@@ -32,8 +32,8 @@ ALLOWED_HOSTS = [
 CSRF_TRUSTED_ORIGINS = [
     "https://tradewise.up.railway.app",
     "http://127.0.0.1:8000",
-    "www.tradewise-hub.com",
-    "tradewise-hub.com",
+    "https://tradewise-hub.com",
+    "https://www.tradewise-hub.com",
 ]
 
 CORS_ORIGIN_ALLOW_ALL = True
