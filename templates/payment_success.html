@@ -1,0 +1,92 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Payment Successful - TradeWise</title>
+    <style>
+        .success-container {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background: linear-gradient(135deg, #00c6ff, #0072ff);
+            color: white;
+            text-align: center;
+            padding: 20px;
+        }
+        
+        .success-icon {
+            width: 100px;
+            height: 100px;
+            background: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 30px;
+            animation: success-bounce 0.6s ease;
+        }
+        
+        @keyframes success-bounce {
+            0% { transform: scale(0); }
+            50% { transform: scale(1.2); }
+            100% { transform: scale(1); }
+        }
+        
+        .confetti {
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            background: #ffd700;
+            animation: confetti-fall 5s linear infinite;
+        }
+        
+        @keyframes confetti-fall {
+            0% { transform: translateY(-100px) rotate(0deg); opacity: 1; }
+            100% { transform: translateY(100vh) rotate(360deg); opacity: 0; }
+        }
+    </style>
+</head>
+<body>
+    <div class="success-container">
+        <div class="success-icon">
+            <i class="fas fa-check" style="font-size: 48px; color: #0072ff;"></i>
+        </div>
+        
+        <h1>Payment Successful! 🎉</h1>
+        <p>Welcome to {{ plan.name }} package!</p>
+        
+        <div class="transaction-details">
+            <p><strong>Reference:</strong> {{ transaction.reference }}</p>
+            <p><strong>Amount:</strong> KES {{ transaction.amount }}</p>
+            <p><strong>Email:</strong> {{ transaction.email }}</p>
+        </div>
+        
+        <a href="/" class="btn-home">Start Trading</a>
+    </div>
+
+    <script>
+        // Create confetti
+        for (let i = 0; i < 50; i++) {
+            createConfetti();
+        }
+        
+        function createConfetti() {
+            const confetti = document.createElement('div');
+            confetti.className = 'confetti';
+            confetti.style.left = Math.random() * 100 + 'vw';
+            confetti.style.background = getRandomColor();
+            confetti.style.animationDelay = Math.random() * 5 + 's';
+            document.body.appendChild(confetti);
+        }
+        
+        function getRandomColor() {
+            const colors = ['#ffd700', '#ff6b6b', '#4ecdc4', '#45b7d1', '#96ceb4'];
+            return colors[Math.floor(Math.random() * colors.length)];
+        }
+    </script>
+</body>
+</html>

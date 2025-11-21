@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🔥 New User Registered - TradeWise</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { 
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            margin: 0; padding: 20px;
+        }
+        
+        .email-container {
+            max-width: 700px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 15px 40px rgba(0,0,0,0.08);
+        }
+        
+        .email-header {
+            background: linear-gradient(135deg, #2c3e50 0%, #3498db 100%);
+            padding: 40px 30px;
+            text-align: center;
+            color: white;
+        }
+        
+        .alert-icon {
+            font-size: 50px;
+            margin-bottom: 20px;
+        }
+        
+        .user-details {
+            background: #f8f9fa;
+            border-radius: 12px;
+            padding: 25px;
+            margin: 25px;
+            border-left: 4px solid #3498db;
+        }
+        
+        .detail-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-top: 20px;
+        }
+        
+        .detail-card {
+            background: white;
+            padding: 15px;
+            border-radius: 10px;
+            border: 1px solid #e9ecef;
+            transition: all 0.3s ease;
+        }
+        
+        .detail-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        
+        .stat-card {
+            background: linear-gradient(135deg, #3498db 0%, #2c3e50 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            margin: 15px 25px;
+        }
+        
+        .action-buttons {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin: 25px;
+        }
+        
+        .action-button {
+            display: block;
+            padding: 15px;
+            text-align: center;
+            border-radius: 10px;
+            text-decoration: none;
+            color: white;
+            font-weight: bold;
+            transition: all 0.3s ease;
+        }
+        
+        .view-dashboard {
+            background: linear-gradient(135deg, #3498db 0%, #2c3e50 100%);
+        }
+        
+        .view-users {
+            background: linear-gradient(135deg, #7f8c8d 0%, #64748b 100%);
+        }
+        
+        .action-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(52, 152, 219, 0.3);
+        }
+        
+        .registration-time {
+            margin-top: 20px; 
+            padding: 15px; 
+            background: rgba(241, 196, 15, 0.1); 
+            border-radius: 8px; 
+            color: #8e6c0c;
+            border: 1px solid rgba(241, 196, 15, 0.3);
+        }
+        
+        .quick-actions {
+            background: rgba(52, 152, 219, 0.1);
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px 25px;
+            border: 1px solid rgba(52, 152, 219, 0.2);
+        }
+    </style>
+</head>
+<body>
+    <div class="email-container">
+        <!-- Header -->
+        <div class="email-header">
+            <div class="alert-icon">🚀</div>
+            <div style="font-size: 28px; font-weight: bold;">NEW USER REGISTERED</div>
+            <div style="opacity: 0.9; margin-top: 10px;">TradeWise Platform</div>
+        </div>
+        
+        <!-- Content -->
+        <div style="padding: 30px;">
+            <h2 style="color: #2c3e50; text-align: center; margin-bottom: 10px;">
+                New Trader Joined! 🎉
+            </h2>
+            <p style="text-align: center; color: #64748b; margin-bottom: 25px;">
+                A new user has registered on the TradeWise platform.
+            </p>
+            
+            <!-- User Details -->
+            <div class="user-details">
+                <h3 style="color: #2c3e50; margin-bottom: 20px;">👤 User Information</h3>
+                
+                <div class="detail-grid">
+                    <div class="detail-card">
+                        <strong style="color: #2c3e50;">Full Name:</strong><br>
+                        <span style="color: #64748b;">{{ user.first_name }} {{ user.second_name }}</span>
+                    </div>
+                    <div class="detail-card">
+                        <strong style="color: #2c3e50;">Email:</strong><br>
+                        <span style="color: #64748b;">{{ user.email }}</span>
+                    </div>
+                    <div class="detail-card">
+                        <strong style="color: #2c3e50;">Phone:</strong><br>
+                        <span style="color: #64748b;">{{ user.phone|default:"Not provided" }}</span>
+                    </div>
+                    <div class="detail-card">
+                        <strong style="color: #2c3e50;">TradeWise Number:</strong><br>
+                        <span style="color: #3498db; font-weight: bold;">{{ user.account_number }}</span>
+                    </div>
+                </div>
+                
+                <div class="registration-time">
+                    <strong>📅 Registration Time:</strong> {{ registration_time }}
+                </div>
+            </div>
+            
+            <!-- Platform Stats -->
+            <div class="stat-card">
+                <h3 style="margin-bottom: 10px;">📊 Platform Statistics</h3>
+                <div style="font-size: 24px; font-weight: bold;">Total Users: {{ total_users }}</div>
+                <div style="opacity: 0.9; margin-top: 5px;">Growing Community! 🌱</div>
+            </div>
+            
+            <!-- Action Buttons -->
+            <div class="action-buttons">
+                <a href="http://127.0.0.1:8000/admin/dashboard/" class="action-button view-dashboard">
+                    📈 View Dashboard
+                </a>
+                <a href="http://127.0.0.1:8000/admin/dashboard/#users" class="action-button view-users">
+                    👥 Manage Users
+                </a>
+            </div>
+            
+            <!-- Quick Actions -->
+            <div class="quick-actions">
+                <h4 style="color: #2c3e50; margin-bottom: 15px;">⚡ Quick Actions:</h4>
+                <ul style="color: #64748b; padding-left: 20px;">
+                    <li>Review user profile completeness</li>
+                    <li>Check for pending verifications</li>
+                    <li>Monitor user activity</li>
+                    <li>Prepare welcome communication</li>
+                </ul>
+            </div>
+        </div>
+        
+        <!-- Footer -->
+        <div style="background: #2c3e50; color: white; padding: 25px; text-align: center;">
+            <p style="margin-bottom: 10px; font-size: 14px;">
+                TradeWise Admin System • Automated Notification
+            </p>
+            <p style="font-size: 12px; opacity: 0.7;">
+                © 2025 TradeWise • Growing Together
+            </p>
+        </div>
+    </div>
+</body>
+</html>

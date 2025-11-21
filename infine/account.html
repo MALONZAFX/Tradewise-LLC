@@ -1,0 +1,2242 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create Account | TradeWise</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-blue: #3498db;
+            --dark-blue: #2c3e50;
+            --gradient-main: linear-gradient(135deg, #2c3e50 0%, #3498db 100%);
+            --gradient-reverse: linear-gradient(135deg, #3498db 0%, #2c3e50 100%);
+            --light-bg: #f8fafc;
+            --dark-text: #1e293b;
+            --hover-color: #74b9ff;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: var(--light-bg);
+            color: var(--dark-text);
+            line-height: 1.6;
+        }
+
+        
+
+        /* Hero Section */
+        .account-hero {
+            background: url('images/bullish-golden-1.jpg') no-repeat center center/cover;
+            height: 60vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            color: white;
+            text-align: center;
+            padding: 0 20px;
+            margin-top: 70px;
+        }
+
+        .account-hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.6);
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 2;
+            max-width: 800px;
+        }
+
+        .hero-content h1 {
+            font-size: 3rem;
+            margin-bottom: 20px;
+            font-weight: 800;
+        }
+
+        .hero-content p {
+            font-size: 1.2rem;
+            margin-bottom: 30px;
+            opacity: 0.9;
+        }
+
+        .cta-button {
+            display: inline-block;
+            background: var(--gradient-main);
+            color: white;
+            padding: 15px 30px;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 1.1rem;
+            transition: all 0.3s ease;
+        }
+
+        .cta-button:hover {
+            background: var(--gradient-reverse);
+            transform: translateY(-3px);
+        }
+
+        /* Brokers Section */
+        .brokers-section {
+            padding: 80px 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: 50px;
+        }
+
+        .section-header h2 {
+            font-size: 2.2rem;
+            margin-bottom: 15px;
+            background: var(--gradient-main);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .brokers-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            gap: 30px;
+        }
+
+        @media (max-width: 768px) {
+            .brokers-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .broker-card {
+            background: white;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+            transition: all 0.3s ease;
+        }
+
+        .broker-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 40px rgba(0,0,0,0.1);
+        }
+
+        .broker-card-header {
+            text-align: center;
+            padding: 20px 0 0;
+        }
+        
+        .broker-type-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #2c3e50;
+            margin-bottom: 0;
+            padding-bottom: 10px;
+            position: relative;
+        }
+        
+        .broker-type-title:after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 60px;
+            height: 3px;
+            background: linear-gradient(90deg, #3498db, #2ecc71);
+        }
+
+        .broker-header {
+            background: var(--dark-blue);
+            color: white;
+            padding: 25px;
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .logo-container {
+            width: 120px;
+            height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: white;
+            padding: 10px;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+        }
+
+        .broker-logo {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain;
+        }
+
+        .broker-title h3 {
+            font-size: 1.5rem;
+            margin-bottom: 5px;
+        }
+
+        .broker-title p {
+            opacity: 0.8;
+            font-size: 0.9rem;
+        }
+
+        .broker-body {
+            padding: 25px;
+        }
+
+        .broker-features {
+            margin-bottom: 25px;
+        }
+
+        .feature-item {
+            display: flex;
+            align-items: flex-start;
+            margin-bottom: 15px;
+        }
+
+        .feature-icon {
+            color: var(--primary-blue);
+            margin-right: 15px;
+            margin-top: 3px;
+        }
+
+        .broker-button {
+            display: block;
+            text-align: center;
+            background: var(--gradient-main);
+            color: white;
+            padding: 12px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .broker-button:hover {
+            background: var(--gradient-reverse);
+            transform: translateY(-3px);
+        }
+
+        /* Video Tutorials Section */
+        .videos-section {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px 80px;
+        }
+
+        .videos-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(500px, 1fr));
+            gap: 40px;
+        }
+
+        @media (max-width: 768px) {
+            .videos-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .video-card {
+            background: white;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+        }
+
+        .video-header {
+            background: var(--dark-blue);
+            color: white;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .video-header h3 {
+            font-size: 1.5rem;
+        }
+
+        .video-container {
+            position: relative;
+            padding-bottom: 56.25%;
+            height: 0;
+        }
+
+        .video-container iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+
+        .video-steps {
+            padding: 25px;
+        }
+
+        .steps-list {
+            list-style-type: none;
+        }
+
+        .step-item {
+            display: flex;
+            margin-bottom: 20px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .step-number {
+            width: 30px;
+            height: 30px;
+            background: var(--gradient-main);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 700;
+            margin-right: 15px;
+            flex-shrink: 0;
+        }
+
+        .step-content h4 {
+            font-size: 1.1rem;
+            margin-bottom: 5px;
+        }
+
+        .step-content p {
+            color: #64748b;
+            font-size: 0.95rem;
+        }
+
+        /* Membership Card Section */
+        .membership-section {
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            padding: 80px 0;
+        }
+
+        .membership-card {
+            background: linear-gradient(145deg, #1a2a4f 0%, #0d1a33 100%);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 15px 40px rgba(0,0,0,0.2);
+            position: relative;
+            overflow: hidden;
+            color: white;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .membership-card::before {
+            content: 'TRADE';
+            position: absolute;
+            top: -30px;
+            right: -30px;
+            opacity: 0.1;
+            font-size: 12rem;
+            font-weight: 700;
+            color: white;
+            transform: rotate(15deg);
+        }
+
+        .card-content {
+            position: relative;
+            z-index: 2;
+        }
+
+        /* Future Section */
+        .future-section {
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            padding: 80px 0;
+        }
+
+        .future-content {
+            flex: 1;
+            min-width: 300px;
+        }
+
+        .price-tag {
+            background: #f1f8fe;
+            border-left: 4px solid #3498db;
+            padding: 15px;
+            margin-bottom: 25px;
+            display: inline-block;
+        }
+
+        .coin-container {
+            flex: 1;
+            min-width: 300px;
+            text-align: center;
+            position: relative;
+        }
+
+        .coin-3d {
+            width: 250px;
+            height: 250px;
+            margin: 0 auto;
+            perspective: 1000px;
+        }
+
+        .rotating-coin {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            animation: rotate-coin 8s infinite linear;
+            filter: drop-shadow(0 10px 20px rgba(0,0,0,0.2));
+        }
+
+        .glow-effect {
+            position: absolute;
+            width: 200px;
+            height: 200px;
+            background: radial-gradient(circle, rgba(52, 152, 219, 0.3) 0%, rgba(52, 152, 219, 0) 70%);
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            border-radius: 50%;
+            z-index: -1;
+        }
+
+        @keyframes rotate-coin {
+            from { transform: rotateY(0deg); }
+            to { transform: rotateY(360deg); }
+        }
+
+        /* Payment Modal Styles */
+        .payment-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.8);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+            backdrop-filter: blur(5px);
+            overflow-y: auto;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+
+        .modal-content {
+            background: linear-gradient(135deg, #1e1e2f, #111122);
+            border-radius: 20px;
+            width: 100%;
+            max-width: 550px;
+            max-height: 90vh;
+            overflow-y: auto;
+            padding: 30px;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            position: relative;
+        }
+
+        .close-modal {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: rgba(255, 255, 255, 0.1);
+            border: none;
+            color: white;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .close-modal:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: rotate(90deg);
+        }
+
+        .modal-header {
+            text-align: center;
+            margin-bottom: 15px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .modal-header h3 {
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin-bottom: 10px;
+            color: white;
+        }
+
+        .modal-price {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: #3498db;
+        }
+
+        /* Payment Options */
+        .payment-options {
+            margin-bottom: 20px;
+        }
+
+        .payment-options h4 {
+            font-size: 1.1rem;
+            color: #fff;
+            margin-bottom: 15px;
+        }
+
+        .payment-option {
+            display: flex;
+            align-items: center;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 12px;
+            padding: 15px 20px;
+            margin-bottom: 15px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 1px solid transparent;
+        }
+
+        .payment-option:hover {
+            background: rgba(255, 255, 255, 0.08);
+            border-color: rgba(52, 152, 219, 0.4);
+        }
+
+        .payment-icon {
+            width: 45px;
+            height: 45px;
+            min-width: 45px;
+            background: linear-gradient(135deg, rgba(52, 152, 219, 0.8), rgba(44, 62, 80, 0.8));
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 15px;
+        }
+
+        .payment-icon i {
+            font-size: 20px;
+            color: white;
+        }
+
+        .payment-text {
+            flex: 1;
+        }
+
+        .payment-text h4 {
+            font-size: 1rem;
+            margin: 0 0 5px 0;
+            color: white;
+        }
+
+        .payment-text p {
+            font-size: 0.85rem;
+            color: #b0b0b0;
+            margin: 0;
+        }
+
+        .payment-check {
+            display: none;
+            color: #3498db;
+            font-size: 1.2rem;
+        }
+
+        .payment-option.active {
+            background: rgba(52, 152, 219, 0.1);
+            border-color: rgba(52, 152, 219, 0.6);
+        }
+
+        .payment-option.active .payment-check {
+            display: block;
+        }
+
+        /* Payment Details */
+        .payment-details {
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 20px;
+            display: none;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            animation: fadeIn 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .payment-details h4 {
+            font-size: 1.1rem;
+            margin-bottom: 15px;
+            color: white;
+        }
+
+        .payment-info {
+            background: rgba(0,0,0,0.3);
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+        }
+
+        .payment-step {
+            display: flex;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+
+        .step-number {
+            width: 28px;
+            height: 28px;
+            min-width: 28px;
+            background: linear-gradient(135deg, #3498db, #2c3e50);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.9rem;
+            font-weight: 600;
+            margin-right: 15px;
+            color: white;
+        }
+
+        .step-text {
+            font-size: 0.95rem;
+            color: #e0e0e0;
+        }
+
+        .highlight {
+            color: #3498db;
+            font-weight: 600;
+        }
+
+        .whatsapp-confirmation {
+            display: flex;
+            align-items: center;
+            background: rgba(37, 211, 102, 0.1);
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 15px;
+        }
+
+        .whatsapp-confirmation i {
+            font-size: 24px;
+            color: #25d366;
+            margin-right: 15px;
+        }
+
+        .whatsapp-confirmation p {
+            font-size: 0.95rem;
+            color: #e0e0e0;
+            margin: 0;
+        }
+
+        .maintenance-notice {
+            background: rgba(241, 196, 15, 0.1);
+            border-radius: 10px;
+            padding: 15px;
+            display: flex;
+            align-items: flex-start;
+        }
+
+        .maintenance-notice i {
+            font-size: 20px;
+            color: #f1c40f;
+            margin-right: 15px;
+            margin-top: 2px;
+        }
+
+        .maintenance-notice p {
+            font-size: 0.9rem;
+            color: #e0e0e0;
+            margin: 0;
+        }
+
+        /* Confirm Button */
+        .confirm-button {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, #3498db, #2c3e50);
+            color: white;
+            padding: 12px 25px;
+            border-radius: 30px;
+            font-weight: 600;
+            font-size: 1.1rem;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            margin-top: 15px;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+            border: none;
+            cursor: pointer;
+            width: 100%;
+        }
+
+        .confirm-button:hover {
+            background: linear-gradient(135deg, #2c3e50, #3498db);
+            transform: translateY(-3px);
+        }
+
+        .confirm-button i {
+            margin-right: 10px;
+        }
+
+        .modal-note {
+            text-align: center;
+            margin-top: 10px;
+            color: #b0b0b0;
+            font-size: 0.9rem;
+        }
+
+        /* Responsive Adjustments */
+        @media (max-width: 768px) {
+            .hero-content h1 {
+                font-size: 2.2rem;
+            }
+            
+            .modal-content {
+                padding: 25px;
+            }
+            
+            .videos-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .modal-header h3 {
+                font-size: 1.5rem;
+            }
+            
+            .modal-price {
+                font-size: 1.5rem;
+            }
+            
+            .payment-option {
+                padding: 12px 15px;
+            }
+            
+            .payment-details {
+                padding: 15px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .hero-content h1 {
+                font-size: 1.8rem;
+            }
+            
+            .hero-content p {
+                font-size: 1rem;
+            }
+            
+            .cta-button {
+                padding: 12px 25px;
+                font-size: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+     <!-- Custom Navigation Styles -->
+<style>
+    /* Custom Reset and Base Styles for Navbar */
+    .tw-navbar *,
+    .tw-mobile-menu *,
+    .tw-menu-overlay {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+    
+    /* Unique Cool Menubar Styles */
+    .tw-navbar {
+        background: linear-gradient(135deg, #3498db, #2c3e50);
+        border-radius: 12px;
+        box-shadow: 0 8px 30px rgba(44, 62, 80, 0.2);
+        position: relative;
+        overflow: hidden;
+        z-index: 1000;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+    
+    .tw-navbar::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(255, 255, 255, 0.1);
+        backdrop-filter: blur(10px);
+        z-index: -1;
+    }
+    
+    .tw-nav-container {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 0 20px;
+        max-width: 1200px;
+        margin: 0 auto;
+        height: 70px;
+    }
+    
+    .tw-nav-logo {
+        color: #fff;
+        font-size: 24px;
+        font-weight: 700;
+        text-decoration: none;
+        letter-spacing: 1px;
+        display: flex;
+        align-items: center;
+        position: relative;
+        z-index: 10;
+        text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+    }
+    
+    .tw-nav-logo span {
+        background: linear-gradient(90deg, #a6e1ff, #89c4f8);
+        -webkit-background-clip: text;
+        color: transparent;
+        margin-left: 3px;
+    }
+    
+    .tw-nav-menu {
+        display: flex;
+        list-style: none;
+        transition: all 0.3s ease;
+    }
+    
+    .tw-nav-item {
+        margin: 0 5px;
+        position: relative;
+    }
+    
+    .tw-nav-link {
+        color: #fff;
+        padding: 10px 15px;
+        text-decoration: none;
+        font-weight: 500;
+        display: flex;
+        align-items: center;
+        border-radius: 8px;
+        transition: all 0.3s ease;
+        position: relative;
+        overflow: hidden;
+    }
+    
+    .tw-nav-link i {
+        margin-right: 8px;
+        font-size: 16px;
+        transition: transform 0.3s ease;
+    }
+    
+    .tw-nav-link::before {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        height: 3px;
+        background: linear-gradient(90deg, #a6e1ff, #fff);
+        transform: scaleX(0);
+        transform-origin: right;
+        transition: transform 0.3s ease;
+        border-radius: 3px;
+    }
+    
+    .tw-nav-link:hover {
+        background: rgba(255, 255, 255, 0.1);
+        transform: translateY(-2px);
+    }
+    
+    .tw-nav-link:hover::before {
+        transform: scaleX(1);
+        transform-origin: left;
+    }
+    
+    .tw-nav-link:hover i {
+        transform: translateY(-3px);
+    }
+    
+    /* Mobile Menu Toggle Button */
+    .tw-mobile-toggle {
+        display: none;
+        background: transparent;
+        border: none;
+        color: #fff;
+        font-size: 24px;
+        cursor: pointer;
+        z-index: 10;
+        transition: all 0.3s ease;
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        position: relative;
+    }
+    
+    .tw-mobile-toggle:hover {
+        background: rgba(255, 255, 255, 0.1);
+    }
+    
+    /* Mobile Menu */
+    .tw-mobile-menu {
+        position: fixed;
+        top: 0;
+        right: -100%;
+        width: 270px;
+        height: 100vh;
+        background: linear-gradient(135deg, #3498db, #2c3e50);
+        z-index: 999;
+        transition: all 0.5s cubic-bezier(0.77, 0, 0.175, 1);
+        padding: 80px 0 30px;
+        box-shadow: -5px 0px 20px rgba(0, 0, 0, 0.2);
+        display: none;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+    
+    .tw-mobile-menu.active {
+        right: 0;
+    }
+    
+    .tw-mobile-nav-menu {
+        list-style: none;
+        padding: 0 20px;
+    }
+    
+    .tw-mobile-nav-item {
+        margin: 15px 0;
+        opacity: 0;
+        transform: translateX(50px);
+        transition: all 0.3s ease;
+    }
+    
+    .tw-mobile-menu.active .tw-mobile-nav-item {
+        opacity: 1;
+        transform: translateX(0);
+    }
+    
+    /* Staggered animation for menu items */
+    .tw-mobile-menu.active .tw-mobile-nav-item:nth-child(1) { transition-delay: 0.1s; }
+    .tw-mobile-menu.active .tw-mobile-nav-item:nth-child(2) { transition-delay: 0.2s; }
+    .tw-mobile-menu.active .tw-mobile-nav-item:nth-child(3) { transition-delay: 0.3s; }
+    .tw-mobile-menu.active .tw-mobile-nav-item:nth-child(4) { transition-delay: 0.4s; }
+    .tw-mobile-menu.active .tw-mobile-nav-item:nth-child(5) { transition-delay: 0.5s; }
+    .tw-mobile-menu.active .tw-mobile-nav-item:nth-child(6) { transition-delay: 0.6s; }
+    .tw-mobile-menu.active .tw-mobile-nav-item:nth-child(7) { transition-delay: 0.7s; }
+    
+    .tw-mobile-nav-link {
+        color: #fff;
+        text-decoration: none;
+        font-size: 18px;
+        display: flex;
+        align-items: center;
+        padding: 10px 15px;
+        border-radius: 10px;
+        transition: all 0.3s ease;
+        position: relative;
+        overflow: hidden;
+    }
+    
+    .tw-mobile-nav-link i {
+        margin-right: 15px;
+        width: 20px;
+        text-align: center;
+        transition: all 0.3s ease;
+    }
+    
+    .tw-mobile-nav-link:hover {
+        background: rgba(255, 255, 255, 0.1);
+        padding-left: 25px;
+    }
+    
+    .tw-mobile-nav-link:hover i {
+        transform: rotate(10deg);
+    }
+    
+    /* Overlay */
+    .tw-menu-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.7);
+        z-index: 998;
+        opacity: 0;
+        visibility: hidden;
+        transition: all 0.5s ease;
+        backdrop-filter: blur(3px);
+    }
+    
+    .tw-menu-overlay.active {
+        opacity: 1;
+        visibility: visible;
+    }
+    
+    /* Active State */
+    .tw-nav-link.active {
+        background: rgba(255, 255, 255, 0.2);
+        position: relative;
+    }
+    
+    .tw-nav-link.active::before {
+        transform: scaleX(1);
+    }
+    
+    .tw-mobile-nav-link.active {
+        background: rgba(255, 255, 255, 0.15);
+        font-weight: 600;
+    }
+    
+    /* Hamburger Animation */
+    .tw-hamburger {
+        width: 24px;
+        height: 20px;
+        position: relative;
+        margin: 0 auto;
+        transform: rotate(0deg);
+        transition: 0.5s ease-in-out;
+        cursor: pointer;
+    }
+    
+    .tw-hamburger span {
+        display: block;
+        position: absolute;
+        height: 3px;
+        width: 100%;
+        background: #fff;
+        border-radius: 3px;
+        opacity: 1;
+        left: 0;
+        transform: rotate(0deg);
+        transition: 0.25s ease-in-out;
+    }
+    
+    .tw-hamburger span:nth-child(1) {
+        top: 0px;
+    }
+    
+    .tw-hamburger span:nth-child(2), .tw-hamburger span:nth-child(3) {
+        top: 8px;
+    }
+    
+    .tw-hamburger span:nth-child(4) {
+        top: 16px;
+    }
+    
+    .tw-mobile-toggle.active .tw-hamburger span:nth-child(1) {
+        top: 8px;
+        width: 0%;
+        left: 50%;
+    }
+    
+    .tw-mobile-toggle.active .tw-hamburger span:nth-child(2) {
+        transform: rotate(45deg);
+    }
+    
+    .tw-mobile-toggle.active .tw-hamburger span:nth-child(3) {
+        transform: rotate(-45deg);
+    }
+    
+    .tw-mobile-toggle.active .tw-hamburger span:nth-child(4) {
+        top: 8px;
+        width: 0%;
+        left: 50%;
+    }
+    
+    /* Responsive Styles */
+    @media (max-width: 992px) {
+        .tw-nav-menu {
+            display: none;
+        }
+        
+        .tw-mobile-toggle {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .tw-mobile-menu {
+            display: block;
+        }
+        
+        .tw-nav-container {
+            height: 60px;
+        }
+    }
+    
+    @media (max-width: 576px) {
+        .tw-mobile-menu {
+            width: 100%;
+        }
+        
+        .tw-nav-logo {
+            font-size: 22px;
+        }
+    }
+</style>
+
+<!-- Custom Navigation Structure -->
+<nav class="tw-navbar" id="tw-navbar">
+    <div class="tw-nav-container">
+        <a href="#" class="tw-nav-logo">Trade<span>Wise</span></a>
+        
+        <!-- Desktop Menu -->
+        <ul class="tw-nav-menu">
+            <li class="tw-nav-item">
+                <a href="index.html" class="tw-nav-link active">
+                    <i class="fas fa-home"></i>
+                    Home
+                </a>
+            </li>
+            <li class="tw-nav-item">
+                <a href="account.html" class="tw-nav-link">
+                    <i class="fas fa-user"></i>
+                    Account
+                </a>
+            </li>
+            <li class="tw-nav-item">
+                <a href="coaching.html" class="tw-nav-link">
+                    <i class="fas fa-chalkboard-teacher"></i>
+                    Coaching
+                </a>
+            </li>
+            <li class="tw-nav-item">
+                <a href="market.html" class="tw-nav-link">
+                    <i class="fas fa-chart-line"></i>
+                    Market
+                </a>
+            </li>
+            <li class="tw-nav-item">
+                <a href="trade.html" class="tw-nav-link">
+                    <i class="fas fa-desktop"></i>
+                    Trade Desk
+                </a>
+            </li>
+            <li class="tw-nav-item">
+                <a href="payment.html" class="tw-nav-link">
+                    <i class="fas fa-credit-card"></i>
+                    Payment Plan
+                </a>
+            </li>
+        </ul>
+        
+        <!-- Mobile Menu Toggle -->
+        <button class="tw-mobile-toggle" id="tw-mobileToggle">
+            <div class="tw-hamburger">
+                <span></span>
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </button>
+    </div>
+</nav>
+
+<!-- Mobile Menu -->
+<div class="tw-mobile-menu" id="tw-mobileMenu">
+    <ul class="tw-mobile-nav-menu">
+        <li class="tw-mobile-nav-item">
+            <a class="tw-mobile-nav-link active" href="index.html">
+                <i class="fas fa-home"></i>
+                Home
+            </a>
+        </li>
+        <li class="tw-mobile-nav-item">
+            <a class="tw-mobile-nav-link" href="account.html">
+                <i class="fas fa-user"></i>
+                Account
+            </a>
+        </li>
+        <li class="tw-mobile-nav-item">
+            <a class="tw-mobile-nav-link" href="coaching.html">
+                <i class="fas fa-chalkboard-teacher"></i>
+                Coaching
+            </a>
+        </li>
+        <li class="tw-mobile-nav-item">
+            <a class="tw-mobile-nav-link" href="market.html">
+                <i class="fas fa-chart-line"></i>
+                Market
+            </a>
+        </li>
+        <li class="tw-mobile-nav-item">
+            <a class="tw-mobile-nav-link" href="trade.html">
+                <i class="fas fa-desktop"></i>
+                Trade Desk
+            </a>
+        </li>
+        <li class="tw-mobile-nav-item">
+            <a class="tw-mobile-nav-link" href="payment.html">
+                <i class="fas fa-credit-card"></i>
+                Payment Plan
+            </a>
+        </li>
+        <li class="tw-mobile-nav-item">
+            <a class="tw-mobile-nav-link" href="contact.html">
+                <i class="fas fa-envelope"></i>
+                Contact Us
+            </a>
+        </li>
+    </ul>
+</div>
+
+<!-- Overlay -->
+<div class="tw-menu-overlay" id="tw-menuOverlay"></div>
+
+<!-- JavaScript for the menu functionality -->
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // DOM Elements
+        const mobileToggle = document.getElementById('tw-mobileToggle');
+        const mobileMenu = document.getElementById('tw-mobileMenu');
+        const overlay = document.getElementById('tw-menuOverlay');
+        const navLinks = document.querySelectorAll('.tw-nav-link, .tw-mobile-nav-link');
+        
+        // Toggle Mobile Menu
+        mobileToggle.addEventListener('click', () => {
+            mobileToggle.classList.toggle('active');
+            mobileMenu.classList.toggle('active');
+            overlay.classList.toggle('active');
+            document.body.style.overflow = mobileMenu.classList.contains('active') ? 'hidden' : '';
+        });
+        
+        // Close Menu when clicking overlay
+        overlay.addEventListener('click', () => {
+            mobileToggle.classList.remove('active');
+            mobileMenu.classList.remove('active');
+            overlay.classList.remove('active');
+            document.body.style.overflow = '';
+        });
+        
+        // Set Active Navigation Item
+        navLinks.forEach(link => {
+            link.addEventListener('click', function() {
+                // Remove active class from all links
+                navLinks.forEach(item => item.classList.remove('active'));
+                
+                // Add active class to clicked link
+                this.classList.add('active');
+                
+                // If mobile, close the menu
+                if (window.innerWidth <= 992) {
+                    mobileToggle.classList.remove('active');
+                    mobileMenu.classList.remove('active');
+                    overlay.classList.remove('active');
+                    document.body.style.overflow = '';
+                }
+            });
+        });
+        
+        // Handle window resize
+        window.addEventListener('resize', () => {
+            if (window.innerWidth > 992 && mobileMenu.classList.contains('active')) {
+                mobileToggle.classList.remove('active');
+                mobileMenu.classList.remove('active');
+                overlay.classList.remove('active');
+                document.body.style.overflow = '';
+            }
+        });
+    });
+</script>
+
+    <!-- Hero Section -->
+    <section class="account-hero">
+        <div class="hero-content">
+            <h1>Create Your Trading Account</h1>
+            <p>Get started with our trusted brokerage partners and unlock premium TradeWise features</p>
+            <a href="#brokers" class="cta-button">Choose Your Broker</a>
+        </div>
+    </section>
+
+
+    
+
+
+<!-- TradeWise Membership Card Section -->
+<section class="membership-section" style="background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%); padding: 80px 0;">
+    <div class="container" id="membership">
+        <div class="row justify-content-center">
+            <div class="col-lg-8 text-center mb-5">
+                <h2 style="font-size: 2.5rem; font-weight: 700; color: #2c3e50;">Your Exclusive <span style="color: #3498db;">TradeWise Membership</span></h2>
+                <p class="mt-3" style="font-size: 1.1rem; color: #7f8c8d;">Upgrade to premium status and unlock exclusive benefits with our membership card</p>
+            </div>
+        </div>
+        
+        <div class="row justify-content-center">
+            <div class="col-lg-6">
+                <!-- Membership Card Container -->
+                <div id="cardContainer">
+                    <!-- Dynamic Card (default shows the designed card) -->
+                    <div id="designedCard" class="membership-card" style="background: linear-gradient(145deg, #1a2a4f 0%, #0d1a33 100%); border-radius: 20px; padding: 30px; box-shadow: 0 15px 40px rgba(0,0,0,0.2); position: relative; overflow: hidden; color: white;">
+                        <!-- Card Watermark -->
+                        <div style="position: absolute; top: -30px; right: -30px; opacity: 0.1; font-size: 12rem; font-weight: 700; color: white; transform: rotate(15deg);">TRADE</div>
+                        
+                        <!-- Card Content -->
+                        <div class="card-content" style="position: relative; z-index: 2;">
+                            <!-- Logo -->
+                            <div class="mb-4" style="display: flex; align-items: center;">
+                                <img src="images/TRADE-WISE-FINAL-TRANSPARENT.png" alt="TradeWise Logo" style="height: 50px; margin-right: 15px;">
+                                <div style="font-size: 1.2rem; font-weight: 600;">Premium Member</div>
+                            </div>
+                            
+                            <!-- Card Number -->
+                            <div class="mb-4" style="background: rgba(255,255,255,0.15); padding: 15px; border-radius: 10px;">
+                                <div style="font-size: 0.9rem; margin-bottom: 5px; opacity: 0.8;">TRADEWISE CARD NUMBER</div>
+                                <div style="font-size: 1.5rem; letter-spacing: 3px; font-weight: 600;">6734 559</div>
+                            </div>
+                            
+                            <!-- Capital Available -->
+                            <div class="mb-4">
+                                <div style="font-size: 0.9rem; opacity: 0.8;">CAPITAL ACCESS</div>
+                                <div style="font-size: 2rem; font-weight: 700;">$500,000</div>
+                            </div>
+                            
+                            <!-- Partner Info -->
+                            <div style="display: flex; justify-content: space-between; align-items: flex-end;">
+                                <div>
+                                    <div style="font-size: 0.9rem; opacity: 0.8;">MEMBER SINCE</div>
+                                    <div style="font-size: 1.2rem; font-weight: 600;">2023</div>
+                                </div>
+                                <div>
+                                    <div style="font-size: 0.9rem; opacity: 0.8;">STATUS</div>
+                                    <div style="font-size: 1.2rem; font-weight: 600;">ACTIVE</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Real Card Image (hidden by default) -->
+                    <div id="realCard" style="display: none; text-align: center;">
+                        <img src="images/tradewisecard.png" alt="TradeWise Physical Card" style="max-width: 100%; border-radius: 20px; box-shadow: 0 15px 40px rgba(0,0,0,0.2);">
+                    </div>
+                    
+                    <!-- Purchase Button -->
+                    <div style="text-align: center; margin-top: 30px;">
+                        <button onclick="showPaymentModal('TradeWise Membership Card', 1500)" style="background: linear-gradient(135deg, #3498db, #2c3e50); color: white; border: none; border-radius: 30px; padding: 15px 40px; font-weight: 600; cursor: pointer; box-shadow: 0 5px 15px rgba(52, 152, 219, 0.3); transition: all 0.3s ease; font-size: 1.1rem;">
+                            <i class="fas fa-credit-card" style="margin-right: 10px;"></i> Get Your Card Now - $10
+                        </button>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Card Benefits -->
+            <div class="col-lg-6 mt-5 mt-lg-0">
+                <div class="card-benefits" style="height: 100%; display: flex; flex-direction: column; justify-content: center;">
+                    <h3 style="font-size: 1.8rem; color: #2c3e50; margin-bottom: 25px;">Membership Benefits</h3>
+                    
+                    <div class="benefit-item mb-4" style="display: flex; align-items: flex-start;">
+                        <div style="margin-right: 15px; color: #3498db; font-size: 1.5rem; line-height: 1.5;">✓</div>
+                        <div>
+                            <h4 style="font-size: 1.2rem; color: #2c3e50; margin-bottom: 5px;">Exclusive Trading Capital</h4>
+                            <p style="color: #7f8c8d;">Access to $500,000 in trading capital upon qualification</p>
+                        </div>
+                    </div>
+                    
+                    <div class="benefit-item mb-4" style="display: flex; align-items: flex-start;">
+                        <div style="margin-right: 15px; color: #3498db; font-size: 1.5rem; line-height: 1.5;">✓</div>
+                        <div>
+                            <h4 style="font-size: 1.2rem; color: #2c3e50; margin-bottom: 5px;">Priority Signals</h4>
+                            <p style="color: #7f8c8d;">Receive trade signals 30 minutes before regular members</p>
+                        </div>
+                    </div>
+                    
+                    <div class="benefit-item mb-4" style="display: flex; align-items: flex-start;">
+                        <div style="margin-right: 15px; color: #3498db; font-size: 1.5rem; line-height: 1.5;">✓</div>
+                        <div>
+                            <h4 style="font-size: 1.2rem; color: #2c3e50; margin-bottom: 5px;">Dedicated Account Manager</h4>
+                            <p style="color: #7f8c8d;">24/7 support from your personal trading consultant</p>
+                        </div>
+                    </div>
+                    
+                    <div class="benefit-item mb-4" style="display: flex; align-items: flex-start;">
+                        <div style="margin-right: 15px; color: #3498db; font-size: 1.5rem; line-height: 1.5;">✓</div>
+                        <div>
+                            <h4 style="font-size: 1.2rem; color: #2c3e50; margin-bottom: 5px;">VIP Education Portal</h4>
+                            <p style="color: #7f8c8d;">Unlock premium trading courses and mentorship programs</p>
+                        </div>
+                    </div>
+                    
+                    <div class="benefit-item" style="display: flex; align-items: flex-start;">
+                        <div style="margin-right: 15px; color: #3498db; font-size: 1.5rem; line-height: 1.5;">✓</div>
+                        <div>
+                            <h4 style="font-size: 1.2rem; color: #2c3e50; margin-bottom: 5px;">Exclusive Events</h4>
+                            <p style="color: #7f8c8d;">Invitation to members-only trading seminars and workshops</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+  </section>
+  
+  <!-- Payment Modal -->
+  <div class="payment-modal" id="paymentModal">
+      <div class="modal-content">
+          <button class="close-modal" onclick="closePaymentModal()">&times;</button>
+          <div class="modal-header">
+              <h3 id="modalClassTitle">Purchase Membership Card</h3>
+              <div class="modal-price" id="modalClassPrice">KES 1,500</div>
+          </div>
+          
+          <div class="payment-options">
+              <h4>Choose Payment Method:</h4>
+              
+              <div class="payment-option" onclick="showPaymentDetails('mpesa')">
+                  <div class="payment-icon">
+                      <i class="fas fa-mobile-alt"></i>
+                  </div>
+                  <div class="payment-text">
+                      <h4>M-Pesa</h4>
+                      <p>Instant payment via mobile money</p>
+                  </div>
+                  <div class="payment-check">
+                      <i class="fas fa-check-circle"></i>
+                  </div>
+              </div>
+              
+              <div class="payment-option" onclick="showPaymentDetails('bank')">
+                  <div class="payment-icon">
+                      <i class="fas fa-university"></i>
+                  </div>
+                  <div class="payment-text">
+                      <h4>Bank Transfer</h4>
+                      <p>Currently under maintenance</p>
+                  </div>
+                  <div class="payment-check">
+                      <i class="fas fa-check-circle"></i>
+                  </div>
+              </div>
+              
+              <div class="payment-option" onclick="showPaymentDetails('paypal')">
+                  <div class="payment-icon">
+                      <i class="fab fa-paypal"></i>
+                  </div>
+                  <div class="payment-text">
+                      <h4>PayPal</h4>
+                      <p>Currently under maintenance</p>
+                  </div>
+                  <div class="payment-check">
+                      <i class="fas fa-check-circle"></i>
+                  </div>
+              </div>
+          </div>
+          
+          <div class="payment-details" id="mpesaDetails">
+              <h4>M-Pesa Payment Instructions</h4>
+              <div class="payment-info">
+                  <div class="payment-step">
+                      <span class="step-number">1</span>
+                      <span class="step-text">Go to M-Pesa menu</span>
+                  </div>
+                  <div class="payment-step">
+                      <span class="step-number">2</span>
+                      <span class="step-text">Select "Lipa na M-Pesa"</span>
+                  </div>
+                  <div class="payment-step">
+                      <span class="step-number">3</span>
+                      <span class="step-text">Select "Pay Bill"</span>
+                  </div>
+                  <div class="payment-step">
+                      <span class="step-number">4</span>
+                      <span class="step-text">Enter Business No: <span class="highlight">247247</span></span>
+                  </div>
+                  <div class="payment-step">
+                      <span class="step-number">5</span>
+                      <span class="step-text">Enter Account No: <span class="highlight">1520184242426</span></span>
+                  </div>
+                  <div class="payment-step">
+                      <span class="step-number">6</span>
+                      <span class="step-text">Enter Amount: <span class="highlight" id="mpesaAmount">KES 1,500</span></span>
+                  </div>
+                  <div class="payment-step">
+                      <span class="step-number">7</span>
+                      <span class="step-text">Enter your M-Pesa PIN and send</span>
+                  </div>
+              </div>
+              <div class="whatsapp-confirmation">
+                  <i class="fab fa-whatsapp"></i>
+                  <p>After payment, send confirmation to: <span class="highlight">0702700745</span></p>
+              </div>
+              <div class="maintenance-notice">
+                  <p><strong>Important:</strong> Please send your payment confirmation to our WhatsApp number to receive your membership card details. Include your full name and "Membership Card" in the message.</p>
+              </div>
+          </div>
+          
+          <div class="payment-details" id="bankDetails">
+              <div class="maintenance-notice">
+                  <i class="fas fa-exclamation-triangle"></i>
+                  <p><strong>Notice:</strong> Bank transfer payments are currently under maintenance. Please use M-Pesa for instant processing.</p>
+              </div>
+          </div>
+          
+          <div class="payment-details" id="paypalDetails">
+              <div class="maintenance-notice">
+                  <i class="fas fa-exclamation-triangle"></i>
+                  <p><strong>Notice:</strong> PayPal payments are currently under maintenance. Please use M-Pesa for instant processing.</p>
+              </div>
+          </div>
+          
+          <a href="https://wa.me/254742962615" class="confirm-button">
+              <i class="fas fa-check-circle"></i> I've Completed Payment
+          </a>
+          <p class="modal-note">
+              Your membership card details will be sent via WhatsApp within 24 hours after payment confirmation
+          </p>
+      </div>
+  </div>
+  
+  <style>
+      /* Payment Modal Styles */
+      .payment-modal {
+          display: none;
+          position: fixed;
+          top: 0;
+          left: 0;
+          width: 100%;
+          height: 100%;
+          background-color: rgba(0,0,0,0.8);
+          z-index: 1000;
+          justify-content: center;
+          align-items: center;
+          backdrop-filter: blur(5px);
+          overflow-y: auto;
+          padding: 20px;
+          box-sizing: border-box;
+      }
+  
+      .modal-content {
+          background: linear-gradient(135deg, #1e1e2f, #111122);
+          border-radius: 20px;
+          width: 100%;
+          max-width: 550px;
+          max-height: 90vh;
+          overflow-y: auto;
+          padding: 30px;
+          box-shadow: 0 20px 50px rgba(0, 0, 0, 0.3);
+          border: 1px solid rgba(255, 255, 255, 0.1);
+          position: relative;
+      }
+  
+      .close-modal {
+          position: absolute;
+          top: 15px;
+          right: 15px;
+          background: rgba(255, 255, 255, 0.1);
+          border: none;
+          color: white;
+          width: 36px;
+          height: 36px;
+          border-radius: 50%;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          font-size: 1.5rem;
+          cursor: pointer;
+          transition: all 0.3s ease;
+      }
+  
+      .close-modal:hover {
+          background: rgba(255, 255, 255, 0.2);
+          transform: rotate(90deg);
+      }
+  
+      .modal-header {
+          text-align: center;
+          margin-bottom: 15px;
+          padding-bottom: 15px;
+          border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+      }
+  
+      .modal-header h3 {
+          font-size: 1.8rem;
+          font-weight: 700;
+          margin-bottom: 10px;
+          color: white;
+      }
+  
+      .modal-price {
+          font-size: 1.8rem;
+          font-weight: 700;
+          color: #3498db;
+      }
+  
+      /* Payment Options */
+      .payment-options {
+          margin-bottom: 20px;
+      }
+  
+      .payment-options h4 {
+          font-size: 1.1rem;
+          color: #fff;
+          margin-bottom: 15px;
+      }
+  
+      .payment-option {
+          display: flex;
+          align-items: center;
+          background: rgba(255, 255, 255, 0.05);
+          border-radius: 12px;
+          padding: 15px 20px;
+          margin-bottom: 15px;
+          cursor: pointer;
+          transition: all 0.3s ease;
+          border: 1px solid transparent;
+      }
+  
+      .payment-option:hover {
+          background: rgba(255, 255, 255, 0.08);
+          border-color: rgba(52, 152, 219, 0.4);
+      }
+  
+      .payment-icon {
+          width: 45px;
+          height: 45px;
+          min-width: 45px;
+          background: linear-gradient(135deg, rgba(52, 152, 219, 0.8), rgba(44, 62, 80, 0.8));
+          border-radius: 10px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          margin-right: 15px;
+      }
+  
+      .payment-icon i {
+          font-size: 20px;
+          color: white;
+      }
+  
+      .payment-text {
+          flex: 1;
+      }
+  
+      .payment-text h4 {
+          font-size: 1rem;
+          margin: 0 0 5px 0;
+          color: white;
+      }
+  
+      .payment-text p {
+          font-size: 0.85rem;
+          color: #b0b0b0;
+          margin: 0;
+      }
+  
+      .payment-check {
+          display: none;
+          color: #3498db;
+          font-size: 1.2rem;
+      }
+  
+      .payment-option.active {
+          background: rgba(52, 152, 219, 0.1);
+          border-color: rgba(52, 152, 219, 0.6);
+      }
+  
+      .payment-option.active .payment-check {
+          display: block;
+      }
+  
+      /* Payment Details */
+      .payment-details {
+          background: rgba(255, 255, 255, 0.03);
+          border-radius: 12px;
+          padding: 20px;
+          margin-bottom: 20px;
+          display: none;
+          border: 1px solid rgba(255, 255, 255, 0.08);
+          animation: fadeIn 0.3s ease;
+      }
+  
+      @keyframes fadeIn {
+          from { opacity: 0; transform: translateY(10px); }
+          to { opacity: 1; transform: translateY(0); }
+      }
+  
+      .payment-details h4 {
+          font-size: 1.1rem;
+          margin-bottom: 15px;
+          color: white;
+      }
+  
+      .payment-info {
+          background: rgba(0,0,0,0.3);
+          padding: 15px;
+          border-radius: 8px;
+          margin-bottom: 15px;
+      }
+  
+      .payment-step {
+          display: flex;
+          align-items: center;
+          margin-bottom: 12px;
+      }
+  
+      .step-number {
+          width: 28px;
+          height: 28px;
+          min-width: 28px;
+          background: linear-gradient(135deg, #3498db, #2c3e50);
+          border-radius: 50%;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          font-size: 0.9rem;
+          font-weight: 600;
+          margin-right: 15px;
+          color: white;
+      }
+  
+      .step-text {
+          font-size: 0.95rem;
+          color: #e0e0e0;
+      }
+  
+      .highlight {
+          color: #3498db;
+          font-weight: 600;
+      }
+  
+      .whatsapp-confirmation {
+          display: flex;
+          align-items: center;
+          background: rgba(37, 211, 102, 0.1);
+          border-radius: 10px;
+          padding: 15px;
+          margin-bottom: 15px;
+      }
+  
+      .whatsapp-confirmation i {
+          font-size: 24px;
+          color: #25d366;
+          margin-right: 15px;
+      }
+  
+      .whatsapp-confirmation p {
+          font-size: 0.95rem;
+          color: #e0e0e0;
+          margin: 0;
+      }
+  
+      .maintenance-notice {
+          background: rgba(241, 196, 15, 0.1);
+          border-radius: 10px;
+          padding: 15px;
+          display: flex;
+          align-items: flex-start;
+      }
+  
+      .maintenance-notice i {
+          font-size: 20px;
+          color: #f1c40f;
+          margin-right: 15px;
+          margin-top: 2px;
+      }
+  
+      .maintenance-notice p {
+          font-size: 0.9rem;
+          color: #e0e0e0;
+          margin: 0;
+      }
+  
+      /* Confirm Button */
+      .confirm-button {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          background: linear-gradient(135deg, #3498db, #2c3e50);
+          color: white;
+          padding: 12px 25px;
+          border-radius: 30px;
+          font-weight: 600;
+          font-size: 1.1rem;
+          text-decoration: none;
+          transition: all 0.3s ease;
+          margin-top: 15px;
+          box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+          border: none;
+          cursor: pointer;
+          width: 100%;
+      }
+  
+      .confirm-button:hover {
+          background: linear-gradient(135deg, #2c3e50, #3498db);
+          transform: translateY(-3px);
+      }
+  
+      .confirm-button i {
+          margin-right: 10px;
+      }
+  
+      .modal-note {
+          text-align: center;
+          margin-top: 10px;
+          color: #b0b0b0;
+          font-size: 0.9rem;
+      }
+  
+      /* Responsive Adjustments */
+      @media (max-width: 768px) {
+          .modal-content {
+              padding: 25px;
+          }
+      }
+  
+      @media (max-width: 576px) {
+          .modal-header h3 {
+              font-size: 1.5rem;
+          }
+          
+          .modal-price {
+              font-size: 1.5rem;
+          }
+          
+          .payment-option {
+              padding: 12px 15px;
+          }
+          
+          .payment-details {
+              padding: 15px;
+          }
+      }
+  
+      @media (max-width: 400px) {
+          .modal-content {
+              padding: 20px 15px;
+          }
+      }
+  </style>
+  
+  <script>
+      // Payment modal functions
+      function showPaymentModal(serviceName, price) {
+          document.getElementById('modalClassTitle').textContent = 'Purchase ' + serviceName;
+          document.getElementById('modalClassPrice').textContent = 'KES ' + price.toLocaleString();
+          document.getElementById('mpesaAmount').textContent = 'KES ' + price.toLocaleString();
+          
+          // Hide all payment details initially
+          document.querySelectorAll('.payment-details').forEach(el => {
+              el.style.display = 'none';
+          });
+          
+          // Show M-Pesa details by default
+          document.getElementById('mpesaDetails').style.display = 'block';
+          
+          // Set active class on M-Pesa option
+          document.querySelectorAll('.payment-option').forEach(el => {
+              el.classList.remove('active');
+          });
+          document.querySelector('.payment-option').classList.add('active');
+          
+          document.getElementById('paymentModal').style.display = 'flex';
+          document.body.style.overflow = 'hidden';
+      }
+      
+      function closePaymentModal() {
+          document.getElementById('paymentModal').style.display = 'none';
+          document.body.style.overflow = 'auto';
+      }
+      
+      function showPaymentDetails(method) {
+          // Hide all payment details
+          document.querySelectorAll('.payment-details').forEach(el => {
+              el.style.display = 'none';
+          });
+          
+          // Show selected payment method
+          const detailsElement = document.getElementById(method + 'Details');
+          if (detailsElement) {
+              detailsElement.style.display = 'block';
+          }
+          
+          // Update active class
+          document.querySelectorAll('.payment-option').forEach(el => {
+              el.classList.remove('active');
+          });
+          
+          // Find the clicked option
+          const options = document.querySelectorAll('.payment-option');
+          for (let i = 0; i < options.length; i++) {
+              if (options[i].getAttribute('onclick').includes(method)) {
+                  options[i].classList.add('active');
+                  break;
+              }
+          }
+  
+          // Smooth scroll to details on mobile
+          if (window.innerWidth <= 768 && detailsElement) {
+              setTimeout(() => {
+                  detailsElement.scrollIntoView({
+                      behavior: 'smooth',
+                      block: 'nearest'
+                  });
+              }, 100);
+          }
+      }
+      
+      // Close modal when clicking outside
+      window.onclick = function(event) {
+          const modal = document.getElementById('paymentModal');
+          if (event.target == modal) {
+              closePaymentModal();
+          }
+      }
+      
+      // Set M-Pesa as active by default when page loads
+      document.addEventListener('DOMContentLoaded', function() {
+          const firstOption = document.querySelector('.payment-option');
+          if (firstOption) {
+              firstOption.classList.add('active');
+          }
+      });
+  </script>
+
+
+  <!-- Brokers Section -->
+<section class="brokers-section" id="brokers">
+    <div class="section-header">
+        <h2>Our Brokerage Partners</h2>
+    </div>
+    <div class="brokers-grid">
+        <!-- Windsor Brokers Card -->
+        <div class="broker-card">
+            <div class="broker-card-header">
+                <h3 class="broker-type-title">Start Your Forex Trading Journey</h3>
+            </div>
+            <div class="broker-header">
+                <div class="logo-container">
+                    <img src="images/WhatsApp Image 2025-05-15 at 01.10.44.jpeg" alt="Windsor Brokers" class="broker-logo">
+                </div>
+                <div class="broker-title">
+                    <h3>Windsor Brokers</h3>
+                    <p>Regulated | Since 1988</p>
+                </div>
+            </div>
+            <div class="broker-body">
+                <div class="broker-features">
+                    <div class="feature-item">
+                        <i class="fas fa-check feature-icon"></i>
+                        <div>
+                            <h4>Tight spreads from 0.0 pips</h4>
+                            <p>Competitive pricing for all traders</p>
+                        </div>
+                    </div>
+                    <div class="feature-item">
+                        <i class="fas fa-check feature-icon"></i>
+                        <div>
+                            <h4>Leverage up to 1:500</h4>
+                            <p>Maximize your trading potential</p>
+                        </div>
+                    </div>
+                    <div class="feature-item">
+                        <i class="fas fa-check feature-icon"></i>
+                        <div>
+                            <h4>Negative balance protection</h4>
+                            <p>Your risk is limited</p>
+                        </div>
+                    </div>
+                </div>
+                <a href="https://ke.myuserhub.com/welcome?returnUrl=%2Faccounts&pt=200578" target="_blank" class="broker-button">Create Windsor Account</a>
+            </div>
+        </div>
+
+        <!-- Deriv Card -->
+        <div class="broker-card">
+            <div class="broker-card-header">
+                <h3 class="broker-type-title">Start Your Binary Trading Journey</h3>
+            </div>
+            <div class="broker-header">
+                <div class="logo-container">
+                    <img src="images/deriv.webp" alt="Deriv" class="broker-logo">
+                </div>
+                <div class="broker-title">
+                    <h3>Deriv</h3>
+                    <p>Multi-regulated | 20+ Years</p>
+                </div>
+            </div>
+            <div class="broker-body">
+                <div class="broker-features">
+                    <div class="feature-item">
+                        <i class="fas fa-check feature-icon"></i>
+                        <div>
+                            <h4>Synthetic indices 24/7</h4>
+                            <p>Trade anytime, anywhere</p>
+                        </div>
+                    </div>
+                    <div class="feature-item">
+                        <i class="fas fa-check feature-icon"></i>
+                        <div>
+                            <h4>Leverage up to 1:1000</h4>
+                            <p>Powerful trading conditions</p>
+                        </div>
+                    </div>
+                    <div class="feature-item">
+                        <i class="fas fa-check feature-icon"></i>
+                        <div>
+                            <h4>$10,000 demo account</h4>
+                            <p>Practice risk-free</p>
+                        </div>
+                    </div>
+                </div>
+                <a href="https://track.deriv.com/_9VbYrFdiio5MjdsyM5hasGNd7ZgqdRLk/1/" target="_blank" class="broker-button">Create Deriv Account</a>
+            </div>
+        </div>
+    </div>
+</section>
+
+<style>
+    /* Broker Type Titles */
+    .broker-card-header {
+        text-align: center;
+        padding: 20px 0 0;
+    }
+    
+    .broker-type-title {
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: #2c3e50;
+        margin-bottom: 0;
+        padding-bottom: 10px;
+        position: relative;
+    }
+    
+    .broker-type-title:after {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 60px;
+        height: 3px;
+        background: linear-gradient(90deg, #3498db, #2ecc71);
+    }
+
+    /* Updated Logo Styling */
+    .logo-container {
+        width: 120px;
+        height: 60px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: white;
+        padding: 10px;
+        border-radius: 8px;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+    }
+
+    .broker-logo {
+        max-width: 100%;
+        max-height: 100%;
+        object-fit: contain;
+    }
+
+    /* Adjust header layout */
+    .broker-header {
+        display: flex;
+        align-items: center;
+        gap: 25px;
+        padding: 30px;
+    }
+
+    /* Make broker title more prominent */
+    .broker-title h3 {
+        font-size: 1.8rem;
+        margin-bottom: 8px;
+    }
+
+    .broker-title p {
+        font-size: 1rem;
+        opacity: 0.9;
+    }
+
+    /* Responsive adjustments */
+    @media (max-width: 768px) {
+        .broker-header {
+            flex-direction: column;
+            text-align: center;
+            gap: 15px;
+        }
+        
+        .logo-container {
+            width: 160px;
+            height: 80px;
+        }
+        
+        .broker-type-title {
+            font-size: 1.3rem;
+        }
+    }
+</style>
+
+<!-- Video Tutorials Section -->
+<section class="videos-section">
+    <div class="section-header">
+        <h2>Account Setup Guides</h2>
+    </div>
+    <div class="videos-grid">
+        <!-- Windsor Brokers Video -->
+        <div class="video-card">
+            <div class="video-header">
+                <h3>Windsor Brokers Account Setup</h3>
+            </div>
+            <div class="video-container">
+                <iframe src="https://www.youtube.com/embed/bqEYnvba-QY?rel=0&showinfo=0" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+            </div>
+            <div class="video-steps">
+                <ul class="steps-list">
+                    <li class="step-item">
+                        <div class="step-number">1</div>
+                        <div class="step-content">
+                            <h4>Click "Create Windsor Account"</h4>
+                            <p>Use the button above to begin</p>
+                        </div>
+                    </li>
+                    <li class="step-item">
+                        <div class="step-number">2</div>
+                        <div class="step-content">
+                            <h4>Complete registration</h4>
+                            <p>Fill in all required personal details</p>
+                        </div>
+                    </li>
+                    <li class="step-item">
+                        <div class="step-number">3</div>
+                        <div class="step-content">
+                            <h4>Verify your identity</h4>
+                            <p>Upload ID and proof of address</p>
+                        </div>
+                    </li>
+                    <li class="step-item">
+                        <div class="step-number">4</div>
+                        <div class="step-content">
+                            <h4>Fund your account</h4>
+                            <p>Make your first deposit to start trading</p>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Deriv Video -->
+        <div class="video-card">
+            <div class="video-header">
+                <h3>Deriv Account Setup</h3>
+            </div>
+            <div class="video-container">
+                <iframe src="https://www.youtube.com/embed/YgEYfz5BfOA?rel=0&showinfo=0" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+            </div>
+            <div class="video-steps">
+                <ul class="steps-list">
+                    <li class="step-item">
+                        <div class="step-number">1</div>
+                        <div class="step-content">
+                            <h4>Click "Create Deriv Account"</h4>
+                            <p>Use the button above to begin</p>
+                        </div>
+                    </li>
+                    <li class="step-item">
+                        <div class="step-number">2</div>
+                        <div class="step-content">
+                            <h4>Choose account type</h4>
+                            <p>Select real or demo account</p>
+                        </div>
+                    </li>
+                    <li class="step-item">
+                        <div class="step-number">3</div>
+                        <div class="step-content">
+                            <h4>Complete your profile</h4>
+                            <p>Provide all required information</p>
+                        </div>
+                    </li>
+                    <li class="step-item">
+                        <div class="step-number">4</div>
+                        <div class="step-content">
+                            <h4>Start trading</h4>
+                            <p>Fund your account and begin</p>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+
+
+<!-- TradeWise Future: The Next Evolution -->
+<section class="future-section" style="background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%); padding: 80px 0;">
+    <div class="container" style="max-width: 1200px; margin: 0 auto; padding: 0 20px; display: flex; align-items: center; gap: 50px; flex-wrap: wrap;">
+        
+        <!-- Left Side: Text & CTA -->
+        <div class="future-content" style="flex: 1; min-width: 300px;">
+            <h2 style="font-size: 2.5rem; font-weight: 700; color: #2c3e50; margin-bottom: 20px;">
+                <span style="color: #3498db;">TradeWise Coin</span>  
+                <span style="display: inline-block; background: #3498db; color: white; font-size: 0.8rem; padding: 5px 10px; border-radius: 20px; margin-left: 10px; vertical-align: middle;">Coming Soon</span>
+            </h2>
+            
+            <p style="color: #555; line-height: 1.6; margin-bottom: 25px; font-size: 1.1rem;">
+                The future of decentralized trading is here. **TradeWise Coin (TWC)** is a revolutionary utility token designed for seamless transactions, staking rewards, and exclusive access to TradeWise’s premium ecosystem.
+            </p>
+            
+            <ul style="margin-bottom: 30px; padding-left: 20px; color: #555;">
+                <li style="margin-bottom: 10px; position: relative; padding-left: 25px;">
+                    <i class="fas fa-check" style="position: absolute; left: 0; color: #3498db;"></i>
+                    <strong>Stake & Earn:</strong> Passive income through staking rewards
+                </li>
+                <li style="margin-bottom: 10px; position: relative; padding-left: 25px;">
+                    <i class="fas fa-check" style="position: absolute; left: 0; color: #3498db;"></i>
+                    <strong>VIP Access:</strong> Unlock premium signals & strategies
+                </li>
+                <li style="margin-bottom: 10px; position: relative; padding-left: 25px;">
+                    <i class="fas fa-check" style="position: absolute; left: 0; color: #3498db;"></i>
+                    <strong>Zero Fees:</strong> Trade with minimal transaction costs
+                </li>
+            </ul>
+            
+            <div class="price-tag" style="background: #f1f8fe; border-left: 4px solid #3498db; padding: 15px; margin-bottom: 25px; display: inline-block;">
+                <p style="margin: 0; font-weight: 600; color: #2c3e50; font-size: 1.2rem;">
+                    <span style="color: #3498db;">Pre-Sale Price:</span> $0.10 per TWC (Limited Supply)
+                </p>
+            </div>
+            
+            <button onclick="showPreOrderModal()" style="background: linear-gradient(135deg, #2c3e50, #3498db); color: white; border: none; border-radius: 30px; padding: 15px 30px; font-weight: 600; cursor: pointer; font-size: 1.1rem; transition: transform 0.3s ease; box-shadow: 0 10px 20px rgba(52, 152, 219, 0.3);">
+                <i class="fas fa-coins" style="margin-right: 10px;"></i> Pre-Order Now
+            </button>
+            
+            <p style="color: #7f8c8d; font-size: 0.9rem; margin-top: 15px;">
+                Early investors get <strong>+15% bonus tokens</strong> in the first round.
+            </p>
+        </div>
+        
+        <!-- Right Side: Rotating Coin -->
+        <div class="coin-container" style="flex: 1; min-width: 300px; text-align: center; position: relative;">
+            <div class="coin-3d" style="width: 250px; height: 250px; margin: 0 auto; perspective: 1000px;">
+                <img src="images/tradewisecoin.png" alt="TradeWise Coin" class="rotating-coin" style="width: 100%; height: 100%; object-fit: contain; animation: rotate-coin 8s infinite linear; filter: drop-shadow(0 10px 20px rgba(0,0,0,0.2));">
+            </div>
+            <div class="glow-effect" style="position: absolute; width: 200px; height: 200px; background: radial-gradient(circle, rgba(52, 152, 219, 0.3) 0%, rgba(52, 152, 219, 0) 70%); top: 50%; left: 50%; transform: translate(-50%, -50%); border-radius: 50%; z-index: -1;"></div>
+        </div>
+    </div>
+</section>
+
+
+</body>
+</html>

@@ -1,0 +1,97 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ category_name }} - TradeWise Merchandise</title>
+    <style>
+    .category-header {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        padding: 60px 0;
+        text-align: center;
+        margin-bottom: 50px;
+    }
+    
+    .product-grid {
+        padding: 40px 0;
+    }
+    
+    .product-card {
+        border: none;
+        border-radius: 12px;
+        overflow: hidden;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        transition: transform 0.3s ease;
+        margin-bottom: 30px;
+        height: 100%;
+    }
+    
+    .product-card:hover {
+        transform: translateY(-5px);
+    }
+    
+    .product-image {
+        height: 250px;
+        object-fit: cover;
+        width: 100%;
+    }
+    
+    .product-price {
+        color: #e74c3c;
+        font-weight: bold;
+        font-size: 1.2rem;
+    }
+    
+    .back-button {
+        margin-bottom: 30px;
+    }
+    </style>
+</head>
+<body>
+    <!-- Include your navigation header here -->
+
+    <div class="category-header">
+        <div class="container">
+            <h1>{{ category_name }}</h1>
+            <p class="lead">Explore our premium {{ category_name|lower }} collection</p>
+        </div>
+    </div>
+
+    <div class="container">
+        <a href="{% url 'merchandise' %}" class="btn btn-outline-primary back-button">
+            ← Back to All Merchandise
+        </a>
+
+        <div class="row">
+            {% for item in items %}
+            <div class="col-lg-4 col-md-6">
+                <div class="product-card">
+                    {% if item.image %}
+                    <img src="{{ item.image.url }}" class="product-image" alt="{{ item.name }}">
+                    {% else %}
+                    <img src="{% static 'images/placeholder.jpg' %}" class="product-image" alt="{{ item.name }}">
+                    {% endif %}
+                    <div class="card-body">
+                        <h5 class="card-title">{{ item.name }}</h5>
+                        <p class="card-text">{{ item.description }}</p>
+                        <div class="d-flex justify-content-between align-items-center">
+                            <span class="product-price">KES {{ item.price }}</span>
+                            <a href="{% url 'merchandise_payment' item.id %}" class="btn btn-primary">Buy Now</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% empty %}
+            <div class="col-12 text-center">
+                <div class="alert alert-info">
+                    <h4>No items available in this category yet</h4>
+                    <p>Check back soon for new {{ category_name|lower }}!</p>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</body>
+</html>

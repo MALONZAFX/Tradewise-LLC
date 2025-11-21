@@ -1,0 +1,95 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trading Plans - TradeWise</title>
+    <style>
+        /* Add these styles to your existing CSS */
+        .payment-loading {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 86, 179, 0.95);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            color: white;
+        }
+        
+        .loader {
+            width: 80px;
+            height: 80px;
+            border: 5px solid rgba(255,255,255,0.3);
+            border-radius: 50%;
+            border-top-color: white;
+            animation: spin 1s ease-in-out infinite;
+            margin-bottom: 20px;
+        }
+        
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        
+        .pulse {
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+    </style>
+</head>
+<body>
+    <!-- Your existing pricing section -->
+    <div class="our-pricing bg-section">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-5">
+                    <div class="pricing-content">
+                        <div class="section-title">
+                            <h3 class="wow fadeInUp">trading plans</h3>
+                            <h2 class="wow fadeInUp" data-wow-delay="0.25s">Flexible <span>membership options</span></h2>
+                            <p class="wow fadeInUp" data-wow-delay="0.5s">Choose the trading package that fits your goals and budget. All plans include risk management guidance and market analysis tools to help you trade smarter.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-lg-7">
+                    <div class="pricing-box-list">
+                        {% for plan in plans %}
+                        <div class="pricing-box {% if plan.is_highlighted %}highlighted-box{% endif %} wow fadeInUp" data-wow-delay="{{ forloop.counter0|add:0.2 }}s">
+                            <div class="pricing-box-content">
+                                <div class="pricing-title">
+                                    <p>{{ plan.name|lower }}</p>
+                                    <h2><sup>KES</sup>{{ plan.price }}<sub></sub></h2>
+                                </div>
+                                <div class="pricing-btn">
+                                    <a href="{% url 'initialize_payment' plan.id %}" class="btn-default {% if plan.is_highlighted %}btn-highlighted{% endif %} pulse">
+                                        join now
+                                    </a>
+                                </div>
+                            </div>
+                            <div class="pricing-list">
+                                <ul>
+                                    {% for feature in plan.features %}
+                                    <li><i class="fas fa-check"></i> {{ feature }}</li>
+                                    {% endfor %}
+                                </ul>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

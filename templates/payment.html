@@ -1,0 +1,764 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TradeWise Services & Payment Plans</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #3498db;
+            --secondary: #2c3e50;
+            --light: #f8f9fa;
+            --dark: #343a40;
+            --success: #28a745;
+            --border: #dee2e6;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: #f8fafc;
+            color: var(--dark);
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* Header */
+        .header {
+            background: var(--secondary);
+            color: white;
+            padding: 20px 0;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.8rem;
+            font-weight: 700;
+        }
+
+        .logo span {
+            color: var(--primary);
+        }
+
+        .back-link {
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: color 0.3s ease;
+        }
+
+        .back-link:hover {
+            color: var(--primary);
+        }
+
+        /* Hero Section */
+        .hero {
+            background: linear-gradient(135deg, var(--secondary) 0%, var(--primary) 100%);
+            color: white;
+            padding: 60px 0;
+            text-align: center;
+        }
+
+        .hero h1 {
+            font-size: 2.5rem;
+            margin-bottom: 15px;
+            font-weight: 700;
+        }
+
+        .hero p {
+            font-size: 1.2rem;
+            opacity: 0.9;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        /* Services Section */
+        .services-section {
+            padding: 80px 0;
+        }
+
+        .section-title {
+            text-align: center;
+            margin-bottom: 50px;
+        }
+
+        .section-title h2 {
+            font-size: 2.2rem;
+            color: var(--secondary);
+            margin-bottom: 10px;
+        }
+
+        .section-title p {
+            color: #6c757d;
+            font-size: 1.1rem;
+        }
+
+        .services-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 30px;
+            margin-bottom: 50px;
+        }
+
+        .service-card {
+            background: white;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+            border: 1px solid var(--border);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .service-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+        }
+
+        .service-header {
+            background: var(--secondary);
+            color: white;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .service-header h3 {
+            font-size: 1.4rem;
+            margin-bottom: 5px;
+        }
+
+        .service-header .service-desc {
+            opacity: 0.9;
+            font-size: 0.95rem;
+        }
+
+        .service-body {
+            padding: 25px;
+        }
+
+        .service-features {
+            list-style: none;
+            margin-bottom: 20px;
+        }
+
+        .service-features li {
+            padding: 8px 0;
+            border-bottom: 1px solid #f1f1f1;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .service-features li:last-child {
+            border-bottom: none;
+        }
+
+        .service-features i {
+            color: var(--primary);
+            font-size: 0.9rem;
+        }
+
+        .price-section {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 8px;
+            text-align: center;
+            margin-bottom: 20px;
+            border-left: 4px solid var(--primary);
+        }
+
+        .price {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--secondary);
+            margin-bottom: 5px;
+        }
+
+        .price-note {
+            font-size: 0.9rem;
+            color: #6c757d;
+        }
+
+        .request-btn {
+            background: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 6px;
+            padding: 12px 25px;
+            font-weight: 600;
+            cursor: pointer;
+            width: 100%;
+            font-size: 1rem;
+            transition: background 0.3s ease;
+        }
+
+        .request-btn:hover {
+            background: #2980b9;
+        }
+
+        /* Enhanced Modal Styles */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.7);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            overflow-y: auto;
+        }
+
+        .modal-container {
+            background: white;
+            border-radius: 15px;
+            width: 100%;
+            max-width: 500px;
+            max-height: 90vh;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .modal-header {
+            background: var(--secondary);
+            color: white;
+            padding: 20px 25px;
+            border-radius: 15px 15px 0 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-shrink: 0;
+        }
+
+        .modal-header h3 {
+            margin: 0;
+            font-size: 1.3rem;
+            font-weight: 600;
+        }
+
+        .close-modal {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 1.8rem;
+            cursor: pointer;
+            line-height: 1;
+            width: 35px;
+            height: 35px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            transition: background-color 0.3s ease;
+        }
+
+        .close-modal:hover {
+            background-color: rgba(255,255,255,0.2);
+        }
+
+        .modal-content {
+            padding: 25px;
+            flex: 1;
+            overflow-y: auto;
+        }
+
+        .selected-service {
+            background: #e8f4fd;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 25px;
+            text-align: center;
+            border-left: 4px solid var(--primary);
+        }
+
+        .selected-service h4 {
+            color: var(--secondary);
+            margin-bottom: 8px;
+            font-size: 1.2rem;
+        }
+
+        .selected-service .price {
+            font-size: 1.4rem;
+            color: var(--primary);
+            margin: 5px 0;
+        }
+
+        .selected-service p {
+            color: #666;
+            margin: 0;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: var(--secondary);
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 14px 16px;
+            border: 2px solid var(--border);
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.1);
+        }
+
+        .submit-btn {
+            background: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            padding: 16px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            width: 100%;
+            transition: all 0.3s ease;
+            margin-top: 10px;
+        }
+
+        .submit-btn:hover {
+            background: #2980b9;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(52, 152, 219, 0.3);
+        }
+
+        .submit-btn:active {
+            transform: translateY(0);
+        }
+
+        .modal-footer {
+            padding: 0 25px 25px;
+            text-align: center;
+            flex-shrink: 0;
+        }
+
+        .modal-note {
+            color: #6c757d;
+            font-size: 0.9rem;
+            margin-top: 15px;
+            line-height: 1.5;
+        }
+
+        /* Loading State */
+        .loading {
+            opacity: 0.7;
+            pointer-events: none;
+        }
+
+        /* Success Message */
+        .success-message {
+            background: #d4edda;
+            color: #155724;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            text-align: center;
+            display: none;
+        }
+
+        /* Responsive Enhancements */
+        @media (max-width: 768px) {
+            .services-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .hero h1 {
+                font-size: 2rem;
+            }
+            
+            .header-content {
+                flex-direction: column;
+                gap: 15px;
+                text-align: center;
+            }
+            
+            .modal-container {
+                margin: 10px;
+                max-height: 95vh;
+            }
+            
+            .modal-content {
+                padding: 20px;
+            }
+            
+            .modal-header {
+                padding: 15px 20px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .container {
+                padding: 0 15px;
+            }
+            
+            .services-section {
+                padding: 50px 0;
+            }
+            
+            .modal-overlay {
+                padding: 10px;
+            }
+            
+            .modal-container {
+                border-radius: 10px;
+            }
+        }
+
+        /* Scrollbar styling for modal */
+        .modal-content::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .modal-content::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 3px;
+        }
+
+        .modal-content::-webkit-scrollbar-thumb {
+            background: var(--primary);
+            border-radius: 3px;
+        }
+
+        .modal-content::-webkit-scrollbar-thumb:hover {
+            background: #2980b9;
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="container">
+            <div class="header-content">
+                <div class="logo">Trade<span>Wise</span> </div>
+                <a href="{% url 'account' %}" class="back-link">
+                    <i class="fas fa-arrow-left"></i> Back to Dashboard
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="container">
+            <h1>Professional Trading Services</h1>
+            <p>Choose from our premium trading services and start your journey to financial success</p>
+        </div>
+    </section>
+
+    <!-- Services Section -->
+    <section class="services-section">
+        <div class="container">
+            <div class="section-title">
+                <h2>Our Premium Services</h2>
+                <p>Select a service that matches your trading goals</p>
+            </div>
+
+            <!-- Display Django Messages -->
+            {% if messages %}
+            <div class="messages-container">
+                {% for message in messages %}
+                <div class="success-message" style="display: block;">
+                    <i class="fas fa-check-circle"></i> {{ message }}
+                </div>
+                {% endfor %}
+            </div>
+            {% endif %}
+
+            <div class="services-grid">
+                <!-- Copy Trading -->
+                <div class="service-card">
+                    <div class="service-header">
+                        <h3>Copy Trading</h3>
+                        <p class="service-desc">Automate your trading success</p>
+                    </div>
+                    <div class="service-body">
+                        <ul class="service-features">
+                            <li><i class="fas fa-check"></i> Mirror expert traders automatically</li>
+                            <li><i class="fas fa-check"></i> Perfect for beginners</li>
+                            <li><i class="fas fa-check"></i> Real-time trade copying</li>
+                            <li><i class="fas fa-check"></i> Full control over your account</li>
+                            <li><i class="fas fa-check"></i> 24/7 monitoring</li>
+                        </ul>
+                        <div class="price-section">
+                            <div class="price">KES.10,000/=</div>
+                            <div class="price-note">One-time payment • Lifetime access</div>
+                        </div>
+                        <button class="request-btn" onclick="openRequestModal('Copy Trading', 10000)">
+                            Request This Service
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Live Trading -->
+                <div class="service-card">
+                    <div class="service-header">
+                        <h3>Live Trading Sessions</h3>
+                        <p class="service-desc">Learn from real market action</p>
+                    </div>
+                    <div class="service-body">
+                        <ul class="service-features">
+                            <li><i class="fas fa-check"></i> Real-time market analysis</li>
+                            <li><i class="fas fa-check"></i> Interactive Q&A sessions</li>
+                            <li><i class="fas fa-check"></i> Live trade execution</li>
+                            <li><i class="fas fa-check"></i> Strategy breakdowns</li>
+                            <li><i class="fas fa-check"></i> Recorded sessions access</li>
+                        </ul>
+                        <div class="price-section">
+                            <div class="price">KES.10,000/=</div>
+                            <div class="price-note">One-time payment • Lifetime access</div>
+                        </div>
+                        <button class="request-btn" onclick="openRequestModal('Live Trading Sessions', 10000)">
+                            Request This Service
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Trading Signals -->
+                <div class="service-card">
+                    <div class="service-header">
+                        <h3>Trading Signals</h3>
+                        <p class="service-desc">Professional trade alerts</p>
+                    </div>
+                    <div class="service-body">
+                        <ul class="service-features">
+                            <li><i class="fas fa-check"></i> Real-time trade signals</li>
+                            <li><i class="fas fa-check"></i> Multiple timeframes</li>
+                            <li><i class="fas fa-check"></i> Entry/Exit/Stop-loss levels</li>
+                            <li><i class="fas fa-check"></i> Risk management guidance</li>
+                            <li><i class="fas fa-check"></i> Telegram & Email alerts</li>
+                        </ul>
+                        <div class="price-section">
+                            <div class="price">KES.13,000/=</div>
+                            <div class="price-note">One-time payment • Lifetime access</div>
+                        </div>
+                        <button class="request-btn" onclick="openRequestModal('Trading Signals', 13000)">
+                            Request This Service
+                        </button>
+                    </div>
+                </div>
+
+                <!-- 1-on-1 Consultation -->
+                <div class="service-card">
+                    <div class="service-header">
+                        <h3>1-on-1 Consultation</h3>
+                        <p class="service-desc">Personalized trading guidance</p>
+                    </div>
+                    <div class="service-body">
+                        <ul class="service-features">
+                            <li><i class="fas fa-check"></i> Personalized strategy development</li>
+                            <li><i class="fas fa-check"></i> Portfolio review</li>
+                            <li><i class="fas fa-check"></i> Risk assessment</li>
+                            <li><i class="fas fa-check"></i> Market analysis training</li>
+                            <li><i class="fas fa-check"></i> Ongoing support</li>
+                        </ul>
+                        <div class="price-section">
+                            <div class="price">KES.15,000/=</div>
+                            <div class="price-note">Per session • 60 minutes</div>
+                        </div>
+                        <button class="request-btn" onclick="openRequestModal('1-on-1 Consultation', 15000)">
+                            Request This Service
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Capital Funding -->
+                <div class="service-card">
+                    <div class="service-header">
+                        <h3>Capital Funding</h3>
+                        <p class="service-desc">Trade with our capital</p>
+                    </div>
+                    <div class="service-body">
+                        <ul class="service-features">
+                            <li><i class="fas fa-check"></i> Prove your trading strategy</li>
+                            <li><i class="fas fa-check"></i> Access larger capital</li>
+                            <li><i class="fas fa-check"></i> No personal risk</li>
+                            <li><i class="fas fa-check"></i> Performance-based scaling</li>
+                            <li><i class="fas fa-check"></i> Professional trader status</li>
+                        </ul>
+                        <div class="price-section">
+                            <div class="price">KES.13,000</div>
+                            <div class="price-note">Evaluation fee • No hidden costs</div>
+                        </div>
+                        <button class="request-btn" onclick="openRequestModal('Capital Funding', 13000)">
+                            Request This Service
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Advanced Course -->
+                <div class="service-card">
+                    <div class="service-header">
+                        <h3>Advanced Trading Course</h3>
+                        <p class="service-desc">Master professional strategies</p>
+                    </div>
+                    <div class="service-body">
+                        <ul class="service-features">
+                            <li><i class="fas fa-check"></i> Advanced technical analysis</li>
+                            <li><i class="fas fa-check"></i> Risk management systems</li>
+                            <li><i class="fas fa-check"></i> Psychology of trading</li>
+                            <li><i class="fas fa-check"></i> Live trading examples</li>
+                            <li><i class="fas fa-check"></i> Certificate of completion</li>
+                        </ul>
+                        <div class="price-section">
+                            <div class="price">KES.20,000</div>
+                            <div class="price-note">One-time payment • Full access</div>
+                        </div>
+                        <button class="request-btn" onclick="openRequestModal('Advanced Trading Course', 20000)">
+                            Request This Service
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Request Modal -->
+    <div class="modal-overlay" id="requestModal">
+        <div class="modal-container">
+            <div class="modal-header">
+                <h3>Service Request Form</h3>
+                <button class="close-modal" onclick="closeRequestModal()">&times;</button>
+            </div>
+            <div class="modal-content">
+                <div class="selected-service" id="selectedServiceDisplay">
+                    <!-- Dynamic content -->
+                </div>
+                
+                <form id="serviceRequestForm" method="POST" action="{% url 'submit_service_request' %}">
+                    {% csrf_token %}
+                    <input type="hidden" name="service_type" id="serviceTypeInput">
+                    <input type="hidden" name="service_price" id="servicePriceInput">
+                    
+                    <div class="form-group">
+                        <label for="clientName" class="form-label">Full Name *</label>
+                        <input type="text" id="clientName" name="name" class="form-control" placeholder="Enter your full name" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="clientPhone" class="form-label">Phone Number *</label>
+                        <input type="tel" id="clientPhone" name="phone" class="form-control" placeholder="Enter your phone number" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="clientEmail" class="form-label">Email Address *</label>
+                        <input type="email" id="clientEmail" name="email" class="form-control" placeholder="Enter your email address" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="clientMessage" class="form-label">Additional Notes (Optional)</label>
+                        <textarea id="clientMessage" name="message" class="form-control" placeholder="Any specific requirements or questions..." rows="3"></textarea>
+                    </div>
+                    <button type="submit" class="submit-btn" id="submitButton">
+                        <i class="fas fa-paper-plane"></i> Submit Service Request
+                    </button>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <p class="modal-note">We'll contact you within 24 hours to confirm your service and discuss payment options</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let currentService = '';
+        let currentPrice = 0;
+
+        function openRequestModal(serviceName, price) {
+            currentService = serviceName;
+            currentPrice = price;
+            
+            // Update modal content
+            document.getElementById('selectedServiceDisplay').innerHTML = `
+                <h4>${serviceName}</h4>
+                <div class="price">KES ${price}</div>
+                <p>Service Commitment Amount</p>
+            `;
+            
+            // Set hidden form values
+            document.getElementById('serviceTypeInput').value = serviceName;
+            document.getElementById('servicePriceInput').value = price;
+            
+            // Show modal
+            document.getElementById('requestModal').style.display = 'flex';
+            document.body.style.overflow = 'hidden';
+            
+            // Focus on first input
+            setTimeout(() => {
+                document.getElementById('clientName').focus();
+            }, 300);
+        }
+
+        function closeRequestModal() {
+            document.getElementById('requestModal').style.display = 'none';
+            document.body.style.overflow = 'auto';
+            document.getElementById('serviceRequestForm').reset();
+        }
+
+        // Close modal when clicking outside
+        document.getElementById('requestModal').addEventListener('click', function(event) {
+            if (event.target === this) {
+                closeRequestModal();
+            }
+        });
+
+        // Close modal with Escape key
+        document.addEventListener('keydown', function(event) {
+            if (event.key === 'Escape') {
+                closeRequestModal();
+            }
+        });
+
+        // Form submission handling
+        document.getElementById('serviceRequestForm').addEventListener('submit', function(e) {
+            const submitBtn = document.getElementById('submitButton');
+            submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Submitting...';
+            submitBtn.disabled = true;
+            
+            // Form will be submitted to Django backend
+            // No need for additional JavaScript handling
+        });
+
+        // Auto-hide success messages after 5 seconds
+        document.addEventListener('DOMContentLoaded', function() {
+            const successMessages = document.querySelectorAll('.success-message');
+            successMessages.forEach(message => {
+                setTimeout(() => {
+                    message.style.display = 'none';
+                }, 5000);
+            });
+        });
+    </script>
+</body>
+</html>

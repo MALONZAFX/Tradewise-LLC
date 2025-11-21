@@ -1,0 +1,624 @@
+<!-- templates/admin_modals.html -->
+<!-- Add Strategy Modal -->
+<div class="modal fade" id="addStrategyModal" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Add New Trading Strategy</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <form method="POST" action="{% url 'admin_dashboard' %}" enctype="multipart/form-data">
+                {% csrf_token %}
+                <input type="hidden" name="action" value="add_strategy">
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="strategyTitle">Strategy Title</label>
+                        <input type="text" class="form-control" id="strategyTitle" name="title" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="strategyDescription">Description</label>
+                        <textarea class="form-control" id="strategyDescription" name="description" rows="4" required></textarea>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="strategyPriceUSD">Price (USD)</label>
+                                <input type="number" class="form-control" id="strategyPriceUSD" name="price_usd" step="0.01" required>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="strategyPriceKES">Price (KES)</label>
+                                <input type="number" class="form-control" id="strategyPriceKES" name="price_kes" step="0.01" required>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="strategyImage">Image</label>
+                        <input type="file" class="form-control" id="strategyImage" name="image" accept="image/*">
+                        <img id="strategyImagePreview" class="image-preview" src="#" alt="Image preview">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-gradient-primary">Save Strategy</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Add Signal Modal -->
+<div class="modal fade" id="addSignalModal" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Add New Trading Signal</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <form method="POST" action="{% url 'admin_dashboard' %}" enctype="multipart/form-data">
+                {% csrf_token %}
+                <input type="hidden" name="action" value="add_signal">
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="signalTitle">Signal Title</label>
+                        <input type="text" class="form-control" id="signalTitle" name="title" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="signalDescription">Description</label>
+                        <textarea class="form-control" id="signalDescription" name="description" rows="4" required></textarea>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="signalPriceUSD">Price (USD)</label>
+                                <input type="number" class="form-control" id="signalPriceUSD" name="price_usd" step="0.01" required>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="signalPriceKES">Price (KES)</label>
+                                <input type="number" class="form-control" id="signalPriceKES" name="price_kes" step="0.01" required>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="signalImage">Image</label>
+                        <input type="file" class="form-control" id="signalImage" name="image" accept="image/*">
+                        <img id="signalImagePreview" class="image-preview" src="#" alt="Image preview">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-gradient-primary">Save Signal</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Add Class Modal -->
+<div class="modal fade" id="addClassModal" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Add New Trading Class</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <form method="POST" action="{% url 'admin_dashboard' %}" enctype="multipart/form-data">
+                {% csrf_token %}
+                <input type="hidden" name="action" value="add_class">
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="classTitle">Class Title</label>
+                        <input type="text" class="form-control" id="classTitle" name="title" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="classDescription">Description</label>
+                        <textarea class="form-control" id="classDescription" name="description" rows="4" required></textarea>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="classPrice">Price (USD)</label>
+                                <input type="number" class="form-control" id="classPrice" name="price" step="0.01" required>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="classDuration">Duration</label>
+                                <input type="text" class="form-control" id="classDuration" name="duration" placeholder="e.g., 4 weeks, 2 months" required>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="classImage">Image</label>
+                        <input type="file" class="form-control" id="classImage" name="image" accept="image/*">
+                        <img id="classImagePreview" class="image-preview" src="#" alt="Image preview">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-gradient-primary">Save Class</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Add Software Modal -->
+<div class="modal fade" id="addSoftwareModal" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Add New Software/Tool</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <form method="POST" action="{% url 'admin_dashboard' %}" enctype="multipart/form-data">
+                {% csrf_token %}
+                <input type="hidden" name="action" value="add_software">
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="softwareName">Software Name</label>
+                        <input type="text" class="form-control" id="softwareName" name="name" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="softwareDescription">Description</label>
+                        <textarea class="form-control" id="softwareDescription" name="description" rows="3" required></textarea>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="softwareVersion">Version</label>
+                                <input type="text" class="form-control" id="softwareVersion" name="version" value="1.0" required>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="softwareType">File Type</label>
+                                <select class="form-control" id="softwareType" name="file_type" required>
+                                    <option value="software">Software</option>
+                                    <option value="ebook">E-Book</option>
+                                    <option value="indicator">Trading Indicator</option>
+                                    <option value="template">Template</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="softwareFile">Software File</label>
+                        <input type="file" class="form-control" id="softwareFile" name="file" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="softwareThumbnail">Thumbnail (Optional)</label>
+                        <input type="file" class="form-control" id="softwareThumbnail" name="thumbnail" accept="image/*">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-gradient-primary">Save Software</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Add Blog Modal -->
+<div class="modal fade" id="addBlogModal" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Add New Blog Post</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <form method="POST" action="{% url 'admin_dashboard' %}" enctype="multipart/form-data">
+                {% csrf_token %}
+                <input type="hidden" name="action" value="add_blog">
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="blogTitle">Blog Title</label>
+                        <input type="text" class="form-control" id="blogTitle" name="title" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="blogContent">Content</label>
+                        <textarea class="form-control" id="blogContent" name="content" rows="6" required></textarea>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="blogAuthor">Author</label>
+                                <input type="text" class="form-control" id="blogAuthor" name="author" value="TradeWise Team">
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="blogImage">Featured Image</label>
+                                <input type="file" class="form-control" id="blogImage" name="image" accept="image/*" required>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-gradient-primary">Publish Blog Post</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Edit User Modal -->
+<div class="modal fade" id="editUserModal" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Edit User</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <form method="POST" action="{% url 'admin_dashboard' %}">
+                {% csrf_token %}
+                <input type="hidden" name="action" value="edit_user">
+                <input type="hidden" id="editUserId" name="user_id">
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="editFirstName">First Name</label>
+                        <input type="text" class="form-control" id="editFirstName" name="first_name" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="editSecondName">Second Name</label>
+                        <input type="text" class="form-control" id="editSecondName" name="second_name" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="editEmail">Email</label>
+                        <input type="email" class="form-control" id="editEmail" name="email" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="editPhone">Phone</label>
+                        <input type="text" class="form-control" id="editPhone" name="phone">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-gradient-primary">Update User</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Add Service Modal -->
+<div class="modal fade" id="addServiceModal" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Add New Service</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <form method="POST" action="{% url 'admin_dashboard' %}" enctype="multipart/form-data">
+                {% csrf_token %}
+                <input type="hidden" name="action" value="add_service">
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="serviceTitle">Service Title</label>
+                        <input type="text" class="form-control" id="serviceTitle" name="title" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="serviceDescription">Description</label>
+                        <textarea class="form-control" id="serviceDescription" name="description" rows="4" required></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="servicePriceLabel">Price Label</label>
+                        <input type="text" class="form-control" id="servicePriceLabel" name="price_label" placeholder="e.g., $99/month, Custom pricing" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="serviceCategory">Category</label>
+                        <select class="form-control" id="serviceCategory" name="category" required>
+                            <option value="copytrading">Copy Trading</option>
+                            <option value="livetrading">Live Trading</option>
+                            <option value="signals">Signal Service</option>
+                            <option value="mentorship">Mentorship</option>
+                            <option value="analysis">Market Analysis</option>
+                            <option value="others">Other Services</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-gradient-primary">Save Service</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Add Merchandise Modal -->
+<div class="modal fade" id="addMerchandiseModal" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Add New Merchandise</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <form method="POST" action="{% url 'admin_dashboard' %}" enctype="multipart/form-data">
+                {% csrf_token %}
+                <input type="hidden" name="action" value="add_merchandise">
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="merchandiseName">Product Name</label>
+                        <input type="text" class="form-control" id="merchandiseName" name="name" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="merchandiseCategory">Category</label>
+                        <select class="form-control" id="merchandiseCategory" name="category" required>
+                            <option value="caps-hats">Caps & Hats</option>
+                            <option value="hoodies">Hoodies</option>
+                            <option value="t-shirts">T-Shirts</option>
+                            <option value="accessories">Accessories</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="merchandiseDescription">Description</label>
+                        <textarea class="form-control" id="merchandiseDescription" name="description" rows="3" required></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="merchandisePrice">Price (KES)</label>
+                        <input type="number" class="form-control" id="merchandisePrice" name="price" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="merchandiseImage">Product Image</label>
+                        <input type="file" class="form-control" id="merchandiseImage" name="image" accept="image/*" required>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-gradient-primary">Save Merchandise</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Add Review Modal -->
+<div class="modal fade" id="addReviewModal" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header bg-gradient-primary text-white">
+                <h5 class="modal-title">
+                    <i class="fas fa-plus"></i> Add New Review
+                </h5>
+                <button type="button" class="close text-white" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <form method="POST" action="{% url 'admin_dashboard' %}" enctype="multipart/form-data">
+                {% csrf_token %}
+                <input type="hidden" name="action" value="add_review">
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="reviewAuthorName">Reviewer Name *</label>
+                                <input type="text" class="form-control" id="reviewAuthorName" name="author_name" required>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="reviewUserRole">User Role *</label>
+                                <select class="form-control" id="reviewUserRole" name="user_role" required>
+                                    <option value="">Select Role</option>
+                                    <option value="Beginner Trader">Beginner Trader</option>
+                                    <option value="Intermediate Trader">Intermediate Trader</option>
+                                    <option value="Advanced Trader">Advanced Trader</option>
+                                    <option value="Professional Trader">Professional Trader</option>
+                                    <option value="Student">Student</option>
+                                    <option value="Client">Client</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="reviewEmail">Email Address</label>
+                        <input type="email" class="form-control" id="reviewEmail" name="email">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Rating *</label>
+                        <div class="star-rating-input-large">
+                            <input type="radio" id="star5" name="rating" value="5">
+                            <label class="star-label" for="star5">★</label>
+                            <input type="radio" id="star4" name="rating" value="4">
+                            <label class="star-label" for="star4">★</label>
+                            <input type="radio" id="star3" name="rating" value="3">
+                            <label class="star-label" for="star3">★</label>
+                            <input type="radio" id="star2" name="rating" value="2">
+                            <label class="star-label" for="star2">★</label>
+                            <input type="radio" id="star1" name="rating" value="1">
+                            <label class="star-label" for="star1">★</label>
+                        </div>
+                        <small class="form-text text-muted">Click on a star to select rating (1-5)</small>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="reviewContent">Review Content *</label>
+                        <textarea class="form-control" id="reviewContent" name="content" rows="4" required placeholder="Enter the review content..."></textarea>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="reviewAvatar">Reviewer Avatar (Optional)</label>
+                        <div class="custom-file">
+                            <input type="file" class="custom-file-input" id="reviewAvatar" name="image" accept="image/*">
+                            <label class="custom-file-label" for="reviewAvatar">
+                                <i class="fas fa-image"></i> Choose avatar...
+                            </label>
+                        </div>
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <div class="custom-control custom-switch">
+                                    <input type="checkbox" class="custom-control-input" id="reviewApproved" name="is_approved" checked>
+                                    <label class="custom-control-label" for="reviewApproved">Approved</label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <div class="custom-control custom-switch">
+                                    <input type="checkbox" class="custom-control-input" id="reviewFeatured" name="is_featured">
+                                    <label class="custom-control-label" for="reviewFeatured">Featured</label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">
+                        <i class="fas fa-times"></i> Cancel
+                    </button>
+                    <button type="submit" class="btn btn-gradient-primary">
+                        <i class="fas fa-save"></i> Add Review
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+
+<!-- User Details Modal -->
+<div class="modal fade" id="userDetailsModal" tabindex="-1" role="dialog" aria-labelledby="userDetailsModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header bg-primary text-white">
+                <h5 class="modal-title" id="userDetailsModalLabel">
+                    <i class="fas fa-user-circle"></i> User Details
+                </h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true" class="text-white">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="card mb-3">
+                            <div class="card-header bg-light">
+                                <h6 class="mb-0"><i class="fas fa-info-circle"></i> Basic Information</h6>
+                            </div>
+                            <div class="card-body">
+                                <table class="table table-sm table-borderless">
+                                    <tr>
+                                        <td><strong>Name:</strong></td>
+                                        <td id="userDetailsName">-</td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>Email:</strong></td>
+                                        <td id="userDetailsEmail">-</td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>Phone:</strong></td>
+                                        <td id="userDetailsPhone">-</td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>Account No:</strong></td>
+                                        <td id="userDetailsAccountNo">-</td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>Status:</strong></td>
+                                        <td id="userDetailsStatus">-</td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="card mb-3">
+                            <div class="card-header bg-light">
+                                <h6 class="mb-0"><i class="fas fa-cog"></i> Account Information</h6>
+                            </div>
+                            <div class="card-body">
+                                <table class="table table-sm table-borderless">
+                                    <tr>
+                                        <td><strong>User ID:</strong></td>
+                                        <td id="userDetailsId">-</td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>Role:</strong></td>
+                                        <td id="userDetailsRole">-</td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>Created:</strong></td>
+                                        <td id="userDetailsCreated">-</td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>Last Login:</strong></td>
+                                        <td id="userDetailsLastLogin">-</td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>Service Requests:</strong></td>
+                                        <td id="userDetailsRequests">-</td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="row">
+                    <div class="col-12">
+                        <div class="card">
+                            <div class="card-header bg-light">
+                                <h6 class="mb-0"><i class="fas fa-users"></i> Affiliate Information</h6>
+                            </div>
+                            <div class="card-body">
+                                <div id="userDetailsAffiliate" class="text-center py-2">
+                                    <span class="text-muted">Loading...</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="row mt-3">
+                    <div class="col-12">
+                        <div class="card">
+                            <div class="card-header bg-light">
+                                <h6 class="mb-0"><i class="fas fa-tools"></i> Quick Actions</h6>
+                            </div>
+                            <div class="card-body">
+                                <div id="userDetailsActions" class="text-center py-2">
+                                    <span class="text-muted">Loading actions...</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">
+                    <i class="fas fa-times"></i> Close
+                </button>
+                <button type="button" class="btn btn-primary" onclick="printUserDetails()">
+                    <i class="fas fa-print"></i> Print Details
+                </button>
+            </div>
+        </div>
+    </div>
+</div>

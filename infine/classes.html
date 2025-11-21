@@ -1,0 +1,681 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TradeWise Classes</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-blue: #3498db;
+            --dark-blue: #2c3e50;
+            --gradient-main: linear-gradient(135deg, #2c3e50 0%, #3498db 100%);
+            --gradient-reverse: linear-gradient(135deg, #3498db 0%, #2c3e50 100%);
+            --light-bg: #f8fafc;
+            --dark-text: #1e293b;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: var(--light-bg);
+            color: var(--dark-text);
+            line-height: 1.6;
+        }
+
+        /* Navigation */
+        .nav {
+            background: var(--dark-blue);
+            padding: 20px 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .nav-logo {
+            color: white;
+            font-size: 1.5rem;
+            font-weight: 700;
+            text-decoration: none;
+        }
+
+        .nav-logo span {
+            color: var(--primary-blue);
+        }
+
+        .nav-link {
+            color: white;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .nav-link:hover {
+            color: var(--primary-blue);
+        }
+
+        /* Hero Section */
+        .classes-hero {
+            background: url('images/bullish-golden-1.jpg') no-repeat center center/cover;
+            height: 50vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            color: white;
+            text-align: center;
+            padding: 0 20px;
+        }
+
+        .classes-hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.6);
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 2;
+            max-width: 800px;
+        }
+
+        .hero-content h1 {
+            font-size: 3rem;
+            margin-bottom: 20px;
+            font-weight: 800;
+        }
+
+        .hero-content p {
+            font-size: 1.2rem;
+            margin-bottom: 30px;
+            opacity: 0.9;
+        }
+
+        .cta-button {
+            display: inline-block;
+            background: var(--gradient-main);
+            color: white;
+            padding: 15px 30px;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 1.1rem;
+            transition: all 0.3s ease;
+        }
+
+        .cta-button:hover {
+            background: var(--gradient-reverse);
+            transform: translateY(-3px);
+        }
+
+        /* Classes Section */
+        .classes-section {
+            padding: 60px 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: 50px;
+        }
+
+        .section-header h2 {
+            font-size: 2.2rem;
+            margin-bottom: 15px;
+            background: var(--gradient-main);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .classes-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 30px;
+        }
+
+        .class-card {
+            background: white;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+            transition: all 0.3s ease;
+        }
+
+        .class-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 40px rgba(0,0,0,0.1);
+        }
+
+        .class-header {
+            background: var(--dark-blue);
+            color: white;
+            padding: 25px;
+            text-align: center;
+        }
+
+        .class-header h3 {
+            font-size: 1.8rem;
+            margin-bottom: 10px;
+        }
+
+        .class-header .price {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 5px;
+        }
+
+        .class-header .duration {
+            opacity: 0.9;
+            font-size: 1rem;
+        }
+
+        .class-body {
+            padding: 25px;
+        }
+
+        .class-features {
+            margin-bottom: 25px;
+        }
+
+        .feature-item {
+            display: flex;
+            align-items: flex-start;
+            margin-bottom: 15px;
+        }
+
+        .feature-icon {
+            color: var(--primary-blue);
+            margin-right: 15px;
+            margin-top: 3px;
+        }
+
+        .enroll-button {
+            display: block;
+            text-align: center;
+            background: var(--gradient-main);
+            color: white;
+            padding: 12px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            border: none;
+            cursor: pointer;
+            width: 100%;
+            font-size: 1.1rem;
+        }
+
+        .enroll-button:hover {
+            background: var(--gradient-reverse);
+            transform: translateY(-3px);
+        }
+
+        /* Payment Modal */
+        .payment-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+            backdrop-filter: blur(5px);
+        }
+
+        .modal-content {
+            background: white;
+            border-radius: 15px;
+            width: 90%;
+            max-width: 500px;
+            max-height: 90vh;
+            overflow-y: auto;
+            padding: 30px;
+            box-shadow: 0 15px 40px rgba(0,0,0,0.15);
+            position: relative;
+        }
+
+        .close-modal {
+            position: sticky;
+            top: 10px;
+            right: 10px;
+            float: right;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: #7f8c8d;
+            background: none;
+            border: none;
+            z-index: 1;
+        }
+
+        .modal-header {
+            position: sticky;
+            top: 0;
+            background: white;
+            padding-top: 10px;
+            z-index: 1;
+        }
+
+        .modal-header h3 {
+            font-size: 1.8rem;
+            color: var(--dark-blue);
+            margin-bottom: 10px;
+        }
+
+        .modal-price {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--primary-blue);
+            margin-bottom: 20px;
+        }
+
+        .payment-options {
+            margin-bottom: 30px;
+        }
+
+        .payment-option {
+            display: flex;
+            align-items: center;
+            padding: 15px;
+            border: 1px solid #eee;
+            border-radius: 10px;
+            margin-bottom: 15px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .payment-option:hover {
+            border-color: var(--primary-blue);
+            background: #f8fafc;
+        }
+
+        .payment-icon {
+            font-size: 2rem;
+            margin-right: 15px;
+            color: var(--primary-blue);
+            width: 50px;
+            text-align: center;
+        }
+
+        .payment-details {
+            display: none;
+            background: #f8fafc;
+            border-radius: 10px;
+            padding: 20px;
+            margin-top: 20px;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .payment-details h4 {
+            margin-bottom: 15px;
+            color: var(--dark-blue);
+        }
+
+        .payment-info {
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+        }
+
+        .payment-info p {
+            margin-bottom: 8px;
+            font-size: 0.9rem;
+        }
+
+        .payment-info .highlight {
+            font-weight: 700;
+            color: var(--dark-blue);
+            font-size: 1.1rem;
+        }
+
+        .maintenance-notice {
+            background: #fff3cd;
+            color: #856404;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            border-left: 4px solid #ffeeba;
+        }
+
+        .confirm-button {
+            display: block;
+            text-align: center;
+            background: var(--gradient-main);
+            color: white;
+            padding: 12px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            border: none;
+            cursor: pointer;
+            width: 100%;
+            font-size: 1.1rem;
+            margin-top: 20px;
+        }
+
+        .confirm-button:hover {
+            background: var(--gradient-reverse);
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Responsive Adjustments */
+        @media (max-width: 768px) {
+            .hero-content h1 {
+                font-size: 2.2rem;
+            }
+            
+            .nav {
+                padding: 15px 20px;
+            }
+            
+            .classes-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .modal-content {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="nav">
+        <a href="#" class="nav-logo">Trade<span>Wise</span></a>
+        <a href="index.html" class="nav-link">
+            <i class="fas fa-arrow-left"></i> Back Home
+        </a>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="classes-hero">
+        <div class="hero-content">
+            <h1>TradeWise Classes</h1>
+            <p>Master the markets with our expert-led training programs and premium resources</p>
+            <a href="#classes" class="cta-button">View Classes</a>
+        </div>
+    </section>
+
+    <!-- Classes Section -->
+    <section class="classes-section" id="classes">
+        <div class="section-header">
+            <h2>Our Trading Classes</h2>
+            <p>Choose the learning path that fits your goals and schedule</p>
+        </div>
+        
+        <div class="classes-grid">
+            <!-- Beginner Class -->
+            <div class="class-card">
+                <div class="class-header">
+                    <h3>Beginner Class</h3>
+                    <div class="price">KES 5,000</div>
+                    <div class="duration">4 Weeks Training</div>
+                </div>
+                <div class="class-body">
+                    <div class="class-features">
+                        <div class="feature-item">
+                            <i class="fas fa-check feature-icon"></i>
+                            <div>
+                                <h4>Market Fundamentals</h4>
+                                <p>Learn the basics of trading and market analysis</p>
+                            </div>
+                        </div>
+                        <div class="feature-item">
+                            <i class="fas fa-check feature-icon"></i>
+                            <div>
+                                <h4>Risk Management</h4>
+                                <p>Essential strategies to protect your capital</p>
+                            </div>
+                        </div>
+                        <div class="feature-item">
+                            <i class="fas fa-check feature-icon"></i>
+                            <div>
+                                <h4>Demo Account Setup</h4>
+                                <p>Practice trading with virtual funds</p>
+                            </div>
+                        </div>
+                        <div class="feature-item">
+                            <i class="fas fa-check feature-icon"></i>
+                            <div>
+                                <h4>Basic Strategies</h4>
+                                <p>Simple yet effective trading approaches</p>
+                            </div>
+                        </div>
+                    </div>
+                    <button class="enroll-button" onclick="showPaymentModal('Beginner Class', 5000)">Enroll Now</button>
+                </div>
+            </div>
+            
+            <!-- Intermediate Class -->
+            <div class="class-card">
+                <div class="class-header" style="background: var(--gradient-main);">
+                    <h3>Intermediate Class</h3>
+                    <div class="price">KES 10,000</div>
+                    <div class="duration">6 Weeks Training</div>
+                </div>
+                <div class="class-body">
+                    <div class="class-features">
+                        <div class="feature-item">
+                            <i class="fas fa-check feature-icon"></i>
+                            <div>
+                                <h4>Technical Analysis</h4>
+                                <p>Master chart patterns and indicators</p>
+                            </div>
+                        </div>
+                        <div class="feature-item">
+                            <i class="fas fa-check feature-icon"></i>
+                            <div>
+                                <h4>Advanced Strategies</h4>
+                                <p>More sophisticated trading techniques</p>
+                            </div>
+                        </div>
+                        <div class="feature-item">
+                            <i class="fas fa-check feature-icon"></i>
+                            <div>
+                                <h4>Live Trading Sessions</h4>
+                                <p>Watch real-time market analysis</p>
+                            </div>
+                        </div>
+                        <div class="feature-item">
+                            <i class="fas fa-check feature-icon"></i>
+                            <div>
+                                <h4>VIP Signals</h4>
+                                <p>Access to premium trade alerts</p>
+                            </div>
+                        </div>
+                    </div>
+                    <button class="enroll-button" onclick="showPaymentModal('Intermediate Class', 10000)" style="background: var(--gradient-main);">Enroll Now</button>
+                </div>
+            </div>
+            
+            <!-- Advanced Class -->
+            <div class="class-card">
+                <div class="class-header" style="background: var(--gradient-reverse);">
+                    <h3>Advanced Class</h3>
+                    <div class="price">KES 15,000</div>
+                    <div class="duration">8 Weeks Intensive</div>
+                </div>
+                <div class="class-body">
+                    <div class="class-features">
+                        <div class="feature-item">
+                            <i class="fas fa-check feature-icon"></i>
+                            <div>
+                                <h4>Professional Strategies</h4>
+                                <p>Institutional-level trading methods</p>
+                            </div>
+                        </div>
+                        <div class="feature-item">
+                            <i class="fas fa-check feature-icon"></i>
+                            <div>
+                                <h4>Algorithmic Trading</h4>
+                                <p>Introduction to automated systems</p>
+                            </div>
+                        </div>
+                        <div class="feature-item">
+                            <i class="fas fa-check feature-icon"></i>
+                            <div>
+                                <h4>1-on-1 Mentorship</h4>
+                                <p>Personalized coaching sessions</p>
+                            </div>
+                        </div>
+                        <div class="feature-item">
+                            <i class="fas fa-check feature-icon"></i>
+                            <div>
+                                <h4>Funded Account Opportunity</h4>
+                                <p>Potential to trade with our capital</p>
+                            </div>
+                        </div>
+                    </div>
+                    <button class="enroll-button" onclick="showPaymentModal('Advanced Class', 15000)" style="background: var(--gradient-reverse);">Enroll Now</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Payment Modal -->
+    <div class="payment-modal" id="paymentModal">
+        <div class="modal-content">
+            <button class="close-modal" onclick="closePaymentModal()">&times;</button>
+            <div class="modal-header">
+                <h3 id="modalClassTitle">Enroll in Class</h3>
+                <div class="modal-price" id="modalClassPrice">KES 0</div>
+            </div>
+            
+            <div class="payment-options">
+                <h4>Choose Payment Method:</h4>
+                
+                <div class="payment-option" onclick="showPaymentDetails('mpesa')">
+                    <div class="payment-icon">
+                        <i class="fas fa-mobile-alt"></i>
+                    </div>
+                    <div>
+                        <h4>M-Pesa</h4>
+                        <p>Instant payment via mobile money</p>
+                    </div>
+                </div>
+                
+                <div class="payment-option" onclick="showPaymentDetails('bank')">
+                    <div class="payment-icon">
+                        <i class="fas fa-university"></i>
+                    </div>
+                    <div>
+                        <h4>Bank Transfer</h4>
+                        <p>Currently under maintenance</p>
+                    </div>
+                </div>
+                
+                <div class="payment-option" onclick="showPaymentDetails('paypal')">
+                    <div class="payment-icon">
+                        <i class="fab fa-paypal"></i>
+                    </div>
+                    <div>
+                        <h4>PayPal</h4>
+                        <p>Currently under maintenance</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="payment-details" id="mpesaDetails">
+                <h4>M-Pesa Payment Instructions</h4>
+                <div class="payment-info">
+                    <p>1. Go to M-Pesa menu</p>
+                    <p>2. Select "Lipa na M-Pesa"</p>
+                    <p>3. Select "Pay Bill"</p>
+                    <p>4. Enter Business No: <span class="highlight">247247</span></p>
+                    <p>5. Enter Account No: <span class="highlight">1520184242426</span></p>
+                    <p>6. Enter Amount: <span class="highlight" id="mpesaAmount">KES 0</span></p>
+                    <p>7. Enter your M-Pesa PIN and send</p>
+                </div>
+                <p>After payment, WhatsApp confirmation to: <span class="highlight">0702700745</span></p>
+                <div class="maintenance-notice">
+                    <p><strong>Important:</strong> Please send your payment confirmation to our WhatsApp number for immediate onboarding. Include your full name and the class you're enrolling in.</p>
+                </div>
+            </div>
+            
+            <div class="payment-details" id="bankDetails">
+                <div class="maintenance-notice">
+                    <p><strong>Notice:</strong> Bank transfer payments are currently under maintenance. Please use M-Pesa for instant enrollment.</p>
+                </div>
+            </div>
+            
+            <div class="payment-details" id="paypalDetails">
+                <div class="maintenance-notice">
+                    <p><strong>Notice:</strong> PayPal payments are currently under maintenance. Please use M-Pesa for instant enrollment.</p>
+                </div>
+            </div>
+            
+            <a href="contact.html" class="confirm-button">
+                I've Completed Payment - Get Onboarded
+            </a>
+            <p style="text-align: center; margin-top: 15px; color: #7f8c8d; font-size: 0.9rem;">
+                Don't forget to WhatsApp your payment confirmation to 0702700745
+            </p>
+        </div>
+    </div>
+
+    <script>
+        // Payment modal functions
+        function showPaymentModal(className, price) {
+            document.getElementById('modalClassTitle').textContent = 'Enroll in ' + className;
+            document.getElementById('modalClassPrice').textContent = 'KES ' + price.toLocaleString();
+            document.getElementById('mpesaAmount').textContent = 'KES ' + price.toLocaleString();
+            
+            // Hide all payment details initially
+            document.querySelectorAll('.payment-details').forEach(el => {
+                el.style.display = 'none';
+            });
+            
+            // Show M-Pesa details by default
+            document.getElementById('mpesaDetails').style.display = 'block';
+            
+            document.getElementById('paymentModal').style.display = 'flex';
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closePaymentModal() {
+            document.getElementById('paymentModal').style.display = 'none';
+            document.body.style.overflow = 'auto';
+        }
+
+        function showPaymentDetails(method) {
+            // Hide all payment details
+            document.querySelectorAll('.payment-details').forEach(el => {
+                el.style.display = 'none';
+            });
+            
+            // Show selected payment method
+            document.getElementById(method + 'Details').style.display = 'block';
+        }
+
+        // Close modal when clicking outside
+        window.onclick = function(event) {
+            const modal = document.getElementById('paymentModal');
+            if (event.target == modal) {
+                closePaymentModal();
+            }
+        }
+    </script>
+</body>
+</html>

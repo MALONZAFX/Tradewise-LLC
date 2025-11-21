@@ -1,0 +1,1553 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>TradeWise Admin Dashboard</title>
+    
+    <!-- Favicon -->
+    <link rel="shortcut icon" href="https://static8.depositphotos.com/1013501/826/i/450/depositphotos_8267057-stock-photo-electric-lightning-letter-or-font.jpg" type="image/x-icon">
+    
+    <!-- Google Font: Source Sans Pro -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    
+    <!-- Theme style -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/admin-lte@3.2/dist/css/adminlte.min.css">
+    
+    <!-- Custom CSS -->
+    <style>
+        :root {
+            --primary: #4361ee;
+            --primary-light: #4895ef;
+            --primary-dark: #3a0ca3;
+            --secondary: #7209b7;
+            --success: #4cc9f0;
+            --info: #17a2b8;
+            --warning: #f8961e;
+            --danger: #f72585;
+            --light: #f8f9fa;
+            --dark: #1a1a2e;
+            --gradient: linear-gradient(135deg, var(--primary), var(--secondary));
+            --gradient-success: linear-gradient(135deg, var(--success), #2a9d8f);
+            --gradient-warning: linear-gradient(135deg, var(--warning), #f3722c);
+            --gradient-danger: linear-gradient(135deg, var(--danger), #ef233c);
+            --shadow: 0 10px 30px rgba(67, 97, 238, 0.2);
+            --transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+        }
+        
+        /* Loader Styles */
+        .preloader {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: var(--dark);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            transition: opacity 0.5s ease;
+        }
+        
+        .preloader img {
+            width: 80px;
+            height: 80px;
+            margin-bottom: 20px;
+            animation: pulse 2s infinite;
+        }
+        
+        .loader-text {
+            color: white;
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-top: 20px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+        
+        .loader-progress {
+            width: 200px;
+            height: 4px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 2px;
+            margin-top: 20px;
+            overflow: hidden;
+        }
+        
+        .loader-progress-bar {
+            height: 100%;
+            width: 0%;
+            background: var(--gradient);
+            transition: width 0.3s ease;
+        }
+        
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        /* Main Content Animation */
+        .content-wrapper {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.5s ease, transform 0.5s ease;
+        }
+        
+        .page-loaded .content-wrapper {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        /* Theme Styles */
+        .bg-gradient-primary {
+            background: var(--gradient) !important;
+        }
+        
+        .bg-gradient-success {
+            background: var(--gradient-success) !important;
+        }
+        
+        .bg-gradient-warning {
+            background: var(--gradient-warning) !important;
+        }
+        
+        .bg-gradient-danger {
+            background: var(--gradient-danger) !important;
+        }
+        
+        .btn-gradient-primary {
+            background: var(--gradient);
+            color: white;
+            border: none;
+            transition: var(--transition);
+        }
+        
+        .btn-gradient-primary:hover {
+            background: linear-gradient(135deg, var(--primary-dark), var(--secondary));
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(67, 97, 238, 0.5);
+        }
+        
+        .sidebar-dark-primary .nav-sidebar > .nav-item > .nav-link.active, 
+        .sidebar-light-primary .nav-sidebar > .nav-item > .nav-link.active {
+            background: var(--gradient);
+        }
+        
+        .brand-link {
+            border-bottom: none !important;
+        }
+        
+        .brand-link img {
+            height: 40px;
+            width: auto;
+            transition: var(--transition);
+        }
+        
+        .brand-link:hover img {
+            transform: rotate(15deg);
+        }
+        
+        .main-header {
+            border-bottom: none !important;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        .content-wrapper {
+            background-color: #f8fafc;
+        }
+        
+        .card {
+            border-radius: 12px;
+            box-shadow: var(--shadow);
+            border: none;
+            transition: var(--transition);
+            overflow: hidden;
+        }
+        
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 35px rgba(67, 97, 238, 0.25);
+        }
+        
+        .card-header {
+            border-radius: 12px 12px 0 0 !important;
+            border-bottom: none;
+            background-color: white;
+        }
+        
+        .info-box {
+            border-radius: 12px;
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+        }
+        
+        .info-box:hover {
+            transform: translateY(-5px);
+        }
+        
+        .info-box-icon {
+            border-radius: 12px 0 0 12px;
+        }
+        
+        .table th {
+            border-top: none;
+        }
+        
+        .user-panel img {
+            height: 2.1rem;
+            width: 2.1rem;
+            border: 2px solid var(--primary);
+            transition: var(--transition);
+        }
+        
+        .user-panel:hover img {
+            transform: scale(1.1);
+        }
+        
+        .nav-pills .nav-link.active {
+            background: var(--gradient);
+        }
+        
+        /* TradingView Widget Container */
+        .tradingview-widget-container {
+            height: 100%;
+            border-radius: 12px;
+            overflow: hidden;
+        }
+        
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 10px;
+        }
+        
+        ::-webkit-scrollbar-thumb {
+            background: var(--gradient);
+            border-radius: 10px;
+        }
+        
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--primary-dark);
+        }
+        
+        /* Custom Tabs */
+        .custom-tab .nav-link {
+            color: var(--dark);
+            font-weight: 500;
+            border: none;
+            padding: 0.8rem 1.5rem;
+            transition: var(--transition);
+        }
+        
+        .custom-tab .nav-link:hover {
+            color: var(--primary);
+        }
+        
+        .custom-tab .nav-link.active {
+            color: var(--primary);
+            background: transparent;
+            border-bottom: 3px solid var(--primary);
+        }
+        
+        /* User Profile Card */
+        .profile-card {
+            position: relative;
+            overflow: hidden;
+            border-radius: 12px;
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+        }
+        
+        .profile-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 35px rgba(67, 97, 238, 0.3);
+        }
+        
+        .profile-card .cover {
+            height: 120px;
+            background: var(--gradient);
+            position: relative;
+        }
+        
+        .profile-card .profile-img {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            border: 5px solid white;
+            position: absolute;
+            bottom: -50px;
+            left: 50%;
+            transform: translateX(-50%);
+            object-fit: cover;
+            transition: var(--transition);
+        }
+        
+        .profile-card:hover .profile-img {
+            transform: translateX(-50%) scale(1.1);
+        }
+        
+        /* Status Indicators */
+        .status-indicator {
+            display: inline-block;
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            margin-right: 5px;
+        }
+        
+        .status-active {
+            background-color: var(--success);
+        }
+        
+        .status-inactive {
+            background-color: var(--danger);
+        }
+        
+        .status-pending {
+            background-color: var(--warning);
+        }
+        
+        /* Custom Badges */
+        .badge-gradient-primary {
+            background: var(--gradient);
+            color: white;
+        }
+        
+        /* Chart Container */
+        .chart-container {
+            position: relative;
+            height: 300px;
+        }
+        
+        /* Premium Modal Popup */
+        .premium-popup {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.8);
+            z-index: 1050;
+            justify-content: center;
+            align-items: center;
+            backdrop-filter: blur(5px);
+        }
+        
+        .premium-popup-content {
+            background: white;
+            border-radius: 16px;
+            width: 90%;
+            max-width: 500px;
+            padding: 30px;
+            position: relative;
+            animation: modalFadeIn 0.3s ease-out;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.3);
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+        
+        @keyframes modalFadeIn {
+            from { opacity: 0; transform: translateY(-20px) scale(0.95); }
+            to { opacity: 1; transform: translateY(0) scale(1); }
+        }
+        
+        .premium-popup-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        
+        .premium-popup-header h2 {
+            margin: 0;
+            font-size: 1.8rem;
+            background: var(--gradient);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+        
+        .close-popup {
+            font-size: 1.8rem;
+            cursor: pointer;
+            color: #666;
+            transition: var(--transition);
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+        }
+        
+        .close-popup:hover {
+            background: #f5f7fa;
+            color: var(--danger);
+            transform: rotate(90deg);
+        }
+        
+        .premium-icon {
+            text-align: center;
+            margin: 20px 0;
+        }
+        
+        .premium-icon i {
+            font-size: 3.5rem;
+            color: var(--primary);
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+        
+        .premium-popup-body {
+            text-align: center;
+        }
+        
+        .premium-popup-body p {
+            margin-bottom: 20px;
+            font-size: 1.1rem;
+            line-height: 1.6;
+        }
+        
+        .premium-features {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 12px;
+            margin-bottom: 25px;
+            text-align: left;
+        }
+        
+        .premium-feature {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px 15px;
+            border-radius: 8px;
+            background: rgba(67, 97, 238, 0.1);
+            transition: var(--transition);
+        }
+        
+        .premium-feature:hover {
+            background: rgba(67, 97, 238, 0.2);
+            transform: translateX(5px);
+        }
+        
+        .premium-feature i {
+            color: var(--primary);
+            font-size: 1.1rem;
+        }
+        
+        .premium-btn {
+            background: var(--gradient);
+            color: white;
+            padding: 12px 30px;
+            border-radius: 50px;
+            font-weight: 600;
+            text-decoration: none;
+            display: inline-block;
+            margin-top: 10px;
+            transition: var(--transition);
+            box-shadow: 0 5px 20px rgba(67, 97, 238, 0.4);
+            border: none;
+            cursor: pointer;
+            font-size: 1rem;
+        }
+        
+        .premium-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 30px rgba(67, 97, 238, 0.5);
+            color: white;
+        }
+        
+        .premium-note {
+            font-size: 0.9rem;
+            color: #666;
+            margin-top: 15px;
+        }
+        
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .premium-popup-content {
+                padding: 20px;
+            }
+            
+            .premium-popup-header h2 {
+                font-size: 1.5rem;
+            }
+            
+            .premium-icon i {
+                font-size: 3rem;
+            }
+        }
+        
+        @media (max-width: 576px) {
+            .premium-popup-content {
+                width: 95%;
+                padding: 15px;
+            }
+            
+            .premium-features {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+
+<body class="hold-transition sidebar-mini layout-fixed">
+    <!-- Loader -->
+    <div class="preloader flex-column justify-content-center align-items-center" id="loader">
+        <img class="animation__shake" src="images/TRADE-WISE-FINAL-TRANSPARENT.png" alt="TradeWiseLogo" height="80" width="80">
+        <div class="loader-text">Loading Dashboard</div>
+        <div class="loader-progress">
+            <div class="loader-progress-bar" id="progressBar"></div>
+        </div>
+    </div>
+    
+    <div class="wrapper">
+        <!-- Navbar -->
+        <nav class="main-header navbar navbar-expand navbar-white navbar-light">
+            <!-- Left navbar links -->
+            <ul class="navbar-nav">
+                <li class="nav-item">
+                    <a class="nav-link" data-widget="pushmenu" href="#" role="button"><i class="fas fa-bars"></i></a>
+                </li>
+                <li class="nav-item d-none d-sm-inline-block">
+                    <a href="#" class="nav-link" onclick="openPremiumModal(); return false;">Home</a>
+                </li>
+                <li class="nav-item d-none d-sm-inline-block">
+                    <a href="#" class="nav-link" onclick="openPremiumModal(); return false;">Contact</a>
+                </li>
+            </ul>
+
+            <!-- Right navbar links -->
+            <ul class="navbar-nav ml-auto">
+                <!-- Notifications Dropdown Menu -->
+                <li class="nav-item dropdown">
+                    <a class="nav-link" data-toggle="dropdown" href="#" onclick="openPremiumModal(); return false;">
+                        <i class="far fa-bell"></i>
+                        <span class="badge badge-warning navbar-badge">15</span>
+                    </a>
+                    <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right">
+                        <span class="dropdown-item dropdown-header">15 Notifications</span>
+                        <div class="dropdown-divider"></div>
+                        <a href="#" class="dropdown-item" onclick="openPremiumModal(); return false;">
+                            <i class="fas fa-envelope mr-2"></i> 4 new messages
+                            <span class="float-right text-muted text-sm">3 mins</span>
+                        </a>
+                        <div class="dropdown-divider"></div>
+                        <a href="#" class="dropdown-item" onclick="openPremiumModal(); return false;">
+                            <i class="fas fa-users mr-2"></i> 8 new users registered
+                            <span class="float-right text-muted text-sm">12 hours</span>
+                        </a>
+                        <div class="dropdown-divider"></div>
+                        <a href="#" class="dropdown-item" onclick="openPremiumModal(); return false;">
+                            <i class="fas fa-file mr-2"></i> 3 new reports
+                            <span class="float-right text-muted text-sm">2 days</span>
+                        </a>
+                        <div class="dropdown-divider"></div>
+                        <a href="#" class="dropdown-item dropdown-footer" onclick="openPremiumModal(); return false;">See All Notifications</a>
+                    </div>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" data-widget="fullscreen" href="#" role="button">
+                        <i class="fas fa-expand-arrows-alt"></i>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" data-widget="control-sidebar" data-slide="true" href="#" role="button">
+                        <i class="fas fa-th-large"></i>
+                    </a>
+                </li>
+            </ul>
+        </nav>
+        <!-- /.navbar -->
+
+        <!-- Main Sidebar Container -->
+        <aside class="main-sidebar sidebar-dark-primary elevation-4">
+            <!-- Brand Logo -->
+            <a href="#" onclick="openPremiumModal(); return false;" class="brand-link">
+                <img src="images/TRADE-WISE-FINAL-TRANSPARENT.png" alt="TradeWise Logo" class="brand-image img-circle elevation-3" style="opacity: .8">
+                <span class="brand-text font-weight-light">TradeWise Admin</span>
+            </a>
+
+            <!-- Sidebar -->
+            <div class="sidebar">
+                <!-- Sidebar user panel (optional) -->
+                <div class="user-panel mt-3 pb-3 mb-3 d-flex">
+                    <div class="image">
+                        <img src="images/WhatsApp Image 2025-05-10 at 12.31.01.jpeg" class="img-circle elevation-2" alt="User Image">
+                    </div>
+                    <div class="info">
+                        <a href="#" class="d-block" onclick="openPremiumModal(); return false;">Spallis</a>
+                        <small class="text-success">Super Admin</small>
+                    </div>
+                </div>
+
+                <!-- SidebarSearch Form -->
+                <div class="form-inline">
+                    <div class="input-group" data-widget="sidebar-search">
+                        <input class="form-control form-control-sidebar" type="search" placeholder="Search" aria-label="Search">
+                        <div class="input-group-append">
+                            <button class="btn btn-sidebar">
+                                <i class="fas fa-search fa-fw"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Sidebar Menu -->
+                <nav class="mt-2">
+                    <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
+                        <!-- Add icons to the links using the .nav-icon class with font-awesome or any other icon font library -->
+                        <li class="nav-item">
+                            <a href="#" class="nav-link active" onclick="openPremiumModal(); return false;">
+                                <i class="nav-icon fas fa-tachometer-alt"></i>
+                                <p>Dashboard</p>
+                            </a>
+                        </li>
+                        
+                        <li class="nav-header">USER MANAGEMENT</li>
+                        <li class="nav-item">
+                            <a href="#" class="nav-link" onclick="openPremiumModal(); return false;">
+                                <i class="nav-icon fas fa-users"></i>
+                                <p>Users</p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="#" class="nav-link" onclick="openPremiumModal(); return false;">
+                                <i class="nav-icon fas fa-user-tie"></i>
+                                <p>Accounts</p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="#" class="nav-link" onclick="openPremiumModal(); return false;">
+                                <i class="nav-icon fas fa-user-shield"></i>
+                                <p>Roles & Permissions</p>
+                            </a>
+                        </li>
+                        
+                        <li class="nav-header">TRADING</li>
+                        <li class="nav-item">
+                            <a href="#" class="nav-link" onclick="openPremiumModal(); return false;">
+                                <i class="nav-icon fas fa-bell"></i>
+                                <p>Trading Signals</p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="#" class="nav-link" onclick="openPremiumModal(); return false;">
+                                <i class="nav-icon fas fa-chart-line"></i>
+                                <p>Market Data</p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="#" class="nav-link" onclick="openPremiumModal(); return false;">
+                                <i class="nav-icon fas fa-exchange-alt"></i>
+                                <p>Trade History</p>
+                            </a>
+                        </li>
+                        
+                        <li class="nav-header">CONTENT</li>
+                        <li class="nav-item">
+                            <a href="#" class="nav-link" onclick="openPremiumModal(); return false;">
+                                <i class="nav-icon fas fa-file"></i>
+                                <p>Pages</p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="#" class="nav-link" onclick="openPremiumModal(); return false;">
+                                <i class="nav-icon fas fa-blog"></i>
+                                <p>Blog</p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="#" class="nav-link" onclick="openPremiumModal(); return false;">
+                                <i class="nav-icon fas fa-images"></i>
+                                <p>Media Library</p>
+                            </a>
+                        </li>
+                        
+                        <li class="nav-header">SYSTEM</li>
+                        <li class="nav-item">
+                            <a href="#" class="nav-link" onclick="openPremiumModal(); return false;">
+                                <i class="nav-icon fas fa-cog"></i>
+                                <p>Settings</p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="#" class="nav-link" onclick="openPremiumModal(); return false;">
+                                <i class="nav-icon fas fa-clipboard-list"></i>
+                                <p>System Logs</p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="#" class="nav-link" onclick="openPremiumModal(); return false;">
+                                <i class="nav-icon fas fa-database"></i>
+                                <p>Backups</p>
+                            </a>
+                        </li>
+                        
+                        <li class="nav-header">ACTIONS</li>
+                        <li class="nav-item">
+                            <a href="#" class="nav-link" onclick="openPremiumModal(); return false;">
+                                <i class="nav-icon fas fa-sign-out-alt"></i>
+                                <p>Logout</p>
+                            </a>
+                        </li>
+                    </ul>
+                </nav>
+                <!-- /.sidebar-menu -->
+            </div>
+            <!-- /.sidebar -->
+        </aside>
+
+        <!-- Content Wrapper. Contains page content -->
+        <div class="content-wrapper">
+            <!-- Content Header (Page header) -->
+            <div class="content-header">
+                <div class="container-fluid">
+                    <div class="row mb-2">
+                        <div class="col-sm-6">
+                            <h1 class="m-0">Dashboard</h1>
+                        </div><!-- /.col -->
+                        <div class="col-sm-6">
+                            <ol class="breadcrumb float-sm-right">
+                                <li class="breadcrumb-item"><a href="#" onclick="openPremiumModal(); return false;">Home</a></li>
+                                <li class="breadcrumb-item active">Dashboard</li>
+                            </ol>
+                        </div><!-- /.col -->
+                    </div><!-- /.row -->
+                </div><!-- /.container-fluid -->
+            </div>
+            <!-- /.content-header -->
+
+            <!-- Main content -->
+            <section class="content">
+                <div class="container-fluid">
+                    <!-- Small boxes (Stat box) -->
+                    <div class="row">
+                        <div class="col-lg-3 col-6">
+                            <!-- small box -->
+                            <div class="small-box bg-gradient-primary">
+                                <div class="inner">
+                                    <h3>1,254</h3>
+                                    <p>Total Users</p>
+                                </div>
+                                <div class="icon">
+                                    <i class="fas fa-users"></i>
+                                </div>
+                                <a href="#" class="small-box-footer" onclick="openPremiumModal(); return false;">More info <i class="fas fa-arrow-circle-right"></i></a>
+                            </div>
+                        </div>
+                        <!-- ./col -->
+                        <div class="col-lg-3 col-6">
+                            <!-- small box -->
+                            <div class="small-box bg-gradient-success">
+                                <div class="inner">
+                                    <h3>854</h3>
+                                    <p>Active Accounts</p>
+                                </div>
+                                <div class="icon">
+                                    <i class="fas fa-user-check"></i>
+                                </div>
+                                <a href="#" class="small-box-footer" onclick="openPremiumModal(); return false;">More info <i class="fas fa-arrow-circle-right"></i></a>
+                            </div>
+                        </div>
+                        <!-- ./col -->
+                        <div class="col-lg-3 col-6">
+                            <!-- small box -->
+                            <div class="small-box bg-gradient-warning">
+                                <div class="inner">
+                                    <h3>24</h3>
+                                    <p>Pending Requests</p>
+                                </div>
+                                <div class="icon">
+                                    <i class="fas fa-clock"></i>
+                                </div>
+                                <a href="#" class="small-box-footer" onclick="openPremiumModal(); return false;">More info <i class="fas fa-arrow-circle-right"></i></a>
+                            </div>
+                        </div>
+                        <!-- ./col -->
+                        <div class="col-lg-3 col-6">
+                            <!-- small box -->
+                            <div class="small-box bg-gradient-danger">
+                                <div class="inner">
+                                    <h3>KES 12.5M</h3>
+                                    <p>Total Deposits</p>
+                                </div>
+                                <div class="icon">
+                                    <i class="fas fa-coins"></i>
+                                </div>
+                                <a href="#" class="small-box-footer" onclick="openPremiumModal(); return false;">More info <i class="fas fa-arrow-circle-right"></i></a>
+                            </div>
+                        </div>
+                        <!-- ./col -->
+                    </div>
+                    <!-- /.row -->
+
+                    <!-- Main row -->
+                    <div class="row">
+                        <!-- Left col -->
+                        <section class="col-lg-7 connectedSortable">
+                            <!-- TradingView Widget -->
+                            <div class="card">
+                                <div class="card-header">
+                                    <h3 class="card-title">Live Market Data</h3>
+                                    <div class="card-tools">
+                                        <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                                            <i class="fas fa-minus"></i>
+                                        </button>
+                                        <button type="button" class="btn btn-tool" data-card-widget="remove">
+                                            <i class="fas fa-times"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                                <div class="card-body" style="padding: 0;">
+                                    <!-- TradingView Widget BEGIN -->
+                                    <div class="tradingview-widget-container">
+                                        <div class="tradingview-widget-container__widget"></div>
+                                        <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-market-overview.js" async>
+                                        {
+                                            "colorTheme": "light",
+                                            "dateRange": "12M",
+                                            "showChart": true,
+                                            "locale": "en",
+                                            "largeChartUrl": "",
+                                            "isTransparent": false,
+                                            "showSymbolLogo": true,
+                                            "showFloatingTooltip": false,
+                                            "width": "100%",
+                                            "height": "400",
+                                            "plotLineColorGrowing": "rgba(41, 98, 255, 1)",
+                                            "plotLineColorFalling": "rgba(41, 98, 255, 1)",
+                                            "gridLineColor": "rgba(240, 243, 250, 0)",
+                                            "scaleFontColor": "rgba(120, 123, 134, 1)",
+                                            "belowLineFillColorGrowing": "rgba(41, 98, 255, 0.12)",
+                                            "belowLineFillColorFalling": "rgba(41, 98, 255, 0.12)",
+                                            "belowLineFillColorGrowingBottom": "rgba(41, 98, 255, 0)",
+                                            "belowLineFillColorFallingBottom": "rgba(41, 98, 255, 0)",
+                                            "symbolActiveColor": "rgba(41, 98, 255, 0.12)",
+                                            "tabs": [
+                                                {
+                                                    "title": "Indices",
+                                                    "symbols": [
+                                                        {
+                                                            "s": "FOREXCOM:SPXUSD",
+                                                            "d": "S&P 500"
+                                                        },
+                                                        {
+                                                            "s": "FOREXCOM:NSXUSD",
+                                                            "d": "Nasdaq 100"
+                                                        },
+                                                        {
+                                                            "s": "FOREXCOM:DJI",
+                                                            "d": "Dow 30"
+                                                        },
+                                                        {
+                                                            "s": "INDEX:NKY",
+                                                            "d": "Nikkei 225"
+                                                        },
+                                                        {
+                                                            "s": "INDEX:DEU30",
+                                                            "d": "DAX Index"
+                                                        },
+                                                        {
+                                                            "s": "FOREXCOM:UKXGBP",
+                                                            "d": "FTSE 100"
+                                                        }
+                                                    ],
+                                                    "originalTitle": "Indices"
+                                                },
+                                                {
+                                                    "title": "Forex",
+                                                    "symbols": [
+                                                        {
+                                                            "s": "FX:EURUSD",
+                                                            "d": "EUR/USD"
+                                                        },
+                                                        {
+                                                            "s": "FX:GBPUSD",
+                                                            "d": "GBP/USD"
+                                                        },
+                                                        {
+                                                            "s": "FX:USDJPY",
+                                                            "d": "USD/JPY"
+                                                        },
+                                                        {
+                                                            "s": "FX:USDCHF",
+                                                            "d": "USD/CHF"
+                                                        },
+                                                        {
+                                                            "s": "FX:AUDUSD",
+                                                            "d": "AUD/USD"
+                                                        },
+                                                        {
+                                                            "s": "FX:USDCAD",
+                                                            "d": "USD/CAD"
+                                                        }
+                                                    ],
+                                                    "originalTitle": "Forex"
+                                                },
+                                                {
+                                                    "title": "Cryptocurrencies",
+                                                    "symbols": [
+                                                        {
+                                                            "s": "BITSTAMP:BTCUSD",
+                                                            "d": "BTC/USD"
+                                                        },
+                                                        {
+                                                            "s": "BITSTAMP:ETHUSD",
+                                                            "d": "ETH/USD"
+                                                        },
+                                                        {
+                                                            "s": "BINANCE:SOLUSDT",
+                                                            "d": "SOL/USD"
+                                                        },
+                                                        {
+                                                            "s": "BINANCE:ADAUSDT",
+                                                            "d": "ADA/USD"
+                                                        },
+                                                        {
+                                                            "s": "BINANCE:DOGEUSDT",
+                                                            "d": "DOGE/USD"
+                                                        },
+                                                        {
+                                                            "s": "BINANCE:DOTUSDT",
+                                                            "d": "DOT/USD"
+                                                        }
+                                                    ],
+                                                    "originalTitle": "Cryptocurrencies"
+                                                },
+                                                {
+                                                    "title": "Commodities",
+                                                    "symbols": [
+                                                        {
+                                                            "s": "OANDA:XAUUSD",
+                                                            "d": "Gold"
+                                                        },
+                                                        {
+                                                            "s": "OANDA:XAGUSD",
+                                                            "d": "Silver"
+                                                        },
+                                                        {
+                                                            "s": "OANDA:XPDUSD",
+                                                            "d": "Palladium"
+                                                        },
+                                                        {
+                                                            "s": "OANDA:XPTUSD",
+                                                            "d": "Platinum"
+                                                        },
+                                                        {
+                                                            "s": "NYMEX:CL1!",
+                                                            "d": "Crude Oil"
+                                                        },
+                                                        {
+                                                            "s": "NYMEX:NG1!",
+                                                            "d": "Natural Gas"
+                                                        }
+                                                    ],
+                                                    "originalTitle": "Commodities"
+                                                }
+                                            ]
+                                        }
+                                        </script>
+                                    </div>
+                                    <!-- TradingView Widget END -->
+                                </div>
+                            </div>
+                            
+                            <!-- Recent Users -->
+                            <div class="card">
+                                <div class="card-header">
+                                    <h3 class="card-title">Recent Users</h3>
+                                    <div class="card-tools">
+                                        <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                                            <i class="fas fa-minus"></i>
+                                        </button>
+                                        <button type="button" class="btn btn-tool" data-card-widget="remove">
+                                            <i class="fas fa-times"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                                <!-- /.card-header -->
+                                <div class="card-body p-0">
+                                    <div class="table-responsive">
+                                        <table class="table m-0">
+                                            <thead>
+                                                <tr>
+                                                    <th>T-Wise No</th>
+                                                    <th>Name</th>
+                                                    <th>Status</th>
+                                                    <th>Registered</th>
+                                                    <th>Action</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr>
+                                                    <td><a href="#" onclick="openPremiumModal(); return false;">TW001254</a></td>
+                                                    <td>Spallis FX</td>
+                                                    <td><span class="badge badge-success">Active</span></td>
+                                                    <td>Today, 10:45 AM</td>
+                                                    <td>
+                                                        <div class="btn-group">
+                                                            <button type="button" class="btn btn-default btn-sm" onclick="openPremiumModal(); return false;"><i class="fas fa-eye"></i></button>
+                                                            <button type="button" class="btn btn-default btn-sm" onclick="openPremiumModal(); return false;"><i class="fas fa-edit"></i></button>
+                                                            <button type="button" class="btn btn-default btn-sm" onclick="openPremiumModal(); return false;"><i class="fas fa-lock"></i></button>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td><a href="#" onclick="openPremiumModal(); return false;">TW001253</a></td>
+                                                    <td>Jane Smith</td>
+                                                    <td><span class="badge badge-warning">Pending</span></td>
+                                                    <td>Today, 09:32 AM</td>
+                                                    <td>
+                                                        <div class="btn-group">
+                                                            <button type="button" class="btn btn-default btn-sm" onclick="openPremiumModal(); return false;"><i class="fas fa-eye"></i></button>
+                                                            <button type="button" class="btn btn-default btn-sm" onclick="openPremiumModal(); return false;"><i class="fas fa-edit"></i></button>
+                                                            <button type="button" class="btn btn-default btn-sm" onclick="openPremiumModal(); return false;"><i class="fas fa-check"></i></button>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td><a href="#" onclick="openPremiumModal(); return false;">TW001252</a></td>
+                                                    <td>Robert Maluki</td>
+                                                    <td><span class="badge badge-success">Active</span></td>
+                                                    <td>Yesterday, 05:12 PM</td>
+                                                    <td>
+                                                        <div class="btn-group">
+                                                            <button type="button" class="btn btn-default btn-sm" onclick="openPremiumModal(); return false;"><i class="fas fa-eye"></i></button>
+                                                            <button type="button" class="btn btn-default btn-sm" onclick="openPremiumModal(); return false;"><i class="fas fa-edit"></i></button>
+                                                            <button type="button" class="btn btn-default btn-sm" onclick="openPremiumModal(); return false;"><i class="fas fa-lock"></i></button>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td><a href="#" onclick="openPremiumModal(); return false;">TW001251</a></td>
+                                                    <td>Sarah Kinyanjui</td>
+                                                    <td><span class="badge badge-danger">Suspended</span></td>
+                                                    <td>Yesterday, 03:45 PM</td>
+                                                    <td>
+                                                        <div class="btn-group">
+                                                            <button type="button" class="btn btn-default btn-sm" onclick="openPremiumModal(); return false;"><i class="fas fa-eye"></i></button>
+                                                            <button type="button" class="btn btn-default btn-sm" onclick="openPremiumModal(); return false;"><i class="fas fa-edit"></i></button>
+                                                            <button type="button" class="btn btn-default btn-sm" onclick="openPremiumModal(); return false;"><i class="fas fa-unlock"></i></button>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td><a href="#" onclick="openPremiumModal(); return false;">TW001250</a></td>
+                                                    <td>Michael Brown</td>
+                                                    <td><span class="badge badge-success">Active</span></td>
+                                                    <td>Yesterday, 11:23 AM</td>
+                                                    <td>
+                                                        <div class="btn-group">
+                                                            <button type="button" class="btn btn-default btn-sm" onclick="openPremiumModal(); return false;"><i class="fas fa-eye"></i></button>
+                                                            <button type="button" class="btn btn-default btn-sm" onclick="openPremiumModal(); return false;"><i class="fas fa-edit"></i></button>
+                                                            <button type="button" class="btn btn-default btn-sm" onclick="openPremiumModal(); return false;"><i class="fas fa-lock"></i></button>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                    <!-- /.table-responsive -->
+                                </div>
+                                <!-- /.card-body -->
+                                <div class="card-footer clearfix">
+                                    <a href="#" class="btn btn-sm btn-info float-left" onclick="openPremiumModal(); return false;">View All Users</a>
+                                    <a href="#" class="btn btn-sm btn-gradient-primary float-right" onclick="openPremiumModal(); return false;">Create New User</a>
+                                </div>
+                                <!-- /.card-footer -->
+                            </div>
+                            <!-- /.card -->
+                        </section>
+                        <!-- /.Left col -->
+                        
+                        <!-- Right col -->
+                        <section class="col-lg-5 connectedSortable">
+                            <!-- Account Summary -->
+                            <div class="card">
+                                <div class="card-header">
+                                    <h3 class="card-title">Account Summary</h3>
+                                    <div class="card-tools">
+                                        <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                                            <i class="fas fa-minus"></i>
+                                        </button>
+                                        <button type="button" class="btn btn-tool" data-card-widget="remove">
+                                            <i class="fas fa-times"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                                <div class="card-body">
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <div class="info-box mb-3 bg-gradient-info">
+                                                <span class="info-box-icon"><i class="fas fa-user-plus"></i></span>
+                                                <div class="info-box-content">
+                                                    <span class="info-box-text">New Accounts</span>
+                                                    <span class="info-box-number">24</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="info-box mb-3 bg-gradient-success">
+                                                <span class="info-box-icon"><i class="fas fa-chart-line"></i></span>
+                                                <div class="info-box-content">
+                                                    <span class="info-box-text">Active Traders</span>
+                                                    <span class="info-box-number">458</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="info-box mb-3 bg-gradient-warning">
+                                                <span class="info-box-icon"><i class="fas fa-money-bill-wave"></i></span>
+                                                <div class="info-box-content">
+                                                    <span class="info-box-text">Total Deposits</span>
+                                                    <span class="info-box-number">KES 12.5M</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="info-box mb-3 bg-gradient-danger">
+                                                <span class="info-box-icon"><i class="fas fa-hand-holding-usd"></i></span>
+                                                <div class="info-box-content">
+                                                    <span class="info-box-text">Total Withdrawals</span>
+                                                    <span class="info-box-number">KES 8.7M</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="chart-container">
+                                        <canvas id="accountGrowthChart" style="min-height: 250px; height: 250px; max-height: 250px; max-width: 100%;"></canvas>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Recent Activity -->
+                            <div class="card">
+                                <div class="card-header">
+                                    <h3 class="card-title">Recent Activity</h3>
+                                    <div class="card-tools">
+                                        <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                                            <i class="fas fa-minus"></i>
+                                        </button>
+                                        <button type="button" class="btn btn-tool" data-card-widget="remove">
+                                            <i class="fas fa-times"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                                <!-- /.card-header -->
+                                <div class="card-body p-0">
+                                    <ul class="products-list product-list-in-card pl-2 pr-2">
+                                        <li class="item">
+                                            <div class="product-img">
+                                                <img src="https://www.shutterstock.com/image-vector/black-woman-smiling-portrait-vector-600nw-2281497689.jpg" alt="Product Image" class="img-size-50">
+                                            </div>
+                                            <div class="product-info">
+                                                <a href="javascript:void(0)" class="product-title" onclick="openPremiumModal(); return false;">New user registration
+                                                    <span class="badge badge-info float-right">user</span></a>
+                                                <span class="product-description">
+                                                    Kelly FX registered a new account
+                                                </span>
+                                                <small class="text-muted">10 mins ago</small>
+                                            </div>
+                                        </li>
+                                        <!-- /.item -->
+                                        <li class="item">
+                                            <div class="product-img">
+                                                <img src="https://png.pngtree.com/thumb_back/fh260/background/20220921/pngtree-investor-icon-human-crime-capital-photo-image_19896804.jpg" alt="Product Image" class="img-size-50">
+                                            </div>
+                                            <div class="product-info">
+                                                <a href="javascript:void(0)" class="product-title" onclick="openPremiumModal(); return false;">Deposit processed
+                                                    <span class="badge badge-success float-right">KES 25,000</span></a>
+                                                <span class="product-description">
+                                                    Sarah Williams deposited funds
+                                                </span>
+                                                <small class="text-muted">25 mins ago</small>
+                                            </div>
+                                        </li>
+                                        <!-- /.item -->
+                                        <li class="item">
+                                            <div class="product-img">
+                                                <img src="https://t3.ftcdn.net/jpg/14/28/10/44/360_F_1428104436_5Xe1yFzJpQxSg7Jjd0enbjDRsgdJOjVH.jpg" alt="Product Image" class="img-size-50">
+                                            </div>
+                                            <div class="product-info">
+                                                <a href="javascript:void(0)" class="product-title" onclick="openPremiumModal(); return false;">Withdrawal request
+                                                    <span class="badge badge-danger float-right">KES 15,000</span></a>
+                                                <span class="product-description">
+                                                    Michael Mgaza requested withdrawal
+                                                </span>
+                                                <small class="text-muted">1 hour ago</small>
+                                            </div>
+                                        </li>
+                                        <!-- /.item -->
+                                        <li class="item">
+                                            <div class="product-img">
+                                                <img src="https://img.freepik.com/premium-vector/profile-with-verification-check-mark-icon-user-account-approved-avatar-verified-circle-vector_654297-626.jpg" alt="Product Image" class="img-size-50">
+                                            </div>
+                                            <div class="product-info">
+                                                <a href="javascript:void(0)" class="product-title" onclick="openPremiumModal(); return false;">Account verification
+                                                    <span class="badge badge-warning float-right">pending</span></a>
+                                                <span class="product-description">
+                                                    Robert Johnson submitted KYC documents
+                                                </span>
+                                                <small class="text-muted">2 hours ago</small>
+                                            </div>
+                                        </li>
+                                        <!-- /.item -->
+                                        <li class="item">
+                                            <div class="product-img">
+                                                <img src="https://www.metatrader5.com/i/web-trading/web-trading-main.jpg" alt="Product Image" class="img-size-50">
+                                            </div>
+                                            <div class="product-info">
+                                                <a href="javascript:void(0)" class="product-title" onclick="openPremiumModal(); return false;">Trade executed
+                                                    <span class="badge badge-success float-right">+KES 3,200</span></a>
+                                                <span class="product-description">
+                                                    Jane Smith closed a profitable trade
+                                                </span>
+                                                <small class="text-muted">3 hours ago</small>
+                                            </div>
+                                        </li>
+                                        <!-- /.item -->
+                                    </ul>
+                                </div>
+                                <!-- /.card-body -->
+                                <div class="card-footer text-center">
+                                    <a href="#" class="uppercase" onclick="openPremiumModal(); return false;">View All Activity</a>
+                                </div>
+                                <!-- /.card-footer -->
+                            </div>
+                            <!-- /.card -->
+                        </section>
+                        <!-- /.Right col -->
+                    </div>
+                    <!-- /.row (main row) -->
+                    
+                    <!-- Additional Content Row -->
+                    <div class="row">
+                        <!-- Quick Actions -->
+                        <div class="col-md-12">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h3 class="card-title">Quick Actions</h3>
+                                </div>
+                                <div class="card-body">
+                                    <div class="row">
+                                        <div class="col-md-3 col-sm-6 col-12">
+                                            <a href="#" class="btn btn-block btn-gradient-primary btn-lg" onclick="openPremiumModal(); return false;">
+                                                <i class="fas fa-user-plus"></i> Add User
+                                            </a>
+                                        </div>
+                                        <div class="col-md-3 col-sm-6 col-12">
+                                            <a href="#" class="btn btn-block btn-success btn-lg" onclick="openPremiumModal(); return false;">
+                                                <i class="fas fa-plus-circle"></i> Create Account
+                                            </a>
+                                        </div>
+                                        <div class="col-md-3 col-sm-6 col-12">
+                                            <a href="#" class="btn btn-block btn-info btn-lg" onclick="openPremiumModal(); return false;">
+                                                <i class="fas fa-bell"></i> Send Signal
+                                            </a>
+                                        </div>
+                                        <div class="col-md-3 col-sm-6 col-12">
+                                            <a href="#" class="btn btn-block btn-warning btn-lg" onclick="openPremiumModal(); return false;">
+                                                <i class="fas fa-cog"></i> Settings
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div><!-- /.container-fluid -->
+            </section>
+            <!-- /.content -->
+        </div>
+        <!-- /.content-wrapper -->
+        
+        <footer class="main-footer">
+            <strong>Copyright &copy; 2025 <a href="https://trade-wise.co.ke">TradeWise</a>.</strong>
+            All rights reserved.
+            <div class="float-right d-none d-sm-inline-block">
+                <b>Version</b> 2.5.0
+            </div>
+        </footer>
+
+        <!-- Control Sidebar -->
+        <aside class="control-sidebar control-sidebar-dark">
+            <!-- Control sidebar content goes here -->
+            <div class="p-3">
+                <h5>Quick Settings</h5>
+                <hr class="mb-2">
+                
+                <h6>Theme Settings</h6>
+                <div class="form-group">
+                    <div class="custom-control custom-switch">
+                        <input type="checkbox" class="custom-control-input" id="darkModeSwitch">
+                        <label class="custom-control-label" for="darkModeSwitch">Dark Mode</label>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <div class="custom-control custom-switch">
+                        <input type="checkbox" class="custom-control-input" id="sidebarCollapseSwitch" checked>
+                        <label class="custom-control-label" for="sidebarCollapseSwitch">Collapsed Sidebar</label>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <div class="custom-control custom-switch">
+                        <input type="checkbox" class="custom-control-input" id="fixedNavbarSwitch">
+                        <label class="custom-control-label" for="fixedNavbarSwitch">Fixed Navbar</label>
+                    </div>
+                </div>
+                
+                <hr class="my-2">
+                
+                <h6>System Status</h6>
+                <div class="progress-group">
+                    CPU Usage
+                    <span class="float-right"><b>25</b>/100%</span>
+                    <div class="progress progress-sm">
+                        <div class="progress-bar bg-primary" style="width: 25%"></div>
+                    </div>
+                </div>
+                
+                <div class="progress-group">
+                    Memory Usage
+                    <span class="float-right"><b>310</b>/500MB</span>
+                    <div class="progress progress-sm">
+                        <div class="progress-bar bg-danger" style="width: 62%"></div>
+                    </div>
+                </div>
+                
+                <div class="progress-group">
+                    Disk Space
+                    <span class="float-right"><b>45.5</b>/100GB</span>
+                    <div class="progress progress-sm">
+                        <div class="progress-bar bg-success" style="width: 45.5%"></div>
+                    </div>
+                </div>
+            </div>
+        </aside>
+        <!-- /.control-sidebar -->
+    </div>
+    <!-- ./wrapper -->
+
+    <!-- Premium Access Popup -->
+    <div class="premium-popup" id="premiumModal">
+        <div class="premium-popup-content">
+            <div class="premium-popup-header">
+                <h2>Premium Access Required</h2>
+                <span class="close-popup" onclick="closePremiumModal()">&times;</span>
+            </div>
+            <div class="premium-icon">
+                <i class="fas fa-crown"></i>
+            </div>
+            <div class="premium-popup-body">
+                <p>This feature is part of the premium version of Envato Admin Dashboard. Purchase the full theme to unlock all features and get complete access.</p>
+                
+                <div class="premium-features">
+                    <div class="premium-feature">
+                        <i class="fas fa-check"></i>
+                        <span>Complete admin dashboard access</span>
+                    </div>
+                    <div class="premium-feature">
+                        <i class="fas fa-check"></i>
+                        <span>All user management features</span>
+                    </div>
+                    <div class="premium-feature">
+                        <i class="fas fa-check"></i>
+                        <span>Advanced trading tools</span>
+                    </div>
+                    <div class="premium-feature">
+                        <i class="fas fa-check"></i>
+                        <span>Priority support and updates</span>
+                    </div>
+                </div>
+                
+                <a href="https://themeforest.net/item/tradewise-admin-dashboard/12345678" target="_blank" class="premium-btn">
+                    <i class="fas fa-shopping-cart"></i> Purchase on Envato
+                </a>
+                
+                <p class="premium-note">Purchase the full theme to remove this limitation</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- jQuery -->
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js"></script>
+    
+    <!-- Bootstrap 4 -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <!-- AdminLTE App -->
+    <script src="https://cdn.jsdelivr.net/npm/admin-lte@3.2/dist/js/adminlte.min.js"></script>
+    
+    <!-- ChartJS -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@3.7.1/dist/chart.min.js"></script>
+    
+    <!-- TradingView Widget -->
+    <script type="text/javascript" src="https://s3.tradingview.com/tv.js"></script>
+    
+    <!-- GSAP for animations -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    
+    <!-- Custom Scripts -->
+    <script>
+        $(function () {
+            // Simulate loading progress
+            function simulateProgress() {
+                let progress = 0;
+                const progressBar = $('#progressBar');
+                const interval = setInterval(function() {
+                    progress += Math.random() * 10;
+                    if (progress >= 100) {
+                        progress = 100;
+                        clearInterval(interval);
+                        
+                        // Animate loader out
+                        gsap.to("#loader", {
+                            opacity: 0,
+                            duration: 0.5,
+                            onComplete: function() {
+                                $("#loader").remove();
+                                $("body").addClass("page-loaded");
+                            }
+                        });
+                    }
+                    progressBar.css('width', progress + '%');
+                }, 200);
+            }
+            
+            // Start progress simulation
+            simulateProgress();
+            
+            // Account Growth Chart
+            var accountGrowthChart = new Chart(
+                document.getElementById('accountGrowthChart'), {
+                    type: 'line',
+                    data: {
+                        labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+                        datasets: [{
+                            label: 'New Accounts',
+                            backgroundColor: 'rgba(67, 97, 238, 0.9)',
+                            borderColor: 'rgba(67, 97, 238, 0.8)',
+                            pointRadius: false,
+                            pointColor: '#4361ee',
+                            pointStrokeColor: 'rgba(67, 97, 238, 1)',
+                            pointHighlightFill: '#fff',
+                            pointHighlightStroke: 'rgba(67, 97, 238, 1)',
+                            data: [28, 48, 40, 19, 86, 27, 90, 120, 150, 180, 210, 240]
+                        }]
+                    },
+                    options: {
+                        maintainAspectRatio: false,
+                        responsive: true,
+                        legend: {
+                            display: false
+                        },
+                        scales: {
+                            x: {
+                                grid: {
+                                    display: false
+                                }
+                            },
+                            y: {
+                                grid: {
+                                    display: false
+                                },
+                                ticks: {
+                                    beginAtZero: true
+                                }
+                            }
+                        }
+                    }
+                }
+            );
+            
+            // Dark Mode Toggle
+            $('#darkModeSwitch').change(function() {
+                if($(this).is(':checked')) {
+                    $('body').addClass('dark-mode');
+                } else {
+                    $('body').removeClass('dark-mode');
+                }
+            });
+            
+            // Sidebar Collapse Toggle
+            $('#sidebarCollapseSwitch').change(function() {
+                if($(this).is(':checked')) {
+                    $('body').addClass('sidebar-collapse');
+                } else {
+                    $('body').removeClass('sidebar-collapse');
+                }
+            });
+            
+            // Fixed Navbar Toggle
+            $('#fixedNavbarSwitch').change(function() {
+                if($(this).is(':checked')) {
+                    $('.main-header').addClass('fixed-top');
+                    $('body').css('padding-top', $('.main-header').outerHeight());
+                } else {
+                    $('.main-header').removeClass('fixed-top');
+                    $('body').css('padding-top', 0);
+                }
+            });
+            
+            // Prevent all links from navigating
+            $('a').on('click', function(e) {
+                if (!$(this).hasClass('premium-btn') && !$(this).hasClass('close-popup')) {
+                    e.preventDefault();
+                    openPremiumModal();
+                }
+            });
+        });
+        
+        // Premium Modal Functions
+        function openPremiumModal() {
+            $('#premiumModal').fadeIn(300);
+            $('body').css('overflow', 'hidden');
+        }
+        
+        function closePremiumModal() {
+            $('#premiumModal').fadeOut(300);
+            $('body').css('overflow', 'auto');
+        }
+        
+        // Close modal when clicking outside
+        $(document).mouseup(function(e) {
+            const modal = $('#premiumModal');
+            if (!modal.is(e.target) && modal.has(e.target).length === 0) {
+                closePremiumModal();
+            }
+        });
+        
+        // Close modal with ESC key
+        $(document).keyup(function(e) {
+            if (e.key === "Escape") {
+                closePremiumModal();
+            }
+        });
+    </script>
+</body>
+</html>

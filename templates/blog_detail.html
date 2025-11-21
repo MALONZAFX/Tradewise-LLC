@@ -1,0 +1,45 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <article class="blog-post">
+                <nav aria-label="breadcrumb" class="mb-4">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item"><a href="{% url 'index' %}">Home</a></li>
+                        <li class="breadcrumb-item"><a href="{% url 'blog_list' %}">Blog</a></li>
+                        <li class="breadcrumb-item active">{{ post.title }}</li>
+                    </ol>
+                </nav>
+
+                {% if post.image %}
+                <div class="blog-featured-image mb-4">
+                    <img src="{{ post.image.url }}" alt="{{ post.title }}" class="w-100 rounded-3" style="max-height: 400px; object-fit: cover;">
+                </div>
+                {% endif %}
+
+                <header class="mb-4">
+                    <div class="d-flex align-items-center mb-3">
+                        <span class="badge bg-primary bg-opacity-10 text-primary me-3">Analysis</span>
+                        <small class="text-muted">{{ post.created_at|date:"F d, Y" }}</small>
+                    </div>
+                    <h1 class="display-5 fw-bold mb-3">{{ post.title }}</h1>
+                    <p class="text-muted">By {{ post.author }}</p>
+                </header>
+
+                <div class="blog-content">
+                    {{ post.content|linebreaks }}
+                </div>
+
+                <div class="mt-5 pt-4 border-top">
+                    <a href="{% url 'blog_list' %}" class="btn btn-outline-primary">
+                        <i class="fas fa-arrow-left me-2"></i> Back to Blog
+                    </a>
+                </div>
+            </article>
+        </div>
+    </div>
+</div>
+{% endblock %}

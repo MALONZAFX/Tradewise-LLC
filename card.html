@@ -1,0 +1,653 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TradeWise | Account</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.14.0/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css?family=Montserrat:400,800');
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            background: #f6f5f7;
+            font-family: 'Montserrat', sans-serif;
+            margin: 0;
+        }
+
+        h1 {
+            font-weight: bold;
+            margin: 0;
+        }
+
+        h2 {
+            text-align: center;
+            color: #2c3e50;
+        }
+
+        p {
+            font-size: 14px;
+            font-weight: 100;
+            line-height: 20px;
+            letter-spacing: 0.5px;
+            margin: 20px 0 30px;
+        }
+
+        span {
+            font-size: 12px;
+        }
+
+        a {
+            color: #333;
+            font-size: 14px;
+            text-decoration: none;
+            margin: 15px 0;
+        }
+
+        button {
+            border-radius: 20px;
+            border: 1px solid #3498db;
+            background-color: #3498db;
+            color: #FFFFFF;
+            font-size: 12px;
+            font-weight: bold;
+            padding: 12px 45px;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            transition: transform 80ms ease-in;
+            cursor: pointer;
+        }
+
+        button:active {
+            transform: scale(0.95);
+        }
+
+        button:focus {
+            outline: none;
+        }
+
+        button.ghost {
+            background-color: transparent;
+            border-color: #FFFFFF;
+        }
+
+        form {
+            background-color: #FFFFFF;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            padding: 0 50px;
+            height: 100%;
+            text-align: center;
+        }
+
+        input {
+            background-color: #eee;
+            border: none;
+            padding: 12px 15px;
+            margin: 8px 0;
+            width: 100%;
+        }
+
+        .container {
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 14px 28px rgba(0,0,0,0.25), 
+                        0 10px 10px rgba(0,0,0,0.22);
+            position: relative;
+            overflow: hidden;
+            width: 768px;
+            max-width: 100%;
+            min-height: 480px;
+            margin: 20px auto;
+        }
+
+        .form-container {
+            position: absolute;
+            top: 0;
+            height: 100%;
+            transition: all 0.6s ease-in-out;
+        }
+
+        .sign-in-container {
+            left: 0;
+            width: 50%;
+            z-index: 2;
+        }
+
+        .container.right-panel-active .sign-in-container {
+            transform: translateX(100%);
+        }
+
+        .sign-up-container {
+            left: 0;
+            width: 50%;
+            opacity: 0;
+            z-index: 1;
+        }
+
+        .container.right-panel-active .sign-up-container {
+            transform: translateX(100%);
+            opacity: 1;
+            z-index: 5;
+            animation: show 0.6s;
+        }
+
+        @keyframes show {
+            0%, 49.99% {
+                opacity: 0;
+                z-index: 1;
+            }
+            
+            50%, 100% {
+                opacity: 1;
+                z-index: 5;
+            }
+        }
+
+        .overlay-container {
+            position: absolute;
+            top: 0;
+            left: 50%;
+            width: 50%;
+            height: 100%;
+            overflow: hidden;
+            transition: transform 0.6s ease-in-out;
+            z-index: 100;
+        }
+
+        .container.right-panel-active .overlay-container{
+            transform: translateX(-100%);
+        }
+
+        .overlay {
+            background: #2c3e50;
+            background: -webkit-linear-gradient(to right, #2c3e50, #3498db);
+            background: linear-gradient(to right, #2c3e50, #3498db);
+            background-repeat: no-repeat;
+            background-size: cover;
+            background-position: 0 0;
+            color: #FFFFFF;
+            position: relative;
+            left: -100%;
+            height: 100%;
+            width: 200%;
+            transform: translateX(0);
+            transition: transform 0.6s ease-in-out;
+        }
+
+        .container.right-panel-active .overlay {
+            transform: translateX(50%);
+        }
+
+        .overlay-panel {
+            position: absolute;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            padding: 0 40px;
+            text-align: center;
+            top: 0;
+            height: 100%;
+            width: 50%;
+            transform: translateX(0);
+            transition: transform 0.6s ease-in-out;
+        }
+
+        .overlay-left {
+            transform: translateX(-20%);
+        }
+
+        .container.right-panel-active .overlay-left {
+            transform: translateX(0);
+        }
+
+        .overlay-right {
+            right: 0;
+            transform: translateX(0);
+        }
+
+        .container.right-panel-active .overlay-right {
+            transform: translateX(20%);
+        }
+
+        .social-container {
+            margin: 20px 0;
+        }
+
+        .social-container a {
+            border: 1px solid #DDDDDD;
+            border-radius: 50%;
+            display: inline-flex;
+            justify-content: center;
+            align-items: center;
+            margin: 0 5px;
+            height: 40px;
+            width: 40px;
+        }
+
+        .messageDiv {
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: #4CAF50;
+            color: white;
+            padding: 15px 30px;
+            border-radius: 5px;
+            font-size: 1rem;
+            opacity: 0;
+            transition: opacity 0.5s ease-in-out;
+            z-index: 1000;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .messageDiv.error {
+            background-color: #f44336;
+        }
+
+        .messageDiv.show {
+            opacity: 1;
+        }
+
+        /* Membership Card Styles */
+        .card-section {
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%); 
+            padding: 80px 0;
+            display: none;
+        }
+
+        .membership-card {
+            background: linear-gradient(145deg, #1a2a4f 0%, #0d1a33 100%); 
+            border-radius: 20px; 
+            padding: 30px; 
+            box-shadow: 0 15px 40px rgba(0,0,0,0.2); 
+            position: relative; 
+            overflow: hidden; 
+            color: white;
+            margin-bottom: 30px;
+        }
+
+        .btn {
+            background: linear-gradient(135deg, #3498db, #2c3e50);
+            border: none;
+            border-radius: 30px;
+            padding: 12px 30px;
+            font-weight: 600;
+            color: white;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .btn-logout {
+            background: linear-gradient(135deg, #e74c3c, #c0392b);
+        }
+
+        .benefit-item {
+            display: flex;
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+    <!-- Login/Signup Container (shown when not logged in) -->
+    <div id="authContainer">
+        <h2>TRADEWISE ACCOUNT</h2>
+        <div id="popupMessage" class="messageDiv"></div>
+        
+        <div class="container" id="container">
+            <div class="form-container sign-up-container">
+                <form id="signUpForm">
+                    <h1>Create Account</h1>
+                    <div class="social-container">
+                        <a href="#" class="social"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#" class="social"><i class="fab fa-google-plus-g"></i></a>
+                    </div>
+                    <span>or use your email for registration</span>
+                    <input type="text" id="fName" placeholder="First Name" required>
+                    <input type="text" id="lName" placeholder="Last Name" required>
+                    <input type="email" id="rEmail" placeholder="Email" required>
+                    <input type="password" id="rPassword" placeholder="Password" required minlength="6">
+                    <button type="submit" id="submitSignUp">Sign Up</button>
+                </form>
+            </div>
+            <div class="form-container sign-in-container">
+                <form id="signInForm">
+                    <h1>Sign In</h1>
+                    <div class="social-container">
+                        <a href="#" class="social"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#" class="social"><i class="fab fa-google-plus-g"></i></a>
+                    </div>
+                    <span>or use your account</span>
+                    <input type="email" placeholder="Email" id="sEmail" required>
+                    <input type="password" placeholder="Password" id="sPassword" required>
+                    <a href="#">Forgot your password?</a>
+                    <button type="submit" id="submitSignIn">Sign In</button>
+                </form>
+            </div>
+            <div class="overlay-container">
+                <div class="overlay">
+                    <div class="overlay-panel overlay-left">
+                        <h1>Welcome Back!</h1>
+                        <p>Sign in to access your trading dashboard and analytics</p>
+                        <button class="ghost" id="signIn">Sign In</button>
+                    </div>
+                    <div class="overlay-panel overlay-right">
+                        <h1>New Here?</h1>
+                        <p>Create an account to start your trading journey with us</p>
+                        <button class="ghost" id="signUp">Sign Up</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Membership Card Section (shown when logged in) -->
+    <div id="membershipSection" class="card-section">
+        <div class="container" id="account">
+            <div class="row" style="justify-content: center;">
+                <div style="text-align: center; margin-bottom: 40px; width: 100%;">
+                    <h2 style="font-size: 2.5rem; font-weight: 700; color: #2c3e50;">Welcome, <span id="userGreeting" style="color: #3498db;">Trader</span></h2>
+                    <p class="mt-3" style="font-size: 1.1rem; color: #7f8c8d;" id="membershipStatus">Loading your membership details...</p>
+                </div>
+            </div>
+            
+            <div style="display: flex; flex-wrap: wrap; justify-content: center; gap: 30px;">
+                <div style="flex: 1; min-width: 300px; max-width: 500px;">
+                    <!-- Membership Card -->
+                    <div class="membership-card">
+                        <!-- Card Watermark -->
+                        <div style="position: absolute; top: -30px; right: -30px; opacity: 0.1; font-size: 12rem; font-weight: 700; color: white; transform: rotate(15deg);">TRADE</div>
+                        
+                        <!-- Card Content -->
+                        <div class="card-content" style="position: relative; z-index: 2;">
+                            <!-- Logo -->
+                            <div style="margin-bottom: 30px; display: flex; align-items: center;">
+                                <div style="font-size: 1.5rem; font-weight: 600; color: white;">TRADEWISE</div>
+                            </div>
+                            
+                            <!-- Member Info -->
+                            <div style="margin-bottom: 30px; background: rgba(255,255,255,0.15); padding: 15px; border-radius: 10px;">
+                                <div style="font-size: 0.9rem; margin-bottom: 5px; opacity: 0.8;">MEMBER NAME</div>
+                                <div id="memberName" style="font-size: 1.5rem; font-weight: 600;">Loading...</div>
+                            </div>
+                            
+                            <!-- Card Number -->
+                            <div style="margin-bottom: 30px; background: rgba(255,255,255,0.15); padding: 15px; border-radius: 10px;">
+                                <div style="font-size: 0.9rem; margin-bottom: 5px; opacity: 0.8;">TRADEWISE CARD</div>
+                                <div id="memberCardNumber" style="font-size: 1.5rem; letter-spacing: 3px; font-weight: 600;">6734 559</div>
+                            </div>
+                            
+                            <!-- Capital Available -->
+                            <div style="margin-bottom: 30px;">
+                                <div style="font-size: 0.9rem; opacity: 0.8;">CAPITAL AVAILABLE</div>
+                                <div id="memberCapital" style="font-size: 2rem; font-weight: 700;">$500,000</div>
+                            </div>
+                            
+                            <!-- Partner Info -->
+                            <div style="display: flex; justify-content: space-between; align-items: flex-end;">
+                                <div>
+                                    <div style="font-size: 0.9rem; opacity: 0.8;">EMAIL</div>
+                                    <div id="memberEmail" style="font-size: 1.2rem; font-weight: 600;">user@example.com</div>
+                                </div>
+                                <div>
+                                    <div style="font-size: 0.9rem; opacity: 0.8;">MEMBER SINCE</div>
+                                    <div id="memberSince" style="font-size: 1.2rem; font-weight: 600;">2024</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Card Benefits -->
+                <div style="flex: 1; min-width: 300px; max-width: 500px;">
+                    <div style="height: 100%; display: flex; flex-direction: column; justify-content: center;">
+                        <h3 style="font-size: 1.8rem; color: #2c3e50; margin-bottom: 25px;">Membership Benefits</h3>
+                        
+                        <div class="benefit-item">
+                            <div style="margin-right: 15px; color: #3498db; font-size: 1.5rem;">✓</div>
+                            <div>
+                                <h4 style="font-size: 1.2rem; color: #2c3e50; margin-bottom: 5px;">Exclusive Trading Capital</h4>
+                                <p style="color: #7f8c8d;">Access to $500,000 in trading capital upon qualification</p>
+                            </div>
+                        </div>
+                        
+                        <div class="benefit-item">
+                            <div style="margin-right: 15px; color: #3498db; font-size: 1.5rem;">✓</div>
+                            <div>
+                                <h4 style="font-size: 1.2rem; color: #2c3e50; margin-bottom: 5px;">Priority Signals</h4>
+                                <p style="color: #7f8c8d;">Receive trade signals 30 minutes before regular members</p>
+                            </div>
+                        </div>
+                        
+                        <div class="benefit-item">
+                            <div style="margin-right: 15px; color: #3498db; font-size: 1.5rem;">✓</div>
+                            <div>
+                                <h4 style="font-size: 1.2rem; color: #2c3e50; margin-bottom: 5px;">Dedicated Account Manager</h4>
+                                <p style="color: #7f8c8d;">24/7 support from your personal trading consultant</p>
+                            </div>
+                        </div>
+                        
+                        <div class="benefit-item">
+                            <div style="margin-right: 15px; color: #3498db; font-size: 1.5rem;">✓</div>
+                            <div>
+                                <h4 style="font-size: 1.2rem; color: #2c3e50; margin-bottom: 5px;">VIP Education Portal</h4>
+                                <p style="color: #7f8c8d;">Unlock premium trading courses and mentorship</p>
+                            </div>
+                        </div>
+                        
+                        <button id="logoutBtn" class="btn btn-logout" style="margin-top: 30px; align-self: flex-start;">
+                            Log Out
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script type="module">
+        // Import Firebase modules
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+        import { 
+            getAuth, 
+            createUserWithEmailAndPassword, 
+            signInWithEmailAndPassword,
+            signOut,
+            onAuthStateChanged
+        } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+        import { 
+            getFirestore, 
+            setDoc, 
+            doc,
+            getDoc
+        } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
+        // Firebase configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyDc2k8nqkQrX-PScgknG6ORZQsPdjS9xCc",
+            authDomain: "auth-1-test.firebaseapp.com",
+            projectId: "auth-1-test",
+            storageBucket: "auth-1-test.appspot.com",
+            messagingSenderId: "995102506505",
+            appId: "1:995102506505:web:e02312a0ccbb855896c2d8"
+        };
+
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+
+        // DOM Elements
+        const authContainer = document.getElementById('authContainer');
+        const membershipSection = document.getElementById('membershipSection');
+        const signUpButton = document.getElementById('signUp');
+        const signInButton = document.getElementById('signIn');
+        const container = document.getElementById('container');
+        const logoutBtn = document.getElementById('logoutBtn');
+
+        // Check auth state on page load
+        onAuthStateChanged(auth, async (user) => {
+            if (user) {
+                // User is signed in, show membership section
+                authContainer.style.display = 'none';
+                membershipSection.style.display = 'block';
+                
+                try {
+                    // Get user data from Firestore
+                    const userDoc = await getDoc(doc(db, "users", user.uid));
+                    
+                    if (userDoc.exists()) {
+                        const userData = userDoc.data();
+                        
+                        // Update the card with user data
+                        document.getElementById('userGreeting').textContent = userData.firstName || 'Valued Trader';
+                        document.getElementById('memberName').textContent = `${userData.firstName || ''} ${userData.lastName || ''}`.trim() || 'TradeWise Member';
+                        document.getElementById('memberEmail').textContent = user.email || userData.email || 'No email provided';
+                        
+                        // Generate a unique card number based on user ID
+                        const cardNumber = user.uid.slice(0, 4) + ' ' + user.uid.slice(4, 8);
+                        document.getElementById('memberCardNumber').textContent = cardNumber;
+                        
+                        // Format join date
+                        if (userData.createdAt) {
+                            const joinDate = userData.createdAt.toDate();
+                            document.getElementById('memberSince').textContent = joinDate.getFullYear();
+                        } else {
+                            document.getElementById('memberSince').textContent = new Date().getFullYear();
+                        }
+                        
+                        document.getElementById('membershipStatus').textContent = 'Your premium membership is active';
+                    } else {
+                        // User document doesn't exist (fallback to auth data)
+                        document.getElementById('userGreeting').textContent = 'Valued Trader';
+                        document.getElementById('memberName').textContent = 'TradeWise Member';
+                        document.getElementById('memberEmail').textContent = user.email || 'No email provided';
+                        
+                        const cardNumber = 'TW' + user.uid.slice(0, 2) + ' ' + user.uid.slice(2, 6);
+                        document.getElementById('memberCardNumber').textContent = cardNumber;
+                        document.getElementById('memberSince').textContent = new Date().getFullYear();
+                        document.getElementById('membershipStatus').textContent = 'Welcome to your new membership';
+                    }
+                } catch (error) {
+                    console.error("Error loading user data:", error);
+                    document.getElementById('membershipStatus').textContent = 'Error loading membership details';
+                }
+            } else {
+                // User is not signed in, show auth container
+                authContainer.style.display = 'block';
+                membershipSection.style.display = 'none';
+            }
+        });
+
+        // Popup message function
+        function showPopup(message, isSuccess = true) {
+            const popup = document.getElementById('popupMessage');
+            popup.textContent = message;
+            popup.className = isSuccess ? 'messageDiv show' : 'messageDiv show error';
+            
+            if (popup.timeoutId) {
+                clearTimeout(popup.timeoutId);
+            }
+            
+            popup.timeoutId = setTimeout(() => {
+                popup.classList.remove('show');
+            }, 5000);
+        }
+
+        // Sign up form submission
+        document.getElementById('signUpForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const email = document.getElementById('rEmail').value;
+            const password = document.getElementById('rPassword').value;
+            const firstName = document.getElementById('fName').value;
+            const lastName = document.getElementById('lName').value;
+
+            try {
+                const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+                const user = userCredential.user;
+                
+                const userData = {
+                    email: email,
+                    firstName: firstName,
+                    lastName: lastName,
+                    createdAt: new Date()
+                };
+                
+                await setDoc(doc(db, "users", user.uid), userData);
+                
+                showPopup('Account created successfully! Please sign in.', true);
+                
+                // Switch to sign-in form after successful sign-up
+                container.classList.remove("right-panel-active");
+                document.getElementById('sEmail').value = email; // Pre-fill email
+                
+            } catch (error) {
+                console.error("Sign up error:", error);
+                
+                if (error.code === 'auth/email-already-in-use') {
+                    showPopup('Email already in use!', false);
+                } else if (error.code === 'auth/weak-password') {
+                    showPopup('Password must be at least 6 characters', false);
+                } else if (error.code === 'auth/invalid-email') {
+                    showPopup('Invalid email address', false);
+                } else {
+                    showPopup('Error creating account: ' + error.message, false);
+                }
+            }
+        });
+
+        // Sign in form submission
+        document.getElementById('signInForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const email = document.getElementById('sEmail').value;
+            const password = document.getElementById('sPassword').value;
+
+            try {
+                await signInWithEmailAndPassword(auth, email, password);
+                showPopup('Login successful!', true);
+                
+            } catch (error) {
+                console.error("Sign in error:", error);
+                
+                if (error.code === 'auth/invalid-credential') {
+                    showPopup('Invalid email or password', false);
+                } else if (error.code === 'auth/user-not-found') {
+                    showPopup('User not found', false);
+                } else {
+                    showPopup('Error signing in: ' + error.message, false);
+                }
+            }
+        });
+
+        // Logout button
+        logoutBtn.addEventListener('click', () => {
+            signOut(auth).then(() => {
+                showPopup('Logged out successfully', true);
+            }).catch((error) => {
+                console.error("Logout error:", error);
+                showPopup('Error signing out. Please try again.', false);
+            });
+        });
+
+        // Toggle between sign in and sign up forms
+        signUpButton.addEventListener('click', () => {
+            container.classList.add("right-panel-active");
+        });
+
+        signInButton.addEventListener('click', () => {
+            container.classList.remove("right-panel-active");
+        });
+    </script>
+</body>
+</html>

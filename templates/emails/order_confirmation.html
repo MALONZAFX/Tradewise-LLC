@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Order Confirmation - TradeWise</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { 
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            margin: 0; padding: 20px;
+        }
+        
+        .email-container {
+            max-width: 600px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 15px 40px rgba(0,0,0,0.08);
+        }
+        
+        .email-header {
+            background: linear-gradient(135deg, #2c3e50 0%, #3498db 100%);
+            padding: 40px 30px;
+            text-align: center;
+            color: white;
+        }
+        
+        .order-icon {
+            font-size: 50px;
+            margin-bottom: 20px;
+        }
+        
+        .order-details {
+            background: #f8f9fa;
+            border-radius: 12px;
+            padding: 25px;
+            margin: 25px 0;
+            border-left: 4px solid #3498db;
+        }
+        
+        .detail-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 12px;
+            padding-bottom: 12px;
+            border-bottom: 1px solid #e9ecef;
+        }
+        
+        .detail-row:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+        }
+        
+        .tracking-box {
+            background: linear-gradient(135deg, #3498db 0%, #2c3e50 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            margin: 20px 0;
+        }
+        
+        .next-steps {
+            background: rgba(52, 152, 219, 0.1);
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px 0;
+            border-left: 4px solid #3498db;
+        }
+        
+        .step-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+        
+        .step-number {
+            background: #3498db;
+            color: white;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 15px;
+            font-weight: bold;
+        }
+        
+        .support-button {
+            background: linear-gradient(135deg, #3498db, #2c3e50);
+            color: white;
+            padding: 12px 25px;
+            text-decoration: none;
+            border-radius: 25px;
+            font-weight: bold;
+            display: inline-block;
+            transition: all 0.3s ease;
+        }
+        
+        .support-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(52, 152, 219, 0.3);
+        }
+    </style>
+</head>
+<body>
+    <div class="email-container">
+        <!-- Header -->
+        <div class="email-header">
+            <div class="order-icon">📦</div>
+            <div style="font-size: 28px; font-weight: bold;">Order Confirmed!</div>
+            <div style="opacity: 0.9; margin-top: 10px;">Thank You for Your Purchase</div>
+        </div>
+        
+        <!-- Content -->
+        <div style="padding: 40px 30px;">
+            <h2 style="color: #2c3e50; text-align: center; margin-bottom: 10px;">
+                Hello {{ customer_name }}!
+            </h2>
+            <p style="text-align: center; color: #64748b; margin-bottom: 30px;">
+                Your order has been confirmed and is being processed. Here are your order details:
+            </p>
+            
+            <!-- Order Details -->
+            <div class="order-details">
+                <div class="detail-row">
+                    <span style="color: #64748b;">Order ID:</span>
+                    <strong style="color: #3498db;">{{ order.reference }}</strong>
+                </div>
+                <div class="detail-row">
+                    <span style="color: #64748b;">Product:</span>
+                    <strong>{{ merchandise.name }}</strong>
+                </div>
+                <div class="detail-row">
+                    <span style="color: #64748b;">Price:</span>
+                    <strong style="color: #e74c3c;">KES {{ merchandise.price }}</strong>
+                </div>
+                <div class="detail-row">
+                    <span style="color: #64748b;">Shipping Address:</span>
+                    <strong style="text-align: right; color: #2c3e50;">{{ payment.shipping_address }}</strong>
+                </div>
+                <div class="detail-row">
+                    <span style="color: #64748b;">Order Date:</span>
+                    <strong style="color: #2c3e50;">{{ order_date }}</strong>
+                </div>
+            </div>
+            
+            <!-- Tracking Box -->
+            <div class="tracking-box">
+                <h3 style="margin-bottom: 10px;">🚚 Shipping Updates</h3>
+                <p style="margin: 0; opacity: 0.9;">
+                    We'll process your order within 2-3 business days and send you tracking information.
+                </p>
+            </div>
+            
+            <!-- Next Steps -->
+            <div class="next-steps">
+                <h3 style="color: #2c3e50; margin-bottom: 20px;">What Happens Next:</h3>
+                
+                <div class="step-item">
+                    <div class="step-number">1</div>
+                    <div>
+                        <strong style="color: #2c3e50;">Order Processing</strong><br>
+                        <small style="color: #64748b;">We're preparing your item for shipment</small>
+                    </div>
+                </div>
+                
+                <div class="step-item">
+                    <div class="step-number">2</div>
+                    <div>
+                        <strong style="color: #2c3e50;">Shipping</strong><br>
+                        <small style="color: #64748b;">Your item will be shipped within 2-3 days</small>
+                    </div>
+                </div>
+                
+                <div class="step-item">
+                    <div class="step-number">3</div>
+                    <div>
+                        <strong style="color: #2c3e50;">Delivery</strong><br>
+                        <small style="color: #64748b;">Expected delivery in 5-7 business days</small>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Support Info -->
+            <div style="text-align: center; margin: 30px 0;">
+                <p style="color: #64748b; margin-bottom: 15px;">
+                    Questions about your order? We're here to help!
+                </p>
+                <a href="mailto:support@trade-wise.co.ke" 
+                   class="support-button">
+                    📞 Contact Support
+                </a>
+            </div>
+        </div>
+        
+        <!-- Footer -->
+        <div style="background: #2c3e50; color: white; padding: 30px; text-align: center;">
+            <p style="margin-bottom: 15px; font-size: 14px;">
+                Thank you for shopping with TradeWise!
+            </p>
+            <p style="font-size: 12px; opacity: 0.7;">
+                © 2025 TradeWise • Quality Trading Merchandise
+            </p>
+        </div>
+    </div>
+</body>
+</html>

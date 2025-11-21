@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TradeWise Admin Login</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        body {
+            background: #000;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .login-container {
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            overflow: hidden;
+            max-width: 450px;
+            width: 100%;
+        }
+        .login-header {
+            background: linear-gradient(135deg, #3498db, #2c3e50);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+        .login-header h2 {
+            margin: 0;
+            font-weight: 700;
+        }
+        .login-body {
+            padding: 30px;
+        }
+        .form-control {
+            border-radius: 8px;
+            padding: 12px 15px;
+            border: 2px solid #e9ecef;
+            transition: all 0.3s;
+        }
+        .form-control:focus {
+            border-color: #3498db;
+            box-shadow: 0 0 0 0.2rem rgba(52, 152, 219, 0.25);
+        }
+        .btn-login {
+            background: linear-gradient(135deg, #3498db, #2c3e50);
+            border: none;
+            border-radius: 8px;
+            padding: 12px;
+            font-weight: 600;
+            color: white;
+            width: 100%;
+            transition: all 0.3s;
+        }
+        .btn-login:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(52, 152, 219, 0.4);
+        }
+        .alert {
+            border-radius: 8px;
+            border: none;
+        }
+        .role-badge {
+            font-size: 0.75rem;
+            padding: 4px 8px;
+            border-radius: 4px;
+        }
+        .badge-admin {
+            background: #e74c3c;
+            color: white;
+        }
+        .badge-staff {
+            background: #3498db;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <div class="login-container">
+        <div class="login-header">
+            <h2><i class="fas fa-lock me-2"></i>TradeWise Login</h2>
+            <p class="mb-0 mt-2 opacity-75">Secure Management System Access</p>
+        </div>
+        
+        <div class="login-body">
+            {% if messages %}
+                {% for message in messages %}
+                    <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+                        {{ message }}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                    </div>
+                {% endfor %}
+            {% endif %}
+
+            <form method="POST" action="{% url 'admin_login' %}">
+                {% csrf_token %}
+                
+                <div class="mb-3">
+                    <label for="username" class="form-label">
+                        <i class="fas fa-user me-1"></i>Username
+                    </label>
+                    <div class="input-group">
+                        <span class="input-group-text"><i class="fas fa-user"></i></span>
+                        <input type="text" class="form-control" id="username" name="username" placeholder="Enter your username" required>
+                    </div>
+                </div>
+                
+                <div class="mb-3">
+                    <label for="password" class="form-label">
+                        <i class="fas fa-key me-1"></i>Password
+                    </label>
+                    <div class="input-group">
+                        <span class="input-group-text"><i class="fas fa-lock"></i></span>
+                        <input type="password" class="form-control" id="password" name="password" placeholder="Enter your password" required>
+                    </div>
+                </div>
+
+                <div class="mb-3">
+                    <label for="tradewise_number" class="form-label">
+                        <i class="fas fa-id-card me-1"></i>TradeWise Number
+                    </label>
+                    <div class="input-group">
+                        <span class="input-group-text"><i class="fas fa-hashtag"></i></span>
+                        <input type="text" class="form-control" id="tradewise_number" name="tradewise_number" placeholder="Enter your TradeWise number" required>
+                    </div>
+                    <small class="form-text text-muted">Your unique TradeWise identification number</small>
+                </div>
+
+                <div class="mb-4">
+                    <label for="role" class="form-label">
+                        <i class="fas fa-user-tag me-1"></i>Login As
+                    </label>
+                    <div class="input-group">
+                        <span class="input-group-text"><i class="fas fa-shield-alt"></i></span>
+                        <select class="form-control" id="role" name="role" required>
+                            <option value="">Select your role</option>
+                            <option value="admin">Administrator</option>
+                            <option value="staff">Staff Member</option>
+                        </select>
+                    </div>
+                    <div class="mt-2">
+                        <span class="role-badge badge-admin me-2">
+                            <i class="fas fa-crown"></i> Admin: Full Access
+                        </span>
+                        <span class="role-badge badge-staff">
+                            <i class="fas fa-users"></i> Staff: Limited Access
+                        </span>
+                    </div>
+                </div>
+                
+                <input type="hidden" name="next" value="{{ request.GET.next }}">
+                
+                <button type="submit" class="btn btn-login mb-3">
+                    <i class="fas fa-sign-in-alt me-2"></i>Login to Dashboard
+                </button>
+                
+                <div class="text-center">
+                    <small class="text-muted">
+                        <i class="fas fa-shield-alt me-1"></i>
+                        Secure Role-Based Access Control
+                    </small>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Form validation and role selection enhancement
+        document.addEventListener('DOMContentLoaded', function() {
+            const roleSelect = document.getElementById('role');
+            const loginForm = document.querySelector('form');
+            
+            // Add visual feedback for role selection
+            roleSelect.addEventListener('change', function() {
+                const selectedRole = this.value;
+                const loginBtn = document.querySelector('.btn-login');
+                
+                if (selectedRole === 'admin') {
+                    loginBtn.innerHTML = '<i class="fas fa-crown me-2"></i>Login as Administrator';
+                } else if (selectedRole === 'staff') {
+                    loginBtn.innerHTML = '<i class="fas fa-users me-2"></i>Login as Staff';
+                } else {
+                    loginBtn.innerHTML = '<i class="fas fa-sign-in-alt me-2"></i>Login to Dashboard';
+                }
+            });
+
+            // Enhanced form validation
+            loginForm.addEventListener('submit', function(e) {
+                const tradewiseNumber = document.getElementById('tradewise_number').value;
+                const role = document.getElementById('role').value;
+                
+                // Validate TradeWise number format (alphanumeric, 6-12 characters)
+                if (!/^[a-zA-Z0-9]{6,12}$/.test(tradewiseNumber)) {
+                    e.preventDefault();
+                    alert('Please enter a valid TradeWise number (6-12 alphanumeric characters)');
+                    return false;
+                }
+                
+                if (!role) {
+                    e.preventDefault();
+                    alert('Please select your role');
+                    return false;
+                }
+                
+                // Show loading state
+                const submitBtn = this.querySelector('button[type="submit"]');
+                submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Authenticating...';
+                submitBtn.disabled = true;
+            });
+        });
+    </script>
+</body>
+</html>

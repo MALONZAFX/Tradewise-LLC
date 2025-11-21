@@ -1,0 +1,79 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{{ category_name }} | Shop</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-color: #f8f9fa;
+        }
+        .product-card {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.05);
+            overflow: hidden;
+            transition: transform 0.3s ease;
+        }
+        .product-card:hover {
+            transform: translateY(-5px);
+        }
+        .product-image {
+            height: 250px;
+            object-fit: cover;
+            width: 100%;
+        }
+        .product-body {
+            padding: 1.5rem;
+        }
+        .product-title {
+            font-weight: 600;
+            font-size: 1.2rem;
+            margin-bottom: 0.5rem;
+        }
+        .product-price {
+            font-weight: bold;
+            color: #3498db;
+            font-size: 1.1rem;
+        }
+        .btn-buy {
+            background: linear-gradient(135deg, #3498db, #2c3e50);
+            color: white;
+            border: none;
+            border-radius: 30px;
+            padding: 0.5rem 1.5rem;
+            transition: 0.3s;
+        }
+        .btn-buy:hover {
+            opacity: 0.9;
+        }
+    </style>
+</head>
+<body>
+
+<section class="py-5">
+    <div class="container">
+        <h2 class="mb-4 text-center fw-bold">{{ category_name }}</h2>
+        <div class="row g-4">
+            {% for item in items %}
+            <div class="col-md-6 col-lg-4">
+                <div class="product-card h-100">
+                    <img src="{{ item.image.url }}" alt="{{ item.name }}" class="product-image">
+                    <div class="product-body">
+                        <h5 class="product-title">{{ item.name }}</h5>
+                        <p class="text-muted mb-2">{{ item.description }}</p>
+                        <div class="d-flex justify-content-between align-items-center">
+                            <span class="product-price">KES {{ item.price }}</span>
+                           <a href="{% url 'merchandise_payment' item.id %}" class="btn btn-buy">Buy Now</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+</body>
+</html>

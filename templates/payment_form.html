@@ -1,0 +1,391 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Join {{ plan.name }} - TradeWise</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #2c3e50 0%, #3498db 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .payment-form-container {
+            max-width: 500px;
+            width: 100%;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            animation: slideUp 0.6s ease-out;
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .plan-summary {
+            background: linear-gradient(135deg, #3498db, #2c3e50);
+            color: white;
+            padding: 25px;
+            border-radius: 15px;
+            margin-bottom: 30px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .plan-summary::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(45deg, transparent, rgba(255,255,255,0.1), transparent);
+            transform: rotate(45deg);
+            animation: shine 3s infinite;
+        }
+
+        @keyframes shine {
+            0% { transform: translateX(-100%) translateY(-100%) rotate(45deg); }
+            100% { transform: translateX(100%) translateY(100%) rotate(45deg); }
+        }
+
+        .plan-summary h2 {
+            font-size: 1.8rem;
+            margin-bottom: 10px;
+            font-weight: 700;
+            position: relative;
+            z-index: 1;
+        }
+
+        .plan-summary h3 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            position: relative;
+            z-index: 1;
+        }
+
+        .plan-summary h3 sub {
+            font-size: 1rem;
+            font-weight: 400;
+            opacity: 0.9;
+        }
+
+        .form-group {
+            margin-bottom: 25px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: #2c3e50;
+            font-weight: 600;
+            font-size: 0.95rem;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 15px 20px;
+            border: 2px solid #e9ecef;
+            border-radius: 12px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            background: #f8f9fa;
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: #3498db;
+            background: white;
+            box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.1);
+            transform: translateY(-2px);
+        }
+
+        .btn-pay {
+            background: linear-gradient(135deg, #3498db, #2c3e50);
+            color: white;
+            border: none;
+            padding: 18px 30px;
+            border-radius: 12px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            width: 100%;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn-pay::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            transition: left 0.5s;
+        }
+
+        .btn-pay:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(52, 152, 219, 0.3);
+        }
+
+        .btn-pay:hover::before {
+            left: 100%;
+        }
+
+        .btn-pay:active {
+            transform: translateY(-1px);
+        }
+
+        .security-notice {
+            background: linear-gradient(135deg, #e8f5e8, #d4edda);
+            border: 1px solid #c3e6cb;
+            border-radius: 12px;
+            padding: 15px;
+            margin-top: 25px;
+            text-align: center;
+            color: #155724;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            animation: fadeIn 0.8s ease-out 0.3s both;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .security-notice i {
+            color: #2ecc71;
+            font-size: 1.2rem;
+        }
+
+        .features-list {
+            background: #f8f9fa;
+            border-radius: 12px;
+            padding: 20px;
+            margin: 20px 0;
+            border-left: 4px solid #3498db;
+        }
+
+        .feature-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 10px;
+            color: #495057;
+        }
+
+        .feature-item:last-child {
+            margin-bottom: 0;
+        }
+
+        .feature-item i {
+            color: #2ecc71;
+            font-size: 0.9rem;
+        }
+
+        .payment-methods {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 15px;
+            opacity: 0.7;
+        }
+
+        .payment-methods i {
+            font-size: 1.5rem;
+            color: #3498db;
+        }
+
+        .tradewise-logo {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .tradewise-logo img {
+            height: 60px;
+            margin-bottom: 10px;
+        }
+
+        .tradewise-logo h1 {
+            color: #2c3e50;
+            font-size: 1.5rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, #3498db, #2c3e50);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .plan-badge {
+            position: absolute;
+            top: -10px;
+            right: 20px;
+            background: linear-gradient(45deg, #e74c3c, #c0392b);
+            color: white;
+            padding: 5px 15px;
+            border-radius: 15px;
+            font-size: 12px;
+            font-weight: bold;
+            text-transform: uppercase;
+        }
+
+        @media (max-width: 768px) {
+            .payment-form-container {
+                padding: 30px 20px;
+                margin: 20px;
+            }
+            
+            .plan-summary h2 {
+                font-size: 1.5rem;
+            }
+            
+            .plan-summary h3 {
+                font-size: 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="payment-form-container">
+        <div class="tradewise-logo">
+            <h1>TRADEWISE</h1>
+            <p style="color: #7f8c8d; font-size: 0.9rem;">The Wisest Choice</p>
+        </div>
+
+        <div class="plan-summary">
+            {% if plan.name == "Pro Trader" %}
+            <div class="plan-badge">Best Value</div>
+            {% elif plan.name == "VIP Elite" %}
+            <div class="plan-badge">Elite</div>
+            {% else %}
+            <div class="plan-badge">Popular</div>
+            {% endif %}
+            
+            <h2>{{ plan.name }}</h2>
+            <h3>KES {{ plan.price }}<sub>/month</sub></h3>
+        </div>
+
+        {% if plan.description %}
+        <div class="features-list">
+            <h4 style="margin-bottom: 15px; color: #2c3e50; display: flex; align-items: center; gap: 10px;">
+                <i class="fas fa-star" style="color: #f1c40f;"></i>
+                What's Included:
+            </h4>
+            {% for feature in plan.features.split %}
+                <div class="feature-item">
+                    <i class="fas fa-check-circle"></i>
+                    <span>{{ feature }}</span>
+                </div>
+            {% endfor %}
+        </div>
+        {% endif %}
+        
+        <form method="post">
+            {% csrf_token %}
+            <div class="form-group">
+                <label><i class="fas fa-envelope" style="color: #3498db;"></i> Email Address</label>
+                <input type="email" name="email" class="form-control" required 
+                       placeholder="Enter your email address" value="{{ user.email|default:'' }}">
+            </div>
+            
+            <div class="form-group">
+                <button type="submit" class="btn-pay">
+                    <i class="fas fa-lock"></i> 
+                    <span>Pay KES {{ plan.price }}</span>
+                </button>
+            </div>
+        </form>
+
+        <div class="payment-methods">
+            <i class="fab fa-cc-visa"></i>
+            <i class="fab fa-cc-mastercard"></i>
+            <i class="fab fa-cc-amex"></i>
+            <i class="fas fa-mobile-alt"></i>
+        </div>
+        
+        <div class="security-notice">
+            <i class="fas fa-shield-alt"></i>
+            <span>Secure payment powered by Paystack • 256-bit SSL encrypted</span>
+        </div>
+    </div>
+
+    <script>
+        // Add loading state to button
+        document.querySelector('form').addEventListener('submit', function(e) {
+            const button = this.querySelector('.btn-pay');
+            const originalText = button.innerHTML;
+            
+            button.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Processing...';
+            button.disabled = true;
+            
+            // Revert after 5 seconds if something goes wrong
+            setTimeout(() => {
+                button.innerHTML = originalText;
+                button.disabled = false;
+            }, 5000);
+        });
+
+        // Add subtle hover effects
+        const inputs = document.querySelectorAll('.form-control');
+        inputs.forEach(input => {
+            input.addEventListener('focus', function() {
+                this.parentElement.style.transform = 'translateY(-2px)';
+            });
+            
+            input.addEventListener('blur', function() {
+                this.parentElement.style.transform = 'translateY(0)';
+            });
+        });
+
+        // Add pulse animation to plan summary
+        const planSummary = document.querySelector('.plan-summary');
+        setInterval(() => {
+            planSummary.style.transform = 'scale(1.02)';
+            setTimeout(() => {
+                planSummary.style.transform = 'scale(1)';
+            }, 300);
+        }, 3000);
+    </script>
+</body>
+</html>

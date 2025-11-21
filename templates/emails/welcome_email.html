@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Welcome to TradeWise!</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { 
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            margin: 0; padding: 20px;
+        }
+        
+        .email-container {
+            max-width: 600px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 15px 40px rgba(0,0,0,0.08);
+        }
+        
+        .email-header {
+            background: linear-gradient(135deg, #2c3e50 0%, #3498db 100%);
+            padding: 50px 30px;
+            text-align: center;
+            color: white;
+            position: relative;
+        }
+        
+        .welcome-icon {
+            font-size: 60px;
+            margin-bottom: 20px;
+        }
+        
+        .logo {
+            font-size: 36px;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        
+        .email-content {
+            padding: 40px 30px;
+        }
+        
+        .success-badge {
+            background: rgba(52, 152, 219, 0.1);
+            color: #2c3e50;
+            padding: 15px;
+            border-radius: 10px;
+            text-align: center;
+            margin-bottom: 30px;
+            border: 1px solid rgba(52, 152, 219, 0.2);
+        }
+        
+        .credentials-box {
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            border-radius: 12px;
+            padding: 25px;
+            margin: 25px 0;
+            border: 2px dashed #3498db;
+        }
+        
+        .credential-item {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 15px;
+            padding: 12px;
+            background: white;
+            border-radius: 8px;
+            border-left: 4px solid #3498db;
+        }
+        
+        .cta-buttons {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin: 30px 0;
+        }
+        
+        .cta-button {
+            display: block;
+            padding: 15px;
+            text-align: center;
+            border-radius: 10px;
+            text-decoration: none;
+            color: white;
+            font-weight: bold;
+            transition: all 0.3s ease;
+        }
+        
+        .cta-primary {
+            background: linear-gradient(135deg, #3498db 0%, #2c3e50 100%);
+        }
+        
+        .cta-secondary {
+            background: linear-gradient(135deg, #7f8c8d 0%, #64748b 100%);
+        }
+        
+        .cta-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(52, 152, 219, 0.3);
+        }
+        
+        .features-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin: 30px 0;
+        }
+        
+        .feature-item {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            border: 1px solid #e9ecef;
+            transition: all 0.3s ease;
+        }
+        
+        .feature-item:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        
+        .feature-icon {
+            font-size: 24px;
+            margin-bottom: 10px;
+        }
+        
+        .email-footer {
+            background: #2c3e50;
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+        
+        .security-note {
+            background: rgba(241, 196, 15, 0.1);
+            border: 1px solid rgba(241, 196, 15, 0.3);
+            border-radius: 10px;
+            padding: 15px;
+            text-align: center;
+            margin: 20px 0;
+            color: #8e6c0c;
+        }
+    </style>
+</head>
+<body>
+    <div class="email-container">
+        <!-- Header -->
+        <div class="email-header">
+            <div class="welcome-icon">🚀</div>
+            <div class="logo">TRADEWISE</div>
+            <div style="opacity: 0.9; font-size: 18px;">Your Trading Journey Starts Now!</div>
+        </div>
+        
+        <!-- Content -->
+        <div class="email-content">
+            <div class="success-badge">
+                ✅ <strong>Account Created Successfully!</strong> You're now part of the TradeWise family.
+            </div>
+            
+            <h2 style="color: #2c3e50; text-align: center; margin-bottom: 20px;">
+                Welcome, {{ user.first_name }}! 🎉
+            </h2>
+            
+            <p style="text-align: center; color: #64748b; margin-bottom: 30px; line-height: 1.6;">
+                Get ready to transform your trading experience with cutting-edge tools, 
+                expert signals, and a community of successful traders.
+            </p>
+            
+            <!-- Credentials Box -->
+            <div class="credentials-box">
+                <h3 style="color: #2c3e50; margin-bottom: 20px; text-align: center;">
+                    📋 Your Account Credentials
+                </h3>
+                
+                <div class="credential-item">
+                    <span style="color: #64748b;">TradeWise Number:</span>
+                    <strong style="color: #3498db;">{{ user.account_number }}</strong>
+                </div>
+                <div class="credential-item">
+                    <span style="color: #64748b;">Name:</span>
+                    <strong style="color: #2c3e50;">{{ user.first_name }} {{ user.second_name }}</strong>
+                </div>
+                <div class="credential-item">
+                    <span style="color: #64748b;">Email:</span>
+                    <strong style="color: #2c3e50;">{{ user.email }}</strong>
+                </div>
+                <div class="credential-item">
+                    <span style="color: #64748b;">Password:</span>
+                    <strong style="color: #e74c3c;">{{ plain_password }}</strong>
+                </div>
+            </div>
+            
+            <!-- CTA Buttons -->
+            <div class="cta-buttons">
+                <a href="http://127.0.0.1:8000/loginpage/" class="cta-button cta-primary">
+                    📈 Login to Dashboard
+                </a>
+                <a href="http://127.0.0.1:8000/market/" class="cta-button cta-secondary">
+                    💼 Explore Services
+                </a>
+            </div>
+            
+            <!-- Features Grid -->
+            <h3 style="color: #2c3e50; text-align: center; margin: 30px 0 20px 0;">
+                What Awaits You:
+            </h3>
+            
+            <div class="features-grid">
+                <div class="feature-item">
+                    <div class="feature-icon">📊</div>
+                    <strong style="color: #2c3e50;">Live Trading Signals</strong>
+                    <p style="font-size: 12px; margin-top: 5px; color: #64748b;">Accurate forex & crypto signals</p>
+                </div>
+                <div class="feature-item">
+                    <div class="feature-icon">🎓</div>
+                    <strong style="color: #2c3e50;">Expert Coaching</strong>
+                    <p style="font-size: 12px; margin-top: 5px; color: #64748b;">Learn from pro traders</p>
+                </div>
+                <div class="feature-item">
+                    <div class="feature-icon">🤝</div>
+                    <strong style="color: #2c3e50;">Affiliate Program</strong>
+                    <p style="font-size: 12px; margin-top: 5px; color: #64748b;">Earn while you learn</p>
+                </div>
+                <div class="feature-item">
+                    <div class="feature-icon">💎</div>
+                    <strong style="color: #2c3e50;">Premium Tools</strong>
+                    <p style="font-size: 12px; margin-top: 5px; color: #64748b;">Advanced trading software</p>
+                </div>
+            </div>
+            
+            <!-- Security Note -->
+            <div class="security-note">
+                🔒 <strong>Keep Your Credentials Safe:</strong> Never share your password with anyone.
+            </div>
+        </div>
+        
+        <!-- Footer -->
+        <div class="email-footer">
+            <p style="margin-bottom: 20px; font-size: 16px;">
+                Ready to start your trading journey? 
+                <a href="http://127.0.0.1:8000/loginpage/" style="color: #3498db; text-decoration: none; font-weight: bold;">
+                    Login Now →
+                </a>
+            </p>
+            <div style="margin: 20px 0;">
+                <a href="#" style="color: #fff; margin: 0 10px; text-decoration: none; opacity: 0.8;">Help Center</a> • 
+                <a href="#" style="color: #fff; margin: 0 10px; text-decoration: none; opacity: 0.8;">Contact Support</a> • 
+                <a href="#" style="color: #fff; margin: 0 10px; text-decoration: none; opacity: 0.8;">Privacy Policy</a>
+            </div>
+            <p style="font-size: 12px; opacity: 0.7; margin-top: 20px;">
+                © 2025 TradeWise. Transforming Trading, Empowering Traders Worldwide.
+            </p>
+        </div>
+    </div>
+</body>
+</html>

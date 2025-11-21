@@ -1,0 +1,661 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TradeWise Market Hub</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-blue: #3498db;
+            --dark-blue: #2c3e50;
+            --gradient-main: linear-gradient(135deg, #2c3e50 0%, #3498db 100%);
+            --gradient-reverse: linear-gradient(135deg, #3498db 0%, #2c3e50 100%);
+            --light-bg: #f8fafc;
+            --dark-text: #1e293b;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: var(--light-bg);
+            color: var(--dark-text);
+            line-height: 1.6;
+        }
+
+        /* Navigation */
+        .nav {
+            background: var(--dark-blue);
+            padding: 20px 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .nav-logo {
+            color: white;
+            font-size: 1.5rem;
+            font-weight: 700;
+            text-decoration: none;
+        }
+
+        .nav-logo span {
+            color: var(--primary-blue);
+        }
+
+        .nav-link {
+            color: white;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .nav-link:hover {
+            color: var(--primary-blue);
+        }
+
+        /* Hero Section */
+        .classes-hero {
+            background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), 
+                        url('https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80') no-repeat center center/cover;
+            height: 40vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            text-align: center;
+            padding: 0 20px;
+        }
+
+        .hero-content h1 {
+            font-size: 2.5rem;
+            margin-bottom: 15px;
+            font-weight: 800;
+        }
+
+        .hero-content p {
+            font-size: 1.1rem;
+            margin-bottom: 25px;
+            opacity: 0.9;
+        }
+
+        .cta-button {
+            display: inline-block;
+            background: var(--gradient-main);
+            color: white;
+            padding: 12px 25px;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .cta-button:hover {
+            background: var(--gradient-reverse);
+            transform: translateY(-3px);
+        }
+
+        /* Market Section */
+        .market-section {
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            padding: 60px 0;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .section-header h2 {
+            font-size: 2.2rem;
+            margin-bottom: 10px;
+            color: var(--dark-blue);
+        }
+
+        .section-header p {
+            color: #7f8c8d;
+            max-width: 700px;
+            margin: 0 auto;
+        }
+
+        /* Cards Grid */
+        .cards-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 30px;
+        }
+
+        .feature-card {
+            background: white;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+            transition: all 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            height: 450px; /* Reduced height */
+        }
+
+        .feature-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 40px rgba(0,0,0,0.12);
+        }
+
+        .card-banner {
+            height: 160px;
+            background-size: cover;
+            background-position: center;
+            position: relative;
+        }
+
+        .card-banner::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 60px;
+            background: linear-gradient(to top, white, transparent);
+        }
+
+        .card-header {
+            padding: 20px 25px 10px;
+        }
+
+        .card-header h3 {
+            margin: 0;
+            font-size: 1.4rem;
+            font-weight: 600;
+            color: var(--dark-blue);
+        }
+
+        .card-header p {
+            margin: 5px 0 0;
+            color: #7f8c8d;
+            font-size: 0.9rem;
+        }
+
+        .card-body {
+            padding: 0 25px 20px;
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .card-content {
+            margin-bottom: 20px;
+            flex-grow: 1;
+        }
+
+        .card-content p {
+            color: #555;
+            line-height: 1.5;
+            margin-bottom: 15px;
+            font-size: 0.95rem;
+        }
+
+        .card-content ul {
+            padding-left: 20px;
+            margin-bottom: 15px;
+        }
+
+        .card-content li {
+            margin-bottom: 6px;
+            font-size: 0.9rem;
+        }
+
+        .price-tag {
+            background: #f1f8fe;
+            border-left: 4px solid #3498db;
+            padding: 12px 15px;
+            margin-bottom: 20px;
+        }
+
+        .price-tag p {
+            margin: 0;
+            font-weight: 600;
+            color: #2c3e50;
+            font-size: 0.95rem;
+        }
+
+        .card-actions {
+            display: flex;
+            gap: 15px;
+        }
+
+        .card-actions button {
+            flex: 1;
+            text-align: center;
+            border-radius: 30px;
+            padding: 10px 15px;
+            font-weight: 600;
+            cursor: pointer;
+            border: none;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+        }
+
+        .vip-button {
+            background: #3498db;
+            color: white;
+        }
+
+        .vip-button:hover {
+            background: #2980b9;
+        }
+
+        .preview-button {
+            background: transparent;
+            color: #3498db;
+            border: 1px solid #3498db;
+        }
+
+        .preview-button:hover {
+            background: #f8f9fa;
+        }
+
+        /* Stats Grid */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        .stat-item {
+            background: #f8f9fa;
+            border-radius: 8px;
+            padding: 10px;
+            text-align: center;
+        }
+
+        .stat-item div:first-child {
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: #3498db;
+        }
+
+        .stat-item div:last-child {
+            font-size: 0.8rem;
+            color: #7f8c8d;
+        }
+
+        /* Signal Performance */
+        .signal-performance {
+            display: flex;
+            justify-content: space-around;
+            margin-bottom: 20px;
+        }
+
+        .signal-item {
+            text-align: center;
+        }
+
+        .signal-item > div:first-child {
+            width: 70px;
+            height: 70px;
+            margin: 0 auto 8px;
+            position: relative;
+        }
+
+        .signal-item > div:last-child {
+            font-size: 0.8rem;
+            color: #7f8c8d;
+        }
+
+        /* Payment Modal */
+        .payment-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+            backdrop-filter: blur(5px);
+        }
+
+        .modal-content {
+            background: white;
+            border-radius: 15px;
+            width: 90%;
+            max-width: 450px;
+            padding: 30px;
+            box-shadow: 0 15px 40px rgba(0,0,0,0.15);
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+        }
+
+        .modal-header h3 {
+            margin: 0;
+            font-size: 1.5rem;
+            color: #2c3e50;
+        }
+
+        .close-modal {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: #7f8c8d;
+        }
+
+        .payment-info {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .payment-info p {
+            margin: 0;
+            font-size: 1rem;
+            color: #555;
+            margin-bottom: 10px;
+        }
+
+        .payment-info .highlight {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: #2c3e50;
+        }
+
+        .modal-actions {
+            display: flex;
+            gap: 15px;
+        }
+
+        .modal-actions button, .modal-actions a {
+            flex: 1;
+            text-align: center;
+            border-radius: 30px;
+            padding: 12px 15px;
+            font-weight: 600;
+            cursor: pointer;
+            text-decoration: none;
+            font-size: 0.95rem;
+            transition: all 0.3s ease;
+        }
+
+        /* Responsive Adjustments */
+        @media (max-width: 992px) {
+            .cards-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .feature-card {
+                height: auto;
+                min-height: 450px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .hero-content h1 {
+                font-size: 2rem;
+            }
+            
+            .nav {
+                padding: 15px 20px;
+            }
+            
+            .section-header h2 {
+                font-size: 1.8rem;
+            }
+            
+            .card-actions, .modal-actions {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="nav">
+        <a href="#" class="nav-logo">Trade<span>Wise</span></a>
+        <a href="index.html" class="nav-link">
+            <i class="fas fa-arrow-left"></i> Back Home
+        </a>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="classes-hero">
+        <div class="hero-content">
+            <h1>TradeWise Market Hub</h1>
+            <p>Master the markets with our expert-led training programs and premium resources</p>
+            <a href="#market" class="cta-button">View Market Hub</a>
+        </div>
+    </section>
+
+    <!-- Modern Market Section -->
+    <div class="market-section">
+        <div class="container" id="market">
+            <div class="section-header">
+                <h2>TradeWise <span style="color: #3498db;">Market Hub</span></h2>
+                <p>Your comprehensive trading resource center</p>
+            </div>
+
+            <div class="cards-grid">
+                <!-- Chart Lab Card -->
+                <div class="feature-card">
+                    <div class="card-banner" style="background-image: url('https://images.unsplash.com/photo-1590283603385-17ffb3a7f29f?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80');"></div>
+                    <div class="card-header">
+                        <h3>Chart Lab</h3>
+                        <p>Your technical analysis training ground</p>
+                    </div>
+                    <div class="card-body">
+                        <div class="card-content">
+                            <p>Analyses and charts with guidance from seasoned traders. Learn how to spot patterns, trends, and profitable setups.</p>
+                            <ul>
+                                <li>Live chart breakdowns</li>
+                                <li>Pattern recognition training</li>
+                                <li>Trend analysis techniques</li>
+                            </ul>
+                        </div>
+                        <div class="price-tag">
+                            <p>Lifetime access for only $10 (≈ KES 1,350)</p>
+                        </div>
+                        <div class="card-actions">
+                            <a href="https://hub.deriv.com/tradershub/signup?t=dlqa5n7DcVEzjAYmf6wqTGNd7ZgqdRLk&utm_source=affiliate_231539&utm_medium=affiliate&utm_campaign=MyAffiliates&utm_content=&referrer=127.0.0.1"
+                               class="vip-button" target="_blank">
+                               Open Deriv
+                            </a>
+                            <a href="https://www.tradingview.com/"
+                               class="preview-button" target="_blank">
+                               Open TradingView
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Strategies Card -->
+                <div class="feature-card">
+                    <div class="card-banner" style="background-image: url('https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80');"></div>
+                    <div class="card-header">
+                        <h3>Trading Strategies</h3>
+                        <p>Proven systems for consistent profits</p>
+                    </div>
+                    <div class="card-body">
+                        <div class="card-content">
+                            <div class="stats-grid">
+                                <div class="stat-item">
+                                    <div>4,155+</div>
+                                    <div>Strategies</div>
+                                </div>
+                                <div class="stat-item">
+                                    <div>1,224</div>
+                                    <div>Forex</div>
+                                </div>
+                                <div class="stat-item">
+                                    <div>2,000+</div>
+                                    <div>Crypto</div>
+                                </div>
+                                <div class="stat-item">
+                                    <div>3,000+</div>
+                                    <div>Derivatives</div>
+                                </div>
+                            </div>
+                            <p>Access thousands of proven trading strategies across all major markets.</p>
+                        </div>
+                        <div class="price-tag">
+                            <p>Lifetime access for only $50 (≈ KES 7,800)</p>
+                        </div>
+                        <div class="card-actions">
+                            <button onclick="showPaymentModal(50, 'Trading Strategies')" class="vip-button">VIP Access</button>
+                            <button class="preview-button">Free Preview</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Signals Card -->
+                <div class="feature-card">
+                    <div class="card-banner" style="background-image: url('https://images.unsplash.com/photo-1642790554902-16c76c4c1a3b?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80');"></div>
+                    <div class="card-header">
+                        <h3>Premium Signals</h3>
+                        <p>Real-time trading opportunities</p>
+                    </div>
+                    <div class="card-body">
+                        <div class="card-content">
+                            <div class="signal-performance">
+                                <div class="signal-item">
+                                    <div>
+                                        <svg width="70" height="70" viewBox="0 0 36 36" style="transform: rotate(-90deg);">
+                                            <circle cx="18" cy="18" r="15.9155" fill="none" stroke="#e6e6e6" stroke-width="3" stroke-dasharray="100 100" stroke-dashoffset="0"></circle>
+                                            <circle cx="18" cy="18" r="15.9155" fill="none" stroke="#3498db" stroke-width="3" stroke-dasharray="100 100" stroke-dashoffset="20" stroke-linecap="round"></circle>
+                                        </svg>
+                                        <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); font-weight: 700; font-size: 1rem;">80%</div>
+                                    </div>
+                                    <div>Forex Accuracy</div>
+                                </div>
+                                <div class="signal-item">
+                                    <div>
+                                        <svg width="70" height="70" viewBox="0 0 36 36" style="transform: rotate(-90deg);">
+                                            <circle cx="18" cy="18" r="15.9155" fill="none" stroke="#e6e6e6" stroke-width="3" stroke-dasharray="100 100" stroke-dashoffset="0"></circle>
+                                            <circle cx="18" cy="18" r="15.9155" fill="none" stroke="#3498db" stroke-width="3" stroke-dasharray="100 100" stroke-dashoffset="40" stroke-linecap="round"></circle>
+                                        </svg>
+                                        <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); font-weight: 700; font-size: 1rem;">60%</div>
+                                    </div>
+                                    <div>Crypto Accuracy</div>
+                                </div>
+                            </div>
+                            <p>Receive high-probability trading signals directly to your device with detailed entry and exit points.</p>
+                        </div>
+                        <div class="price-tag">
+                            <p>Monthly access for only $50 (≈ KES 7,800)</p>
+                        </div>
+                        <div class="card-actions">
+                            <button onclick="showPaymentModal(50, 'Premium Signals')" class="vip-button">VIP Access</button>
+                            <button class="preview-button">Free Preview</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Trading Bots Card -->
+                <div class="feature-card">
+                    <div class="card-banner" style="background-image: url('https://images.unsplash.com/photo-1551288049-bebda4e38f71?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80');"></div>
+                    <div class="card-header">
+                        <h3>Trading Bots & Software</h3>
+                        <p>Automated trading solutions</p>
+                    </div>
+                    <div class="card-body">
+                        <div class="card-content">
+                            <p>Access our suite of automated trading bots and software tools designed to execute trades 24/7 based on proven strategies.</p>
+                            <ul>
+                                <li>AI-powered trading algorithms</li>
+                                <li>Customizable trading parameters</li>
+                                <li>Backtesting capabilities</li>
+                                <li>Real-time performance monitoring</li>
+                            </ul>
+                        </div>
+                        <div class="price-tag">
+                            <p>Lifetime access for only $75 (≈ KES 11,700)</p>
+                        </div>
+                        <div class="card-actions">
+                            <button onclick="showPaymentModal(75, 'Trading Bots & Software')" class="vip-button">VIP Access</button>
+                            <button class="preview-button">Free Preview</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Payment Modal -->
+    <div id="paymentModal" class="payment-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Complete VIP Access</h3>
+                <button class="close-modal" onclick="closePaymentModal()">&times;</button>
+            </div>
+            
+            <div class="payment-info">
+                <p>You're purchasing:</p>
+                <p class="highlight" id="modalServiceName"></p>
+            </div>
+            
+            <div class="payment-info">
+                <p>Send payment to:</p>
+                <p class="highlight">+254742962615</p>
+                <p id="modalAmount"></p>
+            </div>
+            
+            <p style="color: #7f8c8d; text-align: center; margin-bottom: 20px;">
+                After payment, confirm with your transaction details for onboarding.
+            </p>
+            
+            <div class="modal-actions">
+                <button onclick="closePaymentModal()" class="preview-button">Cancel</button>
+                <a href="contact.html" class="vip-button">Confirm Payment</a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Payment modal functions
+        function showPaymentModal(amountUSD, serviceName) {
+            // Updated conversion rate from USD to KES (1 USD = 156 KES as of 2024)
+            const amountKES = Math.round(amountUSD * 156);
+            document.getElementById('modalServiceName').textContent = serviceName;
+            document.getElementById('modalAmount').textContent = '$' + amountUSD + ' (≈ KES ' + amountKES.toLocaleString() + ')';
+            document.getElementById('paymentModal').style.display = 'flex';
+        }
+
+        function closePaymentModal() {
+            document.getElementById('paymentModal').style.display = 'none';
+        }
+
+        // Close modal when clicking outside
+        window.onclick = function(event) {
+            const modal = document.getElementById('paymentModal');
+            if (event.target == modal) {
+                closePaymentModal();
+            }
+        }
+    </script>
+    
+</body>
+</html>

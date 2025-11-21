@@ -1,0 +1,757 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TradeWise | Account</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.14.0/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css?family=Montserrat:400,800');
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background: #ffffff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            font-family: 'Montserrat', sans-serif;
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px;
+        }
+
+        h1 {
+            font-weight: bold;
+            margin: 0;
+            color: #2c3e50;
+        }
+
+        h2 {
+            text-align: center;
+            color: #2c3e50;
+            margin-bottom: 20px;
+        }
+
+        p {
+            font-size: 14px;
+            font-weight: 100;
+            line-height: 20px;
+            letter-spacing: 0.5px;
+            margin: 20px 0 30px;
+        }
+
+        span {
+            font-size: 12px;
+        }
+
+        a {
+            color: #333;
+            font-size: 14px;
+            text-decoration: none;
+            margin: 15px 0;
+        }
+
+        button {
+            border-radius: 20px;
+            border: 1px solid #3498db;
+            background-color: #3498db;
+            color: #FFFFFF;
+            font-size: 12px;
+            font-weight: bold;
+            padding: 12px 45px;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            transition: transform 80ms ease-in;
+            cursor: pointer;
+            width: 100%;
+        }
+
+        button:active {
+            transform: scale(0.95);
+        }
+
+        button:focus {
+            outline: none;
+        }
+
+        button.ghost {
+            background-color: transparent;
+            border-color: #FFFFFF;
+        }
+
+        button:hover {
+            background-color: #2980b9;
+            transform: translateY(-2px);
+        }
+
+        form {
+            background-color: #FFFFFF;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            padding: 0 50px;
+            height: 100%;
+            text-align: center;
+            border-radius: 10px;
+        }
+
+        input {
+            background-color: #eee;
+            border: none;
+            padding: 12px 15px;
+            margin: 8px 0;
+            width: 100%;
+            border-radius: 5px;
+            font-size: 14px;
+            transition: all 0.3s ease;
+        }
+
+        input:focus {
+            outline: none;
+            background-color: #e3f2fd;
+            box-shadow: 0 0 5px rgba(52, 152, 219, 0.5);
+        }
+
+        .container {
+            background-color: #fff;
+            border-radius: 15px;
+            box-shadow: 0 14px 28px rgba(0,0,0,0.25), 
+                        0 10px 10px rgba(0,0,0,0.22);
+            position: relative;
+            overflow: hidden;
+            width: 900px;
+            max-width: 100%;
+            min-height: 600px;
+        }
+
+        .form-container {
+            position: absolute;
+            top: 0;
+            height: 100%;
+            transition: all 0.6s ease-in-out;
+        }
+
+        .sign-in-container {
+            left: 0;
+            width: 50%;
+            z-index: 2;
+        }
+
+        .container.right-panel-active .sign-in-container {
+            transform: translateX(100%);
+        }
+
+        .sign-up-container {
+            left: 0;
+            width: 50%;
+            opacity: 0;
+            z-index: 1;
+        }
+
+        .container.right-panel-active .sign-up-container {
+            transform: translateX(100%);
+            opacity: 1;
+            z-index: 5;
+            animation: show 0.6s;
+        }
+
+        @keyframes show {
+            0%, 49.99% {
+                opacity: 0;
+                z-index: 1;
+            }
+            
+            50%, 100% {
+                opacity: 1;
+                z-index: 5;
+            }
+        }
+
+        .overlay-container {
+            position: absolute;
+            top: 0;
+            left: 50%;
+            width: 50%;
+            height: 100%;
+            overflow: hidden;
+            transition: transform 0.6s ease-in-out;
+            z-index: 100;
+        }
+
+        .container.right-panel-active .overlay-container{
+            transform: translateX(-100%);
+        }
+
+        .overlay {
+            background: #2c3e50;
+            background: linear-gradient(to right, #2c3e50, #3498db);
+            background-repeat: no-repeat;
+            background-size: cover;
+            background-position: 0 0;
+            color: #FFFFFF;
+            position: relative;
+            left: -100%;
+            height: 100%;
+            width: 200%;
+            transform: translateX(0);
+            transition: transform 0.6s ease-in-out;
+        }
+
+        .container.right-panel-active .overlay {
+            transform: translateX(50%);
+        }
+
+        .overlay-panel {
+            position: absolute;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            padding: 0 40px;
+            text-align: center;
+            top: 0;
+            height: 100%;
+            width: 50%;
+            transform: translateX(0);
+            transition: transform 0.6s ease-in-out;
+        }
+
+        .overlay-left {
+            transform: translateX(-20%);
+        }
+
+        .container.right-panel-active .overlay-left {
+            transform: translateX(0);
+        }
+
+        .overlay-right {
+            right: 0;
+            transform: translateX(0);
+        }
+
+        .container.right-panel-active .overlay-right {
+            transform: translateX(20%);
+        }
+
+        .social-container {
+            margin: 20px 0;
+        }
+
+        .social-container a {
+            border: 1px solid #DDDDDD;
+            border-radius: 50%;
+            display: inline-flex;
+            justify-content: center;
+            align-items: center;
+            margin: 0 5px;
+            height: 40px;
+            width: 40px;
+            transition: all 0.3s ease;
+        }
+
+        .social-container a:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        .messageDiv {
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: #4CAF50;
+            color: white;
+            padding: 15px 30px;
+            border-radius: 10px;
+            font-size: 1rem;
+            opacity: 0;
+            transition: opacity 0.5s ease-in-out;
+            z-index: 1000;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            max-width: 90%;
+            text-align: center;
+        }
+
+        .messageDiv.error {
+            background-color: #e74c3c;
+        }
+
+        .messageDiv.warning {
+            background-color: #f39c12;
+        }
+
+        .messageDiv.info {
+            background-color: #3498db;
+        }
+
+        .messageDiv.show {
+            opacity: 1;
+        }
+
+        .forgot-password {
+            display: block;
+            text-align: center;
+            margin-top: 15px;
+            color: #3498db;
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s ease;
+        }
+
+        .forgot-password:hover {
+            color: #2980b9;
+            text-decoration: underline;
+        }
+
+        .password-strength {
+            margin-top: 5px;
+            font-size: 12px;
+            text-align: left;
+            width: 100%;
+        }
+
+        .strength-weak { color: #e74c3c; }
+        .strength-medium { color: #f39c12; }
+        .strength-strong { color: #2ecc71; }
+
+        /* Django Messages Styling */
+        .django-messages {
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 1000;
+            width: 90%;
+            max-width: 500px;
+        }
+
+        .alert {
+            padding: 15px 20px;
+            border-radius: 10px;
+            margin-bottom: 10px;
+            font-weight: 500;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+            text-align: center;
+        }
+
+        .alert-success {
+            background-color: #2ecc71;
+            color: white;
+            border-left: 4px solid #27ae60;
+        }
+
+        .alert-error {
+            background-color: #e74c3c;
+            color: white;
+            border-left: 4px solid #c0392b;
+        }
+
+        .alert-warning {
+            background-color: #f39c12;
+            color: white;
+            border-left: 4px solid #e67e22;
+        }
+
+        .alert-info {
+            background-color: #3498db;
+            color: white;
+            border-left: 4px solid #2980b9;
+        }
+
+        /* Activation message styling */
+        .activation-message {
+            background-color: #e8f4fd;
+            border-left: 4px solid #3498db;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 4px;
+            text-align: left;
+            width: 100%;
+        }
+
+        .activation-message h3 {
+            color: #2c3e50;
+            margin-bottom: 8px;
+            font-size: 16px;
+        }
+
+        .activation-message p {
+            margin: 5px 0;
+            font-size: 14px;
+            color: #34495e;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 900px) {
+            .container {
+                width: 100%;
+                min-height: 100vh;
+                border-radius: 0;
+                box-shadow: none;
+            }
+            
+            .form-container {
+                width: 100% !important;
+                padding: 20px;
+            }
+            
+            .sign-in-container, .sign-up-container {
+                width: 100% !important;
+            }
+            
+            .overlay-container {
+                display: none;
+            }
+            
+            .container.right-panel-active .sign-in-container,
+            .container.right-panel-active .sign-up-container {
+                transform: none;
+            }
+            
+            form {
+                padding: 0 30px;
+            }
+            
+            input {
+                font-size: 16px;
+            }
+            
+            button {
+                padding: 15px 45px;
+                font-size: 14px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            form {
+                padding: 0 20px;
+            }
+            
+            h2 {
+                font-size: 1.5rem;
+            }
+            
+            .social-container {
+                margin: 15px 0;
+            }
+        }
+
+        /* Loading spinner */
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid #ffffff;
+            border-radius: 50%;
+            border-top-color: transparent;
+            animation: spin 1s ease-in-out infinite;
+            margin-right: 10px;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .btn-loading {
+            position: relative;
+            color: transparent;
+        }
+
+        .btn-loading::after {
+            content: '';
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            top: 50%;
+            left: 50%;
+            margin-left: -10px;
+            margin-top: -10px;
+            border: 2px solid #ffffff;
+            border-radius: 50%;
+            border-top-color: transparent;
+            animation: spin 1s ease-in-out infinite;
+        }
+
+        /* TradeWise Branding */
+        .tradewise-header {
+            text-align: center;
+            margin-bottom: 30px;
+            width: 100%;
+            padding: 0 20px;
+        }
+
+        .tradewise-logo {
+            font-size: 2.8rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, #2c3e50, #3498db);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 10px;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .tradewise-tagline {
+            color: #7f8c8d;
+            font-size: 1.1rem;
+            font-weight: 500;
+            letter-spacing: 0.5px;
+        }
+
+        /* Form field grouping */
+        .form-row {
+            display: flex;
+            gap: 10px;
+            width: 100%;
+        }
+
+        .form-row input {
+            flex: 1;
+        }
+    </style>
+</head>
+<body>
+    <div class="tradewise-header">
+        <div class="tradewise-logo">TRADEWISE</div>
+        <div class="tradewise-tagline">Trade Smarter With Confidence</div>
+    </div>
+
+    <!-- Django Messages Display -->
+    <div class="django-messages">
+        {% if messages %}
+            {% for message in messages %}
+                <div class="alert alert-{{ message.tags }}">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        {% endif %}
+    </div>
+
+    <div id="popupMessage" class="messageDiv"></div>
+    
+    <div class="container" id="container">
+        <!-- Sign Up Form -->
+        <div class="form-container sign-up-container">
+            <form id="signUpForm" action="{% url 'signup' %}" method="post">
+                <h1>Create Account</h1>
+                <div class="social-container">
+                    <a href="#" class="social"><i class="fab fa-facebook-f"></i></a>
+                    <a href="#" class="social"><i class="fab fa-google-plus-g"></i></a>
+                </div>
+                <span>or use your email for registration</span>
+                {% csrf_token %}
+                <div class="form-row">
+                    <input type="text" id="fName" name="first_name" placeholder="First Name" required>
+                    <input type="text" id="lName" name="second_name" placeholder="Last Name" required>
+                </div>
+                <input type="email" id="rEmail" name="email" placeholder="Email" required>
+                <input type="tel" id="rPhone" name="phone" placeholder="Phone Number" required>
+                <input type="password" id="rPassword" name="password" placeholder="Password" required minlength="6" onkeyup="checkPasswordStrength(this.value)">
+                <div id="passwordStrength" class="password-strength"></div>
+                
+                <!-- Referral Code Field -->
+                <input type="text" id="referralCode" name="referral_code" placeholder="Referral Code (Optional)">
+                
+                <button type="submit" id="submitSignUp">
+                    <span>Sign Up</span>
+                </button>
+                <p>Already have an account? <a href="#" id="signInLink">Sign In</a></p>
+            </form>
+        </div>
+
+        <!-- Sign In Form -->
+        <div class="form-container sign-in-container">
+            <form id="signInForm" action="{% url 'login_view' %}" method="post">
+                <h1>Sign In</h1>
+                <div class="social-container">
+                    <a href="#" class="social"><i class="fab fa-facebook-f"></i></a>
+                    <a href="#" class="social"><i class="fab fa-google-plus-g"></i></a>
+                </div>
+                <span>or use your account</span>
+                {% csrf_token %}
+                <input type="email" id="sEmail" name="email" placeholder="Email" required>
+                <input type="password" id="sPassword" name="password" placeholder="Password" required>
+                <a href="{% url 'forgot_password' %}" class="forgot-password">Forgot your password?</a>
+                <button type="submit" id="submitSignIn">
+                    <span>Sign In</span>
+                </button>
+                <p>Don't have an account? <a href="#" id="signUpLink">Sign Up</a></p>
+            </form>
+        </div>
+
+        <!-- Overlay -->
+        <div class="overlay-container">
+            <div class="overlay">
+                <div class="overlay-panel overlay-left">
+                    <h1>Welcome Back!</h1>
+                    <p>Sign in to access your trading dashboard and analytics</p>
+                    <button class="ghost" id="signIn">Sign In</button>
+                </div>
+                <div class="overlay-panel overlay-right">
+                    <h1>New Here?</h1>
+                    <p>Create an account to start your trading journey with us</p>
+                    <button class="ghost" id="signUp">Sign Up</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+<script>
+    // Popup message function
+    function showPopup(message, type = 'success') {
+        const popup = document.getElementById('popupMessage');
+        popup.textContent = message;
+        popup.className = `messageDiv show ${type}`;
+        
+        if (popup.timeoutId) {
+            clearTimeout(popup.timeoutId);
+        }
+        
+        popup.timeoutId = setTimeout(() => {
+            popup.classList.remove('show');
+        }, 5000);
+    }
+
+    // Password strength checker
+    function checkPasswordStrength(password) {
+        const strengthDiv = document.getElementById('passwordStrength');
+        if (!password) {
+            strengthDiv.textContent = '';
+            return;
+        }
+
+        let strength = 0;
+        let feedback = '';
+
+        // Length check
+        if (password.length >= 8) strength++;
+        else feedback = 'Password should be at least 8 characters';
+
+        // Mixed case check
+        if (password.match(/([a-z].*[A-Z])|([A-Z].*[a-z])/)) strength++;
+        else if (!feedback) feedback = 'Include both uppercase and lowercase letters';
+
+        // Numbers check
+        if (password.match(/([0-9])/)) strength++;
+        else if (!feedback) feedback = 'Include at least one number';
+
+        // Special characters check
+        if (password.match(/([!,%,&,@,#,$,^,*,?,_,~])/)) strength++;
+        else if (!feedback) feedback = 'Include at least one special character';
+
+        // Update UI
+        if (strength === 0) {
+            strengthDiv.textContent = '';
+        } else if (strength <= 2) {
+            strengthDiv.textContent = `Weak ${feedback ? '- ' + feedback : ''}`;
+            strengthDiv.className = 'password-strength strength-weak';
+        } else if (strength === 3) {
+            strengthDiv.textContent = 'Medium - Good password';
+            strengthDiv.className = 'password-strength strength-medium';
+        } else {
+            strengthDiv.textContent = 'Strong - Excellent password';
+            strengthDiv.className = 'password-strength strength-strong';
+        }
+    }
+
+    // Toggle between sign-in and sign-up forms
+    const signUpButton = document.getElementById('signUp');
+    const signInButton = document.getElementById('signIn');
+    const signUpLink = document.getElementById('signUpLink');
+    const signInLink = document.getElementById('signInLink');
+    const container = document.getElementById('container');
+
+    signUpButton.addEventListener('click', () => {
+        container.classList.add("right-panel-active");
+    });
+
+    signInButton.addEventListener('click', () => {
+        container.classList.remove("right-panel-active");
+    });
+
+    signUpLink.addEventListener('click', (e) => {
+        e.preventDefault();
+        container.classList.add("right-panel-active");
+    });
+
+    signInLink.addEventListener('click', (e) => {
+        e.preventDefault();
+        container.classList.remove("right-panel-active");
+    });
+
+    // Form submission handling with loading states
+    document.getElementById('signUpForm').addEventListener('submit', function(e) {
+        const submitBtn = this.querySelector('button[type="submit"]');
+        const originalText = submitBtn.innerHTML;
+        submitBtn.classList.add('btn-loading');
+        submitBtn.disabled = true;
+
+        // Allow form to submit naturally - NO preventDefault()
+        // Show loading state for better UX
+        setTimeout(() => {
+            // This allows the form to submit while showing loading state
+        }, 500);
+    });
+
+    document.getElementById('signInForm').addEventListener('submit', function(e) {
+        const submitBtn = this.querySelector('button[type="submit"]');
+        const originalText = submitBtn.innerHTML;
+        submitBtn.classList.add('btn-loading');
+        submitBtn.disabled = true;
+
+        // Allow form to submit naturally - NO preventDefault()
+        // Re-enable button after 5 seconds in case of error
+        setTimeout(() => {
+            submitBtn.classList.remove('btn-loading');
+            submitBtn.disabled = false;
+            submitBtn.innerHTML = originalText;
+        }, 5000);
+    });
+
+    // Auto-hide Django messages after 5 seconds
+    window.addEventListener('DOMContentLoaded', (event) => {
+        // Auto-hide Django messages
+        const djangoMessages = document.querySelectorAll('.alert');
+        djangoMessages.forEach(message => {
+            setTimeout(() => {
+                message.style.opacity = '0';
+                message.style.transition = 'opacity 0.5s ease-in-out';
+                setTimeout(() => {
+                    message.remove();
+                }, 500);
+            }, 5000);
+        });
+
+        // Check URL for verification success
+        const urlParams = new URLSearchParams(window.location.search);
+        if (urlParams.get('verified') === 'true') {
+            showPopup('Email verified successfully! You can now sign in.', 'success');
+        }
+        
+        // Check for signup success
+        if (urlParams.get('signup') === 'success') {
+            showPopup('Account created successfully! Please check your email to activate your account.', 'info');
+        }
+    });
+
+    // Auto-hide messages on mobile after shorter time
+    if (window.innerWidth <= 768) {
+        const popup = document.getElementById('popupMessage');
+        if (popup && popup.classList.contains('show')) {
+            setTimeout(() => {
+                popup.classList.remove('show');
+            }, 3000);
+        }
+    }
+</script>
+</body>
+</html>

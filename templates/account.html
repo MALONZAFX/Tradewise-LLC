@@ -1,0 +1,1320 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Welcome To TradeWise</title>
+    <link href="{% static 'css/bootstrap.min.css' %}" rel="stylesheet" media="screen">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    
+    <style>
+        :root {
+            --primary-blue: #3498db;
+            --dark-blue: #2c3e50;
+            --gradient-main: linear-gradient(135deg, #2c3e50 0%, #3498db 100%);
+            --gradient-reverse: linear-gradient(135deg, #3498db 0%, #2c3e50 100%);
+            --light-bg: #f8fafc;
+            --dark-text: #1e293b;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: var(--light-bg);
+            color: var(--dark-text);
+            line-height: 1.6;
+            padding-top: 80px;
+        }
+
+        /* Enhanced Navbar Styles */
+        .main-header {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            z-index: 1030;
+            background: #111122;
+            backdrop-filter: none;
+            box-shadow: 0 4px 20px rgba(44, 62, 80, 0.15);
+            border-bottom: 3px solid rgba(255, 255, 255, 0.1);
+        }
+    
+        .navbar {
+            padding: 0.6rem 0;
+            background: transparent !important;
+            min-height: 65px;
+        }
+    
+        .navbar-brand {
+            padding: 0;
+            margin-right: 2rem;
+        }
+    
+        .logo-img {
+            height: 85px !important;
+            width: auto;
+            filter: brightness(0) invert(1);
+            transition: all 0.3s ease;
+        }
+    
+        .navbar-brand:hover .logo-img {
+            transform: scale(1.05);
+            filter: brightness(0) invert(1) drop-shadow(0 2px 8px rgba(255, 255, 255, 0.3));
+        }
+    
+        .navbar-nav {
+            gap: 0.2rem;
+            flex-wrap: nowrap;
+        }
+    
+        .nav-link {
+            color: white !important;
+            font-weight: 600 !important;
+            font-size: 1rem;
+            padding: 0.5rem 0.8rem !important;
+            border-radius: 20px;
+            transition: all 0.3s ease;
+            position: relative;
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+            white-space: nowrap;
+        }
+    
+        .nav-link:hover {
+            background: rgba(255, 255, 255, 0.15) !important;
+            transform: translateY(-1px);
+            box-shadow: 0 3px 10px rgba(255, 255, 255, 0.1);
+        }
+    
+        .nav-link::before {
+            content: '';
+            position: absolute;
+            bottom: 3px;
+            left: 50%;
+            width: 0;
+            height: 2px;
+            background: white;
+            transition: all 0.3s ease;
+            transform: translateX(-50%);
+            border-radius: 2px;
+        }
+    
+        .nav-link:hover::before {
+            width: 40%;
+        }
+    
+        .header-buttons {
+            gap: 0.8rem;
+            margin-left: 1.5rem;
+        }
+    
+        .btn-outline-light {
+            border: 2px solid rgba(255, 255, 255, 0.7);
+            color: white;
+            font-weight: 600;
+            padding: 0.4rem 1rem;
+            border-radius: 20px;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+            font-size: 1rem;
+            white-space: nowrap;
+        }
+    
+        .btn-outline-light:hover {
+            background: rgba(255, 255, 255, 0.15);
+            border-color: white;
+            transform: translateY(-1px);
+            box-shadow: 0 3px 10px rgba(255, 255, 255, 0.2);
+        }
+    
+        .btn-gradient {
+            background: rgba(255, 255, 255, 0.2);
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            color: white;
+            font-weight: 600;
+            padding: 0.4rem 1rem;
+            border-radius: 20px;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+            font-size: 1rem;
+            white-space: nowrap;
+        }
+    
+        .btn-gradient:hover {
+            background: rgba(255, 255, 255, 0.3);
+            border-color: white;
+            transform: translateY(-1px);
+            box-shadow: 0 3px 12px rgba(255, 255, 255, 0.3);
+            color: white;
+        }
+
+        /* Hero Section */
+        .account-hero {
+            background: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)), url('{% static "images/bullish-golden-1.jpg" %}') no-repeat center center/cover;
+            height: 70vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            text-align: center;
+            margin-top: -80px;
+        }
+
+        .hero-content h1 {
+            font-size: 3.5rem;
+            font-weight: 800;
+            margin-bottom: 1rem;
+        }
+
+        .hero-content p {
+            font-size: 1.3rem;
+            margin-bottom: 2rem;
+            opacity: 0.9;
+        }
+
+        .cta-button {
+            display: inline-block;
+            background: var(--gradient-main);
+            color: white;
+            padding: 15px 35px;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 1.2rem;
+            transition: all 0.3s ease;
+            border: none;
+        }
+
+        .cta-button:hover {
+            background: var(--gradient-reverse);
+            transform: translateY(-3px);
+            color: white;
+            box-shadow: 0 10px 25px rgba(52, 152, 219, 0.3);
+        }
+
+        /* Sections */
+        section {
+            padding: 80px 0;
+        }
+
+        /* Affiliates Section Styles */
+        .affiliate-card {
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .affiliate-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(0,0,0,0.12) !important;
+        }
+
+        .stat-box {
+            transition: all 0.3s ease;
+        }
+
+        .stat-box:hover {
+            transform: scale(1.05);
+            background: rgba(52, 152, 219, 0.1) !important;
+        }
+
+        .weekly-number-display {
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+
+        .btn-outline-primary {
+            border-color: #3498db;
+            color: #3498db;
+        }
+
+        .btn-outline-primary:hover {
+            background-color: #3498db;
+            color: white;
+        }
+
+        /* Membership Card */
+        .membership-card {
+            background: linear-gradient(145deg, #1a2a4f 0%, #0d1a33 100%);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 15px 40px rgba(0,0,0,0.2);
+            position: relative;
+            overflow: hidden;
+            color: white;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .membership-card::before {
+            content: 'TRADE';
+            position: absolute;
+            top: -30px;
+            right: -30px;
+            opacity: 0.1;
+            font-size: 12rem;
+            font-weight: 700;
+            color: white;
+            transform: rotate(15deg);
+        }
+
+        /* Brokers Grid */
+        .brokers-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            gap: 30px;
+            margin-top: 50px;
+        }
+
+        .broker-card {
+            background: white;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+        }
+
+        .broker-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 40px rgba(0,0,0,0.15);
+        }
+
+        .broker-header {
+            background: var(--dark-blue);
+            color: white;
+            padding: 25px;
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .logo-container {
+            width: 120px;
+            height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: white;
+            padding: 10px;
+            border-radius: 8px;
+        }
+
+        .broker-logo {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain;
+        }
+
+        .broker-body {
+            padding: 25px;
+        }
+
+        .feature-item {
+            display: flex;
+            align-items: flex-start;
+            margin-bottom: 15px;
+        }
+
+        .feature-icon {
+            color: var(--primary-blue);
+            margin-right: 15px;
+            margin-top: 3px;
+        }
+
+        .broker-button {
+            display: block;
+            text-align: center;
+            background: var(--gradient-main);
+            color: white;
+            padding: 12px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            border: none;
+        }
+
+        .broker-button:hover {
+            background: var(--gradient-reverse);
+            transform: translateY(-3px);
+            color: white;
+        }
+
+        /* Videos Grid */
+        .videos-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(500px, 1fr));
+            gap: 40px;
+            margin-top: 50px;
+        }
+
+        .video-card {
+            background: white;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+
+        .video-header {
+            background: var(--dark-blue);
+            color: white;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .video-container {
+            position: relative;
+            padding-bottom: 56.25%;
+            height: 0;
+        }
+
+        .video-container iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+
+        /* Future Section */
+        .coin-3d {
+            width: 250px;
+            height: 250px;
+            margin: 0 auto;
+            perspective: 1000px;
+        }
+
+        .rotating-coin {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            animation: rotate-coin 8s infinite linear;
+        }
+
+        @keyframes rotate-coin {
+            from { transform: rotateY(0deg); }
+            to { transform: rotateY(360deg); }
+        }
+
+        /* Footer Styles */
+        .footer-menu a:hover {
+            color: #3498db !important;
+        }
+        
+        .footer-social-links a:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+        }
+
+        /* Responsive Design */
+        @media (max-width: 991.98px) {
+            .navbar-nav.mx-auto {
+                position: static;
+                transform: none;
+                text-align: center;
+                margin: 1rem 0;
+                gap: 0.3rem;
+            }
+    
+            .nav-link {
+                padding: 0.8rem 1rem !important;
+                font-size: 1rem;
+            }
+    
+            .header-buttons {
+                margin-left: 0;
+                justify-content: center;
+                margin-top: 1rem;
+            }
+    
+            .navbar-collapse {
+                background: linear-gradient(135deg, rgba(44, 62, 80, 0.98), rgba(52, 152, 219, 0.98));
+                border-radius: 15px;
+                margin-top: 1rem;
+                padding: 1rem;
+                backdrop-filter: blur(20px);
+                box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            }
+    
+            body {
+                padding-top: 70px;
+            }
+
+            .hero-content h1 {
+                font-size: 2.5rem;
+            }
+            
+            .brokers-grid,
+            .videos-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .videos-grid {
+                gap: 20px;
+            }
+
+            .weekly-number-display {
+                font-size: 2rem !important;
+                letter-spacing: 3px !important;
+            }
+            
+            .referral-actions .btn {
+                flex: 1;
+                min-width: 120px;
+            }
+        }
+    
+        @media (min-width: 992px) {
+            .navbar-nav.mx-auto {
+                position: absolute;
+                left: 50%;
+                transform: translateX(-50%);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .footer-menu div {
+                justify-content: center;
+                gap: 15px;
+            }
+            
+            .footer-copyright-text {
+                text-align: center !important;
+                margin-top: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="main-header">
+        <nav class="navbar navbar-expand-lg navbar-dark">
+            <div class="container-fluid px-4">
+                <a class="navbar-brand" href="/">
+                    <img src="{% static 'images/TRADE-WISE-FINAL-TRANSPARENT.png' %}" alt="TradeWise" class="logo-img">
+                </a>
+                
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+    
+                <div class="collapse navbar-collapse" id="navbarContent">
+                    <ul class="navbar-nav mx-auto mb-2 mb-lg-0">
+                        <li class="nav-item"><a class="nav-link text-white active" href="/">Home</a></li>
+                        <li class="nav-item"><a class="nav-link text-white" href="/market">Coaching</a></li>
+                        <li class="nav-item"><a class="nav-link text-white" href="/trade">Trade Desk</a></li>
+                        <li class="nav-item"><a class="nav-link text-white" href="/payment">Payment Plan</a></li>
+                        <li class="nav-item"><a class="nav-link text-white" href="/contact">Contact Us</a></li>
+                    </ul>
+                    
+                    <div class="d-flex header-buttons ms-auto">
+                        {% if first_name %}
+                            <span class="nav-link text-white me-2" style="padding: 0.4rem 0.8rem !important; font-size: 1rem;">
+                                <i class="fas fa-user me-1" style="font-size: 1rem;">Welcome</i>{{ first_name }}
+                            </span>
+                            <a href="{% url 'logout' %}" class="btn btn-outline-light">
+                                <i class="fas fa-sign-out-alt me-1"></i>Logout
+                            </a>
+                        {% else %}
+                            <a href="tel:+254702700745" class="btn btn-outline-light me-2">
+                                <i class="fas fa-phone me-1"></i><span>+254 702 700 745</span>
+                            </a>
+                            <a href="loginpage" class="btn btn-gradient">
+                                <i class="fas fa-sign-in-alt me-1"></i>Sign In
+                            </a>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="account-hero">
+        <div class="hero-content">
+            <h1 style="font-size: 2rem;margin-top: 70px;">You Have Started Your Trading Journey</h1>
+            <p>Join thousands of successful traders with TradeWise premium features and signals</p>
+            <a href="#brokers" class="cta-button">Get Started Now</a>
+        </div>
+    </section>
+
+    
+
+            
+
+    <!-- Membership Card Section -->
+<section id="card" style="background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%); padding: 60px 0;">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-10 text-center mb-4">
+                <h2 style="font-size: 2rem; font-weight: 700; color: #2c3e50; margin-bottom: 10px;">Your Exclusive <span style="color: #3498db;">TradeWise Card</span></h2>
+                <p style="font-size: 1rem; color: #7f8c8d;">Unlock premium trading benefits with your membership card</p>
+            </div>
+        </div>
+        
+        <div class="row align-items-center">
+            <!-- Card Column - LEFT -->
+            <div class="col-lg-6 mb-4 mb-lg-0">
+                <div class="card-container" style="position: relative;">
+                    <div class="membership-card" style="background: linear-gradient(145deg, #1a2a4f 0%, #0d1a33 100%); border-radius: 16px; padding: 25px; box-shadow: 0 15px 35px rgba(0,0,0,0.2); position: relative; overflow: hidden; color: white; border: 1px solid rgba(255,255,255,0.1); min-height: 280px;">
+                        <div class="card-content" style="position: relative; z-index: 2;">
+                            <div class="mb-3" style="display: flex; align-items: center;">
+                                <img src="{% static 'images/TRADE-WISE-FINAL-TRANSPARENT.png' %}" alt="TradeWise Logo" style="height: 45px; margin-right: 12px; filter: brightness(0) invert(1);">
+                                <div style="font-size: 1rem; font-weight: 600;">Premium Member</div>
+                            </div>
+                            
+                            <div class="mb-3" style="background: rgba(255,255,255,0.15); padding: 12px; border-radius: 8px;">
+                                <div style="font-size: 0.8rem; margin-bottom: 4px; opacity: 0.8;">CARD NUMBER</div>
+                                <div style="font-size: 1.2rem; letter-spacing: 2px; font-weight: 600;">
+                                    TWC/NO/{% if account_number %}{{ account_number }}{% else %}001234{% endif %}
+                                </div>
+                            </div>
+
+                            <div class="mb-3">
+                                <div style="font-size: 0.8rem; opacity: 0.8;">TRADEWISE COINS</div>
+                                <div style="font-size: 1.2rem; font-weight: 700;">
+                                    R/T/W/C/G/{% if balance %}{{ balance }}{% else %}50 COINS{% endif %}
+                                </div>
+                            </div>
+                            
+                            <div style="display: flex; justify-content: space-between; align-items: flex-end;">
+                                <div>
+                                    <div style="font-size: 0.8rem; opacity: 0.8;">CARD HOLDER</div>
+                                    <div style="font-size: 1rem; font-weight: 600;">{% if first_name %}{{ first_name }} {{ second_name }}{% else %}John Doe{% endif %}</div>
+                                </div>
+                                <div>
+                                    <div style="font-size: 0.8rem; opacity: 0.8;">STATUS</div>
+                                    <div style="font-size: 1rem; font-weight: 600; color: #2ecc71;">ACTIVE</div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Card Watermark -->
+                        <div style="position: absolute; top: -20px; right: -20px; opacity: 0.1; font-size: 8rem; font-weight: 700; color: white; transform: rotate(15deg);">TRADE</div>
+                        
+                        <!-- Chip Effect -->
+                        <div style="position: absolute; top: 25px; right: 25px; width: 40px; height: 32px; background: linear-gradient(45deg, #ffd700, #ffed4e); border-radius: 6px; opacity: 0.8;"></div>
+                    </div>
+                    
+                    <!-- Glow Effect -->
+                    <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 100%; height: 100%; background: radial-gradient(circle, rgba(52, 152, 219, 0.15) 0%, rgba(52, 152, 219, 0) 70%); border-radius: 16px; z-index: -1;"></div>
+                </div>
+            </div>
+            
+            <!-- Benefits Column - RIGHT -->
+            <div class="col-lg-6">
+                <div class="benefits-content">
+                    <h3 style="font-size: 1.5rem; font-weight: 700; color: #2c3e50; margin-bottom: 20px; text-align: center;">
+                        Premium Benefits
+                    </h3>
+                    
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <div class="benefit-item" style="padding: 16px; background: white; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.08); height: 100%; transition: all 0.3s ease; border-top: 3px solid #3498db;">
+                                <div class="text-center mb-2">
+                                    <div style="width: 48px; height: 48px; background: linear-gradient(135deg, #3498db, #2c3e50); border-radius: 10px; display: inline-flex; align-items: center; justify-content: center;">
+                                        <i class="fas fa-coins" style="color: white; font-size: 1.2rem;"></i>
+                                    </div>
+                                </div>
+                                <h4 style="font-size: 1rem; color: #2c3e50; margin-bottom: 6px; font-weight: 600; text-align: center;">Upto $500K Prop Trading</h4>
+                                <p style="color: #7f8c8d; margin: 0; font-size: 0.85rem; text-align: center;">Access premium funding</p>
+                            </div>
+                        </div>
+                        
+                        <div class="col-md-6 mb-3">
+                            <div class="benefit-item" style="padding: 16px; background: white; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.08); height: 100%; transition: all 0.3s ease; border-top: 3px solid #2ecc71;">
+                                <div class="text-center mb-2">
+                                    <div style="width: 48px; height: 48px; background: linear-gradient(135deg, #2ecc71, #27ae60); border-radius: 10px; display: inline-flex; align-items: center; justify-content: center;">
+                                        <i class="fas fa-chart-line" style="color: white; font-size: 1.2rem;"></i>
+                                    </div>
+                                </div>
+                                <h4 style="font-size: 1rem; color: #2c3e50; margin-bottom: 6px; font-weight: 600; text-align: center;">Priority Signals</h4>
+                                <p style="color: #7f8c8d; margin: 0; font-size: 0.85rem; text-align: center;">Early access to trades</p>
+                            </div>
+                        </div>
+                        
+                        <div class="col-md-6 mb-3">
+                            <div class="benefit-item" style="padding: 16px; background: white; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.08); height: 100%; transition: all 0.3s ease; border-top: 3px solid #e74c3c;">
+                                <div class="text-center mb-2">
+                                    <div style="width: 48px; height: 48px; background: linear-gradient(135deg, #e74c3c, #c0392b); border-radius: 10px; display: inline-flex; align-items: center; justify-content: center;">
+                                        <i class="fas fa-user-tie" style="color: white; font-size: 1.2rem;"></i>
+                                    </div>
+                                </div>
+                                <h4 style="font-size: 1rem; color: #2c3e50; margin-bottom: 6px; font-weight: 600; text-align: center;">Dedicated Manager</h4>
+                                <p style="color: #7f8c8d; margin: 0; font-size: 0.85rem; text-align: center;">24/7 personal support</p>
+                            </div>
+                        </div>
+                        
+                        <div class="col-md-6 mb-3">
+                            <div class="benefit-item" style="padding: 16px; background: white; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.08); height: 100%; transition: all 0.3s ease; border-top: 3px solid #9b59b6;">
+                                <div class="text-center mb-2">
+                                    <div style="width: 48px; height: 48px; background: linear-gradient(135deg, #9b59b6, #8e44ad); border-radius: 10px; display: inline-flex; align-items: center; justify-content: center;">
+                                        <i class="fas fa-graduation-cap" style="color: white; font-size: 1.2rem;"></i>
+                                    </div>
+                                </div>
+                                <h4 style="font-size: 1rem; color: #2c3e50; margin-bottom: 6px; font-weight: 600; text-align: center;">VIP Education</h4>
+                                <p style="color: #7f8c8d; margin: 0; font-size: 0.85rem; text-align: center;">Premium courses & mentorship</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="text-center mt-3">
+                        <button onclick="showPaymentModal('TradeWise Membership Card', 1500)" class="btn-primary-gradient" style="padding: 12px 32px; font-size: 1rem; font-weight: 600; border-radius: 50px; border: none; transition: all 0.3s ease; background: linear-gradient(135deg, #3498db, #2c3e50); color: white; box-shadow: 0 4px 15px rgba(52, 152, 219, 0.3);">
+                            <i class="fas fa-credit-card me-2"></i> Get Card - $10
+                        </button>
+                        <p style="color: #7f8c8d; margin-top: 12px; font-size: 0.85rem;">
+                            <i class="fas fa-shield-alt me-1"></i> Secure • Instant • Guaranteed
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+ <!-- Affiliates Section - Fixed Version -->
+<section id="affiliates" style="padding: 80px 0; background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);">
+    <div class="container">
+        <div class="row justify-content-center mb-5">
+            <div class="col-lg-10 text-center">
+                <span style="background: linear-gradient(135deg, #3498db, #2c3e50); color: white; padding: 8px 25px; border-radius: 2px; font-size: 0.9rem; font-weight: 600; letter-spacing: 1px;">AFFILIATE PROGRAM</span>
+                <h2 style="font-size: 2rem; font-weight: 800; color: #2c3e50; margin: 20px 0 10px;">Earn with <span style="color: #3498db;">TWC Coins</span> Referrals</h2>
+                <p style="color: #64748b; font-size: 1.1rem; max-width: 600px; margin: 0 auto;">Get 50 TWC coins for every person who signs up with your referral link. Redeemable at 10 Ksh per coin weekly!</p>
+            </div>
+        </div>
+    <div class="row g-4">
+        <!-- Affiliate Stats & Referral Link -->
+        <div class="col-lg-6">
+            <div class="affiliate-card" style="background: white; border-radius: 15px; padding: 30px; box-shadow: 0 10px 30px rgba(0,0,0,0.08); height: 100%;">
+                <div class="d-flex align-items-center mb-4">
+                    <div class="icon-box me-3" style="width: 60px; height: 60px; background: rgba(52, 152, 219, 0.1); border-radius: 50%; display: flex; align-items: center; justify-content: center;">
+                        <i class="fas fa-link" style="font-size: 1.8rem; color: #3498db;"></i>
+                    </div>
+                    <h3 class="mb-0" style="color: #2c3e50;">Your Referral Link</h3>
+                </div>
+                
+                <div class="referral-link-container mb-4">
+                    <div class="input-group">
+                        <input type="text" class="form-control" id="referralLink" 
+                        value="http://127.0.0.1:8000/signup?ref={{ user_id }}"
+                               readonly style="border-radius: 8px 0 0 8px; border: 2px solid #e2e8f0;">
+                        <button class="btn btn-primary" onclick="copyReferralLink()" 
+                                style="border-radius: 0 8px 8px 0; background: #3498db; border: 2px solid #3498db;">
+                            <i class="fas fa-copy"></i>
+                        </button>
+                    </div>
+                    <small class="text-muted mt-2 d-block">Share this link to earn 50 TWC coins per successful referral</small>
+                </div>
+                
+                <div class="referral-stats mb-4">
+                    <div class="row text-center">
+                        <div class="col-4">
+                            <div class="stat-box p-3" style="background: rgba(52, 152, 219, 0.05); border-radius: 10px;">
+                                <h3 class="mb-1" style="color: #3498db;" id="totalReferrals">{% if referral_stats.total_referrals %}{{ referral_stats.total_referrals }}{% else %}0{% endif %}</h3>
+                                <p class="mb-0 small" style="color: #64748b;">Total Referrals</p>
+                            </div>
+                        </div>
+                        <div class="col-4">
+                            <div class="stat-box p-3" style="background: rgba(52, 152, 219, 0.05); border-radius: 10px;">
+                                <h3 class="mb-1" style="color: #2ecc71;" id="totalCoins">{% if referral_stats.total_coins %}{{ referral_stats.total_coins }}{% else %}0{% endif %}</h3>
+                                <p class="mb-0 small" style="color: #64748b;">TWC Coins</p>
+                            </div>
+                        </div>
+                        <div class="col-4">
+                            <div class="stat-box p-3" style="background: rgba(52, 152, 219, 0.05); border-radius: 10px;">
+                                <h3 class="mb-1" style="color: #e74c3c;" id="pendingCoins">{% if referral_stats.pending_coins %}{{ referral_stats.pending_coins }}{% else %}0{% endif %}</h3>
+                                <p class="mb-0 small" style="color: #64748b;">Pending</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="referral-actions">
+                    <h5 class="mb-3" style="color: #2c3e50;">Share Your Link</h5>
+                    <div class="d-flex gap-2 flex-wrap">
+                        <button class="btn btn-outline-primary" onclick="shareOnWhatsApp()" style="border-radius: 8px; border-color: #3498db; color: #3498db;">
+                            <i class="fab fa-whatsapp me-2"></i> WhatsApp
+                        </button>
+                        <button class="btn btn-outline-primary" onclick="shareOnFacebook()" style="border-radius: 8px; border-color: #3498db; color: #3498db;">
+                            <i class="fab fa-facebook me-2"></i> Facebook
+                        </button>
+                        <button class="btn btn-outline-primary" onclick="shareOnTwitter()" style="border-radius: 8px; border-color: #3498db; color: #3498db;">
+                            <i class="fab fa-twitter me-2"></i> Twitter
+                        <button class="btn btn-outline-primary" onclick="shareViaEmail()" style="border-radius: 8px; border-color: #3498db; color: #3498db;">
+                            <i class="fas fa-envelope me-2"></i> Email
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- TWC Coin Redemption -->
+<div class="col-lg-6">
+    <div class="affiliate-card" style="background: white; border-radius: 12px; padding: 25px; box-shadow: 0 5px 20px rgba(0,0,0,0.06); height: 100%;">
+        <div class="d-flex align-items-center mb-3">
+            <div class="icon-box me-3" style="width: 50px; height: 50px; background: rgba(46, 204, 113, 0.1); border-radius: 50%; display: flex; align-items: center; justify-content: center;">
+                <i class="fas fa-coins" style="font-size: 1.5rem; color: #2ecc71;"></i>
+            </div>
+            <h3 class="mb-0" style="color: #2c3e50; font-size: 1.3rem;">Redeem Coins</h3>
+        </div>
+        
+        <div class="redemption-info mb-3">
+            <div style="background: rgba(46, 204, 113, 0.05); padding: 15px; border-radius: 8px; text-align: center;">
+                <h4 style="color: #2ecc71; margin-bottom: 8px; font-size: 1.1rem;">Your Balance</h4>
+                <div class="balance-amount" style="font-size: 2rem; font-weight: 700; color: #2c3e50;" id="currentBalance">
+                    {{ referral_stats.coin_balance }}
+                </div>
+                <p class="mb-0 small" style="color: #64748b;">TWC Coins</p>
+                <p class="small mt-1" style="color: #7f8c8d;" id="cashEquivalent">
+                    ≈ <span id="cashValue">{{ cash_value }}</span> Ksh
+                </p>
+            </div>
+        </div>
+        
+        <form method="POST" action="/affiliate/request-payout/">
+            {% csrf_token %}
+            <div class="redemption-form">
+                <div class="row g-2">
+                    <div class="col-md-6">
+                        <label for="coinAmount" class="form-label fw-bold" style="color: #2c3e50; font-size: 0.9rem;">Coins to Redeem</label>
+                        <input type="number" class="form-control" id="coinAmount" name="coin_amount"
+                               placeholder="Min 50 coins" min="50" max="{{ referral_stats.coin_balance }}" 
+                               style="border-radius: 6px; border: 1px solid #e2e8f0; font-size: 0.9rem;" 
+                               oninput="calculatePayout()" required>
+                    </div>
+                    <div class="col-md-6">
+                        <label for="paymentMethod" class="form-label fw-bold" style="color: #2c3e50; font-size: 0.9rem;">Payment Method</label>
+                        <select class="form-select" id="paymentMethod" name="payment_method" style="border-radius: 6px; border: 1px solid #e2e8f0; font-size: 0.9rem;" onchange="showPaymentFields()" required>
+                            <option value="">Choose method</option>
+                            <option value="mpesa">M-Pesa</option>
+                            <option value="bank">Bank Transfer</option>
+                            <option value="paypal">PayPal</option>
+                        </select>
+                    </div>
+                    
+                    <!-- Dynamic Payment Fields -->
+                    <div class="col-12" id="paymentFields" style="display: none;">
+                        <div class="payment-details mt-2 p-3" style="background: #f8f9fa; border-radius: 6px;">
+                            <!-- M-Pesa Fields -->
+                            <div id="mpesaFields" class="payment-method-fields">
+                                <label for="mpesaNumber" class="form-label small">M-Pesa Number</label>
+                                <input type="text" class="form-control" id="mpesaNumber" name="mpesa_number" placeholder="e.g., 254712345678">
+                            </div>
+                            
+                            <!-- Bank Fields -->
+                            <div id="bankFields" class="payment-method-fields" style="display: none;">
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <label for="bankName" class="form-label small">Bank Name</label>
+                                        <input type="text" class="form-control" id="bankName" name="bank_name" placeholder="e.g., Equity Bank">
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label for="bankAccount" class="form-label small">Account Number</label>
+                                        <input type="text" class="form-control" id="bankAccount" name="bank_account" placeholder="e.g., 1234567890">
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- PayPal Fields -->
+                            <div id="paypalFields" class="payment-method-fields" style="display: none;">
+                                <label for="paypalEmail" class="form-label small">PayPal Email</label>
+                                <input type="email" class="form-control" id="paypalEmail" name="paypal_email" placeholder="e.g., your.email@example.com">
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="col-12">
+                        <div class="d-flex justify-content-between align-items-center mt-2">
+                            <div>
+                                <p class="mb-0 fw-bold" style="color: #2c3e50; font-size: 0.9rem;">
+                                    Payout: <span id="estimatedPayout" style="color: #2ecc71;">0 Ksh</span>
+                                </p>
+                            </div>
+                            <button type="submit" class="btn btn-success" style="border-radius: 6px; background: #2ecc71; border: none; padding: 8px 16px; font-size: 0.9rem;">
+                                <i class="fas fa-paper-plane me-1"></i>Request Payout
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+        
+        <div class="mt-3">
+            <div class="alert alert-info" style="background: rgba(52, 152, 219, 0.05); border: none; border-left: 3px solid #3498db; padding: 10px; font-size: 0.8rem;">
+                <i class="fas fa-info-circle me-1"></i>
+                <strong>Weekly processing</strong> every Friday • Min 50 coins • 10 Ksh per coin
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+</section>
+
+    <!-- Modern Brokers Section -->
+    <section id="brokers" style="padding: 80px 0; background: #f8fafc;">
+        <div class="container">
+            <div class="text-center mb-5">
+                <span style="background: linear-gradient(135deg, #2c3e50, #3498db); color: white; padding: 8px 25px; border-radius: 2px; font-size: 0.9rem; font-weight: 600; letter-spacing: 1px;">TRUSTED BROKERS</span>
+                <h2 style="font-size: 2rem; font-weight: 800; color: #2c3e50; margin: 20px 0 10px;">Choose Your Trading Platform</h2>
+                <p style="color: #64748b; font-size: 1.1rem; max-width: 600px; margin: 0 auto;">Partner with world-class brokers trusted by thousands of successful traders</p>
+            </div>
+
+            <div class="row g-4 justify-content-center">
+                <!-- Windsor Brokers - Modern Card -->
+                <div class="col-lg-5 col-md-6">
+                    <div class="broker-card-rectangle" style="background: white; border-radius: 0; padding: 0; overflow: hidden; box-shadow: 0 5px 25px rgba(44, 62, 80, 0.1); transition: all 0.3s ease; border: 1px solid #e2e8f0; height: 100%; position: relative;">
+                        <!-- Header with diagonal cut -->
+                        <div style="background: linear-gradient(135deg, #2c3e50 0%, #3498db 100%); padding: 30px; text-align: center; position: relative; clip-path: polygon(0 0, 100% 0, 100% 85%, 0 100%);">
+                            <div style="width: 100px; height: 60px; background: white; border-radius: 0; display: inline-flex; align-items: center; justify-content: center; margin-bottom: 20px; border: 1px solid #e2e8f0;">
+                                <img src="{% static 'images/windsor.png' %}" alt="Windsor" style="width: 80px; height: 45px; object-fit: contain;">
+                            </div>
+                            <h3 style="color: white; font-size: 1.6rem; font-weight: 700; margin: 0 0 5px;">WINDSOR BROKERS</h3>
+                            <p style="color: rgba(255,255,255,0.9); font-size: 0.9rem; margin: 0; font-weight: 500;">EST. 1988 • REGULATED</p>
+                        </div>
+                        
+                        <!-- Features -->
+                        <div style="padding: 30px;">
+                            <div class="feature-item" style="display: flex; align-items: center; margin-bottom: 20px; padding: 15px; background: #f8fafc; border-left: 4px solid #3498db;">
+                                <div style="margin-right: 15px; color: #3498db; font-size: 1.1rem;">
+                                    <i class="fas fa-chart-line"></i>
+                                </div>
+                                <div>
+                                    <h4 style="font-size: 1rem; color: #2c3e50; margin: 0 0 5px; font-weight: 600;">0.0 Pips Spread</h4>
+                                    <p style="color: #64748b; margin: 0; font-size: 0.85rem;">Ultra-tight competitive spreads</p>
+                                </div>
+                            </div>
+                            
+                            <div class="feature-item" style="display: flex; align-items: center; margin-bottom: 20px; padding: 15px; background: #f8fafc; border-left: 4px solid #3498db;">
+                                <div style="margin-right: 15px; color: #3498db; font-size: 1.1rem;">
+                                    <i class="fas fa-bolt"></i>
+                                </div>
+                                <div>
+                                    <h4 style="font-size: 1rem; color: #2c3e50; margin: 0 0 5px; font-weight: 600;">1:500 Leverage</h4>
+                                    <p style="color: #64748b; margin: 0; font-size: 0.85rem;">Maximum trading power</p>
+                                </div>
+                            </div>
+                            
+                            <div class="feature-item" style="display: flex; align-items: center; margin-bottom: 25px; padding: 15px; background: #f8fafc; border-left: 4px solid #3498db;">
+                                <div style="margin-right: 15px; color: #3498db; font-size: 1.1rem;">
+                                    <i class="fas fa-shield-alt"></i>
+                                </div>
+                                <div>
+                                    <h4 style="font-size: 1rem; color: #2c3e50; margin: 0 0 5px; font-weight: 600;">Balance Protection</h4>
+                                    <p style="color: #64748b; margin: 0; font-size: 0.85rem;">Advanced risk management</p>
+                                </div>
+                            </div>
+                            
+                            <a href="https://ke.myuserhub.com/welcome?returnUrl=%2Faccounts&pt=200578" target="_blank" class="broker-btn" style="display: block; text-align: center; background: linear-gradient(135deg, #2c3e50, #3498db); color: white; padding: 12px; border-radius: 0; text-decoration: none; font-weight: 600; transition: all 0.3s ease; font-size: 1rem; border: none;">
+                                <i class="fas fa-rocket me-2"></i>CREATE WINDSOR ACCOUNT
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Deriv - Modern Card -->
+                <div class="col-lg-5 col-md-6">
+                    <div class="broker-card-rectangle" style="background: white; border-radius: 0; padding: 0; overflow: hidden; box-shadow: 0 5px 25px rgba(44, 62, 80, 0.1); transition: all 0.3s ease; border: 1px solid #e2e8f0; height: 100%; position: relative;">
+                        <!-- Header with diagonal cut -->
+                        <div style="background: linear-gradient(135deg, #1a365d 0%, #2c3e50 100%); padding: 30px; text-align: center; position: relative; clip-path: polygon(0 0, 100% 0, 100% 85%, 0 100%);">
+                            <div style="width: 100px; height: 60px; background: white; border-radius: 0; display: inline-flex; align-items: center; justify-content: center; margin-bottom: 20px; border: 1px solid #e2e8f0;">
+                                <img src="{% static 'images/deriv.webp' %}" alt="Deriv" style="width: 80px; height: 45px; object-fit: contain;">
+                            </div>
+                            <h3 style="color: white; font-size: 1.6rem; font-weight: 700; margin: 0 0 5px;">DERIV</h3>
+                            <p style="color: rgba(255,255,255,0.9); font-size: 0.9rem; margin: 0; font-weight: 500;">20+ YEARS • MULTI-REGULATED</p>
+                        </div>
+                        
+                        <!-- Features -->
+                        <div style="padding: 30px;">
+                            <div class="feature-item" style="display: flex; align-items: center; margin-bottom: 20px; padding: 15px; background: #f8fafc; border-left: 4px solid #2c3e50;">
+                                <div style="margin-right: 15px; color: #2c3e50; font-size: 1.1rem;">
+                                    <i class="fas fa-globe"></i>
+                                </div>
+                                <div>
+                                    <h4 style="font-size: 1rem; color: #2c3e50; margin: 0 0 5px; font-weight: 600;">24/7 Trading</h4>
+                                    <p style="color: #64748b; margin: 0; font-size: 0.85rem;">Synthetic indices anytime</p>
+                                </div>
+                            </div>
+                            
+                            <div class="feature-item" style="display: flex; align-items: center; margin-bottom: 20px; padding: 15px; background: #f8fafc; border-left: 4px solid #2c3e50;">
+                                <div style="margin-right: 15px; color: #2c3e50; font-size: 1.1rem;">
+                                    <i class="fas fa-fire"></i>
+                                </div>
+                                <div>
+                                    <h4 style="font-size: 1rem; color: #2c3e50; margin: 0 0 5px; font-weight: 600;">1:1000 Leverage</h4>
+                                    <p style="color: #64748b; margin: 0; font-size: 0.85rem;">Maximum trading conditions</p>
+                                </div>
+                            </div>
+                            
+                            <div class="feature-item" style="display: flex; align-items: center; margin-bottom: 25px; padding: 15px; background: #f8fafc; border-left: 4px solid #2c3e50;">
+                                <div style="margin-right: 15px; color: #2c3e50; font-size: 1.1rem;">
+                                    <i class="fas fa-play-circle"></i>
+                                </div>
+                                <div>
+                                    <h4 style="font-size: 1rem; color: #2c3e50; margin: 0 0 5px; font-weight: 600;">$10K Demo</h4>
+                                    <p style="color: #64748b; margin: 0; font-size: 0.85rem;">Practice completely risk-free</p>
+                                </div>
+                            </div>
+                            
+                            <a href="https://track.deriv.com/_9VbYrFdiio5MjdsyM5hasGNd7ZgqdRLk/1/" target="_blank" class="broker-btn" style="display: block; text-align: center; background: linear-gradient(135deg, #1a365d, #2c3e50); color: white; padding: 12px; border-radius: 0; text-decoration: none; font-weight: 600; transition: all 0.3s ease; font-size: 1rem; border: none;">
+                                <i class="fas fa-bolt me-2"></i>CREATE DERIV ACCOUNT
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Modern Video Tutorials -->
+    <section style="padding: 80px 0; background: #2c3e50;">
+        <div class="container">
+            <div class="text-center mb-5">
+                <span style="background: #3498db; color: white; padding: 8px 25px; border-radius: 2px; font-size: 0.9rem; font-weight: 600; letter-spacing: 1px;">QUICK START GUIDES</span>
+                <h2 style="font-size: 2rem; font-weight: 800; color: white; margin: 20px 0 10px;">Setup in Minutes</h2>
+                <p style="color: #cbd5e1; font-size: 1.1rem; max-width: 600px; margin: 0 auto;">Watch our professional guides and start trading in less than 10 minutes</p>
+            </div>
+
+            <div class="row g-4 justify-content-center">
+                <div class="col-lg-5 col-md-6">
+                    <div class="video-card-rectangle" style="background: #1a2a3a; border-radius: 0; overflow: hidden; border: 1px solid #374151; transition: all 0.3s ease;">
+                        <div style="position: relative;">
+                            <div class="video-container" style="position: relative; padding-bottom: 56.25%; height: 0;">
+                                <iframe src="https://www.youtube.com/embed/bqEYnvba-QY?rel=0&showinfo=0" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: none;" allowfullscreen></iframe>
+                            </div>
+                            <div style="position: absolute; top: 15px; left: 15px; background: #3498db; color: white; padding: 8px 15px; border-radius: 0; font-size: 0.8rem; font-weight: 600;">
+                                <i class="fas fa-play me-1"></i>WINDSOR BROKERS
+                            </div>
+                        </div>
+                        <div style="padding: 25px; text-align: center; border-top: 3px solid #3498db;">
+                            <h4 style="color: white; font-size: 1.2rem; font-weight: 600; margin-bottom: 10px;">Professional Account Setup</h4>
+                            <p style="color: #cbd5e1; margin: 0; font-size: 0.9rem;">Complete step-by-step Windsor account creation</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-lg-5 col-md-6">
+                    <div class="video-card-rectangle" style="background: #1a2a3a; border-radius: 0; overflow: hidden; border: 1px solid #374151; transition: all 0.3s ease;">
+                        <div style="position: relative;">
+                            <div class="video-container" style="position: relative; padding-bottom: 56.25%; height: 0;">
+                                <iframe src="https://www.youtube.com/embed/YgEYfz5BfOA?rel=0&showinfo=0" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: none;" allowfullscreen></iframe>
+                            </div>
+                            <div style="position: absolute; top: 15px; left: 15px; background: #2c3e50; color: white; padding: 8px 15px; border-radius: 0; font-size: 0.8rem; font-weight: 600;">
+                                <i class="fas fa-play me-1"></i>DERIV PLATFORM
+                            </div>
+                        </div>
+                        <div style="padding: 25px; text-align: center; border-top: 3px solid #2c3e50;">
+                            <h4 style="color: white; font-size: 1.2rem; font-weight: 600; margin-bottom: 10px;">Quick Platform Setup</h4>
+                            <p style="color: #cbd5e1; margin: 0; font-size: 0.9rem;">Rapid Deriv account configuration guide</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Modern TradeWise Coin -->
+    <section style="padding: 100px 0; background: linear-gradient(135deg, #1a2a3a 0%, #2c3e50 100%); position: relative; overflow: hidden; margin-bottom: 0;">
+        <div class="container position-relative" style="z-index: 2;">
+            <div class="row align-items-center">
+                <div class="col-lg-6 text-white">
+                    <span style="background: linear-gradient(135deg, #3498db, #2980b9); color: white; padding: 8px 20px; border-radius: 2px; font-size: 0.9rem; font-weight: 600; letter-spacing: 1px;">COMING SOON</span>
+                    <h2 style="font-size: 2rem; font-weight: 800; margin: 20px 0 15px; line-height: 1.2;">
+                        TradeWise <span style="color: #3498db;">Coin</span>
+                    </h2>
+                    <p style="font-size: 1.2rem; color: #cbd5e1; margin-bottom: 30px; line-height: 1.6;">
+                        The next evolution in trading. Exclusive utility token for premium features, staking rewards, and commission-free transactions.
+                    </p>
+                    
+                    <div style="display: flex; gap: 15px; flex-wrap: wrap; margin-bottom: 30px;">
+                        <button onclick="showPaymentModal('TradeWise Coin Pre-Order', 10)" style="background: linear-gradient(135deg, #3498db, #2980b9); border: 2px solid #3498db; color: white; padding: 12px 30px; border-radius: 0; font-weight: 600; font-size: 1rem; transition: all 0.3s ease; cursor: pointer;">
+                            <i class="fas fa-coins me-2"></i>PRE-ORDER NOW
+                        </button>
+                        <button style="background: transparent; border: 2px solid #3498db; color: #3498db; padding: 12px 25px; border-radius: 0; font-weight: 600; font-size: 1rem; transition: all 0.3s ease; cursor: pointer;">
+                            <i class="fas fa-info-circle me-2"></i>LEARN MORE
+                        </button>
+                    </div>
+                    
+                    <div style="display: flex; gap: 30px; border-top: 1px solid #374151; padding-top: 25px;">
+                        <div style="text-align: center;">
+                            <div style="font-size: 1.5rem; font-weight: 700; color: #3498db;">$0.10</div>
+                            <div style="font-size: 0.8rem; color: #cbd5e1;">Pre-Sale Price</div>
+                        </div>
+                        <div style="text-align: center;">
+                            <div style="font-size: 1.5rem; font-weight: 700; color: #3498db;">+15%</div>
+                            <div style="font-size: 0.8rem; color: #cbd5e1;">Early Bonus</div>
+                        </div>
+                        <div style="text-align: center;">
+                            <div style="font-size: 1.5rem; font-weight: 700; color: #3498db;">1M</div>
+                            <div style="font-size: 0.8rem; color: #cbd5e1;">Total Supply</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-lg-6 text-center">
+                    <div style="position: relative; display: inline-block;">
+                        <!-- Fixed image with rotation animation restored -->
+                        <img src="{% static 'images/tradewisecoin.png' %}" alt="TradeWise Coin" style="width: 300px; height: 300px; object-fit: contain; border: 3px solid #3498db; padding: 20px; background: rgba(255,255,255,0.05); animation: rotate-coin 8s infinite linear;">
+                        <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 350px; height: 350px; background: rgba(52, 152, 219, 0.1); border: 1px solid #3498db; z-index: -1;"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- TradeWise Footer -->
+    <footer class="main-footer" style="background: linear-gradient(135deg, #1a1a1a 0%, #2c3e50 100%); color: white; padding: 60px 0 0; margin-top: 0;">
+        <div class="container">
+            <div class="row">
+                <!-- About Section -->
+                <div class="col-lg-4 col-md-6 mb-4">
+                    <div class="about-footer">
+                        <h2 style="color: white; font-size: 2rem; font-weight: 700; margin-bottom: 15px;">Trade Smarter <span style="color: #3498db;">With Confidence</span></h2>
+                        <p style="color: #cbd5e1; line-height: 1.6; margin-bottom: 20px;">TradeWise provides institutional-grade trading tools and education for retail traders worldwide.</p>
+                        <img src="{% static 'images/TRADE-WISE-FINAL-TRANSPARENT.png' %}" alt="TradeWise Logo" style="height: 80px; width: auto; margin-top: 10px;">
+                    </div>
+                </div>
+
+                <!-- Trading Hours & Social -->
+                <div class="col-lg-4 col-md-6 mb-4">
+                    <div class="footer-contact-info">
+                        <h3 style="color: #3498db; font-size: 1.3rem; font-weight: 600; margin-bottom: 20px;">TRADING HOURS</h3>
+                        <div style="color: #cbd5e1; line-height: 1.8;">
+                            <p style="margin-bottom: 8px;">📈 24/5 Market Coverage</p>
+                            <p style="margin-bottom: 20px;">🕐 Support: 08:00 - 22:00 GMT+3</p>
+                        </div>
+                        
+                        <div class="footer-social-links">
+                            <h3 style="color: #3498db; font-size: 1.3rem; font-weight: 600; margin-bottom: 15px;">FOLLOW US</h3>
+                            <div style="display: flex; gap: 12px;">
+                                <a href="https://whatsapp.com/channel/0029VavSfHJADTO55tdYiu1W" style="display: inline-flex; align-items: center; justify-content: center; width: 40px; height: 40px; background: #25D366; border-radius: 0; color: white; text-decoration: none; transition: all 0.3s ease;">
+                                    <i class="fa-brands fa-whatsapp" style="font-size: 1.2rem;"></i>
+                                </a>
+                                <a href="https://www.facebook.com/share/1V2p5jGAoq/" style="display: inline-flex; align-items: center; justify-content: center; width: 40px; height: 40px; background: #1877F2; border-radius: 0; color: white; text-decoration: none; transition: all 0.3s ease;">
+                                    <i class="fa-brands fa-facebook-f" style="font-size: 1.2rem;"></i>
+                                </a>
+                                <a href="https://www.instagram.com/trade_wise01/profilecard/?igsh=MTh6MjdnbnQ4bmpvZg==" style="display: inline-flex; align-items: center; justify-content: center; width: 40px; height: 40px; background: linear-gradient(45deg, #405DE6, #5851DB, #833AB4, #C13584, #E1306C, #FD1D1D); border-radius: 0; color: white; text-decoration: none; transition: all 0.3s ease;">
+                                    <i class="fa-brands fa-instagram" style="font-size: 1.2rem;"></i>
+                                </a>
+                                <a href="#" style="display: inline-flex; align-items: center; justify-content: center; width: 40px; height: 40px; background: #FF0000; border-radius: 0; color: white; text-decoration: none; transition: all 0.3s ease;">
+                                    <i class="fa-brands fa-youtube" style="font-size: 1.2rem;"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Contact Info -->
+                <div class="col-lg-4 col-md-6 mb-4">
+                    <div class="footer-contact-info">
+                        <h3 style="color: #3498db; font-size: 1.3rem; font-weight: 600; margin-bottom: 20px;">CONTACT US</h3>
+                        <div style="color: #cbd5e1; line-height: 1.8;">
+                            <p style="margin-bottom: 12px; display: flex; align-items: center;">
+                                <i class="fas fa-envelope" style="color: #3498db; margin-right: 10px; width: 20px;"></i>
+                                support@trade-wise.co.ke
+                            </p>
+                            <p style="margin-bottom: 12px; display: flex; align-items: center;">
+                                <i class="fas fa-phone" style="color: #3498db; margin-right: 10px; width: 20px;"></i>
+                                +254 702 700 745
+                            </p>
+                            <p style="margin-bottom: 20px; display: flex; align-items: center;">
+                                <i class="fas fa-map-marker-alt" style="color: #3498db; margin-right: 10px; width: 20px;"></i>
+                                Nairobi, Kenya
+                            </p>
+                        </div>
+                        
+                        <!-- Payment Methods -->
+                        <div>
+                            <h3 style="color: #3498db; font-size: 1.3rem; font-weight: 600; margin-bottom: 15px;">PAYMENT METHODS</h3>
+                            <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+                                <div style="background: #000; padding: 8px 12px; border-radius: 0; font-weight: 600; color: #ffffff; font-size: 0.8rem;">
+                                    M-PESA
+                                </div>
+                                <div style="background: #111122; padding: 8px 12px; border-radius: 0; font-weight: 600; color: #ffffff; font-size: 0.8rem;">
+                                    BANK TRANSFER
+                                </div>
+                                <div style="background:#000; padding: 8px 12px; border-radius: 0; font-weight: 600; color: #ffffff; font-size: 0.8rem;">
+                                    PAYPAL
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Footer Copyright Section -->
+            <div class="footer-copyright" style="border-top: 1px solid #374151; margin-top: 40px; padding: 25px 0;">
+                <div class="row align-items-center">
+                    <div class="col-md-6 mb-3 mb-md-0">
+                        <div class="footer-menu">
+                            <div style="display: flex; gap: 20px; flex-wrap: wrap;">
+                                <a href="/" style="color: #cbd5e1; text-decoration: none; font-weight: 500; font-size: 0.9rem; transition: color 0.3s ease;">HOME</a>
+                                <a href="https://wa.me/254742962615" style="color: #cbd5e1; text-decoration: none; font-weight: 500; font-size: 0.9rem; transition: color 0.3s ease;">MARKETS</a>
+                                <a href="#" style="color: #cbd5e1; text-decoration: none; font-weight: 500; font-size: 0.9rem; transition: color 0.3s ease;">SIGNALS</a>
+                                <a href="https://wa.me/254742962615" style="color: #cbd5e1; text-decoration: none; font-weight: 500; font-size: 0.9rem; transition: color 0.3s ease;">EDUCATION</a>
+                                <a href="#" style="color: #cbd5e1; text-decoration: none; font-weight: 500; font-size: 0.9rem; transition: color 0.3s ease;">ABOUT</a>
+                                <a href="/contact" style="color: #cbd5e1; text-decoration: none; font-weight: 500; font-size: 0.9rem; transition: color 0.3s ease;">CONTACT</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="footer-copyright-text text-center text-md-end">
+                            <p style="color: #3498db; margin: 0; font-weight: 500; font-size: 0.9rem;">
+                                Copyright © <span id="footer-year">2024</span> TradeWise. All Rights Reserved.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Set current year in footer
+        document.getElementById('footer-year').textContent = new Date().getFullYear();
+
+        // Affiliates Section JavaScript
+        function copyReferralLink() {
+            const referralLink = document.getElementById('referralLink');
+            referralLink.select();
+            referralLink.setSelectionRange(0, 99999);
+            navigator.clipboard.writeText(referralLink.value);
+            
+            // Show feedback
+            const originalText = event.target.innerHTML;
+            event.target.innerHTML = '<i class="fas fa-check"></i> Copied!';
+            event.target.style.background = '#2ecc71';
+            
+            setTimeout(() => {
+                event.target.innerHTML = originalText;
+                event.target.style.background = '#3498db';
+            }, 2000);
+        }
+
+        function calculatePayout() {
+            const coinAmount = document.getElementById('coinAmount').value;
+            const estimatedPayout = document.getElementById('estimatedPayout');
+            const payoutAmount = coinAmount * 10; // 10 Ksh per coin
+            estimatedPayout.textContent = payoutAmount + ' Ksh';
+        }
+
+        function updateCashEquivalent() {
+            const totalCoins = parseInt(document.getElementById('currentBalance').textContent) || 0;
+            const cashValue = totalCoins * 10; // 10 Ksh per coin
+            document.getElementById('cashValue').textContent = cashValue;
+        }
+
+        function requestRedemption() {
+            const coinAmount = document.getElementById('coinAmount').value;
+            const paymentMethod = document.getElementById('paymentMethod').value;
+            
+            if (!coinAmount || coinAmount < 50) {
+                alert('Minimum redemption is 50 TWC coins');
+                return;
+            }
+            
+            if (!paymentMethod) {
+                alert('Please select a payment method');
+                return;
+            }
+            
+            // Here you would typically send this data to your backend
+            console.log('Redemption request:', { coinAmount, paymentMethod });
+            
+            // Show success message
+            alert('Redemption request submitted! You will receive payment by Friday.');
+            
+            // Reset form
+            document.getElementById('coinAmount').value = '';
+            document.getElementById('paymentMethod').value = '';
+            document.getElementById('estimatedPayout').textContent = '0 Ksh';
+        }
+
+        function shareOnWhatsApp() {
+            const referralLink = document.getElementById('referralLink').value;
+            const message = `Join TradeWise using my referral link and get 50 TWC coins! ${referralLink}`;
+            window.open(`https://wa.me/?text=${encodeURIComponent(message)}`, '_blank');
+        }
+
+        function shareOnFacebook() {
+            const referralLink = document.getElementById('referralLink').value;
+            window.open(`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(referralLink)}`, '_blank');
+        }
+
+        function shareOnTwitter() {
+            const referralLink = document.getElementById('referralLink').value;
+            const message = 'Join TradeWise using my referral link and get 50 TWC coins!';
+            window.open(`https://twitter.com/intent/tweet?text=${encodeURIComponent(message)}&url=${encodeURIComponent(referralLink)}`, '_blank');
+        }
+
+        function shareViaEmail() {
+            const referralLink = document.getElementById('referralLink').value;
+            const subject = 'Join TradeWise - Get 50 TWC Coins';
+            const body = `Hi! I'm using TradeWise and thought you might be interested. Use my referral link to sign up and we both get 50 TWC coins!\n\n${referralLink}\n\nTradeWise offers premium trading signals, education, and tools to help you succeed in the markets.`;
+            window.open(`mailto:?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`);
+        }
+
+        function showPreviousNumbers() {
+            alert('Previous TradeWise Numbers feature coming soon!');
+        }
+
+        function showBonusRules() {
+            alert('Bonus Rules:\n- Get 50 TWC coins per successful referral\n- If referral\'s TradeWise Number matches weekly number, get 2x bonus (100 coins)\n- Minimum redemption: 50 coins\n- Redemption rate: 10 Ksh per coin\n- Payments processed every Friday');
+        }
+
+        // Real-time data updates (simulated - replace with actual backend calls)
+        function updateAffiliateStats() {
+            // This would be replaced with actual API calls to your backend
+            // For demonstration, we'll simulate some updates
+            setInterval(() => {
+                // Simulate new referrals and coin updates
+                const totalReferrals = document.getElementById('totalReferrals');
+                const totalCoins = document.getElementById('totalCoins');
+                const currentBalance = document.getElementById('currentBalance');
+                
+                // In a real implementation, you would fetch this data from your backend
+                // For now, we'll just demonstrate the structure
+                console.log('Updating affiliate stats...');
+                
+                // Update cash equivalent when balance changes
+                updateCashEquivalent();
+            }, 30000); // Update every 30 seconds
+        }
+
+        // Initialize real-time updates
+        document.addEventListener('DOMContentLoaded', function() {
+            updateAffiliateStats();
+            updateCashEquivalent();
+            
+            // Set max redemption amount based on current balance
+            const currentBalance = parseInt(document.getElementById('currentBalance').textContent);
+            document.getElementById('coinAmount').max = currentBalance;
+        });
+
+        // Payment modal function (placeholder)
+        function showPaymentModal(item, amount) {
+            alert(`Payment functionality for ${item} - $${amount} would be implemented here.`);
+        }
+
+        // Button hover states with gradient
+        document.addEventListener('DOMContentLoaded', function() {
+            const buttons = document.querySelectorAll('button');
+            buttons.forEach(button => {
+                button.addEventListener('mouseenter', function() {
+                    if (this.style.background && this.style.background.includes('gradient')) {
+                        this.style.background = 'linear-gradient(135deg, #2980b9, #3498db) !important';
+                        this.style.borderColor = '#2980b9 !important';
+                        this.style.transform = 'translateY(-2px)';
+                        this.style.color = 'white !important';
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>

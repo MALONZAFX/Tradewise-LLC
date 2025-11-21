@@ -1,0 +1,314 @@
+<!-- Add this right before the closing </body> tag -->
+<div id="launch-overlay" style="
+position: fixed;
+top: 0;
+left: 0;
+width: 100%;
+height: 100%;
+background-color: rgba(0, 0, 0, 0.9);
+backdrop-filter: blur(10px);
+z-index: 9999;
+display: flex;
+justify-content: center;
+align-items: center;
+flex-direction: column;
+font-family: 'Fustat', sans-serif;
+">
+<div style="
+    background: linear-gradient(135deg, #1a2a4f, #0d1a33);
+    border-radius: 20px;
+    padding: 40px;
+    max-width: 600px;
+    width: 90%;
+    text-align: center;
+    box-shadow: 0 0 30px rgba(52, 152, 219, 0.5);
+    border: 1px solid rgba(52, 152, 219, 0.3);
+">
+    <img src="images/TRADE-WISE-FINAL-TRANSPARENT.png" alt="TradeWise Logo" style="height: 120px; margin-bottom: 20px;">
+    
+    <h1 style="color: #fff; font-size: 2.5rem; margin-bottom: 10px;">Launching Today!</h1>
+    <p style="color: #aaa; font-size: 1.1rem; margin-bottom: 30px;">
+        TradeWise is preparing for an explosive launch. Get ready to experience premium trading like never before!
+    </p>
+    
+    <div id="countdown" style="
+        display: flex;
+        justify-content: center;
+        gap: 15px;
+        margin: 30px 0;
+    ">
+        <div class="countdown-item" style="
+            background: rgba(52, 152, 219, 0.2);
+            border-radius: 10px;
+            padding: 15px;
+            min-width: 80px;
+        ">
+            <div id="hours" style="font-size: 2.5rem; font-weight: 700; color: #3498db;">00</div>
+            <div style="font-size: 0.9rem; color: #aaa;">HOURS</div>
+        </div>
+        <div class="countdown-item" style="
+            background: rgba(52, 152, 219, 0.2);
+            border-radius: 10px;
+            padding: 15px;
+            min-width: 80px;
+        ">
+            <div id="minutes" style="font-size: 2.5rem; font-weight: 700; color: #3498db;">00</div>
+            <div style="font-size: 0.9rem; color: #aaa;">MINUTES</div>
+        </div>
+        <div class="countdown-item" style="
+            background: rgba(52, 152, 219, 0.2);
+            border-radius: 10px;
+            padding: 15px;
+            min-width: 80px;
+        ">
+            <div id="seconds" style="font-size: 2.5rem; font-weight: 700; color: #3498db;">00</div>
+            <div style="font-size: 0.9rem; color: #aaa;">SECONDS</div>
+        </div>
+    </div>
+    
+    <p style="color: #f1c40f; font-size: 1.1rem; margin-bottom: 30px;">
+        Official Website launching at 10:45 PM!
+    </p>
+    
+    <button id="signup-btn" style="
+        background: linear-gradient(135deg, #3498db, #2c3e50);
+        color: white;
+        border: none;
+        border-radius: 30px;
+        padding: 15px 30px;
+        font-size: 1.1rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s;
+        margin-bottom: 20px;
+        opacity: 0.5;
+        pointer-events: none;
+    ">
+        <i class="fas fa-user-plus" style="margin-right: 8px;"></i> Create Account (Available after launch)
+    </button>
+    
+    <div style="margin-top: 20px; color: #666; font-size: 0.9rem;">
+        <i class="fas fa-lock" style="margin-right: 5px;"></i> Secure Platform | <i class="fas fa-shield-alt" style="margin-right: 5px; margin-left: 10px;"></i> Encrypted Connection
+    </div>
+</div>
+</div>
+
+<!-- Fireworks Canvas -->
+<canvas id="fireworks" style="
+position: fixed;
+top: 0;
+left: 0;
+width: 100%;
+height: 100%;
+z-index: 9998;
+pointer-events: none;
+display: none;
+"></canvas>
+
+<script>
+// Reset launch status to ensure the countdown shows
+localStorage.removeItem('tradewise_launch_complete');
+
+// Set the target date to 10:45 PM today (using Nairobi time - UTC+3)
+const today = new Date();
+const targetDate = new Date(today.getFullYear(), today.getMonth(), today.getDate(), 22, 45, 0); // 22:45 = 10:45 PM
+
+// Update countdown every second
+function updateCountdown() {
+const now = new Date();
+const totalSeconds = Math.max(0, Math.floor((targetDate - now) / 1000));
+
+// Calculate hours, minutes and seconds
+const hours = Math.floor(totalSeconds / 3600);
+const minutes = Math.floor((totalSeconds % 3600) / 60);
+const seconds = totalSeconds % 60;
+
+// Display countdown
+document.getElementById('hours').textContent = hours.toString().padStart(2, '0');
+document.getElementById('minutes').textContent = minutes.toString().padStart(2, '0');
+document.getElementById('seconds').textContent = seconds.toString().padStart(2, '0');
+
+// Check if countdown is complete
+if (totalSeconds <= 0) {
+    clearInterval(countdownInterval);
+    countdownComplete();
+}
+}
+
+// Function to handle countdown completion
+function countdownComplete() {
+// Mark the launch as complete in localStorage
+localStorage.setItem('tradewise_launch_complete', 'true');
+
+// Hide the countdown panel immediately to show fireworks
+document.getElementById('launch-overlay').style.display = 'none';
+
+// Start fireworks
+startFireworks();
+
+// Remove fireworks after 1 minute (60 seconds)
+setTimeout(() => {
+    document.getElementById('fireworks').style.display = 'none';
+}, 60000);
+}
+
+// Start countdown immediately
+updateCountdown(); // Initial update
+const countdownInterval = setInterval(updateCountdown, 1000);
+
+// Signup button functionality
+document.getElementById('signup-btn').addEventListener('click', function() {
+window.location.href = 'login.html';
+});
+
+// Fireworks animation
+function startFireworks() {
+// Show fireworks canvas
+document.getElementById('fireworks').style.display = 'block';
+
+const canvas = document.getElementById('fireworks');
+const ctx = canvas.getContext('2d');
+canvas.width = window.innerWidth;
+canvas.height = window.innerHeight;
+
+// Firework particles
+const particles = [];
+const colors = ['#3498db', '#e74c3c', '#2ecc71', '#f1c40f', '#9b59b6', '#1abc9c'];
+
+// Create firework
+function Firework(x, y, targetX, targetY, color) {
+    this.x = x;
+    this.y = y;
+    this.targetX = targetX;
+    this.targetY = targetY;
+    this.color = color;
+    this.distance = Math.sqrt(Math.pow(targetX - x, 2) + Math.pow(targetY - y, 2));
+    this.angle = Math.atan2(targetY - y, targetX - x);
+    this.speed = 2;
+    this.radius = 2;
+    this.trail = [];
+    this.alive = true;
+    
+    this.update = function() {
+        this.x += Math.cos(this.angle) * this.speed;
+        this.y += Math.sin(this.angle) * this.speed;
+        
+        // Add to trail
+        this.trail.push({x: this.x, y: this.y});
+        if (this.trail.length > 10) {
+            this.trail.shift();
+        }
+        
+        // Check if reached target
+        if (Math.abs(this.x - this.targetX) < 5 && Math.abs(this.y - this.targetY) < 5) {
+            this.explode();
+            this.alive = false;
+        }
+    };
+    
+    this.draw = function() {
+        ctx.beginPath();
+        ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+        ctx.fillStyle = this.color;
+        ctx.fill();
+        
+        // Draw trail
+        for (let i = 0; i < this.trail.length; i++) {
+            const alpha = i / this.trail.length;
+            ctx.beginPath();
+            ctx.arc(this.trail[i].x, this.trail[i].y, this.radius * alpha, 0, Math.PI * 2);
+            ctx.fillStyle = `${this.color}${Math.floor(alpha * 255).toString(16).padStart(2, '0')}`;
+            ctx.fill();
+        }
+    };
+    
+    this.explode = function() {
+        // Create particles
+        for (let i = 0; i < 100; i++) {
+            particles.push({
+                x: this.x,
+                y: this.y,
+                color: this.color,
+                radius: Math.random() * 2 + 1,
+                speed: Math.random() * 3 + 1,
+                angle: Math.random() * Math.PI * 2,
+                friction: 0.95,
+                gravity: 0.2,
+                alpha: 1,
+                decay: Math.random() * 0.02 + 0.01
+            });
+        }
+    };
+}
+
+// Create initial fireworks
+const fireworks = [];
+function createFirework() {
+    const x = Math.random() * canvas.width;
+    const y = canvas.height;
+    const targetX = Math.random() * canvas.width;
+    const targetY = Math.random() * canvas.height * 0.6;
+    const color = colors[Math.floor(Math.random() * colors.length)];
+    
+    fireworks.push(new Firework(x, y, targetX, targetY, color));
+}
+
+// Animation loop
+function animate() {
+    // Clear canvas with semi-transparent black for trail effect
+    ctx.fillStyle = 'rgba(0, 0, 0, 0.1)';
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+    
+    // Create new fireworks randomly
+    if (Math.random() < 0.05) {
+        createFirework();
+    }
+    
+    // Update and draw fireworks
+    for (let i = fireworks.length - 1; i >= 0; i--) {
+        fireworks[i].update();
+        fireworks[i].draw();
+        
+        if (!fireworks[i].alive) {
+            fireworks.splice(i, 1);
+        }
+    }
+    
+    // Update and draw particles
+    for (let i = particles.length - 1; i >= 0; i--) {
+        const p = particles[i];
+        
+        p.x += Math.cos(p.angle) * p.speed;
+        p.y += Math.sin(p.angle) * p.speed + p.gravity;
+        p.speed *= p.friction;
+        p.alpha -= p.decay;
+        
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+        ctx.fillStyle = `${p.color}${Math.floor(p.alpha * 255).toString(16).padStart(2, '0')}`;
+        ctx.fill();
+        
+        if (p.alpha <= 0) {
+            particles.splice(i, 1);
+        }
+    }
+    
+    requestAnimationFrame(animate);
+}
+
+// Start animation
+animate();
+
+// Create initial fireworks
+for (let i = 0; i < 5; i++) {
+    setTimeout(createFirework, i * 300);
+}
+}
+
+// Handle window resize
+window.addEventListener('resize', function() {
+const canvas = document.getElementById('fireworks');
+canvas.width = window.innerWidth;
+canvas.height = window.innerHeight;
+});
+</script>

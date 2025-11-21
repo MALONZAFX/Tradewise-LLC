@@ -1,0 +1,486 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OML Africa Logistics - Oil & Gas Transport Specialists</title>
+    <!-- Logiz Template CSS -->
+    <link rel="stylesheet" href="css/logiz.min.css">
+    <!-- Custom Styles -->
+    <style>
+        /* Hero Section with Video Background */
+        .hero-video {
+            position: relative;
+            height: 100vh;
+            min-height: 650px;
+            overflow: hidden;
+        }
+        .video-background {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            z-index: 1;
+        }
+        .hero-content {
+            position: relative;
+            z-index: 2;
+            color: white;
+            padding-top: 30vh;
+        }
+        .hero-tagline {
+            font-size: 3.5rem;
+            font-weight: 700;
+            text-shadow: 0 2px 10px rgba(0,0,0,0.5);
+            margin-bottom: 1.5rem;
+        }
+        .hse-counter {
+            background: rgba(0,0,0,0.7);
+            padding: 1.5rem;
+            border-radius: 8px;
+            display: inline-block;
+            margin-top: 2rem;
+        }
+        .hse-number {
+            color: #4CAF50;
+            font-size: 2.5rem;
+            font-weight: bold;
+        }
+        
+        /* Service Icons Animation */
+        .service-icon {
+            transition: all 0.3s ease;
+        }
+        .service-card:hover .service-icon {
+            transform: translateY(-10px) scale(1.1);
+        }
+        
+        /* Interactive Timeline */
+        .timeline-item {
+            position: relative;
+            padding-left: 80px;
+            margin-bottom: 50px;
+        }
+        .timeline-year {
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 60px;
+            height: 60px;
+            background: #d4af37;
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 1.2rem;
+        }
+        
+        /* AI Search Enhancement */
+        .ai-search-container {
+            position: relative;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        .search-suggestions {
+            position: absolute;
+            width: 100%;
+            background: white;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            border-radius: 0 0 8px 8px;
+            z-index: 100;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <!-- Header with Multilingual Support -->
+    <header class="header header-transparent">
+        <div class="container">
+            <div class="header-inner">
+                <div class="logo">
+                    <a href="index.html">
+                        <img src="images/oml-logo.png" alt="OML Africa Logistics">
+                    </a>
+                </div>
+                <div class="header-right">
+                    <!-- Language Selector -->
+                    <div class="language-switcher">
+                        <select class="form-control">
+                            <option value="en">English</option>
+                            <option value="fr">Français</option>
+                            <option value="pt">Português</option>
+                            <option value="sw">Kiswahili</option>
+                        </select>
+                    </div>
+                    
+                    <!-- AI-Powered Search -->
+                    <div class="header-search">
+                        <form action="#">
+                            <input type="text" class="form-control" placeholder="Search services, locations..." id="ai-search">
+                            <button type="submit"><i class="fa fa-search"></i></button>
+                        </form>
+                        <div class="search-suggestions" id="search-suggestions">
+                            <!-- Dynamically populated by JavaScript -->
+                        </div>
+                    </div>
+                    
+                    <!-- Main Navigation -->
+                    <nav class="main-menu">
+                        <ul>
+                            <li class="active"><a href="index.html">Home</a></li>
+                            <li><a href="about.html">About Us</a>
+                                <ul class="sub-menu">
+                                    <li><a href="history.html">History & Milestones</a></li>
+                                    <li><a href="leadership.html">Leadership</a></li>
+                                    <li><a href="hse.html">HSE Commitment</a></li>
+                                </ul>
+                            </li>
+                            <li><a href="services.html">Services</a>
+                                <ul class="sub-menu">
+                                    <li><a href="logistics-support.html">Logistics Support</a></li>
+                                    <li><a href="equipment-handling.html">Equipment Handling</a></li>
+                                    <li><a href="equipment-leasing.html">Equipment Leasing</a></li>
+                                    <li><a href="warehousing.html">Warehousing</a></li>
+                                    <li><a href="yard-hire.html">Yard Hire</a></li>
+                                </ul>
+                            </li>
+                            <li><a href="industries.html">Industries</a></li>
+                            <li><a href="case-studies.html">Case Studies</a></li>
+                            <li><a href="locations.html">Locations</a>
+                                <ul class="sub-menu">
+                                    <li><a href="uganda.html">Uganda</a></li>
+                                    <li><a href="kenya.html">Kenya</a></li>
+                                    <li><a href="tanzania.html">Tanzania</a></li>
+                                </ul>
+                            </li>
+                            <li><a href="contact.html">Contact</a></li>
+                        </ul>
+                    </nav>
+                    
+                    <!-- Mobile Menu Toggle -->
+                    <div class="mobile-menu-toggle">
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Hero Section with Video Background -->
+    <section class="hero-video">
+        <video class="video-background" autoplay muted loop>
+            <source src="videos/hero-transport.mp4" type="video/mp4">
+        </video>
+        <div class="container">
+            <div class="hero-content text-center">
+                <h1 class="hero-tagline">Powering Africa's Energy Logistics</h1>
+                <p class="lead">Safe, efficient transport solutions for the oil, gas, and mining industries across East Africa</p>
+                
+                <div class="cta-buttons">
+                    <a href="quote.html" class="btn btn-primary btn-lg">Get a Free Quote</a>
+                    <a href="services.html" class="btn btn-outline-light btn-lg">Explore Services</a>
+                </div>
+                
+                <div class="hse-counter">
+                    <i class="fas fa-shield-alt"></i> <span class="hse-number">128</span> Perfect HSE Days and Counting
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Client Trust Badges -->
+    <section class="client-logos py-5 bg-light">
+        <div class="container">
+            <div class="section-title text-center mb-5">
+                <h2>Trusted By Industry Leaders</h2>
+            </div>
+            <div class="client-logo-slider">
+                <div class="client-logo-item">
+                    <img src="images/clients/tullow.png" alt="Tullow">
+                </div>
+                <div class="client-logo-item">
+                    <img src="images/clients/bamburi.png" alt="Bamburi Cement">
+                </div>
+                <!-- Additional client logos -->
+            </div>
+        </div>
+    </section>
+
+    <!-- Services Overview -->
+    <section class="services-section py-5">
+        <div class="container">
+            <div class="section-title text-center mb-5">
+                <h2>Our Core Services</h2>
+                <p>Comprehensive logistics solutions tailored for Africa's challenging environments</p>
+            </div>
+            <div class="row">
+                <div class="col-lg-3 col-md-6">
+                    <div class="service-card text-center">
+                        <div class="service-icon">
+                            <i class="flaticon-truck"></i>
+                        </div>
+                        <h3>Cross-Border Transport</h3>
+                        <p>Efficient movement of goods across East African borders with full customs compliance</p>
+                        <a href="cross-border.html" class="read-more">Learn More <i class="fa fa-arrow-right"></i></a>
+                    </div>
+                </div>
+                <!-- Additional service cards -->
+            </div>
+        </div>
+    </section>
+
+    <!-- Interactive Quote Calculator -->
+    <section class="quote-calculator py-5 bg-dark text-white">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-lg-6">
+                    <h2>Instant Quote Estimator</h2>
+                    <p>Get a preliminary estimate for your logistics needs in seconds</p>
+                    <div class="feature-list">
+                        <div class="feature-item">
+                            <i class="fas fa-check-circle"></i>
+                            <span>No obligation</span>
+                        </div>
+                        <div class="feature-item">
+                            <i class="fas fa-check-circle"></i>
+                            <span>Customized for your route</span>
+                        </div>
+                        <div class="feature-item">
+                            <i class="fas fa-check-circle"></i>
+                            <span>Real-time pricing</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-6">
+                    <div class="calculator-form">
+                        <form id="quoteForm">
+                            <div class="form-group">
+                                <label for="cargoType">Cargo Type</label>
+                                <select class="form-control" id="cargoType">
+                                    <option>Oil & Gas Equipment</option>
+                                    <option>Mining Equipment</option>
+                                    <option>Construction Materials</option>
+                                    <option>General Cargo</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="origin">Origin</label>
+                                <input type="text" class="form-control" id="origin" placeholder="e.g. Mombasa, Kenya">
+                            </div>
+                            <div class="form-group">
+                                <label for="destination">Destination</label>
+                                <input type="text" class="form-control" id="destination" placeholder="e.g. Kampala, Uganda">
+                            </div>
+                            <button type="submit" class="btn btn-primary btn-block">Calculate Estimate</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Uganda Focus Section -->
+    <section class="uganda-section py-5">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-lg-6">
+                    <div class="section-title">
+                        <h2>OML Uganda Operations</h2>
+                        <p>Local expertise for Uganda's growing energy sector</p>
+                    </div>
+                    <div class="uganda-features">
+                        <div class="feature-item">
+                            <i class="fas fa-route"></i>
+                            <div>
+                                <h4>Border Crossings</h4>
+                                <p>Malaba, Busia, and other key Uganda border points</p>
+                            </div>
+                        </div>
+                        <div class="feature-item">
+                            <i class="fas fa-warehouse"></i>
+                            <div>
+                                <h4>Kampala Warehouse</h4>
+                                <p>10,000 sqm secure storage facility</p>
+                            </div>
+                        </div>
+                    </div>
+                    <a href="uganda.html" class="btn btn-outline-primary">Explore Uganda Operations</a>
+                </div>
+                <div class="col-lg-6">
+                    <div class="uganda-map">
+                        <img src="images/uganda-map.jpg" alt="OML Uganda Operations Map" class="img-fluid">
+                        <div class="map-pin" style="top: 30%; left: 50%;" data-toggle="tooltip" title="Kampala HQ"></div>
+                        <div class="map-pin" style="top: 60%; left: 70%;" data-toggle="tooltip" title="Malaba Border"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Certifications Section -->
+    <section class="certifications py-5 bg-light">
+        <div class="container">
+            <div class="section-title text-center mb-5">
+                <h2>Our Certifications</h2>
+                <p>Meeting the highest industry standards for safety and quality</p>
+            </div>
+            <div class="certification-badges">
+                <div class="certification-item">
+                    <img src="images/certifications/iso9001.png" alt="ISO 9001:2015 Certified">
+                    <div class="certification-hover">
+                        <h4>ISO 9001:2015</h4>
+                        <p>Quality Management System</p>
+                        <a href="#" class="btn btn-sm btn-outline-primary">View Certificate</a>
+                    </div>
+                </div>
+                <!-- Additional certification badges -->
+            </div>
+        </div>
+    </section>
+
+    <!-- WhatsApp Chat Plugin -->
+    <div class="whatsapp-chat">
+        <a href="https://wa.me/254712345678" target="_blank">
+            <i class="fab fa-whatsapp"></i>
+            <span>Chat with Us</span>
+        </a>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-4">
+                    <div class="footer-widget">
+                        <h3>About OML</h3>
+                        <p>Providing safe and efficient logistical solutions for Africa's oil, gas, and mining industries since 2005.</p>
+                        <div class="social-links">
+                            <a href="#"><i class="fab fa-linkedin"></i></a>
+                            <a href="#"><i class="fab fa-twitter"></i></a>
+                            <a href="#"><i class="fab fa-facebook"></i></a>
+                            <a href="#"><i class="fab fa-youtube"></i></a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-2">
+                    <div class="footer-widget">
+                        <h3>Services</h3>
+                        <ul>
+                            <li><a href="#">Cross-Border Transport</a></li>
+                            <li><a href="#">Equipment Leasing</a></li>
+                            <li><a href="#">Warehousing</a></li>
+                            <li><a href="#">Yard Hire</a></li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="col-lg-3">
+                    <div class="footer-widget">
+                        <h3>Locations</h3>
+                        <ul>
+                            <li><a href="uganda.html">Uganda</a></li>
+                            <li><a href="kenya.html">Kenya</a></li>
+                            <li><a href="tanzania.html">Tanzania</a></li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="col-lg-3">
+                    <div class="footer-widget">
+                        <h3>Contact Us</h3>
+                        <ul class="contact-info">
+                            <li><i class="fas fa-map-marker-alt"></i> Nairobi, Kenya</li>
+                            <li><i class="fas fa-phone"></i> +254 712 345 678</li>
+                            <li><i class="fas fa-envelope"></i> info@omlafrica.com</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <div class="row">
+                    <div class="col-md-6">
+                        <p>&copy; 2023 OML Africa Logistics. All Rights Reserved.</p>
+                    </div>
+                    <div class="col-md-6 text-right">
+                        <ul class="footer-menu">
+                            <li><a href="#">Privacy Policy</a></li>
+                            <li><a href="#">Terms of Service</a></li>
+                            <li><a href="#">Sitemap</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- JavaScript Files -->
+    <script src="js/jquery.min.js"></script>
+    <script src="js/bootstrap.bundle.min.js"></script>
+    <script src="js/owl.carousel.min.js"></script>
+    <script src="js/waypoints.min.js"></script>
+    <script src="js/jquery.counterup.min.js"></script>
+    <script src="js/main.js"></script>
+    
+    <!-- Custom Scripts -->
+    <script>
+        // AI Search Functionality
+        $(document).ready(function() {
+            // Initialize HSE counter animation
+            $('.hse-number').counterUp({
+                delay: 10,
+                time: 2000
+            });
+            
+            // AI Search Suggestions
+            $('#ai-search').on('input', function() {
+                const query = $(this).val().toLowerCase();
+                if (query.length > 2) {
+                    // In a real implementation, this would be an AJAX call to your search backend
+                    const suggestions = [
+                        "Oil and gas logistics",
+                        "Cross-border transport Uganda",
+                        "Equipment leasing rates",
+                        "Warehousing in Kampala",
+                        "HSE compliance"
+                    ].filter(item => item.toLowerCase().includes(query));
+                    
+                    const $suggestions = $('#search-suggestions');
+                    $suggestions.empty();
+                    
+                    if (suggestions.length) {
+                        suggestions.forEach(suggestion => {
+                            $suggestions.append(`<div class="suggestion-item">${suggestion}</div>`);
+                        });
+                        $suggestions.show();
+                    } else {
+                        $suggestions.hide();
+                    }
+                } else {
+                    $('#search-suggestions').hide();
+                }
+            });
+            
+            // Close suggestions when clicking elsewhere
+            $(document).on('click', function(e) {
+                if (!$(e.target).closest('#ai-search').length) {
+                    $('#search-suggestions').hide();
+                }
+            });
+            
+            // Quote calculator form submission
+            $('#quoteForm').on('submit', function(e) {
+                e.preventDefault();
+                // In a real implementation, this would calculate based on backend data
+                alert('Quote request received! Our team will contact you with a detailed estimate shortly.');
+            });
+            
+            // Initialize map tooltips
+            $('[data-toggle="tooltip"]').tooltip();
+        });
+    </script>
+</body>
+</html>

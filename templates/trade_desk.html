@@ -1,0 +1,627 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TradeWise Packages</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-blue: #3498db;
+            --dark-blue: #2c3e50;
+            --gradient-main: linear-gradient(135deg, #2c3e50 0%, #3498db 100%);
+            --gradient-reverse: linear-gradient(135deg, #3498db 0%, #2c3e50 100%);
+            --light-bg: #f8fafc;
+            --dark-text: #1e293b;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: var(--light-bg);
+            color: var(--dark-text);
+            line-height: 1.6;
+        }
+
+        /* Navigation */
+        .nav {
+            background: var(--dark-blue);
+            padding: 20px 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .nav-logo {
+            color: white;
+            font-size: 1.5rem;
+            font-weight: 700;
+            text-decoration: none;
+        }
+
+        .nav-logo span {
+            color: var(--primary-blue);
+        }
+
+        .nav-link {
+            color: white;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .nav-link:hover {
+            color: var(--primary-blue);
+        }
+
+        /* Hero Section */
+        .classes-hero {
+            background: url('/static/images/bullish-golden-1.jpg') no-repeat center center/cover;
+            height: 50vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            color: white;
+            text-align: center;
+            padding: 0 20px;
+        }
+
+        .classes-hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.6);
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 2;
+            max-width: 800px;
+        }
+
+        .hero-content h1 {
+            font-size: 3rem;
+            margin-bottom: 20px;
+            font-weight: 800;
+        }
+
+        .hero-content p {
+            font-size: 1.2rem;
+            margin-bottom: 30px;
+            opacity: 0.9;
+        }
+
+        .cta-button {
+            display: inline-block;
+            background: var(--gradient-main);
+            color: white;
+            padding: 15px 30px;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 1.1rem;
+            transition: all 0.3s ease;
+        }
+
+        .cta-button:hover {
+            background: var(--gradient-reverse);
+            transform: translateY(-3px);
+        }
+
+        /* Services Section */
+        .services-section {
+            background: linear-gradient(135deg, #f6f5f7 0%, #e9ecef 100%);
+            padding: 80px 0;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: 60px;
+        }
+
+        .section-header h2 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: #2c3e50;
+            margin-bottom: 15px;
+        }
+
+        .section-header span {
+            color: #3498db;
+        }
+
+        .section-header p {
+            font-size: 1.1rem;
+            color: #7f8c8d;
+            max-width: 700px;
+            margin: 0 auto;
+        }
+
+        .services-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 30px;
+        }
+
+        .service-card {
+            background: white;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+            transition: transform 0.3s ease;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .service-card:hover {
+            transform: translateY(-10px);
+        }
+
+        .service-image {
+            height: 200px;
+            overflow: hidden;
+        }
+
+        .service-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .card-header {
+            background: linear-gradient(135deg, #2c3e50, #3498db);
+            padding: 20px;
+            color: white;
+        }
+
+        .card-header h3 {
+            margin: 0;
+            font-size: 1.5rem;
+            font-weight: 600;
+        }
+
+        .card-header p {
+            margin: 10px 0 0;
+            opacity: 0.9;
+        }
+
+        .card-body {
+            padding: 25px;
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .card-content {
+            margin-bottom: 25px;
+            flex-grow: 1;
+        }
+
+        .card-content p {
+            color: #555;
+            line-height: 1.6;
+            margin-bottom: 15px;
+        }
+
+        .card-content ul {
+            padding-left: 20px;
+            margin-bottom: 15px;
+        }
+
+        .card-content li {
+            margin-bottom: 8px;
+        }
+
+        .price-tag {
+            background: #f1f8fe;
+            border-left: 4px solid #3498db;
+            padding: 15px;
+            margin-bottom: 20px;
+        }
+
+        .price-tag p {
+            margin: 0;
+            font-weight: 600;
+            color: #2c3e50;
+        }
+
+        .card-actions {
+            display: flex;
+            justify-content: center;
+            margin-top: auto;
+        }
+
+        .request-button {
+            background: #3498db;
+            color: white;
+            border: none;
+            border-radius: 30px;
+            padding: 15px 40px;
+            font-weight: 600;
+            cursor: pointer;
+            font-size: 1.1rem;
+            transition: all 0.3s ease;
+            width: 100%;
+            max-width: 250px;
+        }
+
+        .request-button:hover {
+            background: #2980b9;
+            transform: translateY(-2px);
+        }
+
+        /* Modal Styles */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+            backdrop-filter: blur(5px);
+        }
+
+        .modal-container {
+            background: white;
+            border-radius: 15px;
+            width: 90%;
+            max-width: 500px;
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: 0 15px 40px rgba(0,0,0,0.15);
+        }
+
+        .modal-header {
+            background: linear-gradient(135deg, #2c3e50, #3498db);
+            color: white;
+            padding: 20px;
+            border-radius: 15px 15px 0 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .modal-header h3 {
+            margin: 0;
+            font-size: 1.5rem;
+        }
+
+        .close-modal {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+
+        .modal-content {
+            padding: 25px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #2c3e50;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: border-color 0.3s ease;
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: #3498db;
+            box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.2);
+        }
+
+        .service-display {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            text-align: center;
+            font-weight: 600;
+            color: #2c3e50;
+        }
+
+        .submit-btn {
+            background: linear-gradient(135deg, #2c3e50, #3498db);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            padding: 15px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            width: 100%;
+            transition: all 0.3s ease;
+        }
+
+        .submit-btn:hover {
+            background: linear-gradient(135deg, #3498db, #2c3e50);
+            transform: translateY(-2px);
+        }
+
+        .modal-footer {
+            padding: 15px 25px 25px;
+            text-align: center;
+        }
+
+        .modal-note {
+            color: #7f8c8d;
+            font-size: 0.9rem;
+            margin-top: 10px;
+        }
+
+        /* Responsive Adjustments */
+        @media (max-width: 768px) {
+            .hero-content h1 {
+                font-size: 2.2rem;
+            }
+            
+            .nav {
+                padding: 15px 20px;
+            }
+            
+            .services-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .modal-container {
+                width: 95%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="nav">
+        <a href="#" class="nav-logo">Trade<span>Wise</span></a>
+        <a href="/account" class="nav-link">
+            <i class="fas fa-arrow-left"></i> Back Home
+        </a>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="classes-hero">
+        <div class="hero-content">
+            <h1>TradeWise Trade Desk</h1>
+            <p>Master the markets with our expert-led training programs and premium resources</p>
+            <a href="#trade" class="cta-button">View Trade Desk</a>
+        </div>
+    </section>
+
+    <!-- Modern Trading Services Section -->
+    <div class="services-section">
+        <div class="container">
+            <div class="section-header">
+                <h2>TradeWise <span>Premium Services</span></h2>
+                <p>Advanced tools to accelerate your trading success</p>
+            </div>
+
+            <div class="services-grid">
+                <!-- Copy Trading Card -->
+                <div class="service-card">
+                    <div class="service-image">
+                        <img src="https://a.c-dn.net/c/content/dam/publicsites/igcom/uk/images/ContentImage/copy_trader_EN.jpg/jcr:content/renditions/original-size.webp" alt="Copy Trading">
+                    </div>
+                    <div class="card-header">
+                        <h3>Copy Trading</h3>
+                        <p>Mirror expert traders automatically</p>
+                    </div>
+                    <div class="card-body">
+                        <div class="card-content">
+                            <p>Earn while you learn by automatically copying trades from our certified expert traders.</p>
+                            <ul>
+                                <li>Perfect for beginners</li>
+                                <li>Ideal for busy individuals</li>
+                                <li>You maintain full control</li>
+                            </ul>
+                            <p><strong>Profit smarter, not harder—copy success today</strong></p>
+                        </div>
+                        <div class="price-tag">
+                            <p>Lifetime access for only $103</p>
+                        </div>
+                        <div class="card-actions">
+                            <button class="request-button" onclick="openRequestModal('Copy Trading')">
+                                Request Copy Trading
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Live Trading Card -->
+                <div class="service-card">
+                    <div class="service-image">
+                        <img src="https://blueberrymarkets.com/media/4w3joppw/when-to-move-from-demo-to-live-forex-trading-account.jpg" alt="Live Trading">
+                    </div>
+                    <div class="card-header">
+                        <h3>Live Trading</h3>
+                        <p>Real-time market action</p>
+                    </div>
+                    <div class="card-body">
+                        <div class="card-content">
+                            <p>Experience real market action in our Live Trading sessions with expert traders.</p>
+                            <ul>
+                                <li>Watch analysis & execution</li>
+                                <li>Ask questions in real-time</li>
+                                <li>Learn from live results</li>
+                            </ul>
+                            <p><strong>The best way to see strategies in action</strong></p>
+                        </div>
+                        <div class="price-tag">
+                            <p>Lifetime access for only $103</p>
+                        </div>
+                        <div class="card-actions">
+                            <button class="request-button" onclick="openRequestModal('Live Trading')">
+                                Request Live Trading
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Capital Funding Card -->
+                <div class="service-card">
+                    <div class="service-image">
+                        <img src="https://assets.finbold.com/uploads/2023/10/3-cryptocurrencies-under-1-to-consider-buying-next-week-.jpg" alt="Capital Funding">
+                    </div>
+                    <div class="card-header">
+                        <h3>Capital Funding</h3>
+                        <p>Trade big with our capital</p>
+                    </div>
+                    <div class="card-body">
+                        <div class="card-content">
+                            <p>We provide capital to skilled traders who pass our evaluation process.</p>
+                            <ul>
+                                <li>Prove your strategy</li>
+                                <li>Get funded—no personal risk</li>
+                                <li>No hidden fees</li>
+                            </ul>
+                            <p><strong>Your chance to trade big and earn more</strong></p>
+                        </div>
+                        <div class="price-tag">
+                            <p>Lifetime access for only $103</p>
+                        </div>
+                        <div class="card-actions">
+                            <button class="request-button" onclick="openRequestModal('Capital Funding')">
+                                Request Capital Funding
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Request Service Modal -->
+    <div class="modal-overlay" id="requestModal">
+        <div class="modal-container">
+            <div class="modal-header">
+                <h3>Request Service</h3>
+                <button class="close-modal" onclick="closeRequestModal()">&times;</button>
+            </div>
+            <div class="modal-content">
+                <div class="service-display" id="selectedService">
+                    <!-- Service name will be inserted here -->
+                </div>
+                <form id="serviceRequestForm">
+                    <div class="form-group">
+                        <label for="clientName" class="form-label">Full Name</label>
+                        <input type="text" id="clientName" class="form-control" placeholder="Enter your full name" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="clientEmail" class="form-label">Email Address</label>
+                        <input type="email" id="clientEmail" class="form-control" placeholder="Enter your email" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="clientPhone" class="form-label">Phone Number</label>
+                        <input type="tel" id="clientPhone" class="form-control" placeholder="Enter your phone number" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="clientMessage" class="form-label">Additional Message (Optional)</label>
+                        <textarea id="clientMessage" class="form-control" placeholder="Any additional information or questions..." rows="3"></textarea>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="submit" form="serviceRequestForm" class="submit-btn" onclick="submitServiceRequest()">
+                    Submit Request
+                </button>
+                <p class="modal-note">We'll contact you within 24 hours to discuss your service</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let currentService = '';
+
+        function openRequestModal(serviceName) {
+            currentService = serviceName;
+            document.getElementById('selectedService').textContent = serviceName;
+            document.getElementById('requestModal').style.display = 'flex';
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeRequestModal() {
+            document.getElementById('requestModal').style.display = 'none';
+            document.body.style.overflow = 'auto';
+            document.getElementById('serviceRequestForm').reset();
+        }
+
+        function submitServiceRequest() {
+            const name = document.getElementById('clientName').value;
+            const email = document.getElementById('clientEmail').value;
+            const phone = document.getElementById('clientPhone').value;
+            const message = document.getElementById('clientMessage').value;
+
+            if (!name || !email || !phone) {
+                alert('Please fill in all required fields.');
+                return;
+            }
+
+            // Here you would typically send the data to your server
+            console.log('Service Request:', {
+                service: currentService,
+                name: name,
+                email: email,
+                phone: phone,
+                message: message
+            });
+
+            // Show success message
+            alert(`Thank you ${name}! Your request for ${currentService} has been submitted. We'll contact you soon.`);
+            
+            // Close modal and reset form
+            closeRequestModal();
+        }
+
+        // Close modal when clicking outside
+        window.onclick = function(event) {
+            const modal = document.getElementById('requestModal');
+            if (event.target === modal) {
+                closeRequestModal();
+            }
+        }
+
+        // Close modal with Escape key
+        document.addEventListener('keydown', function(event) {
+            if (event.key === 'Escape') {
+                closeRequestModal();
+            }
+        });
+    </script>
+</body>
+</html>
