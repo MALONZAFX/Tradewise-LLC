@@ -205,6 +205,13 @@ def create_admin_log(admin_user, action, model_name, description, object_id=None
         print(f"⚠️ AdminLog creation failed: {e}")
         return False
 
+
+
+# ================= EXPLORE====================        
+def explore(request):
+    return render(request, 'explore.html')
+
+
 # ================== SAFE HELPER FUNCTIONS SECTION ==================
 
 def get_or_create_tradewise_coin():

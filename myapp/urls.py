@@ -60,6 +60,7 @@ urlpatterns = [
     path('services/', views.services_page, name='services_page'),
     path('classes/', views.classes_view, name='classes'),
     path('learning-hub/', views.learning_hub, name='learning_hub'),
+    path('explore/', views.explore, name='explore'),
 
     # ================== BLOG URLS ==================
     path('blog/', views.blog_page, name='blog_page'),
