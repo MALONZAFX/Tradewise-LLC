@@ -1644,16 +1644,16 @@ def create_admin_log_entry(admin_user, action, model_name, description, object_i
         print(f"❌ Error creating admin log: {e}")
         return False
     
-    from myapp.models import BlogPost
+#     from myapp.models import BlogPost
 
-# Publish all blog posts
-BlogPost.objects.all().update(is_published=True, status='published')
+# # Publish all blog posts
+# BlogPost.objects.all().update(is_published=True, status='published')
 
 # Check results
-posts = BlogPost.objects.all()
-print(f"✅ Published {posts.count()} blog posts:")
-for post in posts:
-    print(f"   - {post.title} (ID: {post.id})")
+# posts = BlogPost.objects.all()
+# print(f"✅ Published {posts.count()} blog posts:")
+# for post in posts:
+#     print(f"   - {post.title} (ID: {post.id})")
 
 
 
