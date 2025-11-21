@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% block title %}Explore TradeWise{% endblock %}</title>
+    <title>Explore TradeWise</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
@@ -82,122 +82,6 @@
             margin-bottom: 20px;
         }
         
-        .team-card {
-            text-align: center;
-            padding: 30px 20px;
-            border-radius: 10px;
-            transition: all 0.3s ease;
-        }
-        
-        .team-card:hover {
-            background: white;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-            transform: translateY(-5px);
-        }
-        
-        .team-img {
-            width: 150px;
-            height: 150px;
-            border-radius: 50%;
-            object-fit: cover;
-            border: 3px solid var(--primary-blue);
-            margin: 0 auto 20px;
-        }
-        
-        .donate-section {
-            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
-            position: relative;
-            overflow: hidden;
-        }
-        
-        .donate-card {
-            background: white;
-            border-radius: 10px;
-            padding: 40px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.05);
-            position: relative;
-            z-index: 2;
-        }
-        
-        .btn-primary {
-            background-color: var(--primary-blue);
-            border-color: var(--primary-blue);
-            padding: 12px 30px;
-            border-radius: 30px;
-            font-weight: 600;
-            letter-spacing: 0.5px;
-        }
-        
-        .btn-outline-primary {
-            color: var(--primary-blue);
-            border-color: var(--primary-blue);
-            padding: 12px 30px;
-            border-radius: 30px;
-            font-weight: 600;
-            letter-spacing: 0.5px;
-        }
-        
-        .btn-outline-primary:hover {
-            background-color: var(--primary-blue);
-            color: white;
-        }
-        
-        .investor-logo {
-            height: 60px;
-            transition: all 0.3s ease;
-            opacity: 0.7;
-        }
-        
-        .investor-logo:hover {
-            filter: none;
-            opacity: 1;
-        }
-        
-        .program-highlight {
-            border-left: 4px solid var(--accent-gold);
-            background: rgba(241, 196, 15, 0.05);
-            padding: 20px;
-            border-radius: 0 5px 5px 0;
-        }
-        
-        /* Mobile-specific styles */
-        @media (max-width: 767.98px) {
-            .hero-section .d-flex {
-                gap: 1rem !important;
-                width: 100%;
-                max-width: 300px;
-                margin: 0 auto;
-            }
-            .hero-section .btn {
-                width: 100% !important;
-                padding: 0.75rem !important;
-                font-size: 1rem;
-            }
-            .hero-section .display-4 {
-                font-size: 2.5rem;
-            }
-            .hero-section .lead {
-                font-size: 1.1rem;
-            }
-            /* Back link adjustments */
-            .hero-section .mt-3 {
-                margin-top: 1.5rem !important;
-            }
-            .hover-effect:hover {
-                opacity: 0.8;
-            }
-            
-            /* Mobile-specific button spacing */
-            #connect .d-flex {
-                gap: 1rem !important;
-            }
-            #connect .btn {
-                width: 100%;
-                padding: 0.75rem 1rem !important;
-            }
-        }
-        
-        /* Team section styles */
         .team-section {
             background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
             padding: 80px 0;
@@ -217,6 +101,10 @@
             transition: transform 0.3s ease;
         }
         
+        .team-card:hover {
+            transform: translateY(-5px);
+        }
+        
         .team-card-header {
             background: linear-gradient(135deg, #2c3e50, #3498db);
             padding: 25px;
@@ -227,7 +115,27 @@
             padding: 25px;
         }
         
-        /* Investor carousel styles */
+        .btn-primary {
+            background-color: var(--primary-blue);
+            border-color: var(--primary-blue);
+            padding: 12px 30px;
+            border-radius: 30px;
+            font-weight: 600;
+        }
+        
+        .btn-outline-primary {
+            color: var(--primary-blue);
+            border-color: var(--primary-blue);
+            padding: 12px 30px;
+            border-radius: 30px;
+            font-weight: 600;
+        }
+        
+        .btn-outline-primary:hover {
+            background-color: var(--primary-blue);
+            color: white;
+        }
+        
         @keyframes scroll {
             0% { transform: translateX(0); }
             100% { transform: translateX(-50%); }
@@ -238,6 +146,22 @@
             width: max-content;
             animation: scroll 30s linear infinite;
         }
+        
+        .starred-title::before {
+            content: '★';
+            color: var(--accent-gold);
+            margin-right: 8px;
+        }
+        
+        .executive-badge {
+            background: linear-gradient(135deg, #f1c40f, #f39c12);
+            color: white;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            margin-left: 10px;
+        }
     </style>
 </head>
 <body>
@@ -246,20 +170,15 @@
         <div class="container">
             <div class="row align-items-center">
                 <div class="col-lg-8 mx-auto text-center">
-                    <h1 class="display-4 fw-bold mb-3 mb-md-4">Explore TradeWise</h1>
-                    <p class="lead mb-4 mb-md-5">Discover our community, programs, and the people behind Africa's most innovative trading platform</p>
+                    <h1 class="display-4 fw-bold mb-3">Explore TradeWise</h1>
+                    <p class="lead mb-4">Discover our community, programs, and the people behind Africa's most innovative trading platform</p>
                     
-                    <!-- Button Group - Stacked on mobile -->
                     <div class="d-flex flex-column flex-md-row justify-content-center gap-3 mb-4">
-                        <a href="https://wa.me/254742962615" class="btn btn-outline-light btn-lg px-4 py-3">Join Community</a>
-                        <a href="#programs" class="btn btn-light btn-lg px-4 py-3">View Programs</a>
-                    </div>
-                    
-                    <!-- Back to TradeWise Link -->
-                    <div class="mt-3">
-                        <a href="{% url 'home' %}" class="d-inline-flex align-items-center text-light text-decoration-none hover-effect">
-                            <i class="fas fa-arrow-left me-2"></i>
-                            <span>Back to TradeWise</span>
+                        <a href="https://wa.me/254742962615" class="btn btn-outline-light btn-lg">
+                            <i class="fab fa-whatsapp me-2"></i>Join Community
+                        </a>
+                        <a href="#programs" class="btn btn-light btn-lg">
+                            <i class="fas fa-book me-2"></i>View Programs
                         </a>
                     </div>
                 </div>
@@ -271,15 +190,14 @@
     <section id="connect" class="py-5">
         <div class="container">
             <div class="row">
-                <div class="col-lg-6 mb-5 mb-lg-0">
-                    <img src="{% static 'images/ChatGPT Image May 10, 2025, 01_36_10 PM.png' %}" alt="TradeWise Community" class="img-fluid rounded-3 shadow">
+                <div class="col-lg-6 mb-5">
+                    <img src="{% static 'images/community-chat.png' %}" alt="TradeWise Community" class="img-fluid rounded-3 shadow">
                 </div>
                 <div class="col-lg-6">
                     <h2 class="section-title">TradeWise Connect</h2>
-                    <p class="lead mb-4">Where traders, learners, and mentors come together. It's more than just a platform — it's a dynamic network built for sharing strategies, insights, and real-time experiences.</p>
-                    <p class="mb-4"><strong>Learn together, trade smarter & grow as community</strong></p>
+                    <p class="lead mb-4">Where traders, learners, and mentors come together.</p>
                     
-                    <div class="row mt-5">
+                    <div class="row mt-4">
                         <div class="col-md-6 mb-4">
                             <div class="feature-card">
                                 <div class="icon-container">
@@ -303,58 +221,50 @@
             </div>
         </div>
     </section>
-    
+
     <!-- Programs Section -->
     <section id="programs" class="py-5 bg-light">
         <div class="container">
             <div class="text-center mb-5">
-                <h2 class="section-title d-inline-block">Our Programs</h2>
+                <h2 class="section-title">Our Programs</h2>
             </div>
             
             <div class="row g-4">
                 <div class="col-lg-6">
                     <div class="p-4 bg-white rounded-3 shadow-sm h-100">
                         <h3 class="mb-4">Funding Program</h3>
-                        <div class="program-highlight mb-4">
-                            <p class="mb-0">We provide capital to skilled traders who pass our evaluation. Prove your strategy and get funded—no personal risk.</p>
+                        <div class="mb-4 p-3" style="border-left: 4px solid #f1c40f; background: rgba(241, 196, 15, 0.05);">
+                            <p class="mb-0">We provide capital to skilled traders who pass our evaluation.</p>
                         </div>
                         <ul class="mb-4">
                             <li class="mb-2">Your chance to trade big and earn more</li>
                             <li class="mb-2">No hidden fees, just skill and discipline</li>
                             <li>Book with only $10, lifetime deal</li>
                         </ul>
-                        <a href="{% url 'contact' %}" class="btn btn-primary">Apply Now</a>
+                        <a href="https://wa.me/254742962615" class="btn btn-primary">Apply Now</a>
                     </div>
                 </div>
                 
                 <div class="col-lg-6">
                     <div class="p-4 bg-white rounded-3 shadow-sm h-100">
                         <h3 class="mb-4">Education Program</h3>
-                        <p class="mb-4">From beginner to advanced courses, we provide structured learning paths for traders at every level.</p>
+                        <p class="mb-4">From beginner to advanced courses, we provide structured learning paths.</p>
                         <div class="row">
                             <div class="col-md-6 mb-3">
-                                <div class="d-flex align-items-center">
-                                    <i class="fas fa-check-circle text-primary me-2"></i>
-                                    <span>Beginner Bootcamp</span>
-                                </div>
+                                <i class="fas fa-check-circle text-primary me-2"></i>
+                                <span>Beginner Bootcamp</span>
                             </div>
                             <div class="col-md-6 mb-3">
-                                <div class="d-flex align-items-center">
-                                    <i class="fas fa-check-circle text-primary me-2"></i>
-                                    <span>Technical Analysis</span>
-                                </div>
+                                <i class="fas fa-check-circle text-primary me-2"></i>
+                                <span>Technical Analysis</span>
                             </div>
                             <div class="col-md-6 mb-3">
-                                <div class="d-flex align-items-center">
-                                    <i class="fas fa-check-circle text-primary me-2"></i>
-                                    <span>Risk Management</span>
-                                </div>
+                                <i class="fas fa-check-circle text-primary me-2"></i>
+                                <span>Risk Management</span>
                             </div>
                             <div class="col-md-6 mb-3">
-                                <div class="d-flex align-items-center">
-                                    <i class="fas fa-check-circle text-primary me-2"></i>
-                                    <span>Advanced Strategies</span>
-                                </div>
+                                <i class="fas fa-check-circle text-primary me-2"></i>
+                                <span>Advanced Strategies</span>
                             </div>
                         </div>
                         <a href="https://wa.me/254742962615" class="btn btn-outline-primary">View Courses</a>
@@ -364,253 +274,50 @@
         </div>
     </section>
 
-    <!-- TW Donate Section with Modal -->
-    <section class="donate-section py-5">
-        <div class="container">
-            <div class="row justify-content-center">
-                <div class="col-lg-8">
-                    <div class="donate-card">
-                        <div class="text-center mb-5">
-                            <h2 class="section-title d-inline-block">Support TradeWise</h2>
-                        </div>
-                        
-                        <div class="row align-items-center">
-                            <div class="col-lg-6 mb-4 mb-lg-0">
-                                <h3 class="mb-4">Help us democratize trading education</h3>
-                                <p>TradeWise is a unique platform where trading meets learning — powered by the support of our community. We believe that access to financial education and trading tools should be open to everyone, regardless of background.</p>
-                                
-                                <h5 class="mt-4">Your donations help us:</h5>
-                                <ul class="mb-4">
-                                    <li class="mb-2">Keep the platform free and accessible</li>
-                                    <li class="mb-2">Expand educational content and tools</li>
-                                    <li>Support new traders through mentorship</li>
-                                </ul>
-                                
-                                <p><strong>Join us in shaping the future of trading. Support TradeWise today.</strong></p>
-                            </div>
-                            
-                            <div class="col-lg-6">
-                                <div class="bg-light p-4 rounded-3">
-                                    <h4 class="mb-4 text-center">Make a Donation</h4>
-                                    <div class="d-grid gap-3">
-                                        <button class="btn btn-outline-primary donation-btn" data-bs-toggle="modal" data-bs-target="#donationModal" data-amount="25">$25</button>
-                                        <button class="btn btn-outline-primary donation-btn" data-bs-toggle="modal" data-bs-target="#donationModal" data-amount="50">$50</button>
-                                        <button class="btn btn-primary donation-btn" data-bs-toggle="modal" data-bs-target="#donationModal" data-amount="100">$100</button>
-                                        <button class="btn btn-outline-primary donation-btn" data-bs-toggle="modal" data-bs-target="#donationModal">Custom Amount</button>
-                                    </div>
-                                    <div class="mt-4 text-center">
-                                        <small>All donations are securely processed</small>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Donation Modal -->
-    <div class="modal fade" id="donationModal" tabindex="-1" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content" style="border-radius: 15px; overflow: hidden; border: none;">
-                <!-- Modal Header -->
-                <div class="modal-header" style="background: linear-gradient(135deg, #3498db 0%, #2c3e50 100%); color: white; border-bottom: none;">
-                    <h5 class="modal-title" style="font-weight: 600;">Complete Your Donation</h5>
-                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                
-                <!-- Modal Body -->
-                <div class="modal-body p-4">
-                    <div class="text-center mb-4">
-                        <div class="icon-circle mb-3" style="
-                            width: 80px;
-                            height: 80px;
-                            background: rgba(52, 152, 219, 0.1);
-                            border-radius: 50%;
-                            display: inline-flex;
-                            align-items: center;
-                            justify-content: center;
-                        ">
-                            <i class="fas fa-hand-holding-heart" style="font-size: 2rem; color: #3498db;"></i>
-                        </div>
-                        <h4 style="font-weight: 700; color: #2c3e50;">Thank You for Supporting TradeWise</h4>
-                        <p class="text-muted">Your contribution helps democratize trading education</p>
-                    </div>
-                    
-                    <!-- Donation Form -->
-                    <form id="donationForm" method="post" action="{% url 'process_donation' %}">
-                        {% csrf_token %}
-                        <div class="mb-4">
-                            <label for="donationAmount" class="form-label" style="font-weight: 600; color: #2c3e50;">Donation Amount ($)</label>
-                            <div class="input-group">
-                                <span class="input-group-text" style="background: #f8f9fa; border-right: none;">$</span>
-                                <input type="number" class="form-control" id="donationAmount" name="amount" placeholder="Enter amount" style="border-left: none; padding: 12px 15px; border-radius: 0 8px 8px 0;" min="1" required>
-                            </div>
-                        </div>
-                        
-                        <div class="mb-4">
-                            <label for="donorName" class="form-label" style="font-weight: 600; color: #2c3e50;">Your Name</label>
-                            <input type="text" class="form-control" id="donorName" name="name" placeholder="Enter your name" style="padding: 12px 15px; border-radius: 8px;" required>
-                        </div>
-                        
-                        <div class="mb-4">
-                            <label for="donorEmail" class="form-label" style="font-weight: 600; color: #2c3e50;">Email Address</label>
-                            <input type="email" class="form-control" id="donorEmail" name="email" placeholder="Enter your email" style="padding: 12px 15px; border-radius: 8px;" required>
-                        </div>
-                        
-                        <div class="form-check mb-4">
-                            <input class="form-check-input" type="checkbox" id="recurringDonation" name="recurring">
-                            <label class="form-check-label" for="recurringDonation" style="color: #64748b;">
-                                Make this a monthly recurring donation
-                            </label>
-                        </div>
-                        
-                        <button type="submit" class="btn btn-primary w-100 py-3" style="
-                            border-radius: 10px;
-                            font-weight: 600;
-                            font-size: 1.1rem;
-                            background: #3498db;
-                            border: none;
-                            transition: all 0.3s ease;
-                        ">
-                            <i class="fas fa-paper-plane me-2"></i> Process Donation
-                        </button>
-                    </form>
-                </div>
-                
-                <!-- Modal Footer -->
-                <div class="modal-footer" style="background: #f8f9fa; border-top: none; justify-content: center;">
-                    <p class="text-center text-muted mb-0" style="font-size: 0.9rem;">
-                        <i class="fas fa-lock me-2"></i> Secure payment processing
-                    </p>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Modern Team Section -->
+    <!-- Team Section -->
     <div class="team-section">
-        <div class="container" style="max-width: 1200px; margin: 0 auto; padding: 0 20px;">
-            <div class="section-header" style="text-align: center; margin-bottom: 60px;">
-                <h2 style="font-size: 2.5rem; font-weight: 700; color: #2c3e50; margin-bottom: 15px;">Meet Our <span style="color: #3498db;">Leadership Team</span></h2>
-                <p style="font-size: 1.1rem; color: #7f8c8d; max-width: 700px; margin: 0 auto;">The experienced professionals guiding TradeWise to success</p>
+        <div class="container">
+            <div class="text-center mb-5">
+                <h2 class="section-title">Our Leadership Team</h2>
             </div>
 
             <div class="team-grid">
-                <!-- Chairman & CEO (Highest Position) -->
+                <!-- C.B.D – Spallis Official -->
                 <div class="team-card">
                     <div class="team-card-header">
-                        <h3 style="margin: 0; font-size: 1.3rem; font-weight: 600;">Chairman & CEO</h3>
+                        <h3 class="starred-title">C.B.D</h3>
+                        <p>Chairman, Board of Directors & Co-Founder</p>
                     </div>
                     <div class="team-card-body">
-                        <div class="team-member" style="display: flex; align-items: center; margin-bottom: 20px;">
-                            <div class="member-avatar" style="width: 70px; height: 70px; border-radius: 50%; background: #eee; display: flex; align-items: center; justify-content: center; margin-right: 20px; font-size: 1.5rem; font-weight: bold; color: #3498db;">PS</div>
-                            <div class="member-info">
-                                <h4 style="margin: 0 0 5px 0; font-size: 1.2rem; color: #2c3e50;">Pitalis "Spallis Official"</h4>
-                                <p style="margin: 0; color: #7f8c8d; font-size: 0.9rem;">5+ Years Trading Experience</p>
-                            </div>
-                        </div>
-                        <div class="team-bio" style="color: #555; font-size: 0.95rem; line-height: 1.6;">
-                            Seasoned trading expert leading the company's strategic direction and growth initiatives.
-                        </div>
+                        <h4>C.B.D – Spallis Official</h4>
+                        <p class="text-muted">Board Leadership & Strategy</p>
+                        <p>Provides strategic oversight and governance as Chairman of the Board.</p>
                     </div>
                 </div>
 
-                <!-- Founder -->
+                <!-- C.E.O – Victor Baraka -->
                 <div class="team-card">
                     <div class="team-card-header">
-                        <h3 style="margin: 0; font-size: 1.3rem; font-weight: 600;">Founder</h3>
+                        <h3 class="starred-title">C.E.O</h3>
+                        <p>Chief Executive Officer</p>
                     </div>
                     <div class="team-card-body">
-                        <div class="team-member" style="display: flex; align-items: center; margin-bottom: 20px;">
-                            <div class="member-avatar" style="width: 70px; height: 70px; border-radius: 50%; background: #eee; display: flex; align-items: center; justify-content: center; margin-right: 20px; font-size: 1.5rem; font-weight: bold; color: #3498db;">LS</div>
-                            <div class="member-info">
-                                <h4 style="margin: 0 0 5px 0; font-size: 1.2rem; color: #2c3e50;">Light Sam</h4>
-                                <p style="margin: 0; color: #7f8c8d; font-size: 0.9rem;">Visionary Leader</p>
-                            </div>
-                        </div>
-                        <div class="team-bio" style="color: #555; font-size: 0.95rem; line-height: 1.6;">
-                            Founding architect of TradeWise with a passion for democratizing trading knowledge.
-                        </div>
+                        <h4>Victor Baraka</h4>
+                        <p class="text-muted">Executive Leadership</p>
+                        <p>Drives company vision, strategic direction, and overall business performance.</p>
                     </div>
                 </div>
 
-                <!-- COO -->
+                <!-- C.O.O – Judah Migwi -->
                 <div class="team-card">
                     <div class="team-card-header">
-                        <h3 style="margin: 0; font-size: 1.3rem; font-weight: 600;">COO</h3>
-                        <p style="margin: 5px 0 0 0; font-size: 0.9rem; opacity: 0.9;">Chief Operating Officer</p>
+                        <h3 class="starred-title">C.O.O</h3>
+                        <p>Chief Operating Officer</p>
                     </div>
                     <div class="team-card-body">
-                        <div class="team-member" style="display: flex; align-items: center; margin-bottom: 20px;">
-                            <div class="member-avatar" style="width: 70px; height: 70px; border-radius: 50%; background: #eee; display: flex; align-items: center; justify-content: center; margin-right: 20px; font-size: 1.5rem; font-weight: bold; color: #3498db;">JM</div>
-                            <div class="member-info">
-                                <h4 style="margin: 0 0 5px 0; font-size: 1.2rem; color: #2c3e50;">Juma "M.K" Mwachaunga</h4>
-                                <p style="margin: 0; color: #7f8c8d; font-size: 0.9rem;">Operations Specialist</p>
-                            </div>
-                        </div>
-                        <div class="team-bio" style="color: #555; font-size: 0.95rem; line-height: 1.6;">
-                            Oversees daily operations and ensures seamless execution of company strategies.
-                        </div>
-                    </div>
-                </div>
-
-                <!-- CFO -->
-                <div class="team-card">
-                    <div class="team-card-header">
-                        <h3 style="margin: 0; font-size: 1.3rem; font-weight: 600;">CFO</h3>
-                        <p style="margin: 5px 0 0 0; font-size: 0.9rem; opacity: 0.9;">Chief Financial Officer</p>
-                    </div>
-                    <div class="team-card-body">
-                        <div class="team-member" style="display: flex; align-items: center; margin-bottom: 20px;">
-                            <div class="member-avatar" style="width: 70px; height: 70px; border-radius: 50%; background: #eee; display: flex; align-items: center; justify-content: center; margin-right: 20px; font-size: 1.5rem; font-weight: bold; color: #3498db;">HM</div>
-                            <div class="member-info">
-                                <h4 style="margin: 0 0 5px 0; font-size: 1.2rem; color: #2c3e50;">Hijra Mohammed</h4>
-                                <p style="margin: 0; color: #7f8c8d; font-size: 0.9rem;">Financial Strategist</p>
-                            </div>
-                        </div>
-                        <div class="team-bio" style="color: #555; font-size: 0.95rem; line-height: 1.6;">
-                            Manages financial planning, risk management, and fiscal operations.
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Head of Technology -->
-                <div class="team-card">
-                    <div class="team-card-header">
-                        <h3 style="margin: 0; font-size: 1.3rem; font-weight: 600;">Head of Technology</h3>
-                    </div>
-                    <div class="team-card-body">
-                        <div class="team-member" style="display: flex; align-items: center; margin-bottom: 20px;">
-                            <div class="member-avatar" style="width: 70px; height: 70px; border-radius: 50%; background: #eee; display: flex; align-items: center; justify-content: center; margin-right: 20px; font-size: 1.5rem; font-weight: bold; color: #3498db;">TW</div>
-                            <div class="member-info">
-                                <h4 style="margin: 0 0 5px 0; font-size: 1.2rem; color: #2c3e50;">Mesh "The-Dev"</h4>
-                                <p style="margin: 0; color: #7f8c8d; font-size: 0.9rem;">Innovation Driver</p>
-                            </div>
-                        </div>
-                        <div class="team-bio" style="color: #555; font-size: 0.95rem; line-height: 1.6;">
-                            Leads the technological development and infrastructure of TradeWise platforms.
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Legal Officer -->
-                <div class="team-card">
-                    <div class="team-card-header">
-                        <h3 style="margin: 0; font-size: 1.3rem; font-weight: 600;">Legal Officer</h3>
-                    </div>
-                    <div class="team-card-body">
-                        <div class="team-member" style="display: flex; align-items: center; margin-bottom: 20px;">
-                            <div class="member-avatar" style="width: 70px; height: 70px; border-radius: 50%; background: #eee; display: flex; align-items: center; justify-content: center; margin-right: 20px; font-size: 1.5rem; font-weight: bold; color: #3498db;">MC</div>
-                            <div class="member-info">
-                                <h4 style="margin: 0 0 5px 0; font-size: 1.2rem; color: #2c3e50;">Miss Caroline</h4>
-                                <p style="margin: 0; color: #7f8c8d; font-size: 0.9rem;">Compliance Expert</p>
-                            </div>
-                        </div>
-                        <div class="team-bio" style="color: #555; font-size: 0.95rem; line-height: 1.6;">
-                            Ensures regulatory compliance and handles all legal aspects of the business.
-                        </div>
+                        <h4>Judah Migwi</h4>
+                        <p class="text-muted">Operations Excellence</p>
+                        <p>Oversees daily operations and ensures seamless execution of company strategies.</p>
                     </div>
                 </div>
             </div>
@@ -618,35 +325,23 @@
     </div>
 
     <!-- Investors Section -->
-    <section id="tradewise-investors" style="padding: 80px 0; background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%); overflow: hidden;">
-        <div class="container" style="max-width: 1200px; margin: 0 auto; padding: 0 20px;">
+    <section class="py-5 bg-light">
+        <div class="container">
             <div class="text-center mb-5">
-                <h2 style="font-size: 2.5rem; font-weight: 700; color: #2c3e50; margin-bottom: 15px; display: inline-block; position: relative;">
-                    Our <span style="color: #3498db;">Investors</span>
-                </h2>
+                <h2 class="section-title">Our Investors</h2>
             </div>
             
-            <div class="row justify-content-center">
-                <div class="col-lg-8 text-center mb-5">
-                    <p style="font-size: 1.1rem; color: #7f8c8d;">We are proud to be backed by visionary investors who share our mission and believe in our long-term growth.</p>
-                </div>
-            </div>
-            
-            <!-- Infinite Logo Carousel -->
-            <div style="position: relative;">
-                <div class="logo-carousel-track">
-                    <!-- Logo Set (repeated for seamless looping) -->
-                    <div style="display: flex; align-items: center; gap: 50px; padding: 20px 0;">
-                        <img src="{% static 'images/tradepillars.jpeg' %}" alt="TradePillars" style="height: 80px; width: auto; object-fit: contain; filter: brightness(100%);">
-                        <img src="{% static 'images/wisecash.jpeg' %}" alt="WiseCash" style="height: 80px; width: auto; object-fit: contain; filter: brightness(100%);">
-                        <img src="{% static 'images/wisetech.jpeg' %}" alt="WiseTech" style="height: 80px; width: auto; object-fit: contain; filter: brightness(100%);">
-                        <img src="{% static 'images/windsor.png' %}" alt="Windsor" style="height: 80px; width: auto; object-fit: contain; filter: brightness(100%);">
-                        <!-- Duplicate set for seamless looping -->
-                        <img src="{% static 'images/tradepillars.jpeg' %}" alt="TradePillars" style="height: 80px; width: auto; object-fit: contain; filter: brightness(100%);">
-                        <img src="{% static 'images/wisecash.jpeg' %}" alt="WiseCash" style="height: 80px; width: auto; object-fit: contain; filter: brightness(100%);">
-                        <img src="{% static 'images/wisetech.jpeg' %}" alt="WiseTech" style="height: 80px; width: auto; object-fit: contain; filter: brightness(100%);">
-                        <img src="{% static 'images/windsor.png' %}" alt="Windsor" style="height: 80px; width: auto; object-fit: contain; filter: brightness(100%);">
-                    </div>
+            <div class="logo-carousel-track">
+                <div style="display: flex; align-items: center; gap: 50px; padding: 20px 0;">
+                    <img src="{% static 'images/tradepillars.jpeg' %}" alt="TradePillars" style="height: 60px; width: auto;">
+                    <img src="{% static 'images/wisecash.jpeg' %}" alt="WiseCash" style="height: 60px; width: auto;">
+                    <img src="{% static 'images/wisetech.jpeg' %}" alt="WiseTech" style="height: 60px; width: auto;">
+                    <img src="{% static 'images/windsor.png' %}" alt="Windsor" style="height: 60px; width: auto;">
+                    <!-- Duplicate for seamless loop -->
+                    <img src="{% static 'images/tradepillars.jpeg' %}" alt="TradePillars" style="height: 60px; width: auto;">
+                    <img src="{% static 'images/wisecash.jpeg' %}" alt="WiseCash" style="height: 60px; width: auto;">
+                    <img src="{% static 'images/wisetech.jpeg' %}" alt="WiseTech" style="height: 60px; width: auto;">
+                    <img src="{% static 'images/windsor.png' %}" alt="Windsor" style="height: 60px; width: auto;">
                 </div>
             </div>
         </div>
@@ -654,40 +349,15 @@
 
     <!-- CTA Section -->
     <section class="py-5 text-white" style="background: linear-gradient(135deg, var(--dark-blue) 0%, var(--primary-blue) 100%);">
-        <div class="container">
-            <div class="row justify-content-center">
-                <div class="col-lg-8 text-center">
-                    <h2 class="mb-4">Ready to join our trading community?</h2>
-                    <p class="lead mb-5">Whether you're looking to learn, connect, or grow your trading capital, TradeWise has everything you need to succeed.</p>
-                    <a href="{% url 'login' %}" class="btn btn-light btn-lg me-3">Sign Up Free</a>
-                    <a href="{% url 'account' %}" class="btn btn-outline-light btn-lg">Learn More</a>
-                </div>
-            </div>
+        <div class="container text-center">
+            <h2 class="mb-4">Ready to join our trading community?</h2>
+            <p class="lead mb-5">Start your trading journey with TradeWise today.</p>
+            <a href="https://wa.me/254742962615" class="btn btn-light btn-lg">
+                <i class="fab fa-whatsapp me-2"></i>Get Started
+            </a>
         </div>
     </section>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            // Initialize modal
-            const donationModal = new bootstrap.Modal(document.getElementById('donationModal'));
-            
-            // Handle donation button clicks
-            document.querySelectorAll('.donation-btn').forEach(button => {
-                button.addEventListener('click', function() {
-                    const amount = this.getAttribute('data-amount');
-                    if (amount) {
-                        document.getElementById('donationAmount').value = amount;
-                    }
-                });
-            });
-            
-            // Handle form submission
-            document.getElementById('donationForm').addEventListener('submit', function(e) {
-                // Form will be submitted to Django view for processing
-                // You can add additional client-side validation here if needed
-            });
-        });
-    </script>
 </body>
 </html>

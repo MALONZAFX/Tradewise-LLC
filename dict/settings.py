@@ -27,8 +27,8 @@ ALLOWED_HOSTS = [
     "tradewise.up.railway.app",
     "127.0.0.1",
     "localhost",
-    "http://tradewise-hub.com",
-    "http://www.tradewise-hub.com",
+    "tradewise-hub.com",
+    "www.tradewise-hub.com",
 ]
 
 CSRF_TRUSTED_ORIGINS = [
