@@ -1,9 +1,12 @@
+# settings.py
 from pathlib import Path
 import os
 from dotenv import load_dotenv
 import dj_database_url
 
-# Load .env file
+# ==============================
+# Load .env
+# ==============================
 load_dotenv()
 
 # ==============================
@@ -14,7 +17,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # ==============================
 # SECRET KEY & DEBUG
 # ==============================
-SECRET_KEY = os.getenv("SECRET_KEY")
+SECRET_KEY = os.getenv("SECRET_KEY", "django-insecure-default-key")
 DEBUG = os.getenv("DEBUG", "False") == "True"
 
 # ==============================
@@ -29,7 +32,6 @@ ALLOWED_HOSTS = [
 CSRF_TRUSTED_ORIGINS = [
     "https://tradewise.up.railway.app",
     "http://127.0.0.1:8000",
-    "https://api.web3forms.com",
 ]
 
 CORS_ORIGIN_ALLOW_ALL = True
@@ -91,10 +93,9 @@ TEMPLATES = [
 # DATABASE
 # ==============================
 DATABASE_URL = os.getenv("DATABASE_URL")
-
 if DATABASE_URL:
     DATABASES = {
-        "default": dj_database_url.parse(DATABASE_URL, conn_max_age=1800)
+        "default": dj_database_url.parse(DATABASE_URL, conn_max_age=600, ssl_require=True)
     }
 else:
     DATABASES = {
@@ -181,8 +182,6 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 LOGGING = {
     "version": 1,
     "disable_existing_loggers": False,
-    "handlers": {
-        "console": {"class": "logging.StreamHandler"},
-    },
+    "handlers": {"console": {"class": "logging.StreamHandler"}},
     "root": {"handlers": ["console"], "level": "INFO"},
 }
