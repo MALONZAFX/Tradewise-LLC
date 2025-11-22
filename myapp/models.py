@@ -15,8 +15,7 @@ from django.conf import settings
 from django.db.models import Sum
 from django.db.models.signals import post_save
 from django.dispatch import receiver
-from django.contrib.auth.models import User
-import uuid
+from django.utils.text import slugify
 import requests
 import json
 
@@ -81,88 +80,6 @@ class PaystackService:
             return {"status": False, "message": str(e)}
         except Exception as e:
             return {"status": False, "message": str(e)}
-        
-
- # At the VERY BOTTOM of models.py, after all model definitions
-
-@receiver(post_save, sender='myapp.Tradeviewusers')  # Use string reference
-def create_user_capital_access(sender, instance, created, **kwargs):
-    """
-    Signal to automatically create CapitalAccess and Affiliate records when a new user is created
-    """
-    if created:
-        try:
-            with transaction.atomic():
-                # Create CapitalAccess record
-                CapitalAccess.objects.get_or_create(
-                    user=instance,
-                    defaults={
-                        'balance': 0.00,
-                        'currency': 'USD',
-                        'status': 'active'
-                    }
-                )
-                
-                # Create Affiliate record with referral code
-                affiliate, affiliate_created = Affiliate.objects.get_or_create(
-                    user=instance,
-                    defaults={
-                        'referral_code': Affiliate.generate_referral_code(),
-                        'total_coins_earned': 0,
-                        'coin_balance': 0,
-                        'total_referrals': 0,
-                        'total_payouts': 0.00
-                    }
-                )
-                
-                # If affiliate was just created, ensure it has a referral code
-                if affiliate_created and not affiliate.referral_code:
-                    affiliate.referral_code = Affiliate.generate_referral_code()
-                    affiliate.save()
-                
-                print(f"✅ Created CapitalAccess and Affiliate for user: {instance.email}")
-                
-        except Exception as e:
-            print(f"❌ Error creating user capital access and affiliate: {e}")
-            # Log the error but don't crash the user creation
-            import traceback
-            traceback.print_exc()
-
-@receiver(post_save, sender='myapp.Tradeviewusers')
-def setup_new_user(sender, instance, created, **kwargs):
-    """
-    Combined signal to setup all user-related records in one transaction
-    """
-    if created:
-        try:
-            with transaction.atomic():
-                # 1. Create CapitalAccess
-                capital_access, ca_created = CapitalAccess.objects.get_or_create(
-                    user=instance,
-                    defaults={'balance': 0.00, 'currency': 'USD', 'status': 'active'}
-                )
-                
-                # 2. Create Affiliate profile
-                affiliate, aff_created = Affiliate.objects.get_or_create(
-                    user=instance,
-                    defaults={'referral_code': Affiliate.generate_referral_code()}
-                )
-                
-                # 3. Create UserProfile
-                profile, prof_created = UserProfile.objects.get_or_create(
-                    user=instance,
-                    defaults={'trading_experience': 'beginner', 'profile_completed': False}
-                )
-                
-                print(f"✅ User setup complete for: {instance.email}")
-                print(f"   - CapitalAccess: {'Created' if ca_created else 'Exists'}")
-                print(f"   - Affiliate: {'Created' if aff_created else 'Exists'}")
-                print(f"   - UserProfile: {'Created' if prof_created else 'Exists'}")
-                
-        except Exception as e:
-            print(f"❌ Comprehensive user setup failed for {instance.email}: {e}")
-            import traceback
-            traceback.print_exc()  
 
 # ================== PAYMENT MODELS ==================
 
@@ -473,17 +390,20 @@ class Tradeviewusers(models.Model):
         return check_password(raw_password, self.password)
 
     def send_verification_email(self):
-        if self.email_verification_token:
-            subject = '✅ Verify Your TradeWise Account'
-            verification_url = f"{getattr(settings, 'SITE_URL', 'http://127.0.0.1:8000')}/verify-email/{self.email_verification_token}/"
+        """Send email verification with FAST performance"""
+        if not self.email_verification_token:
+            return False
             
-            # Render HTML template
-            html_message = render_to_string('emails/verification_email.html', {
-                'user': self,
-                'verification_url': verification_url,
-            })
-            
-            plain_message = f"""
+        subject = '✅ Verify Your TradeWise Account'
+        verification_url = f"{getattr(settings, 'SITE_URL', 'https://www.tradewise-hub.com/')}/verify-email/{self.email_verification_token}/"
+        
+        # Render BEAUTIFUL HTML template
+        html_message = render_to_string('emails/verification_email.html', {
+            'user': self,
+            'verification_url': verification_url,
+        })
+        
+        plain_message = f"""
 Dear {self.first_name},
 
 Welcome to TradeWise! Please verify your email address to activate your account.
@@ -500,37 +420,42 @@ If you didn't create this account, please ignore this email.
 
 Best regards,
 TradeWise Team
-            """
-            try:
-                send_mail(
-                    subject=subject,
-                    message=plain_message,
-                    from_email=getattr(settings, 'DEFAULT_FROM_EMAIL', 'noreply@trade-wise.co.ke'),
-                    recipient_list=[self.email],
-                    html_message=html_message,  # ✅ ADD HTML VERSION
-                    fail_silently=False,
-                )
-                return True
-            except Exception as e:
-                print(f"Email error: {e}")
-                return False
-        return False
+        """
+        
+        try:
+            # FAST EMAIL SENDING - KEEP ORIGINAL APPROACH
+            send_mail(
+                subject=subject,
+                message=plain_message,
+                from_email=getattr(settings, 'DEFAULT_FROM_EMAIL', 'noreply@trade-wise.co.ke'),
+                recipient_list=[self.email],
+                html_message=html_message,  # ✅ BEAUTIFUL TEMPLATE
+                fail_silently=False,
+            )
+            print(f"✅ FAST: Verification email sent to: {self.email}")
+            return True
+            
+        except Exception as e:
+            print(f"❌ Email error for {self.email}: {str(e)}")
+            return False
 
     def send_password_reset_email(self):
-        self.password_reset_token = secrets.token_urlsafe(32)
-        self.save()
-        
-        subject = '🔒 Reset Your TradeWise Password'
-        reset_url = f"{getattr(settings, 'SITE_URL', 'http://127.0.0.1:8000')}/reset-password/{self.password_reset_token}/"
-        
-        # Render HTML template
-        html_message = render_to_string('emails/password_reset.html', {
-            'user': self,
-            'reset_url': reset_url,
-            'request_time': timezone.now().strftime('%Y-%m-%d %H:%M:%S'),
-        })
-        
-        plain_message = f"""
+        """Send password reset email with FAST performance"""
+        try:
+            self.password_reset_token = secrets.token_urlsafe(32)
+            self.save()
+            
+            subject = '🔒 Reset Your TradeWise Password'
+            reset_url = f"{getattr(settings, 'SITE_URL', 'https://www.tradewise-hub.com/')}/reset-password/{self.password_reset_token}/"
+            
+            # Render BEAUTIFUL HTML template
+            html_message = render_to_string('emails/password_reset.html', {
+                'user': self,
+                'reset_url': reset_url,
+                'request_time': timezone.now().strftime('%Y-%m-%d %H:%M:%S'),
+            })
+            
+            plain_message = f"""
 Dear {self.first_name},
 
 You requested to reset your password for your TradeWise account.
@@ -545,30 +470,35 @@ If you didn't request this reset, please ignore this email.
 Best regards,
 TradeWise Team
             """
-        try:
+            
+            # FAST EMAIL SENDING
             send_mail(
                 subject=subject,
                 message=plain_message,
                 from_email=getattr(settings, 'DEFAULT_FROM_EMAIL', 'noreply@trade-wise.co.ke'),
                 recipient_list=[self.email],
-                html_message=html_message,  # ✅ ADD HTML VERSION
+                html_message=html_message,  # ✅ BEAUTIFUL TEMPLATE
                 fail_silently=False,
             )
+            print(f"✅ FAST: Password reset email sent to: {self.email}")
             return True
+            
         except Exception as e:
-            print(f"Password reset email error: {e}")
+            print(f"❌ Password reset email error for {self.email}: {str(e)}")
             return False
 
     def send_welcome_email(self, plain_password):
-        subject = '🎉 Welcome to TradeWise - Your Account is Ready!'
-        
-        # Render HTML template
-        html_message = render_to_string('emails/welcome_email.html', {
-            'user': self,
-            'plain_password': plain_password,
-        })
-        
-        plain_message = f"""
+        """Send welcome email with FAST performance"""
+        try:
+            subject = '🎉 Welcome to TradeWise - Your Account is Ready!'
+            
+            # Render BEAUTIFUL HTML template
+            html_message = render_to_string('emails/welcome_email.html', {
+                'user': self,
+                'plain_password': plain_password,
+            })
+            
+            plain_message = f"""
 Dear {self.first_name} {self.second_name},
 
 Welcome to TradeWise! Your account has been created successfully.
@@ -581,23 +511,117 @@ Your Account Details:
 
 Please keep this information secure.
 
-You can access your account here: {getattr(settings, 'SITE_URL', 'http://127.0.0.1:8000')}/loginpage/
+You can access your account here: {getattr(settings, 'SITE_URL', 'https://www.tradewise-hub.com/')}/loginpage/
 
 Best regards,
 TradeWise Team
-        """
-        try:
+            """
+            
+            # FAST EMAIL SENDING
             send_mail(
                 subject=subject,
                 message=plain_message,
                 from_email=getattr(settings, 'DEFAULT_FROM_EMAIL', 'noreply@trade-wise.co.ke'),
                 recipient_list=[self.email],
-                html_message=html_message,  # ✅ ADD HTML VERSION
+                html_message=html_message,  # ✅ BEAUTIFUL TEMPLATE
                 fail_silently=False,
             )
+            print(f"✅ FAST: Welcome email sent to: {self.email}")
             return True
+            
         except Exception as e:
-            print(f"Welcome email error: {e}")
+            print(f"❌ Welcome email error for {self.email}: {str(e)}")
+            return False
+
+    def send_order_confirmation_email(self, order_details):
+        """Send order confirmation email with FAST performance"""
+        try:
+            subject = '✅ Order Confirmation - TradeWise'
+            
+            # Render BEAUTIFUL HTML template
+            html_message = render_to_string('emails/order_confirmation.html', {
+                'user': self,
+                'order_details': order_details,
+                'order_date': timezone.now().strftime('%Y-%m-%d %H:%M:%S'),
+            })
+            
+            plain_message = f"""
+Dear {self.first_name},
+
+Thank you for your order with TradeWise!
+
+Order Details:
+- Order ID: {order_details.get('order_id', 'N/A')}
+- Service: {order_details.get('service', 'N/A')}
+- Amount: {order_details.get('amount', 'N/A')}
+- Date: {timezone.now().strftime('%Y-%m-%d %H:%M:%S')}
+
+We will process your order shortly and contact you if needed.
+
+Best regards,
+TradeWise Team
+            """
+            
+            # FAST EMAIL SENDING
+            send_mail(
+                subject=subject,
+                message=plain_message,
+                from_email=getattr(settings, 'DEFAULT_FROM_EMAIL', 'noreply@trade-wise.co.ke'),
+                recipient_list=[self.email],
+                html_message=html_message,  # ✅ BEAUTIFUL TEMPLATE
+                fail_silently=False,
+            )
+            print(f"✅ FAST: Order confirmation sent to: {self.email}")
+            return True
+            
+        except Exception as e:
+            print(f"❌ Order confirmation email error: {str(e)}")
+            return False
+
+    def send_admin_new_user_notification(self):
+        """Send FAST notification to admin about new user registration"""
+        try:
+            subject = '👤 New User Registration - TradeWise'
+            
+            # Render BEAUTIFUL HTML template for admin
+            html_message = render_to_string('emails/admin_new_user.html', {
+                'user': self,
+                'registration_time': timezone.now().strftime('%Y-%m-%d %H:%M:%S'),
+                'site_url': getattr(settings, 'SITE_URL', 'https://www.tradewise-hub.com/'),
+            })
+            
+            plain_message = f"""
+New User Registration on TradeWise
+
+User Details:
+- Name: {self.first_name} {self.second_name}
+- Email: {self.email}
+- TradeWise Number: {self.account_number}
+- Phone: {self.phone or 'Not provided'}
+- Registration Time: {timezone.now().strftime('%Y-%m-%d %H:%M:%S')}
+
+You can view this user in the admin dashboard.
+
+Best regards,
+TradeWise System
+            """
+            
+            admin_email = getattr(settings, 'ADMIN_EMAIL', 'theofficialtradewise@gmail.com')
+            
+            # FAST EMAIL SENDING
+            send_mail(
+                subject=subject,
+                message=plain_message,
+                from_email=getattr(settings, 'DEFAULT_FROM_EMAIL', 'noreply@trade-wise.co.ke'),
+                recipient_list=[admin_email],
+                html_message=html_message,  # ✅ BEAUTIFUL TEMPLATE
+                fail_silently=False,
+            )
+            print(f"✅ FAST: Admin notification sent for new user: {self.email}")
+            return True
+            
+        except Exception as e:
+            print(f"❌ Admin notification email error: {str(e)}")
             return False
 
     def __str__(self):
@@ -610,6 +634,8 @@ TradeWise Team
 class CapitalAccess(models.Model):
     user = models.OneToOneField(Tradeviewusers, on_delete=models.CASCADE, related_name='capital_access')
     balance = models.DecimalField(max_digits=10, decimal_places=2, default=0.00)
+    currency = models.CharField(max_length=10, default='USD')
+    status = models.CharField(max_length=20, default='active')
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
@@ -1108,7 +1134,7 @@ class Affiliate(models.Model):
 
     @property
     def referral_link(self):
-        return f"http://127.0.0.1:8000/signup?ref={self.referral_code}"
+        return f"https://www.tradewise-hub.com/signup?ref={self.referral_code}"
 
     class Meta:
         verbose_name = "Affiliate"
@@ -1405,7 +1431,6 @@ class FAQ(models.Model):
         verbose_name = "FAQ"
         verbose_name_plural = "FAQs"
 
-
 class NewsletterSubscriber(models.Model):
     email = models.EmailField(unique=True)
     is_active = models.BooleanField(default=True)
@@ -1420,8 +1445,8 @@ class NewsletterSubscriber(models.Model):
         verbose_name_plural = "Newsletter Subscribers"
         ordering = ['-subscribed_at']
 
+# ================== BLOG MODELS ==================
 
-# ================== BLOG MODELS  ==================
 class BlogPost(models.Model):
     STATUS_CHOICES = [
         ('draft', 'Draft'),
@@ -1452,39 +1477,94 @@ class BlogPost(models.Model):
         verbose_name_plural = "Blog Posts"
         ordering = ['-created_at']
 
+# ================== REVIEWS/TESTIMONIALS MODEL ==================
 
-# ================== SIGNALS FOR AUTOMATIC PROFILE CREATION ==================
+class Testimonial(models.Model):
+    ROLE_CHOICES = [
+        ('Beginner Trader', 'Beginner Trader'),
+        ('Intermediate Trader', 'Intermediate Trader'), 
+        ('Advanced Trader', 'Advanced Trader'),
+        ('Professional Trader', 'Professional Trader'),
+        ('Forex Trader', 'Forex Trader'),
+        ('Crypto Trader', 'Crypto Trader'),
+        ('Funded Trader', 'Funded Trader'),
+        ('Student', 'Student'),
+        ('Client', 'Client'),
+        ('Trader', 'Trader'),  # Default fallback
+    ]
+    
+    # Required fields that match your frontend form
+    author_name = models.CharField(max_length=100)
+    email = models.EmailField(blank=True, null=True)
+    user_role = models.CharField(max_length=50, choices=ROLE_CHOICES, default='Trader')
+    rating = models.IntegerField(
+        choices=[(1, '1 Star'), (2, '2 Stars'), (3, '3 Stars'), (4, '4 Stars'), (5, '5 Stars')],
+        validators=[MinValueValidator(1), MaxValueValidator(5)]
+    )
+    content = models.TextField()
+    
+    # Optional fields
+    image = models.ImageField(upload_to='testimonials/', blank=True, null=True)
+    
+    # Status fields - THESE ARE CRITICAL FOR YOUR VIEWS TO WORK
+    is_approved = models.BooleanField(default=False)
+    is_featured = models.BooleanField(default=False)
+    from_admin = models.BooleanField(default=False)
+    is_active = models.BooleanField(default=True)
+    
+    # Timestamps
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return f"Testimonial by {self.author_name} ({self.rating}★)"
+
+    class Meta:
+        ordering = ['-is_featured', '-created_at']
+        verbose_name = "Testimonial"
+        verbose_name_plural = "Testimonials"
+
+    def get_rating_stars(self):
+        """Return stars for display"""
+        return '★' * self.rating + '☆' * (5 - self.rating)
+
+# ================== SIGNALS ==================
 
 @receiver(post_save, sender=Tradeviewusers)
-def create_user_capital_access(sender, instance, created, **kwargs):
-    """Automatically create capital access when user is created"""
+def setup_new_user(sender, instance, created, **kwargs):
+    """
+    Combined signal to setup all user-related records in one transaction
+    """
     if created:
         try:
-            CapitalAccess.objects.create(user=instance)
-            print(f"✅ Auto-created capital access for {instance.email}")
+            with transaction.atomic():
+                # 1. Create CapitalAccess
+                capital_access, ca_created = CapitalAccess.objects.get_or_create(
+                    user=instance,
+                    defaults={'balance': 0.00, 'currency': 'USD', 'status': 'active'}
+                )
+                
+                # 2. Create Affiliate profile
+                affiliate, aff_created = Affiliate.objects.get_or_create(
+                    user=instance,
+                    defaults={'referral_code': Affiliate.generate_referral_code()}
+                )
+                
+                # 3. Create UserProfile
+                profile, prof_created = UserProfile.objects.get_or_create(
+                    user=instance,
+                    defaults={'trading_experience': 'beginner', 'profile_completed': False}
+                )
+                
+                print(f"✅ User setup complete for: {instance.email}")
+                print(f"   - CapitalAccess: {'Created' if ca_created else 'Exists'}")
+                print(f"   - Affiliate: {'Created' if aff_created else 'Exists'}")
+                print(f"   - UserProfile: {'Created' if prof_created else 'Exists'}")
+                
         except Exception as e:
-            print(f"❌ Error creating capital access for {instance.email}: {e}")
-
-@receiver(post_save, sender=Tradeviewusers)
-def create_affiliate_profile(sender, instance, created, **kwargs):
-    """Automatically create affiliate profile when user is created"""
-    if created:
-        try:
-            affiliate, created_affiliate = Affiliate.objects.get_or_create(user=instance)
-            if created_affiliate:
-                print(f"✅ Auto-created affiliate profile for {instance.email} with code: {affiliate.referral_code}")
-        except Exception as e:
-            print(f"❌ Error creating affiliate profile for {instance.email}: {e}")
-
-@receiver(post_save, sender=Tradeviewusers)
-def create_user_profile(sender, instance, created, **kwargs):
-    """Automatically create user profile when user is created"""
-    if created:
-        try:
-            UserProfile.objects.get_or_create(user=instance)
-            print(f"✅ Auto-created user profile for {instance.email}")
-        except Exception as e:
-            print(f"❌ Error creating user profile for {instance.email}: {e}")
+            print(f"❌ Comprehensive user setup failed for {instance.email}: {e}")
+            import traceback
+            traceback.print_exc()
 
 @receiver(post_save, sender=Referral)
 def handle_referral_status_change(sender, instance, created, **kwargs):
@@ -1503,9 +1583,6 @@ def ensure_system_card_exists(sender, instance, created, **kwargs):
 def create_default_plans():
     """
     Create default pricing plans for Paystack integration
-    Run: python manage.py shell
-    >>> from myapp.models import create_default_plans
-    >>> create_default_plans()
     """
     plans_data = [
         {
@@ -1622,8 +1699,6 @@ def get_recent_admin_activity(limit=10):
 def create_admin_log_entry(admin_user, action, model_name, description, object_id=None, request=None):
     """Utility function to create admin log entries"""
     try:
-        from django.contrib.admin.models import LogEntry
-        
         ip_address = None
         if request:
             x_forwarded_for = request.META.get('HTTP_X_FORWARDED_FOR')
@@ -1644,96 +1719,3 @@ def create_admin_log_entry(admin_user, action, model_name, description, object_i
     except Exception as e:
         print(f"❌ Error creating admin log: {e}")
         return False
-    
-#     from myapp.models import BlogPost
-
-# # Publish all blog posts
-# BlogPost.objects.all().update(is_published=True, status='published')
-
-# Check results
-# posts = BlogPost.objects.all()
-# print(f"✅ Published {posts.count()} blog posts:")
-# for post in posts:
-#     print(f"   - {post.title} (ID: {post.id})")
-
-
-
-# ================== REVIEWS/TESTIMONIALS MODEL - CORRECTED VERSION ==================
-
-class Testimonial(models.Model):
-    ROLE_CHOICES = [
-        ('Beginner Trader', 'Beginner Trader'),
-        ('Intermediate Trader', 'Intermediate Trader'), 
-        ('Advanced Trader', 'Advanced Trader'),
-        ('Professional Trader', 'Professional Trader'),
-        ('Forex Trader', 'Forex Trader'),
-        ('Crypto Trader', 'Crypto Trader'),
-        ('Funded Trader', 'Funded Trader'),
-        ('Student', 'Student'),
-        ('Client', 'Client'),
-        ('Trader', 'Trader'),  # Default fallback
-    ]
-    
-    # Required fields that match your frontend form
-    author_name = models.CharField(max_length=100)
-    email = models.EmailField(blank=True, null=True)
-    user_role = models.CharField(max_length=50, choices=ROLE_CHOICES, default='Trader')
-    rating = models.IntegerField(
-        choices=[(1, '1 Star'), (2, '2 Stars'), (3, '3 Stars'), (4, '4 Stars'), (5, '5 Stars')],
-        validators=[MinValueValidator(1), MaxValueValidator(5)]
-    )
-    content = models.TextField()
-    
-    # Optional fields
-    image = models.ImageField(upload_to='testimonials/', blank=True, null=True)
-    
-    # Status fields - THESE ARE CRITICAL FOR YOUR VIEWS TO WORK
-    is_approved = models.BooleanField(default=False)
-    is_featured = models.BooleanField(default=False)
-    from_admin = models.BooleanField(default=False)  # ✅ ADDED THIS MISSING FIELD
-    is_active = models.BooleanField(default=True)
-    
-    # Timestamps
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
-
-    def __str__(self):
-        return f"Testimonial by {self.author_name} ({self.rating}★)"
-
-    class Meta:
-        ordering = ['-is_featured', '-created_at']
-        verbose_name = "Testimonial"
-        verbose_name_plural = "Testimonials"
-
-    def get_rating_stars(self):
-        """Return stars for display"""
-        return '★' * self.rating + '☆' * (5 - self.rating)
-    
-    def send_new_review_notification(self):
-        """Send email notification to admin about new review"""
-        if not self.from_admin and self.email:
-            subject = f"📝 New Review Submission from {self.author_name}"
-            message = f"""
-            New review submitted by {self.author_name}:
-            
-            Role: {self.user_role}
-            Rating: {self.rating}/5
-            Email: {self.email or 'Not provided'}
-            Content: {self.content}
-            
-            Please log in to the admin dashboard to approve this review.
-            """
-            
-            try:
-                send_mail(
-                    subject,
-                    message,
-                    getattr(settings, 'DEFAULT_FROM_EMAIL', 'noreply@trade-wise.co.ke'),
-                    [getattr(settings, 'ADMIN_EMAIL', 'theofficialtradewise@gmail.com')],
-                    fail_silently=True,
-                )
-                print(f"✅ Sent review notification for: {self.author_name}")
-            except Exception as e:
-                print(f"❌ Failed to send email notification: {e}")
-
-
