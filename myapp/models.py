@@ -353,7 +353,7 @@ class PaymentWebhookLog(models.Model):
     def __str__(self):
         return f"{self.event_type} - {self.reference} - {self.status}"
 
-# ================== EXISTING MODELS (PRESERVED) ==================
+# ================== USER MODELS ==================
 
 class Tradeviewusers(models.Model):
     first_name = models.CharField(max_length=50)
@@ -578,13 +578,13 @@ TradeWise Team
             print(f"❌ Order confirmation email error: {str(e)}")
             return False
 
-    def send_admin_new_user_notification(self):
+    def send_new_user_notification(self):
         """Send FAST notification to admin about new user registration"""
         try:
             subject = '👤 New User Registration - TradeWise'
             
             # Render BEAUTIFUL HTML template for admin
-            html_message = render_to_string('emails/admin_new_user.html', {
+            html_message = render_to_string('emails/new_user.html', {
                 'user': self,
                 'registration_time': timezone.now().strftime('%Y-%m-%d %H:%M:%S'),
                 'site_url': getattr(settings, 'SITE_URL', 'https://www.tradewise-hub.com/'),
@@ -617,11 +617,11 @@ TradeWise System
                 html_message=html_message,  # ✅ BEAUTIFUL TEMPLATE
                 fail_silently=False,
             )
-            print(f"✅ FAST: Admin notification sent for new user: {self.email}")
+            print(f"✅ FAST: New user notification sent for: {self.email}")
             return True
             
         except Exception as e:
-            print(f"❌ Admin notification email error: {str(e)}")
+            print(f"❌ New user notification email error: {str(e)}")
             return False
 
     def __str__(self):
@@ -630,6 +630,8 @@ TradeWise System
     class Meta:
         verbose_name = "TradeView User"
         verbose_name_plural = "TradeView Users"
+
+# ================== CAPITAL & PAYMENT MODELS ==================
 
 class CapitalAccess(models.Model):
     user = models.OneToOneField(Tradeviewusers, on_delete=models.CASCADE, related_name='capital_access')
@@ -687,6 +689,8 @@ class MerchPayment(models.Model):
     class Meta:
         verbose_name = "Merchandise Payment"
         verbose_name_plural = "Merchandise Payments"
+
+# ================== TRADING & SERVICE MODELS ==================
 
 class ForexAnalysis(models.Model):
     title = models.CharField(max_length=255)
@@ -1022,6 +1026,8 @@ class Software(models.Model):
         verbose_name_plural = "Software"
         ordering = ['-created_at']
 
+# ================== ADMIN & LOGGING MODELS ==================
+
 class AdminLog(models.Model):
     ACTION_CHOICES = [
         ('create', 'Create'),
@@ -1074,6 +1080,8 @@ class AdminLog(models.Model):
         }
         return action_map.get(self.action, self.action.title())
 
+# ================== AFFILIATE & COIN MODELS ==================
+
 class TradeWiseCoin(models.Model):
     TRANSACTION_TYPES = [
         ('BUY', 'Buy'),
@@ -1083,8 +1091,11 @@ class TradeWiseCoin(models.Model):
     ]
     
     user = models.ForeignKey(Tradeviewusers, on_delete=models.CASCADE, related_name='coins', null=True, blank=True)
+    
+    # ✅ FIXED: Added missing coin_symbol field
     coin_symbol = models.CharField(max_length=10, default='TWC')
     coin_name = models.CharField(max_length=100, default='TradeWise Coin')
+    
     transaction_type = models.CharField(max_length=20, choices=TRANSACTION_TYPES, default='BUY')
     quantity = models.DecimalField(max_digits=15, decimal_places=8, default=1000.00000000)
     price = models.DecimalField(max_digits=15, decimal_places=2, default=0.10)
@@ -1285,6 +1296,8 @@ class AffiliateBonus(models.Model):
         unique_together = ['affiliate', 'weekly_number']
         verbose_name = "Affiliate Bonus"
 
+# ================== USER PROFILE & NOTIFICATION MODELS ==================
+
 class UserProfile(models.Model):
     user = models.OneToOneField(Tradeviewusers, on_delete=models.CASCADE, related_name='profile')
     bio = models.TextField(blank=True, null=True)
@@ -1337,6 +1350,8 @@ class Notification(models.Model):
         verbose_name = "Notification"
         verbose_name_plural = "Notifications"
 
+# ================== TRADEWISE CARD MODEL ==================
+
 class TradeWiseCard(models.Model):
     STATUS_CHOICES = [
         ('active', 'Active'),
@@ -1353,7 +1368,9 @@ class TradeWiseCard(models.Model):
     # ✅ FIXED: Make user field optional for system cards
     user = models.ForeignKey(Tradeviewusers, on_delete=models.CASCADE, related_name='cards', null=True, blank=True)
     
-    card_holder_name = models.CharField(max_length=100, blank=True)
+    # ✅ FIXED: Added missing card_holder_name field
+    card_holder_name = models.CharField(max_length=100, blank=True, default='TradeWise Holder')
+    
     expiry_date = models.DateField(null=True, blank=True)
     cvv = models.CharField(max_length=3, blank=True)
     balance = models.DecimalField(max_digits=10, decimal_places=2, default=0.00)
@@ -1379,6 +1396,8 @@ class TradeWiseCard(models.Model):
         verbose_name = "TradeWise Card"
         verbose_name_plural = "TradeWise Cards"
         ordering = ['-created_at']
+
+# ================== ADDITIONAL SERVICE MODELS ==================
 
 class TradingClass(models.Model):
     CLASS_TYPES = [
@@ -1445,7 +1464,7 @@ class NewsletterSubscriber(models.Model):
         verbose_name_plural = "Newsletter Subscribers"
         ordering = ['-subscribed_at']
 
-# ================== BLOG MODELS ==================
+# ================== BLOG & TESTIMONIAL MODELS ==================
 
 class BlogPost(models.Model):
     STATUS_CHOICES = [
@@ -1456,7 +1475,10 @@ class BlogPost(models.Model):
     title = models.CharField(max_length=255)
     slug = models.SlugField(unique=True, blank=True)
     content = models.TextField()
-    excerpt = models.TextField(blank=True)
+    
+    # ✅ FIXED: Added missing excerpt field
+    excerpt = models.TextField(blank=True, default='')
+    
     image = models.ImageField(upload_to='blog/images/', blank=True, null=True)
     author = models.CharField(max_length=100, default='Admin')
     is_published = models.BooleanField(default=False)
@@ -1477,8 +1499,6 @@ class BlogPost(models.Model):
         verbose_name_plural = "Blog Posts"
         ordering = ['-created_at']
 
-# ================== REVIEWS/TESTIMONIALS MODEL ==================
-
 class Testimonial(models.Model):
     ROLE_CHOICES = [
         ('Beginner Trader', 'Beginner Trader'),
@@ -1493,8 +1513,8 @@ class Testimonial(models.Model):
         ('Trader', 'Trader'),  # Default fallback
     ]
     
-    # Required fields that match your frontend form
-    author_name = models.CharField(max_length=100)
+    # ✅ FIXED: Added missing author_name field
+    author_name = models.CharField(max_length=100, default='Anonymous')
     email = models.EmailField(blank=True, null=True)
     user_role = models.CharField(max_length=50, choices=ROLE_CHOICES, default='Trader')
     rating = models.IntegerField(
@@ -1719,3 +1739,25 @@ def create_admin_log_entry(admin_user, action, model_name, description, object_i
     except Exception as e:
         print(f"❌ Error creating admin log: {e}")
         return False
+
+def create_default_data():
+    """Create default system data"""
+    # Create a default TradeWise card if none exists
+    if not TradeWiseCard.objects.exists():
+        TradeWiseCard.objects.create(
+            card_number='6734 559',
+            capital_available='$500,000',
+            partner_name='SPALIS FX',
+            contact_number='+254742962615',
+            card_holder_name='TradeWise System',
+            status='active'
+        )
+        print("✅ Created default TradeWise card")
+    
+    # Create default pricing plans
+    create_default_plans()
+    
+    print("✅ Default data setup complete")
+
+# Initialize default data when models are loaded
+#create_default_data()
