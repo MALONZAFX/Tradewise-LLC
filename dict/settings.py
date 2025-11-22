@@ -149,6 +149,9 @@ EMAIL_HOST_USER = os.getenv("EMAIL_HOST_USER")
 EMAIL_HOST_PASSWORD = os.getenv("EMAIL_HOST_PASSWORD")
 DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
 SERVER_EMAIL = EMAIL_HOST_USER
+EMAIL_TIMEOUT = 10
+EMAIL_USE_SSL = False
+
 
 # ==============================
 # AUTH REDIRECTS
@@ -156,6 +159,23 @@ SERVER_EMAIL = EMAIL_HOST_USER
 LOGIN_URL = "/login/"
 LOGIN_REDIRECT_URL = "/dashboard/"
 LOGOUT_REDIRECT_URL = "/"
+
+
+
+# ==============================
+# SECURITY SETTINGS FOR PRODUCTION
+# ==============================
+if not DEBUG:
+    # Security headers
+    SECURE_SSL_REDIRECT = True
+    SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+    SESSION_COOKIE_SECURE = True
+    CSRF_COOKIE_SECURE = True
+    SECURE_BROWSER_XSS_FILTER = True
+    SECURE_CONTENT_TYPE_NOSNIFF = True
+    
+    # Gunicorn timeout settings
+    GUNICORN_TIMEOUT = 120
 
 # ==============================
 # PAYMENT SETTINGS
