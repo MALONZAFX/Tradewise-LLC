@@ -189,6 +189,7 @@ SECURE_CONTENT_TYPE_NOSNIFF = True
 # DEFAULT AUTO FIELD
 # ==============================
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
 # ==============================
 # LOGGING
