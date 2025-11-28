@@ -518,7 +518,7 @@
                             <span class="nav-link text-white me-2" style="padding: 0.4rem 0.8rem !important; font-size: 1rem;">
                                 <i class="fas fa-user me-1" style="font-size: 1rem;">Welcome</i>{{ first_name }}
                             </span>
-                            <a href="{% url 'logout' %}" class="btn btn-outline-light">
+                            <a href="{% url 'logout_view' %}" class="btn btn-outline-light">
                                 <i class="fas fa-sign-out-alt me-1"></i>Logout
                             </a>
                         {% else %}
@@ -678,7 +678,9 @@
     </div>
 </section>
 
- <!-- Affiliates Section - Fixed Version -->
+
+
+         <!-- Affiliates Section - Updated with Total Coins Display -->
 <section id="affiliates" style="padding: 80px 0; background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);">
     <div class="container">
         <div class="row justify-content-center mb-5">
@@ -688,109 +690,177 @@
                 <p style="color: #64748b; font-size: 1.1rem; max-width: 600px; margin: 0 auto;">Get 50 TWC coins for every person who signs up with your referral link. Redeemable at 10 Ksh per coin weekly!</p>
             </div>
         </div>
-    <div class="row g-4">
-        <!-- Affiliate Stats & Referral Link -->
-        <div class="col-lg-6">
-            <div class="affiliate-card" style="background: white; border-radius: 15px; padding: 30px; box-shadow: 0 10px 30px rgba(0,0,0,0.08); height: 100%;">
-                <div class="d-flex align-items-center mb-4">
-                    <div class="icon-box me-3" style="width: 60px; height: 60px; background: rgba(52, 152, 219, 0.1); border-radius: 50%; display: flex; align-items: center; justify-content: center;">
-                        <i class="fas fa-link" style="font-size: 1.8rem; color: #3498db;"></i>
+
+        <div class="row g-4">
+            <!-- Affiliate Stats & Referral Link with Weekly Number -->
+            <div class="col-lg-6">
+                <div class="affiliate-card" style="background: white; border-radius: 15px; padding: 30px; box-shadow: 0 10px 30px rgba(0,0,0,0.08); height: 100%; border: 1px solid #e9ecef;">
+                    <div class="d-flex align-items-center mb-4">
+                        <div class="icon-box me-3" style="width: 60px; height: 60px; background: rgba(52, 152, 219, 0.1); border-radius: 50%; display: flex; align-items: center; justify-content: center;">
+                            <i class="fas fa-link" style="font-size: 1.8rem; color: #3498db;"></i>
+                        </div>
+                        <h3 class="mb-0" style="color: #2c3e50; font-weight: 700;">Your Referral Link</h3>
                     </div>
-                    <h3 class="mb-0" style="color: #2c3e50;">Your Referral Link</h3>
-                </div>
-                
-                <div class="referral-link-container mb-4">
-                    <div class="input-group">
-                        <input type="text" class="form-control" id="referralLink" 
-                        value="http://127.0.0.1:8000/signup?ref={{ user_id }}"
-                               readonly style="border-radius: 8px 0 0 8px; border: 2px solid #e2e8f0;">
-                        <button class="btn btn-primary" onclick="copyReferralLink()" 
-                                style="border-radius: 0 8px 8px 0; background: #3498db; border: 2px solid #3498db;">
-                            <i class="fas fa-copy"></i>
-                        </button>
+                    
+                    <div class="referral-link-container mb-4">
+                        <div class="input-group">
+                            <input type="text" class="form-control" id="referralLink" 
+                            value="https://www.tradewise-hub.com/signup?ref={{ referral_code|default:'TW' }}"
+                                   readonly style="border-radius: 8px 0 0 8px; border: 2px solid #e2e8f0; font-family: 'Courier New', monospace;">
+                            <button class="btn btn-primary" onclick="copyReferralLink()" 
+                                    style="border-radius: 0 8px 8px 0; background: #3498db; border: 2px solid #3498db; font-weight: 600;">
+                                <i class="fas fa-copy me-1"></i>Copy
+                            </button>
+                        </div>
+                        <small class="text-muted mt-2 d-block">
+                            <i class="fas fa-info-circle me-1"></i>Share this link to earn 50 TWC coins per successful referral
+                        </small>
                     </div>
-                    <small class="text-muted mt-2 d-block">Share this link to earn 50 TWC coins per successful referral</small>
-                </div>
-                
-                <div class="referral-stats mb-4">
-                    <div class="row text-center">
-                        <div class="col-4">
-                            <div class="stat-box p-3" style="background: rgba(52, 152, 219, 0.05); border-radius: 10px;">
-                                <h3 class="mb-1" style="color: #3498db;" id="totalReferrals">{% if referral_stats.total_referrals %}{{ referral_stats.total_referrals }}{% else %}0{% endif %}</h3>
-                                <p class="mb-0 small" style="color: #64748b;">Total Referrals</p>
+
+                    <!-- Weekly Lucky Number - Integrated -->
+                    <div class="weekly-number-integrated mb-4" style="background: linear-gradient(135deg, #3498db 0%, #2c3e50 100%); border-radius: 12px; padding: 20px; color: white;">
+                        <div class="d-flex align-items-center justify-content-between mb-3">
+                            <div class="d-flex align-items-center">
+                                <div class="icon-box me-3" style="width: 40px; height: 40px; background: rgba(255,255,255,0.2); border-radius: 50%; display: flex; align-items: center; justify-content: center;">
+                                    <i class="fas fa-trophy" style="font-size: 1.2rem; color: white;"></i>
+                                </div>
+                                <div>
+                                    <h5 class="mb-0" style="color: white; font-weight: 600; font-size: 1rem;">Weekly Lucky Number</h5>
+                                    <small style="opacity: 0.8;">Instant redemption opportunity</small>
+                                </div>
+                            </div>
+                            <div id="weeklyLuckyNumber" class="lucky-number" style="font-size: 1.5rem; font-weight: 800; letter-spacing: 2px; background: rgba(255,255,255,0.15); padding: 8px 16px; border-radius: 8px; font-family: 'Courier New', monospace;">
+                                {% if current_weekly_number %}{{ current_weekly_number.number }}{% else %}7 8 4 2 1{% endif %}
                             </div>
                         </div>
-                        <div class="col-4">
-                            <div class="stat-box p-3" style="background: rgba(52, 152, 219, 0.05); border-radius: 10px;">
-                                <h3 class="mb-1" style="color: #2ecc71;" id="totalCoins">{% if referral_stats.total_coins %}{{ referral_stats.total_coins }}{% else %}0{% endif %}</h3>
-                                <p class="mb-0 small" style="color: #64748b;">TWC Coins</p>
+                        
+                        <div class="redemption-rules" style="background: rgba(255,255,255,0.1); padding: 12px; border-radius: 8px;">
+                            <div class="d-flex align-items-start mb-2">
+                                <i class="fas fa-check-circle mt-1 me-2" style="color: #2ecc71; font-size: 0.9rem;"></i>
+                                <div>
+                                    <small style="opacity: 0.9; font-weight: 600;">Normal: Referred users must subscribe To Atleast One Tradewise Service</small>
+                                </div>
                             </div>
-                        </div>
-                        <div class="col-4">
-                            <div class="stat-box p-3" style="background: rgba(52, 152, 219, 0.05); border-radius: 10px;">
-                                <h3 class="mb-1" style="color: #e74c3c;" id="pendingCoins">{% if referral_stats.pending_coins %}{{ referral_stats.pending_coins }}{% else %}0{% endif %}</h3>
-                                <p class="mb-0 small" style="color: #64748b;">Pending</p>
+                            <div class="d-flex align-items-start">
+                                <i class="fas fa-star mt-1 me-2" style="color: #f39c12; font-size: 0.9rem;"></i>
+                                <div>
+                                    <small style="opacity: 0.9; font-weight: 600;">Lucky Number: Redeem regardless of subscription</small>
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div>
-                
-                <div class="referral-actions">
-                    <h5 class="mb-3" style="color: #2c3e50;">Share Your Link</h5>
-                    <div class="d-flex gap-2 flex-wrap">
-                        <button class="btn btn-outline-primary" onclick="shareOnWhatsApp()" style="border-radius: 8px; border-color: #3498db; color: #3498db;">
-                            <i class="fab fa-whatsapp me-2"></i> WhatsApp
-                        </button>
-                        <button class="btn btn-outline-primary" onclick="shareOnFacebook()" style="border-radius: 8px; border-color: #3498db; color: #3498db;">
-                            <i class="fab fa-facebook me-2"></i> Facebook
-                        </button>
-                        <button class="btn btn-outline-primary" onclick="shareOnTwitter()" style="border-radius: 8px; border-color: #3498db; color: #3498db;">
-                            <i class="fab fa-twitter me-2"></i> Twitter
-                        <button class="btn btn-outline-primary" onclick="shareViaEmail()" style="border-radius: 8px; border-color: #3498db; color: #3498db;">
-                            <i class="fas fa-envelope me-2"></i> Email
-                        </button>
+                    
+                    <div class="referral-stats mb-4">
+                        <div class="row text-center">
+                            <div class="col-4">
+                                <div class="stat-box p-3" style="background: rgba(52, 152, 219, 0.05); border-radius: 10px; border: 1px solid rgba(52, 152, 219, 0.1);">
+                                    <div class="d-flex align-items-center justify-content-center mb-2">
+                                        <i class="fas fa-users me-2" style="color: #3498db;"></i>
+                                        <h3 class="mb-0" style="color: #3498db;" id="totalReferrals">{{ referral_stats.total_referrals }}</h3>
+                                    </div>
+                                    <p class="mb-0 small" style="color: #64748b; font-weight: 600;">Total Referrals</p>
+                                </div>
+                            </div>
+                            <div class="col-4">
+                                <div class="stat-box p-3" style="background: rgba(46, 204, 113, 0.05); border-radius: 10px; border: 1px solid rgba(46, 204, 113, 0.1);">
+                                    <div class="d-flex align-items-center justify-content-center mb-2">
+                                        <i class="fas fa-coins me-2" style="color: #2ecc71;"></i>
+                                        <h3 class="mb-0" style="color: #2ecc71;" id="totalCoins">{{ referral_stats.total_coins }}</h3>
+                                    </div>
+                                    <p class="mb-0 small" style="color: #64748b; font-weight: 600;">Total Coins Earned</p>
+                                </div>
+                            </div>
+                            <div class="col-4">
+                                <div class="stat-box p-3" style="background: rgba(231, 76, 60, 0.05); border-radius: 10px; border: 1px solid rgba(231, 76, 60, 0.1);">
+                                    <div class="d-flex align-items-center justify-content-center mb-2">
+                                        <i class="fas fa-wallet me-2" style="color: #e74c3c;"></i>
+                                        <h3 class="mb-0" style="color: #e74c3c;" id="availableBalance">{{ referral_stats.coin_balance }}</h3>
+                                    </div>
+                                    <p class="mb-0 small" style="color: #64748b; font-weight: 600;">Available Balance</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="referral-actions">
+                        <h5 class="mb-3" style="color: #2c3e50; font-weight: 600;">
+                            <i class="fas fa-share-alt me-2"></i>Share Your Link
+                        </h5>
+                        <div class="d-flex gap-2 flex-wrap">
+                            <button class="btn btn-outline-primary" onclick="shareOnWhatsApp()" style="border-radius: 8px; border-color: #3498db; color: #3498db; font-weight: 600; flex: 1; min-width: 120px;">
+                                <i class="fab fa-whatsapp me-2"></i> WhatsApp
+                            </button>
+                            <button class="btn btn-outline-primary" onclick="shareOnFacebook()" style="border-radius: 8px; border-color: #3498db; color: #3498db; font-weight: 600; flex: 1; min-width: 120px;">
+                                <i class="fab fa-facebook me-2"></i> Facebook
+                            </button>
+                            <button class="btn btn-outline-primary" onclick="shareOnTwitter()" style="border-radius: 8px; border-color: #3498db; color: #3498db; font-weight: 600; flex: 1; min-width: 120px;">
+                                <i class="fab fa-twitter me-2"></i> Twitter
+                            </button>
+                            <button class="btn btn-outline-primary" onclick="shareViaEmail()" style="border-radius: 8px; border-color: #3498db; color: #3498db; font-weight: 600; flex: 1; min-width: 120px;">
+                                <i class="fas fa-envelope me-2"></i> Email
+                            </button>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
-        
-        <!-- TWC Coin Redemption -->
+            
+  <!-- TWC Coin Redemption -->
 <div class="col-lg-6">
-    <div class="affiliate-card" style="background: white; border-radius: 12px; padding: 25px; box-shadow: 0 5px 20px rgba(0,0,0,0.06); height: 100%;">
-        <div class="d-flex align-items-center mb-3">
-            <div class="icon-box me-3" style="width: 50px; height: 50px; background: rgba(46, 204, 113, 0.1); border-radius: 50%; display: flex; align-items: center; justify-content: center;">
-                <i class="fas fa-coins" style="font-size: 1.5rem; color: #2ecc71;"></i>
+    <div class="affiliate-card" style="background: white; border-radius: 15px; padding: 30px; box-shadow: 0 10px 30px rgba(0,0,0,0.08); height: 100%; border: 1px solid #e9ecef;">
+        <div class="d-flex align-items-center mb-4">
+            <div class="icon-box me-3" style="width: 60px; height: 60px; background: rgba(46, 204, 113, 0.1); border-radius: 50%; display: flex; align-items: center; justify-content: center;">
+                <i class="fas fa-exchange-alt" style="font-size: 1.8rem; color: #2ecc71;"></i>
             </div>
-            <h3 class="mb-0" style="color: #2c3e50; font-size: 1.3rem;">Redeem Coins</h3>
+            <h3 class="mb-0" style="color: #2c3e50; font-weight: 700;">Redeem Coins</h3>
         </div>
         
-        <div class="redemption-info mb-3">
-            <div style="background: rgba(46, 204, 113, 0.05); padding: 15px; border-radius: 8px; text-align: center;">
-                <h4 style="color: #2ecc71; margin-bottom: 8px; font-size: 1.1rem;">Your Balance</h4>
-                <div class="balance-amount" style="font-size: 2rem; font-weight: 700; color: #2c3e50;" id="currentBalance">
-                    {{ referral_stats.coin_balance }}
+        <div class="redemption-info mb-4">
+            <div style="background: rgba(46, 204, 113, 0.05); padding: 20px; border-radius: 10px; text-align: center; border: 1px solid rgba(46, 204, 113, 0.1);">
+                <h4 style="color: #2ecc71; margin-bottom: 10px; font-size: 1.1rem; font-weight: 600;">
+                    <i class="fas fa-trophy me-2"></i>Your Total Earnings
+                </h4>
+                <div class="balance-amount" style="font-size: 2.5rem; font-weight: 800; color: #2c3e50; margin: 10px 0;" id="currentBalance">
+                    {{ referral_stats.total_coins }}
                 </div>
-                <p class="mb-0 small" style="color: #64748b;">TWC Coins</p>
-                <p class="small mt-1" style="color: #7f8c8d;" id="cashEquivalent">
-                    ≈ <span id="cashValue">{{ cash_value }}</span> Ksh
+                <p class="mb-0 small" style="color: #64748b; font-weight: 600;">Total TWC Coins Earned</p>
+                <p class="small mt-2" style="color: #7f8c8d; font-weight: 600;" id="cashEquivalent">
+                    <i class="fas fa-money-bill-wave me-1"></i>≈ <span id="cashValue">{{ cash_value }}</span> Ksh Total Value
                 </p>
+                
+                <!-- Available Balance Info -->
+                <div class="mt-3 p-2" style="background: rgba(52, 152, 219, 0.1); border-radius: 8px;">
+                    <small style="color: #3498db; font-weight: 600;">
+                        <i class="fas fa-wallet me-1"></i>
+                        Available to Redeem: <strong>{{ referral_stats.coin_balance }}</strong> coins
+                        {% if referral_stats.coin_balance < referral_stats.total_coins %}
+                            <br><span style="color: #e74c3c; font-size: 0.8rem;">
+                                ({{ referral_stats.total_coins|add:"0"|add:"-"|add:referral_stats.coin_balance }} coins already redeemed)
+                            </span>
+                        {% endif %}
+                    </small>
+                </div>
             </div>
         </div>
         
-        <form method="POST" action="/affiliate/request-payout/">
+        <form method="POST" action="/affiliate/request-payout/" id="payoutForm">
             {% csrf_token %}
             <div class="redemption-form">
-                <div class="row g-2">
+                <div class="row g-3">
                     <div class="col-md-6">
-                        <label for="coinAmount" class="form-label fw-bold" style="color: #2c3e50; font-size: 0.9rem;">Coins to Redeem</label>
+                        <label for="coinAmount" class="form-label fw-bold" style="color: #2c3e50; font-size: 0.9rem;">
+                            <i class="fas fa-coins me-1"></i>Coins to Redeem
+                        </label>
                         <input type="number" class="form-control" id="coinAmount" name="coin_amount"
                                placeholder="Min 50 coins" min="50" max="{{ referral_stats.coin_balance }}" 
-                               style="border-radius: 6px; border: 1px solid #e2e8f0; font-size: 0.9rem;" 
+                               style="border-radius: 8px; border: 2px solid #e2e8f0; font-size: 0.9rem; padding: 12px;" 
                                oninput="calculatePayout()" required>
+                        <small class="text-muted">Max: {{ referral_stats.coin_balance }} coins available to redeem</small>
                     </div>
                     <div class="col-md-6">
-                        <label for="paymentMethod" class="form-label fw-bold" style="color: #2c3e50; font-size: 0.9rem;">Payment Method</label>
-                        <select class="form-select" id="paymentMethod" name="payment_method" style="border-radius: 6px; border: 1px solid #e2e8f0; font-size: 0.9rem;" onchange="showPaymentFields()" required>
+                        <label for="paymentMethod" class="form-label fw-bold" style="color: #2c3e50; font-size: 0.9rem;">
+                            <i class="fas fa-credit-card me-1"></i>Payment Method
+                        </label>
+                        <select class="form-select" id="paymentMethod" name="payment_method" style="border-radius: 8px; border: 2px solid #e2e8f0; font-size: 0.9rem; padding: 12px;" onchange="showPaymentFields()" required>
                             <option value="">Choose method</option>
                             <option value="mpesa">M-Pesa</option>
                             <option value="bank">Bank Transfer</option>
@@ -800,44 +870,53 @@
                     
                     <!-- Dynamic Payment Fields -->
                     <div class="col-12" id="paymentFields" style="display: none;">
-                        <div class="payment-details mt-2 p-3" style="background: #f8f9fa; border-radius: 6px;">
+                        <div class="payment-details mt-2 p-3" style="background: #f8f9fa; border-radius: 10px; border: 1px solid #e9ecef;">
                             <!-- M-Pesa Fields -->
                             <div id="mpesaFields" class="payment-method-fields">
-                                <label for="mpesaNumber" class="form-label small">M-Pesa Number</label>
-                                <input type="text" class="form-control" id="mpesaNumber" name="mpesa_number" placeholder="e.g., 254712345678">
+                                <label for="mpesaNumber" class="form-label small fw-bold" style="color: #2c3e50;">
+                                    <i class="fas fa-mobile-alt me-1"></i>M-Pesa Number
+                                </label>
+                                <input type="text" class="form-control" id="mpesaNumber" name="mpesa_number" placeholder="e.g., 254712345678" style="border-radius: 6px;">
                             </div>
                             
                             <!-- Bank Fields -->
                             <div id="bankFields" class="payment-method-fields" style="display: none;">
-                                <div class="row">
+                                <div class="row g-2">
                                     <div class="col-md-6">
-                                        <label for="bankName" class="form-label small">Bank Name</label>
-                                        <input type="text" class="form-control" id="bankName" name="bank_name" placeholder="e.g., Equity Bank">
+                                        <label for="bankName" class="form-label small fw-bold" style="color: #2c3e50;">
+                                            <i class="fas fa-university me-1"></i>Bank Name
+                                        </label>
+                                        <input type="text" class="form-control" id="bankName" name="bank_name" placeholder="e.g., Equity Bank" style="border-radius: 6px;">
                                     </div>
                                     <div class="col-md-6">
-                                        <label for="bankAccount" class="form-label small">Account Number</label>
-                                        <input type="text" class="form-control" id="bankAccount" name="bank_account" placeholder="e.g., 1234567890">
+                                        <label for="bankAccount" class="form-label small fw-bold" style="color: #2c3e50;">
+                                            <i class="fas fa-file-invoice me-1"></i>Account Number
+                                        </label>
+                                        <input type="text" class="form-control" id="bankAccount" name="bank_account" placeholder="e.g., 1234567890" style="border-radius: 6px;">
                                     </div>
                                 </div>
                             </div>
                             
                             <!-- PayPal Fields -->
                             <div id="paypalFields" class="payment-method-fields" style="display: none;">
-                                <label for="paypalEmail" class="form-label small">PayPal Email</label>
-                                <input type="email" class="form-control" id="paypalEmail" name="paypal_email" placeholder="e.g., your.email@example.com">
+                                <label for="paypalEmail" class="form-label small fw-bold" style="color: #2c3e50;">
+                                    <i class="fab fa-paypal me-1"></i>PayPal Email
+                                </label>
+                                <input type="email" class="form-control" id="paypalEmail" name="paypal_email" placeholder="e.g., your.email@example.com" style="border-radius: 6px;">
                             </div>
                         </div>
                     </div>
                     
                     <div class="col-12">
-                        <div class="d-flex justify-content-between align-items-center mt-2">
+                        <div class="d-flex justify-content-between align-items-center mt-3 p-3" style="background: #f8f9fa; border-radius: 10px;">
                             <div>
-                                <p class="mb-0 fw-bold" style="color: #2c3e50; font-size: 0.9rem;">
-                                    Payout: <span id="estimatedPayout" style="color: #2ecc71;">0 Ksh</span>
+                                <p class="mb-0 fw-bold" style="color: #2c3e50; font-size: 1rem;">
+                                    <i class="fas fa-calculator me-2"></i>Payout: <span id="estimatedPayout" style="color: #2ecc71; font-size: 1.2rem;">0 Ksh</span>
                                 </p>
+                                <small class="text-muted">10 Ksh per coin</small>
                             </div>
-                            <button type="submit" class="btn btn-success" style="border-radius: 6px; background: #2ecc71; border: none; padding: 8px 16px; font-size: 0.9rem;">
-                                <i class="fas fa-paper-plane me-1"></i>Request Payout
+                            <button type="button" class="btn btn-success" style="border-radius: 8px; background: #2ecc71; border: none; padding: 12px 24px; font-size: 1rem; font-weight: 600;" onclick="showEligibilityModal()">
+                                <i class="fas fa-paper-plane me-2"></i>Request Payout
                             </button>
                         </div>
                     </div>
@@ -845,16 +924,544 @@
             </div>
         </form>
         
-        <div class="mt-3">
-            <div class="alert alert-info" style="background: rgba(52, 152, 219, 0.05); border: none; border-left: 3px solid #3498db; padding: 10px; font-size: 0.8rem;">
-                <i class="fas fa-info-circle me-1"></i>
-                <strong>Weekly processing</strong> every Friday • Min 50 coins • 10 Ksh per coin
+        <div class="mt-4">
+            <div class="alert alert-info" style="background: rgba(52, 152, 219, 0.05); border: none; border-left: 4px solid #3498db; padding: 15px; font-size: 0.85rem; border-radius: 8px;">
+                <div class="d-flex align-items-center">
+                    <i class="fas fa-info-circle me-2" style="color: #3498db;"></i>
+                    <div>
+                        <strong>Weekly Processing</strong> every Friday • <strong>Minimum 50 coins</strong> • <strong>10 Ksh per coin</strong>
+                        <br>
+                        <small class="text-muted">Redeem from your available balance: {{ referral_stats.coin_balance }} coins</small>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
 </div>
+
+<!-- Eligibility Modal -->
+<div class="modal fade" id="eligibilityModal" tabindex="-1" aria-labelledby="eligibilityModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content" style="border-radius: 15px; border: none; box-shadow: 0 20px 60px rgba(0,0,0,0.15);">
+            <div class="modal-header" style="background: linear-gradient(135deg, #2ecc71, #27ae60); border-radius: 15px 15px 0 0; border: none; padding: 25px 30px;">
+                <div class="d-flex align-items-center w-100">
+                    <div class="icon-box me-3" style="width: 50px; height: 50px; background: rgba(255,255,255,0.2); border-radius: 50%; display: flex; align-items: center; justify-content: center;">
+                        <i class="fas fa-gift" style="font-size: 1.5rem; color: white;"></i>
+                    </div>
+                    <h5 class="modal-title mb-0" style="color: white; font-weight: 700; font-size: 1.4rem;" id="eligibilityModalLabel">
+                        Almost There!
+                    </h5>
+                </div>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body" style="padding: 30px;">
+                <div class="text-center mb-4">
+                    <div style="width: 80px; height: 80px; background: rgba(46, 204, 113, 0.1); border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; margin-bottom: 20px;">
+                        <i class="fas fa-users" style="font-size: 2rem; color: #2ecc71;"></i>
+                    </div>
+                    <h4 style="color: #2c3e50; font-weight: 700; margin-bottom: 15px;">You're Not Eligible Yet</h4>
+                    <p style="color: #64748b; font-size: 1rem; line-height: 1.6; margin-bottom: 10px;">
+                        None of your referrers or people you referred have subscribed to at least one TradeWise service.
+                    </p>
+                    <p style="color: #2ecc71; font-size: 1.1rem; font-weight: 700; margin-bottom: 0;">
+                        Keep making referrals - you're one referral away from your first payout!
+                    </p>
+                </div>
+                
+                <div class="progress mb-4" style="height: 8px; border-radius: 10px; background: #f1f5f9;">
+                    <div class="progress-bar" style="background: linear-gradient(90deg, #2ecc71, #27ae60); border-radius: 10px; width: 85%;"></div>
+                </div>
+                
+                <div class="d-flex justify-content-between align-items-center text-center">
+                    <div>
+                        <div style="font-size: 0.9rem; color: #64748b; font-weight: 600;">Current Progress</div>
+                        <div style="font-size: 1.2rem; color: #2ecc71; font-weight: 800;">85%</div>
+                    </div>
+                    <div>
+                        <div style="font-size: 0.9rem; color: #64748b; font-weight: 600;">Referrals Needed</div>
+                        <div style="font-size: 1.2rem; color: #2c3e50; font-weight: 800;">1 More</div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer" style="border: none; padding: 25px 30px; border-radius: 0 0 15px 15px; background: #f8f9fa;">
+                <button type="button" class="btn btn-outline-secondary me-3" style="border-radius: 8px; padding: 10px 20px; font-weight: 600;" data-bs-dismiss="modal">
+                    Close
+                </button>
+                <button type="button" class="btn btn-success" style="border-radius: 8px; background: #2ecc71; border: none; padding: 10px 25px; font-weight: 600;">
+                    <i class="fas fa-share-alt me-2"></i>Share Referral Link
+                </button>
+            </div>
+        </div>
+    </div>
 </div>
+
+        </div>
+
+        <!-- Recent Activity Section -->
+        <div class="row mt-4">
+            <div class="col-lg-6">
+                <div class="activity-card" style="background: white; border-radius: 15px; padding: 25px; box-shadow: 0 10px 30px rgba(0,0,0,0.08); border: 1px solid #e9ecef;">
+                    <div class="d-flex justify-content-between align-items-center mb-4">
+                        <h5 style="color: #2c3e50; font-weight: 700; margin-bottom: 0;">
+                            <i class="fas fa-history me-2"></i>Recent Referrals
+                        </h5>
+                        {% if recent_referrals %}
+                        <button class="btn btn-outline-primary btn-sm" onclick="showAllReferralsModal()" 
+                                style="border-radius: 20px; border-color: #3498db; color: #3498db; font-weight: 600;">
+                            <i class="fas fa-eye me-1"></i>
+                            View All 
+                            <span class="badge bg-primary ms-1" style="font-size: 0.7rem;">{{ recent_referrals|length }}</span>
+                        </button>
+                        {% endif %}
+                    </div>
+                    
+                    {% if recent_referrals %}
+                        <!-- Show only the FIRST referral with nice design -->
+                        <div class="first-referral mb-3">
+                            <div class="referral-item p-3" style="background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%); border-radius: 12px; border-left: 4px solid #3498db;">
+                                <div class="d-flex align-items-center">
+                                    <div class="avatar me-3" style="width: 50px; height: 50px; background: linear-gradient(135deg, #3498db, #2c3e50); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-weight: 700; font-size: 1.1rem;">
+                                        {{ recent_referrals.0.referred_user.first_name|first }}{{ recent_referrals.0.referred_user.second_name|first }}
+                                    </div>
+                                    <div class="flex-grow-1">
+                                        <p class="mb-1 fw-bold" style="color: #2c3e50; font-size: 1rem;">
+                                            {{ recent_referrals.0.referred_user.first_name }} {{ recent_referrals.0.referred_user.second_name }}
+                                        </p>
+                                        <small class="text-muted">
+                                            <i class="fas fa-envelope me-1"></i>{{ recent_referrals.0.referred_user.email }}
+                                        </small>
+                                        <br>
+                                        <small class="text-muted">
+                                            <i class="fas fa-calendar me-1"></i>{{ recent_referrals.0.created_at|date:"M d, Y" }}
+                                        </small>
+                                    </div>
+                                    <div class="text-end">
+                                        <span class="badge" style="background: #2ecc71; color: white; padding: 8px 12px; border-radius: 20px; font-size: 0.9rem;">
+                                            <i class="fas fa-coins me-1"></i>+50 coins
+                                        </span>
+                                        <br>
+                                        <small class="text-muted mt-1 d-block">Latest referral</small>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Referral Stats Summary -->
+                        <div class="referral-summary p-3" style="background: rgba(52, 152, 219, 0.05); border-radius: 10px;">
+                            <div class="row text-center">
+                                <div class="col-6">
+                                    <h4 class="mb-0" style="color: #3498db; font-weight: 800;">{{ recent_referrals|length }}</h4>
+                                    <small style="color: #64748b; font-weight: 600;">Total Referrals</small>
+                                </div>
+                                <div class="col-6">
+                                    <h4 class="mb-0" style="color: #2ecc71; font-weight: 800;">{{ referral_stats.total_coins }}</h4>
+                                    <small style="color: #64748b; font-weight: 600;">Total Coins Earned</small>
+                                </div>
+                            </div>
+                        </div>
+
+                    {% else %}
+                        <div class="text-center py-4">
+                            <i class="fas fa-users fa-3x text-muted mb-3"></i>
+                            <h6 style="color: #64748b; font-weight: 600;">No Referrals Yet</h6>
+                            <p class="text-muted mb-3">Share your referral link to start earning coins!</p>
+                            <button class="btn btn-primary" onclick="copyReferralLink()">
+                                <i class="fas fa-copy me-1"></i>Copy Referral Link
+                            </button>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+            
+            <div class="col-lg-6">
+                <div class="activity-card" style="background: white; border-radius: 15px; padding: 25px; box-shadow: 0 10px 30px rgba(0,0,0,0.08); border: 1px solid #e9ecef;">
+                    <h5 style="color: #2c3e50; font-weight: 700; margin-bottom: 20px;">
+                        <i class="fas fa-receipt me-2"></i>Payout History
+                    </h5>
+                    {% if payout_history %}
+                        <div class="payout-list">
+                            {% for payout in payout_history %}
+                            <div class="payout-item d-flex align-items-center justify-content-between p-3 mb-2" style="background: #f8f9fa; border-radius: 8px;">
+                                <div>
+                                    <p class="mb-0 fw-bold" style="color: #2c3e50; font-size: 0.9rem;">
+                                        {{ payout.coin_amount }} coins
+                                    </p>
+                                    <small class="text-muted">{{ payout.created_at|date:"M d, Y" }}</small>
+                                </div>
+                                <div class="text-end">
+                                    <p class="mb-0 fw-bold" style="color: #2c3e50;">KES {{ payout.amount_kes }}</p>
+                                    <span class="badge 
+                                        {% if payout.status == 'approved' %}bg-success
+                                        {% elif payout.status == 'pending' %}bg-warning
+                                        {% elif payout.status == 'rejected' %}bg-danger
+                                        {% else %}bg-secondary{% endif %}"
+                                        style="font-size: 0.7rem;">
+                                        {{ payout.status|title }}
+                                    </span>
+                                </div>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        <div class="text-center py-4">
+                            <i class="fas fa-money-bill-wave fa-2x text-muted mb-3"></i>
+                            <p class="text-muted mb-0">No payout requests yet. Redeem your coins to get started!</p>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
 </section>
+
+<!-- All Referrals Modal -->
+<div class="modal fade" id="allReferralsModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header" style="background: linear-gradient(135deg, #3498db, #2c3e50); color: white;">
+                <h5 class="modal-title">
+                    <i class="fas fa-users me-2"></i>All Referrals ({{ recent_referrals|length }})
+                </h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="referral-stats-summary mb-4 p-3" style="background: rgba(52, 152, 219, 0.1); border-radius: 10px;">
+                    <div class="row text-center">
+                        <div class="col-4">
+                            <h3 class="mb-0" style="color: #3498db; font-weight: 800;">{{ recent_referrals|length }}</h3>
+                            <small style="color: #64748b; font-weight: 600;">Total Referrals</small>
+                        </div>
+                        <div class="col-4">
+                            <h3 class="mb-0" style="color: #2ecc71; font-weight: 800;">{{ referral_stats.total_coins }}</h3>
+                            <small style="color: #64748b; font-weight: 600;">Total Coins</small>
+                        </div>
+                        <div class="col-4">
+                            <h3 class="mb-0" style="color: #e74c3c; font-weight: 800;">{{ referral_stats.coin_balance }}</h3>
+                            <small style="color: #64748b; font-weight: 600;">Available Balance</small>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="referrals-list" style="max-height: 400px; overflow-y: auto;">
+                    {% for referral in recent_referrals %}
+                    <div class="referral-item d-flex align-items-center justify-content-between p-3 mb-2" 
+                         style="background: {% if forloop.first %}linear-gradient(135deg, #d4edda, #c3e6cb){% else %}#f8f9fa{% endif %}; 
+                                border-radius: 10px; border-left: 4px solid {% if forloop.first %}#28a745{% else %}#3498db{% endif %};">
+                        <div class="d-flex align-items-center">
+                            <div class="avatar me-3" 
+                                 style="width: 45px; height: 45px; background: {% if forloop.first %}linear-gradient(135deg, #28a745, #20c997){% else %}linear-gradient(135deg, #3498db, #2c3e50){% endif %}; 
+                                        border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-weight: 600;">
+                                {{ referral.referred_user.first_name|first }}{{ referral.referred_user.second_name|first }}
+                            </div>
+                            <div>
+                                <p class="mb-0 fw-bold" style="color: #2c3e50; font-size: 0.95rem;">
+                                    {{ referral.referred_user.first_name }} {{ referral.referred_user.second_name }}
+                                    {% if forloop.first %}<span class="badge bg-success ms-2" style="font-size: 0.6rem;">LATEST</span>{% endif %}
+                                </p>
+                                <small class="text-muted d-block">
+                                    <i class="fas fa-envelope me-1"></i>{{ referral.referred_user.email }}
+                                </small>
+                                <small class="text-muted">
+                                    <i class="fas fa-calendar me-1"></i>{{ referral.created_at|date:"M d, Y • g:i A" }}
+                                </small>
+                            </div>
+                        </div>
+                        <div class="text-end">
+                            <span class="badge" style="background: #2ecc71; color: white; padding: 6px 10px; border-radius: 15px; font-size: 0.8rem;">
+                                +50 coins
+                            </span>
+                            <br>
+                            <small class="text-muted" style="font-size: 0.75rem;">
+                                {{ forloop.counter }} of {{ recent_referrals|length }}
+                            </small>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" onclick="copyReferralLink()">
+                    <i class="fas fa-copy me-1"></i>Copy Referral Link
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- JavaScript -->
+<script>
+// Flickering effect for lucky number
+document.addEventListener('DOMContentLoaded', function() {
+    const luckyNumber = document.getElementById('weeklyLuckyNumber');
+    if (luckyNumber) {
+        setInterval(() => {
+            luckyNumber.style.opacity = luckyNumber.style.opacity === '0.8' ? '1' : '0.8';
+        }, 1000);
+    }
+    
+    // Initial data load
+    updateLiveData();
+});
+
+// Copy referral link function
+function copyReferralLink() {
+    const referralLink = document.getElementById('referralLink');
+    referralLink.select();
+    referralLink.setSelectionRange(0, 99999);
+    document.execCommand('copy');
+    
+    // Show success message
+    const originalText = event.target.innerHTML;
+    event.target.innerHTML = '<i class="fas fa-check me-1"></i>Copied!';
+    event.target.style.background = '#2ecc71';
+    event.target.style.borderColor = '#2ecc71';
+    
+    setTimeout(() => {
+        event.target.innerHTML = originalText;
+        event.target.style.background = '#3498db';
+        event.target.style.borderColor = '#3498db';
+    }, 2000);
+}
+
+// Calculate payout amount
+function calculatePayout() {
+    const coinAmount = document.getElementById('coinAmount').value;
+    const payoutElement = document.getElementById('estimatedPayout');
+    const maxCoins = parseInt(document.getElementById('coinAmount').max);
+    
+    if (coinAmount > maxCoins) {
+        payoutElement.style.color = '#e74c3c';
+        payoutElement.innerHTML = 'Exceeds available balance!';
+        return;
+    }
+    
+    const payoutAmount = coinAmount * 10; // 10 Ksh per coin
+    payoutElement.style.color = '#2ecc71';
+    payoutElement.textContent = payoutAmount + ' Ksh';
+}
+
+// Show payment method fields
+function showPaymentFields() {
+    const paymentMethod = document.getElementById('paymentMethod').value;
+    const paymentFields = document.getElementById('paymentFields');
+    const mpesaFields = document.getElementById('mpesaFields');
+    const bankFields = document.getElementById('bankFields');
+    const paypalFields = document.getElementById('paypalFields');
+    
+    // Hide all fields first
+    mpesaFields.style.display = 'none';
+    bankFields.style.display = 'none';
+    paypalFields.style.display = 'none';
+    paymentFields.style.display = 'none';
+    
+    // Show selected field
+    if (paymentMethod === 'mpesa') {
+        mpesaFields.style.display = 'block';
+        paymentFields.style.display = 'block';
+    } else if (paymentMethod === 'bank') {
+        bankFields.style.display = 'block';
+        paymentFields.style.display = 'block';
+    } else if (paymentMethod === 'paypal') {
+        paypalFields.style.display = 'block';
+        paymentFields.style.display = 'block';
+    }
+}
+
+// Show all referrals modal
+function showAllReferralsModal() {
+    const modal = new bootstrap.Modal(document.getElementById('allReferralsModal'));
+    modal.show();
+}
+
+// Social sharing functions
+function shareOnWhatsApp() {
+    const referralLink = document.getElementById('referralLink').value;
+    const message = `Join TradeWise using my referral link and get 50 TWC coins! ${referralLink}`;
+    window.open(`https://wa.me/?text=${encodeURIComponent(message)}`, '_blank');
+}
+
+function shareOnFacebook() {
+    const referralLink = document.getElementById('referralLink').value;
+    window.open(`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(referralLink)}`, '_blank');
+}
+
+function shareOnTwitter() {
+    const referralLink = document.getElementById('referralLink').value;
+    const message = 'Join TradeWise using my referral link and get 50 TWC coins!';
+    window.open(`https://twitter.com/intent/tweet?text=${encodeURIComponent(message)}&url=${encodeURIComponent(referralLink)}`, '_blank');
+}
+
+function shareViaEmail() {
+    const referralLink = document.getElementById('referralLink').value;
+    const subject = 'Join TradeWise with my referral link!';
+    const body = `Hi! I'm using TradeWise and thought you might be interested. Use my referral link to sign up and we both get 50 TWC coins!\n\n${referralLink}`;
+    window.location.href = `mailto:?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+}
+
+// Live updates every 10 seconds
+function updateLiveData() {
+    fetch('/get-affiliate-data/')
+        .then(r => r.json())
+        .then(data => {
+            if (data.success) {
+                // Update stats cards
+                document.getElementById('totalReferrals').textContent = data.stats.total_referrals;
+                document.getElementById('totalCoins').textContent = data.stats.total_coins;
+                document.getElementById('availableBalance').textContent = data.stats.coin_balance;
+                
+                // Update balance section - SHOWS TOTAL COINS EARNED
+                document.getElementById('currentBalance').textContent = data.stats.total_coins;
+                document.getElementById('cashValue').textContent = data.cash_value;
+                
+                // Update weekly number
+                document.getElementById('weeklyLuckyNumber').textContent = data.weekly_number;
+                
+                // Update max attribute for coin redemption (uses available balance)
+                const coinInput = document.getElementById('coinAmount');
+                if (coinInput) {
+                    coinInput.max = data.stats.coin_balance;
+                    coinInput.placeholder = `Min 50 coins (Max: ${data.stats.coin_balance})`;
+                }
+                
+                console.log('🔄 Live data updated:', data);
+            }
+        })
+        .catch(error => {
+            console.error('❌ Live update error:', error);
+        });
+}
+
+// Auto-refresh every 10 seconds
+setInterval(updateLiveData, 10000);
+
+// ELIGIBILITY MODAL FUNCTIONS - FIXED
+function showEligibilityModal() {
+    console.log('Button clicked - showing modal');
+    
+    // Get the modal element
+    var modalElement = document.getElementById('eligibilityModal');
+    
+    if (modalElement) {
+        console.log('Modal element found');
+        
+        // Create Bootstrap modal instance
+        var modal = new bootstrap.Modal(modalElement);
+        
+        // Show the modal
+        modal.show();
+        
+        console.log('Modal should be visible now');
+    } else {
+        console.error('Modal element not found!');
+    }
+}
+
+// Prevent form submission and show modal instead
+document.addEventListener('DOMContentLoaded', function() {
+    const payoutForm = document.getElementById('payoutForm');
+    if (payoutForm) {
+        payoutForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            showEligibilityModal();
+        });
+    }
+    
+    // Initialize payment fields and calculations
+    showPaymentFields();
+    calculatePayout();
+});
+</script>
+
+<style>
+.lucky-number {
+    animation: flicker 2s infinite;
+    transition: all 0.3s ease;
+    font-family: 'Courier New', monospace;
+}
+
+@keyframes flicker {
+    0%, 100% { 
+        opacity: 1; 
+        transform: scale(1); 
+        text-shadow: 0 0 10px rgba(255,255,255,0.3);
+    }
+    50% { 
+        opacity: 0.8; 
+        transform: scale(1.02);
+        text-shadow: 0 0 20px rgba(255,255,255,0.5);
+    }
+}
+
+.affiliate-card, .activity-card {
+    transition: all 0.3s ease;
+    border: 1px solid #e9ecef;
+}
+
+.affiliate-card:hover, .activity-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+}
+
+.stat-box {
+    transition: all 0.3s ease;
+}
+
+.stat-box:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+}
+
+.btn-outline-primary:hover {
+    background: #3498db;
+    color: white;
+    transform: translateY(-2px);
+}
+
+.icon-box {
+    transition: all 0.3s ease;
+}
+
+.icon-box:hover {
+    transform: scale(1.1);
+}
+
+.weekly-number-integrated {
+    transition: all 0.3s ease;
+}
+
+.weekly-number-integrated:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(52, 152, 219, 0.3);
+}
+
+.referral-item, .payout-item {
+    transition: all 0.3s ease;
+}
+
+.referral-item:hover, .payout-item:hover {
+    transform: translateX(5px);
+    background: #e9ecef !important;
+}
+
+.referrals-list::-webkit-scrollbar {
+    width: 6px;
+}
+
+.referrals-list::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 10px;
+}
+
+.referrals-list::-webkit-scrollbar-thumb {
+    background: #3498db;
+    border-radius: 10px;
+}
+
+.referrals-list::-webkit-scrollbar-thumb:hover {
+    background: #2980b9;
+}
+</style>
 
     <!-- Modern Brokers Section -->
     <section id="brokers" style="padding: 80px 0; background: #f8fafc;">

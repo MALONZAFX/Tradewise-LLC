@@ -407,24 +407,21 @@
                                 <p>Trading Signals</p>
                             </a>
                         </li>
-                        <li class="nav-item">
-                            <a href="#" class="nav-link" data-tab="classes">
-                                <i class="nav-icon fas fa-graduation-cap"></i>
-                                <p>Trading Classes</p>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="#" class="nav-link" data-tab="services">
-                                <i class="nav-icon fas fa-cogs"></i>
-                                <p>Services</p>
-                            </a>
-                        </li>
+                       
                         <li class="nav-item">
                             <a href="#" class="nav-link" data-tab="software">
                                 <i class="nav-icon fas fa-download"></i>
                                 <p>Software & Tools</p>
                             </a>
                         </li>
+
+                        <li class="nav-item">
+                            <a href="#" class="nav-link" data-tab="payment-plans">
+                                <i class="nav-icon fas fa-cogs"></i>
+                                <p>Payment Plans</p>
+                            </a>
+                        </li>
+                        
                         <li class="nav-item">
                             <a href="#" class="nav-link" data-tab="blog">
                                 <i class="nav-icon fas fa-blog"></i>
@@ -802,121 +799,173 @@
                         </div>
                     </div>
 
-                    <!-- CLASSES MANAGEMENT TAB -->
-                    <div id="classes" class="content-tab">
+                    
+                    <!-- PAYMENT PLAN MANAGEMENT TAB -->
+                    <div id="payment-plans" class="content-tab">
                         <div class="card">
                             <div class="card-header">
-                                <h3 class="card-title">Trading Classes Management</h3>
-                                <button class="btn btn-gradient-primary float-right" data-toggle="modal" data-target="#addClassModal">
-                                    <i class="fas fa-plus"></i> Add New Class
-                                </button>
-                            </div>
-                            <div class="card-body">
-                                <div class="table-responsive">
-                                    <table class="table table-bordered table-hover">
-                                        <thead>
-                                            <tr>
-                                                <th>ID</th>
-                                                <th>Image</th>
-                                                <th>Class Name</th>
-                                                <th>Description</th>
-                                                <th>Price</th>
-                                                <th>Duration</th>
-                                                <th>Status</th>
-                                                <th>Created</th>
-                                                <th>Actions</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            {% for class in classes %}
-                                            <tr>
-                                                <td>CLS{{ class.id|stringformat:"03d" }}</td>
-                                                <td>
-                                                    {% if class.image %}
-                                                    <img src="{{ class.image.url }}" alt="{{ class.title }}" style="width: 50px; height: 50px; object-fit: cover;">
-                                                    {% else %}
-                                                    <span class="text-muted">No Image</span>
-                                                    {% endif %}
-                                                </td>
-                                                <td>{{ class.title }}</td>
-                                                <td>{{ class.description|truncatewords:10 }}</td>
-                                                <td>${{ class.price }}</td>
-                                                <td>{{ class.duration }}</td>
-                                                <td>
-                                                    <span class="badge badge-success">Active</span>
-                                                </td>
-                                                <td>{{ class.created_at|date:"M d, Y" }}</td>
-                                                <td>
-                                                    <button class="btn btn-sm btn-info" onclick="editClass({{ class.id }})">
-                                                        <i class="fas fa-edit"></i>
-                                                    </button>
-                                                    <button class="btn btn-sm btn-danger" onclick="deleteItem('class', {{ class.id }})">
-                                                        <i class="fas fa-trash"></i>
-                                                    </button>
-                                                </td>
-                                            </tr>
-                                            {% empty %}
-                                            <tr>
-                                                <td colspan="9" class="text-center text-muted">No classes found</td>
-                                            </tr>
-                                            {% endfor %}
-                                        </tbody>
-                                    </table>
+                                <h3 class="card-title">Service Payment Progress</h3>
+                                <div class="card-tools">
+                                    <span class="badge badge-primary mr-2">Total: {{ all_service_payments.count }}</span>
+                                    <span class="badge badge-success mr-2">Completed: {{ completed_service_payments.count }}</span>
+                                    <span class="badge badge-warning">In Progress: {{ in_progress_payments.count }}</span>
                                 </div>
                             </div>
-                        </div>
-                    </div>
-
-                    <!-- SERVICES MANAGEMENT TAB -->
-                    <div id="services" class="content-tab">
-                        <div class="card">
-                            <div class="card-header">
-                                <h3 class="card-title">Services Management</h3>
-                                <button class="btn btn-gradient-primary float-right" data-toggle="modal" data-target="#addServiceModal">
-                                    <i class="fas fa-plus"></i> Add New Service
-                                </button>
-                            </div>
                             <div class="card-body">
+                                
+                                <!-- Service Payment Statistics -->
+                                <div class="row mb-4">
+                                    <div class="col-md-3">
+                                        <div class="info-box bg-gradient-primary">
+                                            <span class="info-box-icon"><i class="fas fa-money-bill-wave"></i></span>
+                                            <div class="info-box-content">
+                                                <span class="info-box-text">Total Revenue</span>
+                                                <span class="info-box-number">KES {{ total_service_revenue|floatformat:2 }}</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="info-box bg-gradient-success">
+                                            <span class="info-box-icon"><i class="fas fa-check-circle"></i></span>
+                                            <div class="info-box-content">
+                                                <span class="info-box-text">Completed</span>
+                                                <span class="info-box-number">{{ completed_service_payments.count }}</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="info-box bg-gradient-warning">
+                                            <span class="info-box-icon"><i class="fas fa-spinner"></i></span>
+                                            <div class="info-box-content">
+                                                <span class="info-box-text">In Progress</span>
+                                                <span class="info-box-number">{{ in_progress_payments.count }}</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="info-box bg-gradient-info">
+                                            <span class="info-box-icon"><i class="fas fa-clock"></i></span>
+                                            <div class="info-box-content">
+                                                <span class="info-box-text">Pending</span>
+                                                <span class="info-box-number">{{ pending_service_payments.count }}</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                    
+                                <!-- Service Payment Progress Table -->
                                 <div class="table-responsive">
                                     <table class="table table-bordered table-hover">
-                                        <thead>
+                                        <thead class="thead-dark">
                                             <tr>
                                                 <th>ID</th>
-                                                <th>Service Name</th>
-                                                <th>Category</th>
-                                                <th>Price</th>
+                                                <th>Customer</th>
+                                                <th>Contact</th>
+                                                <th>Service</th>
+                                                <th>Total</th>
+                                                <th>Paid</th>
+                                                <th>Progress</th>
                                                 <th>Status</th>
                                                 <th>Created</th>
                                                 <th>Actions</th>
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            {% for service in services %}
+                                            {% for payment in all_service_payments %}
                                             <tr>
-                                                <td>SRV{{ service.id|stringformat:"03d" }}</td>
-                                                <td>{{ service.title }}</td>
-                                                <td>{{ service.category|title }}</td>
-                                                <td>{{ service.price_label }}</td>
                                                 <td>
-                                                    {% if service.is_active %}
-                                                    <span class="badge badge-success">Active</span>
+                                                    <span class="badge badge-primary">SP{{ payment.id|stringformat:"04d" }}</span>
+                                                </td>
+                                                <td>
+                                                    <strong>{{ payment.user_name }}</strong>
+                                                </td>
+                                                <td>
+                                                    <small>
+                                                        {{ payment.user_phone }}<br>
+                                                        <span class="text-muted">{{ payment.user_email }}</span>
+                                                    </small>
+                                                </td>
+                                                <td>
+                                                    <strong>{{ payment.get_service_type_display }}</strong>
+                                                </td>
+                                                <td>
+                                                    <strong>KES {{ payment.total_amount }}</strong>
+                                                </td>
+                                                <td>
+                                                    KES {{ payment.amount_paid }}
+                                                </td>
+                                                <td>
+                                                    <div class="progress" style="height: 20px;">
+                                                        <div class="progress-bar 
+                                                            {% if payment.progress_percentage >= 100 %}bg-success
+                                                            {% elif payment.progress_percentage >= 50 %}bg-warning
+                                                            {% else %}bg-danger{% endif %}" 
+                                                            role="progressbar" 
+                                                            style="width: {{ payment.progress_percentage }}%"
+                                                            aria-valuenow="{{ payment.progress_percentage }}" 
+                                                            aria-valuemin="0" 
+                                                            aria-valuemax="100">
+                                                            {{ payment.progress_percentage|floatformat:1 }}%
+                                                        </div>
+                                                    </div>
+                                                    <small class="text-muted">
+                                                        {{ payment.transactions.count }} payment(s)
+                                                    </small>
+                                                </td>
+                                                <td>
+                                                    {% if payment.status == 'completed' %}
+                                                    <span class="badge badge-success">
+                                                        <i class="fas fa-check-circle"></i> Completed
+                                                    </span>
+                                                    {% elif payment.status == 'in_progress' %}
+                                                    <span class="badge badge-warning">
+                                                        <i class="fas fa-spinner"></i> In Progress
+                                                    </span>
                                                     {% else %}
-                                                    <span class="badge badge-secondary">Inactive</span>
+                                                    <span class="badge badge-secondary">
+                                                        <i class="fas fa-clock"></i> Pending
+                                                    </span>
+                                                    {% endif %}
+                                                    
+                                                    {% if payment.email_sent %}
+                                                    <br><small class="text-success"><i class="fas fa-envelope"></i> Email Sent</small>
                                                     {% endif %}
                                                 </td>
-                                                <td>{{ service.created_at|date:"M d, Y" }}</td>
                                                 <td>
-                                                    <button class="btn btn-sm btn-info" onclick="editService({{ service.id }})">
-                                                        <i class="fas fa-edit"></i>
-                                                    </button>
-                                                    <button class="btn btn-sm btn-danger" onclick="deleteItem('service', {{ service.id }})">
-                                                        <i class="fas fa-trash"></i>
-                                                    </button>
+                                                    <small class="text-muted">
+                                                        {{ payment.created_at|date:"M d, Y" }}<br>
+                                                        <span class="text-muted">{{ payment.created_at|date:"H:i" }}</span>
+                                                    </small>
+                                                </td>
+                                                <td>
+                                                    <div class="btn-group btn-group-sm">
+                                                        <button class="btn btn-info" 
+                                                                onclick="viewServicePaymentDetails({{ payment.id }})"
+                                                                title="View Details">
+                                                            <i class="fas fa-eye"></i>
+                                                        </button>
+                                                        {% if not payment.email_sent and payment.status == 'completed' %}
+                                                        <button class="btn btn-warning" 
+                                                                onclick="sendServiceOnboardingEmail({{ payment.id }})"
+                                                                title="Send Onboarding Email">
+                                                            <i class="fas fa-envelope"></i>
+                                                        </button>
+                                                        {% endif %}
+                                                        <button class="btn btn-success" 
+                                                                onclick="addManualPayment({{ payment.id }})"
+                                                                title="Add Manual Payment">
+                                                            <i class="fas fa-plus"></i>
+                                                        </button>
+                                                    </div>
                                                 </td>
                                             </tr>
                                             {% empty %}
                                             <tr>
-                                                <td colspan="7" class="text-center text-muted">No services found</td>
+                                                <td colspan="10" class="text-center py-4">
+                                                    <i class="fas fa-money-bill-wave fa-3x text-muted mb-3"></i>
+                                                    <h5 class="text-muted">No Service Payments Yet</h5>
+                                                    <p class="text-muted">Service payments will appear here when customers start paying.</p>
+                                                </td>
                                             </tr>
                                             {% endfor %}
                                         </tbody>
@@ -1349,7 +1398,7 @@
                                     </div>
                                 </form>
 
-                                <!-- Preview Section -->
+                                                            <!-- Preview Section -->
                                 <div class="mt-5">
                                     <h5>Live Preview</h5>
                                     <div class="card preview-card" style="background: linear-gradient(145deg, #1a2a4f 0%, #0d1a33 100%); border-radius: 20px; padding: 20px; color: white; max-width: 400px;">
@@ -1368,7 +1417,7 @@
                                                 <div class="mb-3" style="background: rgba(255,255,255,0.15); padding: 10px; border-radius: 8px;">
                                                     <div style="font-size: 0.8rem; margin-bottom: 3px; opacity: 0.8;">TRADEWISE CARD</div>
                                                     <div style="font-size: 1.1rem; letter-spacing: 2px; font-weight: 600;">
-                                                        {{ tradewise_card.card_number|default:'6734 559' }}
+                                                        {{ tradewise_card.card_number|default:'6734 5590 1234 5678' }}
                                                     </div>
                                                 </div>
                                                 
@@ -2094,34 +2143,23 @@
                                     </div>
                                 </div>
 
-                                <!-- Debug Information -->
-                                <div class="row mb-4">
-                                    <div class="col-12">
-                                        <div class="card card-outline card-info">
-                                            <div class="card-header">
-                                                <h3 class="card-title">
-                                                    <i class="fas fa-bug"></i> System Debug Info
-                                                </h3>
-                                            </div>
-                                            <div class="card-body">
-                                                <div class="row">
-                                                    <div class="col-md-3">
-                                                        <strong>Pending Referrals:</strong> {{ affiliate_debug.pending_referrals }}
-                                                    </div>
-                                                    <div class="col-md-3">
-                                                        <strong>Approved Referrals:</strong> {{ affiliate_debug.approved_referrals }}
-                                                    </div>
-                                                    <div class="col-md-3">
-                                                        <strong>Total Coins Awarded:</strong> {{ affiliate_debug.total_coins_awarded }}
-                                                    </div>
-                                                    <div class="col-md-3">
-                                                        <strong>Total Coin Balance:</strong> {{ affiliate_debug.total_coin_balance }}
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
+                               
+
+                            <script>
+                            function approveReferral(referralId) {
+                                fetch('/approve-referral/', {
+                                    method: 'POST',
+                                    headers: {'X-CSRFToken': '{{ csrf_token }}'},
+                                    body: JSON.stringify({referral_id: referralId})
+                                }).then(response => response.json())
+                                .then(data => {
+                                    if (data.success) {
+                                        alert('Referral approved! 50 coins awarded.');
+                                        location.reload();
+                                    }
+                                });
+                            }
+                            </script>
 
                                 <!-- Pending Payouts -->
                                 <div class="row">
@@ -2288,7 +2326,113 @@
                                         </div>
                                     </div>
                                 </div>
+                                
+                                
 
+                                <!-- Remove all JavaScript approval functions since they're no longer needed -->
+                                <script>
+                               
+                                console.log("🔄 Automatic referral system active - no manual approval needed");
+                                </script>
+                                <!-- Referral Approval JavaScript -->
+                                <script>
+                                // Approve single referral
+                                function approveReferral(referralId) {
+                                    const button = document.getElementById(`approve-btn-${referralId}`);
+                                    const originalText = button.innerHTML;
+                                    
+                                    // Show loading state
+                                    button.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Approving...';
+                                    button.disabled = true;
+                                    
+                                    // Send AJAX request
+                                    fetch('/approve-referral/', {
+                                        method: 'POST',
+                                        headers: {
+                                            'Content-Type': 'application/json',
+                                            'X-CSRFToken': '{{ csrf_token }}'
+                                        },
+                                        body: JSON.stringify({
+                                            referral_id: referralId
+                                        })
+                                    })
+                                    .then(response => response.json())
+                                    .then(data => {
+                                        if (data.success) {
+                                            // Show success message
+                                            showNotification('success', data.message);
+                                            
+                                            // Remove the row from table
+                                            const row = document.getElementById(`referral-${referralId}`);
+                                            row.style.backgroundColor = '#d4edda';
+                                            setTimeout(() => row.remove(), 1000);
+                                            
+                                            // Update stats in real-time
+                                            updateAdminStats();
+                                            
+                                        } else {
+                                            showNotification('error', data.error);
+                                            button.innerHTML = originalText;
+                                            button.disabled = false;
+                                        }
+                                    })
+                                    .catch(error => {
+                                        showNotification('error', 'Network error: ' + error);
+                                        button.innerHTML = originalText;
+                                        button.disabled = false;
+                                    });
+                                }
+
+                                // Approve all pending referrals
+                                function approveAllReferrals() {
+                                    if (!confirm('Are you sure you want to approve ALL pending referrals? This will award 50 coins for each approved referral.')) {
+                                        return;
+                                    }
+                                    
+                                    const pendingReferrals = {{ pending_referrals_list.count }};
+                                    if (pendingReferrals === 0) {
+                                        showNotification('info', 'No pending referrals to approve.');
+                                        return;
+                                    }
+                                    
+                                    // Get all referral IDs
+                                    const referralIds = [];
+                                    document.querySelectorAll('[id^="referral-"]').forEach(row => {
+                                        const id = row.id.replace('referral-', '');
+                                        referralIds.push(parseInt(id));
+                                    });
+                                    
+                                    // Approve each one
+                                    let approvedCount = 0;
+                                    referralIds.forEach(id => {
+                                        setTimeout(() => {
+                                            approveReferral(id);
+                                            approvedCount++;
+                                            
+                                            if (approvedCount === referralIds.length) {
+                                                setTimeout(() => {
+                                                    showNotification('success', `All ${approvedCount} referrals approved successfully!`);
+                                                }, 1000);
+                                            }
+                                        }, approvedCount * 300); // Stagger requests
+                                    });
+                                }
+
+                                // Update admin stats (you can enhance this later)
+                                function updateAdminStats() {
+                                    // Simple page reload for now - we'll make it dynamic in Phase 2
+                                    setTimeout(() => {
+                                        // You can add real-time updates here later
+                                        console.log('Stats updated');
+                                    }, 2000);
+                                }
+
+                                // Notification function
+                                function showNotification(type, message) {
+                                    // Simple alert for now - you can use a better notification system
+                                    alert(`${type.toUpperCase()}: ${message}`);
+                                }
+                                </script>
                             </div>
                         </div>
                     </div>
@@ -2320,2147 +2464,361 @@
     <script src="https://cdn.jsdelivr.net/npm/admin-lte@3.2/dist/js/adminlte.min.js"></script>
 
     <script>
-        // ================== CSRF TOKEN HANDLING ==================
-        function getCookie(name) {
-            let cookieValue = null;
-            if (document.cookie && document.cookie !== '') {
-                const cookies = document.cookie.split(';');
-                for (let i = 0; i < cookies.length; i++) {
-                    const cookie = cookies[i].trim();
-                    if (cookie.substring(0, name.length + 1) === (name + '=')) {
-                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
-                        break;
-                    }
-                }
-            }
-            return cookieValue;
-        }
-
-        // Set up AJAX CSRF token
-        $.ajaxSetup({
-            beforeSend: function(xhr, settings) {
-                if (!/^(GET|HEAD|OPTIONS|TRACE)$/i.test(settings.type) && !this.crossDomain) {
-                    xhr.setRequestHeader("X-CSRFToken", getCookie('csrftoken'));
-                }
-            }
-        });
-
-        // ================== GLOBAL VARIABLES ==================
-        let revenueChart = null;
-        let serviceDistributionChart = null;
-        let liveUpdateIntervals = {};
-        let isActivitiesExpanded = false;
-
-        // ================== INITIALIZATION ==================
-        $(document).ready(function() {
-            console.log('🚀 Initializing TradeWise Admin Dashboard...');
-            
-            // Initialize core functionality
-            initializeTabSystem();
-            initializeCharts();
-            initializeLiveUpdates();
-            setupAjaxForms();
-            updateDateTime();
-            loadInitialActivity();
-            
-            // Initialize tooltips
-            $('[data-toggle="tooltip"]').tooltip();
-            
-            // Adjust footer positioning
-            adjustFooter();
-            
-            console.log('✅ Dashboard initialized successfully');
-        });
-
-        // ================== TAB SYSTEM ==================
-        function initializeTabSystem() {
-            // Tab switching functionality
-            $('.nav-link[data-tab]').on('click', function(e) {
-                e.preventDefault();
-                const targetTab = $(this).data('tab');
-                switchToTab(targetTab);
-            });
-
-            // Dashboard card links
-            $('.small-box-footer[data-tab]').on('click', function(e) {
-                e.preventDefault();
-                const targetTab = $(this).data('tab');
-                switchToTab(targetTab);
-            });
-        }
-
-        function switchToTab(tabName) {
-            // Hide all tabs
-            $('.content-tab').removeClass('active');
-            $('.nav-link').removeClass('active');
-            
-            // Show target tab
-            $(`#${tabName}`).addClass('active');
-            $(`[data-tab="${tabName}"]`).addClass('active');
-            
-            // Load tab-specific data if needed
-            loadTabData(tabName);
-            
-            // Log the tab switch
-            logAdminAction(`Switched to ${tabName.replace('-', ' ')} tab`);
-        }
-
-        function loadTabData(tabName) {
-            switch(tabName) {
-                case 'users':
-                    loadUsersData();
-                    break;
-                case 'all-requests':
-                    loadRequestsData();
-                    break;
-                case 'reviews':
-                    loadReviewsData();
-                    break;
-                case 'affiliate-management':
-                    loadAffiliateData();
-                    break;
-                case 'software':
-                    initializeSoftwareManagement();
-                    break;
-            }
-        }
-
-        // ================== LIVE UPDATES SYSTEM ==================
-        function initializeLiveUpdates() {
-            console.log('🔄 Initializing live updates...');
-            
-            // Start live updates with different intervals
-            liveUpdateIntervals.revenue = setInterval(updateRevenueData, 30000); // 30 seconds
-            liveUpdateIntervals.activity = setInterval(updateActivityData, 60000); // 60 seconds
-            liveUpdateIntervals.stats = setInterval(updateQuickStats, 120000); // 2 minutes
-            liveUpdateIntervals.connection = setInterval(checkConnection, 30000); // 30 seconds
-            
-            // Initial data load
-            updateRevenueData();
-            updateQuickStats();
-            
-            console.log('✅ Live updates initialized');
-        }
-
-        function checkConnection() {
-            // Simple connection check
-            $('#connectionStatus').html('Live <i class="fas fa-signal"></i>');
-        }
-
-        // ================== REVENUE CHART UPDATES ==================
-        function initializeCharts() {
-            // Revenue Chart
-            const revenueCtx = document.getElementById('revenueChart');
-            if (revenueCtx) {
-                revenueChart = new Chart(revenueCtx, {
-                    type: 'line',
-                    data: {
-                        labels: [],
-                        datasets: [{
-                            label: 'Daily Revenue (KES)',
-                            data: [],
-                            borderColor: '#3498db',
-                            backgroundColor: 'rgba(52, 152, 219, 0.1)',
-                            borderWidth: 3,
-                            fill: true,
-                            tension: 0.4,
-                            pointBackgroundColor: '#3498db',
-                            pointBorderColor: '#ffffff',
-                            pointBorderWidth: 2,
-                            pointRadius: 4,
-                            pointHoverRadius: 6
-                        }]
-                    },
-                    options: {
-                        responsive: true,
-                        maintainAspectRatio: false,
-                        plugins: {
-                            legend: {
-                                display: false
-                            },
-                            tooltip: {
-                                mode: 'index',
-                                intersect: false,
-                                callbacks: {
-                                    label: function(context) {
-                                        return `KES ${context.parsed.y.toLocaleString()}`;
-                                    }
-                                }
-                            }
-                        },
-                        scales: {
-                            y: {
-                                beginAtZero: true,
-                                ticks: {
-                                    callback: function(value) {
-                                        return 'KES ' + value.toLocaleString();
-                                    }
-                                },
-                                grid: {
-                                    color: 'rgba(0,0,0,0.1)'
-                                }
-                            },
-                            x: {
-                                grid: {
-                                    color: 'rgba(0,0,0,0.1)'
-                                }
-                            }
-                        },
-                        interaction: {
-                            intersect: false,
-                            mode: 'nearest'
-                        },
-                        animation: {
-                            duration: 1000,
-                            easing: 'easeInOutQuart'
-                        }
-                    }
-                });
-            }
-
-            // Service Distribution Chart (static for now)
-            const serviceCtx = document.getElementById('serviceDistributionChart');
-            if (serviceCtx) {
-                serviceDistributionChart = new Chart(serviceCtx, {
-                    type: 'doughnut',
-                    data: {{ service_distribution_data|safe }},
-                    options: {
-                        responsive: true,
-                        plugins: {
-                            legend: {
-                                position: 'bottom',
-                                labels: {
-                                    padding: 20,
-                                    usePointStyle: true
-                                }
-                            }
-                        },
-                        cutout: '60%',
-                        animation: {
-                            animateScale: true,
-                            animateRotate: true
-                        }
-                    }
-                });
-            }
-        }
-
-        function updateRevenueData() {
-            $.ajax({
-                url: '/admin/ajax/revenue-data/',
-                type: 'GET',
-                dataType: 'json',
-                success: function(response) {
-                    if (response.success && revenueChart) {
-                        // Update chart data
-                        revenueChart.data.labels = response.dates;
-                        revenueChart.data.datasets[0].data = response.amounts;
-                        revenueChart.update('none'); // Quiet update
-                        
-                        // Update revenue stat card
-                        $('#totalRevenueStat').text('KES ' + Math.round(response.total_revenue).toLocaleString());
-                        
-                        // Update last updated time
-                        $('#chartLastUpdated').text('Last updated: ' + new Date().toLocaleTimeString());
-                        
-                        console.log('✅ Revenue data updated');
-                    }
-                },
-                error: function(xhr, status, error) {
-                    console.error('❌ Revenue data update failed:', error);
-                    $('#chartLastUpdated').text('Update failed - Retrying...');
-                }
-            });
-        }
-
-        // ================== QUICK STATS UPDATES ==================
-        function updateQuickStats() {
-            $.ajax({
-                url: '/admin/ajax/quick-stats/',
-                type: 'GET',
-                dataType: 'json',
-                success: function(response) {
-                    if (response.success) {
-                        // Update all stat cards
-                        $('#totalUsersStat').text(response.total_users);
-                        $('#newUsersToday').text('+' + response.new_users_today + ' today');
-                        
-                        $('#pendingRequestsStat').text(response.pending_requests);
-                        $('#newRequestsToday').text(response.new_users_today + ' new today');
-                        
-                        $('#activeTradersStat').text(response.active_traders);
-                        $('#newTradersToday').text('+' + response.new_users_today + ' today');
-                        
-                        // Update badges
-                        $('#totalUsersBadge').text(response.total_users);
-                        $('#pendingRequestsBadge').text(response.pending_requests);
-                        $('#notificationBadge').text(response.pending_requests);
-                        $('#notificationHeader').text(response.pending_requests + ' Notifications');
-                        $('#newUsersCount').text(response.new_users_today);
-                        $('#pendingRequestsCount').text(response.pending_requests);
-                        
-                        console.log('✅ Quick stats updated');
-                    }
-                },
-                error: function(xhr, status, error) {
-                    console.error('❌ Quick stats update failed:', error);
-                }
-            });
-        }
-
-        // ================== ACTIVITY SYSTEM ==================
-        function loadInitialActivity() {
-            updateActivityData();
-        }
-
-        function updateActivityData() {
-            $.ajax({
-                url: '/admin/ajax/activity-data/',
-                type: 'GET',
-                dataType: 'json',
-                success: function(response) {
-                    if (response.success) {
-                        renderActivities(response.activities);
-                        console.log('✅ Activity data updated');
-                    }
-                },
-                error: function(xhr, status, error) {
-                    console.error('❌ Activity data update failed:', error);
-                    $('#activityTimeline').html(`
-                        <div class="text-center py-4 text-danger">
-                            <i class="fas fa-exclamation-triangle fa-2x"></i>
-                            <p class="mt-2">Failed to load activities</p>
-                            <button class="btn btn-sm btn-outline-primary mt-2" onclick="refreshActivity()">
-                                <i class="fas fa-redo"></i> Retry
-                            </button>
-                        </div>
-                    `);
-                }
-            });
-        }
-
-        function renderActivities(activities) {
-            const timeline = $('#activityTimeline');
-            
-            if (activities.length === 0) {
-                timeline.html(`
-                    <div class="text-center py-4 text-muted">
-                        <i class="fas fa-inbox fa-2x"></i>
-                        <p class="mt-2">No recent activity</p>
-                    </div>
-                `);
-                $('#viewMoreContainer').hide();
-                return;
-            }
-
-            let html = '';
-            const visibleCount = isActivitiesExpanded ? activities.length : 4;
-            
-            activities.slice(0, visibleCount).forEach((activity, index) => {
-                html += `
-                    <div class="activity-item ${index >= 4 && !isActivitiesExpanded ? 'hidden-activities' : ''}">
-                        <div class="d-flex justify-content-between">
-                            <strong>${activity.action}</strong>
-                            <small class="text-muted">${activity.time_ago}</small>
-                        </div>
-                        <p class="mb-1">${activity.description}</p>
-                        <small class="text-primary">
-                            <i class="fas fa-user"></i> ${activity.admin} 
-                            <span class="text-muted ml-2">
-                                <i class="fas fa-database"></i> ${activity.model}
-                            </span>
-                        </small>
-                    </div>
-                `;
-            });
-
-            timeline.html(html);
-            
-            // Show view more if there are more than 4 activities
-            if (activities.length > 4) {
-                $('#viewMoreContainer').show();
-                if (isActivitiesExpanded) {
-                    $('#viewMoreBtn').hide();
-                    $('#viewLessBtn').show();
-                } else {
-                    $('#viewMoreBtn').show();
-                    $('#viewLessBtn').hide();
-                }
-            } else {
-                $('#viewMoreContainer').hide();
-            }
-        }
-
-        function toggleActivities() {
-            isActivitiesExpanded = !isActivitiesExpanded;
-            updateActivityData(); // Re-render with new visibility
-        }
-
-        function refreshActivity() {
-            $('#activityTimeline').html(`
-                <div class="text-center py-4">
-                    <i class="fas fa-spinner fa-spin fa-2x text-primary"></i>
-                    <p class="mt-2 text-muted">Refreshing activities...</p>
-                </div>
-            `);
-            updateActivityData();
-        }
-
-        // ================== AJAX FORM HANDLING ==================
-        function setupAjaxForms() {
-            // Only intercept forms that should use AJAX
-            $(document).on('submit', 'form[data-ajax="true"]', function(e) {
-                e.preventDefault();
-                submitFormViaAjax($(this));
-            });
-
-            // Handle file upload forms with AJAX by default
-            $(document).on('submit', 'form[enctype="multipart/form-data"]', function(e) {
-                const form = $(this);
-                if (form.data('ajax') !== false) {
-                    e.preventDefault();
-                    submitFormViaAjax(form);
-                }
-            });
-        }
-
-        function submitFormViaAjax(form) {
-            const formData = new FormData(form[0]);
-            const submitBtn = form.find('button[type="submit"]');
-            const originalText = submitBtn.html();
-            
-            // Show loading state
-            showLoading(true);
-            submitBtn.prop('disabled', true).html('<i class="fas fa-spinner fa-spin"></i> Processing...');
-            
-            $.ajax({
-                url: form.attr('action'),
-                type: 'POST',
-                data: formData,
-                processData: false,
-                contentType: false,
-                headers: {
-                    'X-CSRFToken': getCookie('csrftoken')
-                },
-                success: function(response) {
-                    if (response.success) {
-                        showAjaxAlert('success', response.message || 'Operation completed successfully!');
-                        
-                        // Reset form
-                        form[0].reset();
-                        
-                        // Reset file input labels
-                        form.find('.custom-file-label').html('<i class="fas fa-cloud-upload-alt"></i> Choose file...');
-                        form.find('.image-preview').hide();
-                        
-                        // Close modal if exists
-                        const modal = form.closest('.modal');
-                        if (modal.length) {
-                            modal.modal('hide');
-                        }
-                        
-                        // Refresh relevant data
-                        refreshDataAfterAction(form);
-                        
-                    } else {
-                        showAjaxAlert('error', response.error || 'An error occurred.');
-                    }
-                },
-                error: function(xhr, status, error) {
-                    let errorMessage = 'Error submitting form. Please try again.';
-                    if (xhr.responseJSON && xhr.responseJSON.error) {
-                        errorMessage = xhr.responseJSON.error;
-                    } else if (xhr.status === 413) {
-                        errorMessage = 'File too large. Please choose a smaller file.';
-                    } else if (xhr.status === 403) {
-                        errorMessage = 'Session expired. Please refresh the page and try again.';
-                    }
-                    showAjaxAlert('error', errorMessage);
-                },
-                complete: function() {
-                    showLoading(false);
-                    submitBtn.prop('disabled', false).html(originalText);
-                }
-            });
-        }
-
-        function refreshDataAfterAction(form) {
-            const action = form.find('input[name="action"]').val();
-            
-            switch(action) {
-                case 'add_software':
-                case 'update_software':
-                case 'delete_software':
-                    loadSoftwareData();
-                    break;
-                case 'add_strategy':
-                case 'update_strategy':
-                case 'delete_strategy':
-                    loadStrategiesData();
-                    break;
-                case 'add_signal':
-                case 'update_signal':
-                case 'delete_signal':
-                    loadSignalsData();
-                    break;
-                case 'add_service':
-                case 'update_service':
-                case 'delete_service':
-                    loadServicesData();
-                    break;
-                case 'add_review':
-                case 'approve_review':
-                case 'toggle_featured':
-                case 'delete_review':
-                    loadReviewsData();
-                    break;
-                case 'disable_user':
-                case 'enable_user':
-                    loadUsersData();
-                    break;
-                case 'update_weekly_number':
-                case 'process_payout':
-                    loadAffiliateData();
-                    break;
-            }
-            
-            // Always update activity and stats
-            updateActivityData();
-            updateQuickStats();
-        }
-
-        // ================== TAB-SPECIFIC DATA LOADING ==================
-        function loadUsersData() {
-            $.ajax({
-                url: '/admin/ajax/users-data/',
-                type: 'GET',
-                success: function(response) {
-                    if (response.success) {
-                        console.log('Users data loaded:', response.users.length, 'users');
-                    }
-                }
-            });
-        }
-
-        function loadRequestsData() {
-            $.ajax({
-                url: '/admin/ajax/requests-data/',
-                type: 'GET',
-                success: function(response) {
-                    if (response.success) {
-                        console.log('Requests data loaded:', response.requests.length, 'requests');
-                    }
-                }
-            });
-        }
-
-        function loadReviewsData() {
-            // Refresh reviews data
-            console.log('Loading reviews data...');
-        }
-
-        function loadAffiliateData() {
-            // Refresh affiliate data
-            console.log('Loading affiliate data...');
-        }
-
-        function loadSoftwareData() {
-            // Refresh software data
-            console.log('Loading software data...');
-        }
-
-        function loadStrategiesData() {
-            // Refresh strategies data
-            console.log('Loading strategies data...');
-        }
-
-        function loadSignalsData() {
-            // Refresh signals data
-            console.log('Loading signals data...');
-        }
-
-        function loadServicesData() {
-            // Refresh services data
-            console.log('Loading services data...');
-        }
-
-        // ================== SOFTWARE MANAGEMENT ==================
-        function initializeSoftwareManagement() {
-            // File input change handlers
-            $('#software_file').on('change', function(e) {
-                const file = e.target.files[0];
-                const label = $('#software_file_label');
-                const validation = validateFileUpload(this);
-                
-                if (file) {
-                    if (validation.valid) {
-                        label.html('<i class="fas fa-file"></i> ' + file.name);
-                        const fileSize = (file.size / (1024 * 1024)).toFixed(2);
-                        
-                        if (file.size > 10 * 1024 * 1024) {
-                            $('#file_size_warning').show().html(
-                                `<i class="fas fa-exclamation-triangle"></i> Large file: ${fileSize}MB - Upload may take longer`
-                            );
-                        } else {
-                            $('#file_size_warning').hide();
-                        }
-                    } else {
-                        showAjaxAlert('error', validation.error);
-                        $(this).val(''); // Clear the invalid file
-                        label.html('<i class="fas fa-cloud-upload-alt"></i> Choose software file...');
-                        $('#file_size_warning').hide();
-                    }
-                } else {
-                    label.html('<i class="fas fa-cloud-upload-alt"></i> Choose software file...');
-                    $('#file_size_warning').hide();
-                }
-            });
-
-            $('#software_thumbnail').on('change', function(e) {
-                const file = e.target.files[0];
-                const label = $('#software_thumbnail_label');
-                const preview = $('#thumbnail_preview');
-                const previewImage = $('#preview_image');
-                
-                if (file) {
-                    label.html('<i class="fas fa-image"></i> ' + file.name);
-                    
-                    if (file.type.match('image.*')) {
-                        const reader = new FileReader();
-                        reader.onload = function(e) {
-                            previewImage.attr('src', e.target.result);
-                            preview.show();
-                        }
-                        reader.readAsDataURL(file);
-                    }
-                } else {
-                    label.html('<i class="fas fa-image"></i> Choose thumbnail...');
-                    preview.hide();
-                }
-            });
-
-            // Form validation
-            $('#softwareUploadForm').on('submit', function(e) {
-                const fileInput = $('#software_file')[0];
-                if (!fileInput.files.length) {
-                    e.preventDefault();
-                    showAjaxAlert('error', 'Please select a software file to upload.');
-                    fileInput.focus();
-                    return false;
-                }
-            });
-        }
-
-        function validateFileUpload(fileInput, maxSizeMB = 50) {
-            const file = fileInput.files[0];
-            if (!file) return { valid: false, error: 'Please select a file' };
-            
-            const maxSize = maxSizeMB * 1024 * 1024; // Convert to bytes
-            const allowedTypes = [
-                'application/zip', 
-                'application/x-rar-compressed',
-                'application/pdf',
-                'application/msword',
-                'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
-                'application/octet-stream' // For .exe, .mt4, .mt5 files
-            ];
-            
-            if (file.size > maxSize) {
-                return { 
-                    valid: false, 
-                    error: `File size must be less than ${maxSizeMB}MB` 
-                };
-            }
-            
-            // Check file extension for additional security
-            const fileName = file.name.toLowerCase();
-            const allowedExtensions = ['.exe', '.zip', '.rar', '.pdf', '.doc', '.docx', '.mt4', '.mt5', '.mq4', '.mq5'];
-            const hasValidExtension = allowedExtensions.some(ext => fileName.endsWith(ext));
-            
-            if (!hasValidExtension && !allowedTypes.includes(file.type)) {
-                return { 
-                    valid: false, 
-                    error: 'Invalid file type. Please upload a supported file format.' 
-                };
-            }
-            
-            return { valid: true };
-        }
-
-        function showSoftwareDetails(softwareId) {
-            $.ajax({
-                url: `/admin/ajax/software-details/${softwareId}/`,
-                type: 'GET',
-                success: function(response) {
-                    $('#softwareDetailsContent').html(response.html);
-                    $('#softwareDetailsModal').modal('show');
-                },
-                error: function() {
-                    showAjaxAlert('error', 'Failed to load software details.');
-                }
-            });
-        }
-
-        function editSoftware(softwareId) {
-            showAjaxAlert('info', 'Edit functionality coming soon!');
-        }
-
-        function deleteSoftware(softwareId, softwareName) {
-            if (confirm(`Are you sure you want to delete "${softwareName}"? This action cannot be undone.`)) {
-                const form = document.createElement('form');
-                form.method = 'POST';
-                form.action = '';
-                
-                const csrfToken = getCookie('csrftoken');
-                const csrfInput = document.createElement('input');
-                csrfInput.type = 'hidden';
-                csrfInput.name = 'csrfmiddlewaretoken';
-                csrfInput.value = csrfToken;
-                form.appendChild(csrfInput);
-                
-                const actionInput = document.createElement('input');
-                actionInput.type = 'hidden';
-                actionInput.name = 'action';
-                actionInput.value = 'delete_software';
-                form.appendChild(actionInput);
-                
-                const idInput = document.createElement('input');
-                idInput.type = 'hidden';
-                idInput.name = 'item_id';
-                idInput.value = softwareId;
-                form.appendChild(idInput);
-                
-                document.body.appendChild(form);
-                form.submit();
-            }
-        }
-
-        function trackDownload(softwareId) {
-            // Track download count via AJAX
-            $.ajax({
-                url: `/admin/track-download/${softwareId}/`,
-                type: 'POST',
-                data: {
-                    csrfmiddlewaretoken: getCookie('csrftoken')
-                },
-                success: function(response) {
-                    if (response.success) {
-                        console.log('Download tracked for software ID:', softwareId);
-                    }
-                }
-            });
-        }
-
-        function showImageModal(imageUrl, title) {
-            $('#modalPreviewImage').attr('src', imageUrl);
-            $('#imagePreviewTitle').text(title);
-            $('#imagePreviewModal').modal('show');
-        }
-
-        // ================== REVIEWS MANAGEMENT ==================
-        function initializeReviewsManagement() {
-            // Avatar preview
-            $('#review_avatar').on('change', function(e) {
-                const file = e.target.files[0];
-                const label = $('#avatar_label');
-                const preview = $('#avatar_preview');
-                const previewImage = $('#preview_avatar');
-                
-                if (file) {
-                    label.html('<i class="fas fa-image"></i> ' + file.name);
-                    
-                    if (file.type.match('image.*')) {
-                        const reader = new FileReader();
-                        reader.onload = function(e) {
-                            previewImage.attr('src', e.target.result);
-                            preview.show();
-                        }
-                        reader.readAsDataURL(file);
-                    }
-                } else {
-                    label.html('<i class="fas fa-image"></i> Choose avatar...');
-                    preview.hide();
-                }
-            });
-            
-            // Star rating selection
-            $('.star-rating-input-large input').on('change', function() {
-                const rating = $(this).val();
-                console.log('Selected rating:', rating);
-            });
-
-            // Form validation
-            $('#addReviewForm').on('submit', function(e) {
-                const rating = $('input[name="rating"]:checked').val();
-                if (!rating) {
-                    e.preventDefault();
-                    showAjaxAlert('error', 'Please select a rating for the review.');
-                    return false;
-                }
-            });
-        }
-
-        function approveReview(reviewId) {
-            if (confirm('Are you sure you want to approve this review?')) {
-                const form = document.createElement('form');
-                form.method = 'POST';
-                form.action = "{% url 'admin_dashboard' %}";
-                
-                const csrf = document.createElement('input');
-                csrf.type = 'hidden';
-                csrf.name = 'csrfmiddlewaretoken';
-                csrf.value = getCookie('csrftoken');
-                form.appendChild(csrf);
-                
-                const action = document.createElement('input');
-                action.type = 'hidden';
-                action.name = 'action';
-                action.value = 'approve_review';
-                form.appendChild(action);
-                
-                const reviewIdInput = document.createElement('input');
-                reviewIdInput.type = 'hidden';
-                reviewIdInput.name = 'review_id';
-                reviewIdInput.value = reviewId;
-                form.appendChild(reviewIdInput);
-                
-                document.body.appendChild(form);
-                form.submit();
-            }
-        }
-
-        function toggleFeatured(reviewId, feature) {
-            const action = feature ? 'feature' : 'unfeature';
-            const message = feature ? 'Are you sure you want to feature this review?' : 'Are you sure you want to remove this review from featured?';
-            
-            if (confirm(message)) {
-                const form = document.createElement('form');
-                form.method = 'POST';
-                form.action = "{% url 'admin_dashboard' %}";
-                
-                const csrf = document.createElement('input');
-                csrf.type = 'hidden';
-                csrf.name = 'csrfmiddlewaretoken';
-                csrf.value = getCookie('csrftoken');
-                form.appendChild(csrf);
-                
-                const actionInput = document.createElement('input');
-                actionInput.type = 'hidden';
-                actionInput.name = 'action';
-                actionInput.value = 'toggle_featured';
-                form.appendChild(actionInput);
-                
-                const reviewIdInput = document.createElement('input');
-                reviewIdInput.type = 'hidden';
-                reviewIdInput.name = 'review_id';
-                reviewIdInput.value = reviewId;
-                form.appendChild(reviewIdInput);
-                
-                const featureInput = document.createElement('input');
-                featureInput.type = 'hidden';
-                featureInput.name = 'feature';
-                featureInput.value = feature;
-                form.appendChild(featureInput);
-                
-                document.body.appendChild(form);
-                form.submit();
-            }
-        }
-
-        function deleteReview(reviewId, reviewerName) {
-            if (confirm(`Are you sure you want to delete the review from "${reviewerName}"? This action cannot be undone.`)) {
-                const form = document.createElement('form');
-                form.method = 'POST';
-                form.action = "{% url 'admin_dashboard' %}";
-                
-                const csrf = document.createElement('input');
-                csrf.type = 'hidden';
-                csrf.name = 'csrfmiddlewaretoken';
-                csrf.value = getCookie('csrftoken');
-                form.appendChild(csrf);
-                
-                const action = document.createElement('input');
-                action.type = 'hidden';
-                action.name = 'action';
-                action.value = 'delete_review';
-                form.appendChild(action);
-                
-                const reviewIdInput = document.createElement('input');
-                reviewIdInput.type = 'hidden';
-                reviewIdInput.name = 'review_id';
-                reviewIdInput.value = reviewId;
-                form.appendChild(reviewIdInput);
-                
-                document.body.appendChild(form);
-                form.submit();
-            }
-        }
-
-        function viewReviewDetails(reviewId) {
-            // Fetch review details via AJAX
-            $.ajax({
-                url: `/admin/ajax/review-details/${reviewId}/`,
-                type: 'GET',
-                success: function(response) {
-                    $('#reviewDetailsContent').html(response.html);
-                    $('#reviewDetailsModal').modal('show');
-                },
-                error: function() {
-                    showAjaxAlert('error', 'Failed to load review details.');
-                }
-            });
-        }
-
-        // ================== AFFILIATE MANAGEMENT ==================
-        function processPayout(payoutId, status) {
-            const actionText = status === 'approved' ? 'approve' : 'reject';
-            if (confirm(`Are you sure you want to ${actionText} this payout request?`)) {
-                const form = document.createElement('form');
-                form.method = 'POST';
-                form.action = "{% url 'admin_dashboard' %}";
-                
-                const csrf = document.createElement('input');
-                csrf.type = 'hidden';
-                csrf.name = 'csrfmiddlewaretoken';
-                csrf.value = getCookie('csrftoken');
-                form.appendChild(csrf);
-                
-                const action = document.createElement('input');
-                action.type = 'hidden';
-                action.name = 'action';
-                action.value = 'process_payout';
-                form.appendChild(action);
-                
-                const payoutIdInput = document.createElement('input');
-                payoutIdInput.type = 'hidden';
-                payoutIdInput.name = 'payout_id';
-                payoutIdInput.value = payoutId;
-                form.appendChild(payoutIdInput);
-                
-                const statusInput = document.createElement('input');
-                statusInput.type = 'hidden';
-                statusInput.name = 'status';
-                statusInput.value = status;
-                form.appendChild(statusInput);
-                
-                document.body.appendChild(form);
-                form.submit();
-            }
-        }
-
-        function viewAffiliateDetails(userId) {
-            // Fetch affiliate details via AJAX
-            fetch(`/admin/ajax/affiliate-details/${userId}/`)
-                .then(response => response.json())
-                .then(data => {
-                    showAffiliateDetailsModal(data);
-                })
-                .catch(error => {
-                    console.error('Error:', error);
-                    showAjaxAlert('error', 'Failed to load affiliate details.');
-                });
-        }
-
-        // ================== UTILITY FUNCTIONS ==================
-        function showLoading(show) {
-            if (show) {
-                $('#globalLoading').fadeIn();
-            } else {
-                $('#globalLoading').fadeOut();
-            }
-        }
-
-        function showAjaxAlert(type, message) {
-            const alertClass = type === 'success' ? 'alert-success' : 
-                              type === 'error' ? 'alert-danger' : 
-                              type === 'warning' ? 'alert-warning' : 'alert-info';
-            
-            const icon = type === 'success' ? 'fa-check-circle' :
-                        type === 'error' ? 'fa-exclamation-circle' :
-                        type === 'warning' ? 'fa-exclamation-triangle' : 'fa-info-circle';
-            
-            const alertHtml = `
-                <div class="alert ${alertClass} alert-dismissible fade show ajax-alert" role="alert">
-                    <strong><i class="fas ${icon}"></i> ${type === 'success' ? 'Success!' : type === 'error' ? 'Error!' : 'Notice!'}</strong> 
-                    ${message}
-                    <button type="button" class="close" data-dismiss="alert">
-                        <span>&times;</span>
-                    </button>
-                </div>
-            `;
-            
-            $('#ajaxMessagesContainer').html(alertHtml);
-            
-            // Auto remove after 5 seconds
-            setTimeout(() => {
-                $('.ajax-alert').alert('close');
-            }, 5000);
-        }
-
-        function updateDateTime() {
-            const now = new Date();
-            $('#currentDateTime').text(now.toLocaleString());
-            setTimeout(updateDateTime, 1000);
-        }
-
-        function adjustFooter() {
-            const contentHeight = $('.content-wrapper').height();
-            const windowHeight = $(window).height();
-            
-            if (contentHeight < windowHeight - 100) {
-                $('footer').addClass('fixed-bottom');
-            } else {
-                $('footer').removeClass('fixed-bottom');
-            }
-        }
-
-        function logAdminAction(description) {
-            // Log admin action for tracking
-            console.log('📝 Admin Action:', description);
-        }
-
-        // ================== EXISTING FUNCTIONS (compatibility) ==================
-        function readURL(input, previewId) {
-            if (input.files && input.files[0]) {
-                var reader = new FileReader();
-                reader.onload = function(e) {
-                    $(previewId).attr('src', e.target.result);
-                    $(previewId).show();
-                }
-                reader.readAsDataURL(input.files[0]);
-            }
-        }
-
-        // Delete item function
-        function deleteItem(type, id) {
-            if (confirm(`Are you sure you want to delete this ${type}?`)) {
-                const form = document.createElement('form');
-                form.method = 'POST';
-                form.action = "{% url 'admin_dashboard' %}";
-                
-                const csrf = document.createElement('input');
-                csrf.type = 'hidden';
-                csrf.name = 'csrfmiddlewaretoken';
-                csrf.value = getCookie('csrftoken');
-                form.appendChild(csrf);
-                
-                const action = document.createElement('input');
-                action.type = 'hidden';
-                action.name = 'action';
-                action.value = `delete_${type}`;
-                form.appendChild(action);
-                
-                const itemId = document.createElement('input');
-                itemId.type = 'hidden';
-                itemId.name = 'item_id';
-                itemId.value = id;
-                form.appendChild(itemId);
-                
-                document.body.appendChild(form);
-                form.submit();
-            }
-        }
-
-        // Edit functions (to be implemented)
-        function editStrategy(id) {
-            showAjaxAlert('info', 'Edit strategy functionality coming soon!');
-        }
-
-        function editSignal(id) {
-            showAjaxAlert('info', 'Edit signal functionality coming soon!');
-        }
-
-        function editClass(id) {
-            showAjaxAlert('info', 'Edit class functionality coming soon!');
-        }
-
-        function editService(id) {
-            showAjaxAlert('info', 'Edit service functionality coming soon!');
-        }
-
-        function editBlog(id) {
-            showAjaxAlert('info', 'Edit blog functionality coming soon!');
-        }
-
-        function editMerchandise(id) {
-            showAjaxAlert('info', 'Edit merchandise functionality coming soon!');
-        }
-
-        // User management functions
-        function disableUser(userId) {
-            if (confirm('Are you sure you want to disable this user account?')) {
-                // Implement disable user functionality
-                showAjaxAlert('info', 'User disable functionality coming soon!');
-            }
-        }
-
-        function enableUser(userId) {
-            if (confirm('Are you sure you want to enable this user account?')) {
-                // Implement enable user functionality
-                showAjaxAlert('info', 'User enable functionality coming soon!');
-            }
-        }
-
-        function resetUserPassword(userId) {
-            if (confirm('Send password reset email to this user?')) {
-                // Implement password reset functionality
-                showAjaxAlert('info', 'Password reset functionality coming soon!');
-            }
-        }
-
-        function viewUserDetails(userId) {
-            // Implement view user details functionality
-            showAjaxAlert('info', 'User details functionality coming soon!');
-        }
-
-        // Window resize handler
-        $(window).on('resize', adjustFooter);
-
-        // Cleanup on page unload
-        $(window).on('beforeunload', function() {
-            // Clear all intervals
-            Object.values(liveUpdateIntervals).forEach(interval => {
-                clearInterval(interval);
-            });
-        });
-    </script>
-
-
-<script>
-    // ================== TRADEWISE ADMIN DASHBOARD - COMPREHENSIVE JS ==================
-
-// ================== GLOBAL VARIABLES ==================
-let revenueChart = null;
-let serviceDistributionChart = null;
-let liveUpdateIntervals = {};
-let isActivitiesExpanded = false;
-let isStaffUser = false;
-let isFullAdmin = false;
-
-// ================== CSRF TOKEN HANDLING ==================
-function getCookie(name) {
-    let cookieValue = null;
-    if (document.cookie && document.cookie !== '') {
-        const cookies = document.cookie.split(';');
-        for (let i = 0; i < cookies.length; i++) {
-            const cookie = cookies[i].trim();
-            if (cookie.substring(0, name.length + 1) === (name + '=')) {
-                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
-                break;
-            }
-        }
-    }
-    return cookieValue;
-}
-
-// Set up AJAX CSRF token
-$.ajaxSetup({
-    beforeSend: function(xhr, settings) {
-        if (!/^(GET|HEAD|OPTIONS|TRACE)$/i.test(settings.type) && !this.crossDomain) {
-            xhr.setRequestHeader("X-CSRFToken", getCookie('csrftoken'));
-        }
-    }
-});
-
-// ================== ROLE-BASED ACCESS CONTROL ==================
-function initializeRoleBasedAccess() {
-    console.log('🔐 INITIALIZING ROLE-BASED ACCESS CONTROL...');
-    
-    // Get user role from multiple sources
-    const userRole = "{{ user_role }}";
-    isStaffUser = "{{ is_staff_user }}" === "True";
-    isFullAdmin = "{{ is_full_admin }}" === "True";
-    const djangoIsStaff = "{{ request.user.is_staff }}" === "True";
-    const djangoIsSuperuser = "{{ request.user.is_superuser }}" === "True";
-    
-    console.log('👤 USER ROLE DETECTION:');
-    console.log('  - Template user_role:', userRole);
-    console.log('  - Template is_staff_user:', isStaffUser);
-    console.log('  - Template is_full_admin:', isFullAdmin);
-    console.log('  - Django is_staff:', djangoIsStaff);
-    console.log('  - Django is_superuser:', djangoIsSuperuser);
-    
-    // Final determination - if staff but not superuser, apply restrictions
-    const shouldRestrict = (isStaffUser && !isFullAdmin) || (djangoIsStaff && !djangoIsSuperuser);
-    
-    if (shouldRestrict) {
-        console.log('🔒 APPLYING STAFF RESTRICTIONS...');
-        isStaffUser = true;
-        isFullAdmin = false;
-        applyStaffRestrictions();
-        showStaffRestrictionNotice();
-    } else {
-        console.log('👑 FULL ADMIN ACCESS - No restrictions applied');
-        isStaffUser = false;
-        isFullAdmin = true;
-    }
-}
-
-function applyStaffRestrictions() {
-    console.log('🛡️ Applying comprehensive staff restrictions...');
-    
-    // Define accessible sections (only these will be enabled for staff)
-    const accessibleSections = ['dashboard', 'users', 'affiliate-management', 'all-requests'];
-    const restrictedSections = ['strategies', 'signals', 'classes', 'services', 'software', 
-                               'blog', 'tradewise-card', 'merchandise', 'tradewise-coin', 'reviews'];
-    
-    // 1. RESTRICT NAVIGATION ITEMS
-    $('.nav-link[data-tab]').each(function() {
-        const tabName = $(this).data('tab');
-        const $navItem = $(this).closest('.nav-item');
+    // ================== TRADEWISE ADMIN DASHBOARD - 100% STATIC JS ==================
+
+    // ================== GLOBAL VARIABLES ==================
+    let revenueChart = null;
+    let serviceDistributionChart = null;
+    let isStaffUser = false;
+    let isFullAdmin = false;
+
+    // ================== DASHBOARD INITIALIZATION ==================
+    $(document).ready(function() {
+        console.log('🚀 STATIC TradeWise Admin Dashboard Initialized - NO AJAX!');
         
-        if (!accessibleSections.includes(tabName)) {
-            console.log(`🚫 Restricting navigation: ${tabName}`);
-            
-            // Add restricted class
-            $navItem.addClass('staff-restricted');
-            $(this).addClass('disabled text-muted');
-            
-            // Remove all existing click events
-            $(this).off('click');
-            
-            // Add restricted click handler
-            $(this).on('click', function(e) {
-                e.preventDefault();
-                e.stopPropagation();
-                e.stopImmediatePropagation();
-                showAjaxAlert('error', '❌ Access Denied: This section is restricted to administrators only.');
-                return false;
-            });
-            
-            // Add restriction badge
-            if (!$(this).find('.admin-only-badge').length) {
-                $(this).find('p').append(
-                    '<span class="badge badge-danger admin-only-badge ml-2"><i class="fas fa-lock"></i> Admin Only</span>'
-                );
-            }
-            
-            // Add tooltip
-            $(this).attr('title', '🔒 Administrator access required');
-            $(this).tooltip('dispose').tooltip();
-        }
+        // Initialize in correct order
+        initializeRoleBasedAccess();
+        initializeTabSystem();
+        initializeCharts();
+        updateDateTime();
+        
+        // Initialize tooltips
+        $('[data-toggle="tooltip"]').tooltip();
+        
+        // Adjust footer positioning
+        adjustFooter();
+        
+        console.log('✅ Dashboard ready - 100% static data');
     });
-    
-    // 2. RESTRICT DASHBOARD CARD LINKS
-    $('.small-box-footer[data-tab]').each(function() {
-        const tab = $(this).data('tab');
-        if (tab && !accessibleSections.includes(tab)) {
-            $(this).addClass('disabled text-muted staff-restricted-link');
-            $(this).attr('href', 'javascript:void(0)');
-            $(this).attr('title', 'Restricted to administrators');
-            $(this).tooltip('dispose').tooltip();
-            $(this).off('click').on('click', function(e) {
-                e.preventDefault();
-                showAjaxAlert('error', '❌ Access Denied: This section is restricted to administrators only.');
-            });
+
+    // ================== ROLE-BASED ACCESS CONTROL ==================
+    function initializeRoleBasedAccess() {
+        console.log('🔐 INITIALIZING ROLE-BASED ACCESS CONTROL...');
+        
+        const userRole = "{{ user_role }}";
+        isStaffUser = "{{ is_staff_user }}" === "True";
+        isFullAdmin = "{{ is_full_admin }}" === "True";
+        
+        const shouldRestrict = isStaffUser && !isFullAdmin;
+        
+        if (shouldRestrict) {
+            console.log('🔒 APPLYING STAFF RESTRICTIONS...');
+            applyStaffRestrictions();
+            showStaffRestrictionNotice();
+        } else {
+            console.log('👑 FULL ADMIN ACCESS - No restrictions applied');
         }
-    });
-    
-    // 3. RESTRICT MODAL BUTTONS
-    $('[data-target*="Modal"]').each(function() {
-        const modalId = $(this).data('target');
-        if (modalId) {
-            const restrictedModals = ['#addStrategyModal', '#addSignalModal', '#addClassModal', 
-                                    '#addServiceModal', '#addSoftwareModal', '#addBlogModal',
-                                    '#addMerchandiseModal', '#addReviewModal'];
-            
-            if (restrictedModals.includes(modalId)) {
-                $(this).addClass('disabled staff-restricted-btn');
-                $(this).attr('title', 'Administrator access required');
-                $(this).tooltip('dispose').tooltip();
+    }
+
+    function applyStaffRestrictions() {
+        const accessibleSections = ['dashboard', 'users', 'affiliate-management', 'all-requests'];
+        
+        // RESTRICT NAVIGATION ITEMS
+        $('.nav-link[data-tab]').each(function() {
+            const tabName = $(this).data('tab');
+            if (!accessibleSections.includes(tabName)) {
+                $(this).closest('.nav-item').addClass('staff-restricted');
+                $(this).addClass('disabled text-muted');
                 $(this).off('click').on('click', function(e) {
                     e.preventDefault();
-                    showAjaxAlert('error', '❌ Access Denied: This action requires administrator privileges.');
+                    showAlert('error', '❌ Access Denied: This section is restricted to administrators only.');
+                    return false;
                 });
             }
-        }
-    });
-    
-    // 4. ADD STAFF INDICATOR
-    $('.brand-text').append(' <small class="text-warning staff-mode-indicator"><i class="fas fa-user-shield"></i> Staff Mode</small>');
-    
-    console.log('✅ Staff restrictions applied successfully');
-}
-
-function showStaffRestrictionNotice() {
-    // Remove any existing notice
-    $('#staffNotification').remove();
-    
-    // Add comprehensive staff notice
-    const noticeHtml = `
-        <div class="alert alert-warning alert-dismissible" id="staffNotification">
-            <button type="button" class="close" data-dismiss="alert">&times;</button>
-            <h5><i class="fas fa-user-shield"></i> Staff Access Mode Active</h5>
-            <p class="mb-1"><strong>Your access is limited to the following sections only:</strong></p>
-            <ul class="mb-1">
-                <li>Dashboard Overview</li>
-                <li>User Management</li>
-                <li>Affiliate Program</li>
-                <li>Service Requests</li>
-            </ul>
-            <small class="text-muted">Contact an administrator for full system access.</small>
-        </div>
-    `;
-    
-    // Insert at the top of content
-    $('.content').prepend(noticeHtml);
-}
-
-// ================== TAB SYSTEM WITH ACCESS CONTROL ==================
-function initializeTabSystem() {
-    console.log('📁 Initializing tab system with access control...');
-    
-    // Tab switching functionality with access control
-    $('.nav-link[data-tab]').on('click', function(e) {
-        if ($(this).hasClass('disabled')) {
-            e.preventDefault();
-            e.stopPropagation();
-            return false;
-        }
+        });
         
-        const targetTab = $(this).data('tab');
-        if (!switchToTab(targetTab)) {
-            e.preventDefault();
-            e.stopPropagation();
-        }
-    });
-
-    // Dashboard card links with access control
-    $('.small-box-footer[data-tab]').on('click', function(e) {
-        if ($(this).hasClass('disabled')) {
-            e.preventDefault();
-            e.stopPropagation();
-            return false;
-        }
-        
-        const targetTab = $(this).data('tab');
-        if (!switchToTab(targetTab)) {
-            e.preventDefault();
-            e.stopPropagation();
-        }
-    });
-}
-
-function switchToTab(tabName) {
-    // Server-side access control check
-    const restrictedSections = ['strategies', 'signals', 'classes', 'services', 'software', 
-                               'blog', 'tradewise-card', 'merchandise', 'tradewise-coin', 'reviews'];
-    
-    if (isStaffUser && restrictedSections.includes(tabName)) {
-        showAjaxAlert('error', `❌ Access Denied: The "${formatTabName(tabName)}" section is restricted to administrators only.`);
-        return false;
-    }
-    
-    // Hide all tabs
-    $('.content-tab').removeClass('active');
-    $('.nav-link').removeClass('active');
-    
-    // Show target tab
-    $(`#${tabName}`).addClass('active');
-    $(`[data-tab="${tabName}"]`).addClass('active');
-    
-    // Load tab-specific data if needed
-    loadTabData(tabName);
-    
-    // Log the tab switch
-    logAdminAction(`Switched to ${formatTabName(tabName)}`);
-    
-    return true;
-}
-
-function formatTabName(tabName) {
-    return tabName.split('-').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
-}
-
-function loadTabData(tabName) {
-    switch(tabName) {
-        case 'users':
-            loadUsersData();
-            break;
-        case 'all-requests':
-            loadRequestsData();
-            break;
-        case 'reviews':
-            if (!isStaffUser) loadReviewsData();
-            break;
-        case 'affiliate-management':
-            loadAffiliateData();
-            break;
-        case 'software':
-            if (!isStaffUser) initializeSoftwareManagement();
-            break;
-    }
-}
-
-// ================== DASHBOARD INITIALIZATION ==================
-$(document).ready(function() {
-    console.log('🚀 Initializing TradeWise Admin Dashboard...');
-    
-    // Initialize in correct order
-    initializeRoleBasedAccess();  // FIRST - set up access control
-    initializeTabSystem();        // SECOND - set up tab system with access control
-    initializeCharts();           // THIRD - initialize charts
-    initializeLiveUpdates();      // FOURTH - set up live updates
-    setupAjaxForms();             // FIFTH - set up form handling
-    updateDateTime();             // SIXTH - start clock
-    loadInitialActivity();        // SEVENTH - load initial data
-    
-    // Initialize tooltips
-    $('[data-toggle="tooltip"]').tooltip();
-    
-    // Adjust footer positioning
-    adjustFooter();
-    
-    console.log('✅ Dashboard initialized successfully with role-based access control');
-});
-
-// ================== LIVE UPDATES SYSTEM ==================
-function initializeLiveUpdates() {
-    console.log('🔄 Initializing live updates...');
-    
-    // Start live updates with different intervals
-    liveUpdateIntervals.revenue = setInterval(updateRevenueData, 30000);
-    liveUpdateIntervals.activity = setInterval(updateActivityData, 60000);
-    liveUpdateIntervals.stats = setInterval(updateQuickStats, 120000);
-    liveUpdateIntervals.connection = setInterval(checkConnection, 30000);
-    
-    // Initial data load
-    updateRevenueData();
-    updateQuickStats();
-    
-    console.log('✅ Live updates initialized');
-}
-
-function checkConnection() {
-    $('#connectionStatus').html('Live <i class="fas fa-signal"></i>');
-}
-
-// ================== CHART SYSTEM ==================
-function initializeCharts() {
-    // Revenue Chart
-    const revenueCtx = document.getElementById('revenueChart');
-    if (revenueCtx) {
-        revenueChart = new Chart(revenueCtx, {
-            type: 'line',
-            data: {
-                labels: [],
-                datasets: [{
-                    label: 'Daily Revenue (KES)',
-                    data: [],
-                    borderColor: '#3498db',
-                    backgroundColor: 'rgba(52, 152, 219, 0.1)',
-                    borderWidth: 3,
-                    fill: true,
-                    tension: 0.4,
-                    pointBackgroundColor: '#3498db',
-                    pointBorderColor: '#ffffff',
-                    pointBorderWidth: 2,
-                    pointRadius: 4,
-                    pointHoverRadius: 6
-                }]
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                plugins: {
-                    legend: { display: false },
-                    tooltip: {
-                        mode: 'index',
-                        intersect: false,
-                        callbacks: {
-                            label: function(context) {
-                                return `KES ${context.parsed.y.toLocaleString()}`;
-                            }
-                        }
-                    }
-                },
-                scales: {
-                    y: {
-                        beginAtZero: true,
-                        ticks: {
-                            callback: function(value) {
-                                return 'KES ' + value.toLocaleString();
-                            }
-                        },
-                        grid: { color: 'rgba(0,0,0,0.1)' }
-                    },
-                    x: {
-                        grid: { color: 'rgba(0,0,0,0.1)' }
-                    }
-                },
-                interaction: { intersect: false, mode: 'nearest' },
-                animation: { duration: 1000, easing: 'easeInOutQuart' }
+        // RESTRICT DASHBOARD CARD LINKS
+        $('.small-box-footer[data-tab]').each(function() {
+            const tab = $(this).data('tab');
+            if (tab && !accessibleSections.includes(tab)) {
+                $(this).addClass('disabled text-muted staff-restricted-link');
+                $(this).off('click').on('click', function(e) {
+                    e.preventDefault();
+                    showAlert('error', '❌ Access Denied: This section is restricted to administrators only.');
+                });
             }
         });
     }
 
-    // Service Distribution Chart
-    const serviceCtx = document.getElementById('serviceDistributionChart');
-    if (serviceCtx) {
-        serviceDistributionChart = new Chart(serviceCtx, {
-            type: 'doughnut',
-            data: {{ service_distribution_data|safe }},
-            options: {
-                responsive: true,
-                plugins: {
-                    legend: {
-                        position: 'bottom',
-                        labels: { padding: 20, usePointStyle: true }
-                    }
-                },
-                cutout: '60%',
-                animation: { animateScale: true, animateRotate: true }
-            }
-        });
-    }
-}
-
-function updateRevenueData() {
-    if (isStaffUser) return; // Staff don't need revenue updates
-    
-    $.ajax({
-        url: '/admin/ajax/revenue-data/',
-        type: 'GET',
-        dataType: 'json',
-        success: function(response) {
-            if (response.success && revenueChart) {
-                revenueChart.data.labels = response.dates;
-                revenueChart.data.datasets[0].data = response.amounts;
-                revenueChart.update('none');
-                $('#totalRevenueStat').text('KES ' + Math.round(response.total_revenue).toLocaleString());
-                $('#chartLastUpdated').text('Last updated: ' + new Date().toLocaleTimeString());
-            }
-        },
-        error: function(xhr, status, error) {
-            $('#chartLastUpdated').text('Update failed - Retrying...');
-        }
-    });
-}
-
-// ================== QUICK STATS UPDATES ==================
-function updateQuickStats() {
-    $.ajax({
-        url: '/admin/ajax/quick-stats/',
-        type: 'GET',
-        dataType: 'json',
-        success: function(response) {
-            if (response.success) {
-                $('#totalUsersStat').text(response.total_users);
-                $('#newUsersToday').text('+' + response.new_users_today + ' today');
-                $('#pendingRequestsStat').text(response.pending_requests);
-                $('#activeTradersStat').text(response.active_traders);
-                
-                // Update badges
-                $('#totalUsersBadge').text(response.total_users);
-                $('#pendingRequestsBadge').text(response.pending_requests);
-                $('#notificationBadge').text(response.pending_requests);
-                $('#notificationHeader').text(response.pending_requests + ' Notifications');
-            }
-        },
-        error: function(xhr, status, error) {
-            console.error('❌ Quick stats update failed:', error);
-        }
-    });
-}
-
-// ================== ACTIVITY SYSTEM ==================
-function loadInitialActivity() {
-    updateActivityData();
-}
-
-function updateActivityData() {
-    $.ajax({
-        url: '/admin/ajax/activity-data/',
-        type: 'GET',
-        dataType: 'json',
-        success: function(response) {
-            if (response.success) {
-                renderActivities(response.activities);
-            }
-        },
-        error: function(xhr, status, error) {
-            $('#activityTimeline').html(`
-                <div class="text-center py-4 text-danger">
-                    <i class="fas fa-exclamation-triangle fa-2x"></i>
-                    <p class="mt-2">Failed to load activities</p>
-                    <button class="btn btn-sm btn-outline-primary mt-2" onclick="refreshActivity()">
-                        <i class="fas fa-redo"></i> Retry
-                    </button>
-                </div>
-            `);
-        }
-    });
-}
-
-function renderActivities(activities) {
-    const timeline = $('#activityTimeline');
-    
-    if (activities.length === 0) {
-        timeline.html(`
-            <div class="text-center py-4 text-muted">
-                <i class="fas fa-inbox fa-2x"></i>
-                <p class="mt-2">No recent activity</p>
-            </div>
-        `);
-        $('#viewMoreContainer').hide();
-        return;
-    }
-
-    let html = '';
-    const visibleCount = isActivitiesExpanded ? activities.length : 4;
-    
-    activities.slice(0, visibleCount).forEach((activity, index) => {
-        html += `
-            <div class="activity-item ${index >= 4 && !isActivitiesExpanded ? 'hidden-activities' : ''}">
-                <div class="d-flex justify-content-between">
-                    <strong>${activity.action}</strong>
-                    <small class="text-muted">${activity.time_ago}</small>
-                </div>
-                <p class="mb-1">${activity.description}</p>
-                <small class="text-primary">
-                    <i class="fas fa-user"></i> ${activity.admin} 
-                    <span class="text-muted ml-2">
-                        <i class="fas fa-database"></i> ${activity.model}
-                    </span>
-                </small>
+    function showStaffRestrictionNotice() {
+        $('#staffNotification').remove();
+        
+        const noticeHtml = `
+            <div class="alert alert-warning alert-dismissible" id="staffNotification">
+                <button type="button" class="close" data-dismiss="alert">&times;</button>
+                <h5><i class="fas fa-user-shield"></i> Staff Access Mode Active</h5>
+                <p class="mb-1"><strong>Your access is limited to the following sections only:</strong></p>
+                <ul class="mb-1">
+                    <li>Dashboard Overview</li>
+                    <li>User Management</li>
+                    <li>Affiliate Program</li>
+                    <li>Service Requests</li>
+                </ul>
+                <small class="text-muted">Contact an administrator for full system access.</small>
             </div>
         `;
-    });
-
-    timeline.html(html);
-    
-    if (activities.length > 4) {
-        $('#viewMoreContainer').show();
-        if (isActivitiesExpanded) {
-            $('#viewMoreBtn').hide();
-            $('#viewLessBtn').show();
-        } else {
-            $('#viewMoreBtn').show();
-            $('#viewLessBtn').hide();
-        }
-    } else {
-        $('#viewMoreContainer').hide();
-    }
-}
-
-function toggleActivities() {
-    isActivitiesExpanded = !isActivitiesExpanded;
-    updateActivityData();
-}
-
-function refreshActivity() {
-    $('#activityTimeline').html(`
-        <div class="text-center py-4">
-            <i class="fas fa-spinner fa-spin fa-2x text-primary"></i>
-            <p class="mt-2 text-muted">Refreshing activities...</p>
-        </div>
-    `);
-    updateActivityData();
-}
-
-// ================== AJAX FORM HANDLING ==================
-function setupAjaxForms() {
-    $(document).on('submit', 'form[data-ajax="true"]', function(e) {
-        e.preventDefault();
-        submitFormViaAjax($(this));
-    });
-
-    $(document).on('submit', 'form[enctype="multipart/form-data"]', function(e) {
-        const form = $(this);
-        if (form.data('ajax') !== false) {
-            e.preventDefault();
-            submitFormViaAjax(form);
-        }
-    });
-}
-
-function submitFormViaAjax(form) {
-    // Check if staff user is trying to perform restricted actions
-    if (isStaffUser) {
-        const action = form.find('input[name="action"]').val();
-        const restrictedActions = ['add_strategy', 'add_signal', 'add_class', 'add_service', 
-                                 'add_software', 'add_blog', 'add_merchandise', 'update_card',
-                                 'update_coin', 'delete_strategy', 'delete_signal', 'delete_class',
-                                 'delete_service', 'delete_software', 'delete_blog', 'delete_merchandise'];
         
-        if (restrictedActions.includes(action)) {
-            showAjaxAlert('error', '❌ Access Denied: This action requires administrator privileges.');
-            return;
-        }
+        $('.content').prepend(noticeHtml);
     }
-    
-    const formData = new FormData(form[0]);
-    const submitBtn = form.find('button[type="submit"]');
-    const originalText = submitBtn.html();
-    
-    showLoading(true);
-    submitBtn.prop('disabled', true).html('<i class="fas fa-spinner fa-spin"></i> Processing...');
-    
-    $.ajax({
-        url: form.attr('action'),
-        type: 'POST',
-        data: formData,
-        processData: false,
-        contentType: false,
-        success: function(response) {
-            if (response.success) {
-                showAjaxAlert('success', response.message || 'Operation completed successfully!');
-                form[0].reset();
-                
-                const modal = form.closest('.modal');
-                if (modal.length) {
-                    modal.modal('hide');
-                }
-                
-                refreshDataAfterAction(form);
-            } else {
-                showAjaxAlert('error', response.error || 'An error occurred.');
+
+    // ================== TAB SYSTEM ==================
+    function initializeTabSystem() {
+        $('.nav-link[data-tab]').on('click', function(e) {
+            if ($(this).hasClass('disabled')) {
+                e.preventDefault();
+                return false;
             }
-        },
-        error: function(xhr, status, error) {
-            let errorMessage = 'Error submitting form. Please try again.';
-            if (xhr.responseJSON && xhr.responseJSON.error) {
-                errorMessage = xhr.responseJSON.error;
-            }
-            showAjaxAlert('error', errorMessage);
-        },
-        complete: function() {
-            showLoading(false);
-            submitBtn.prop('disabled', false).html(originalText);
-        }
-    });
-}
-
-function refreshDataAfterAction(form) {
-    const action = form.find('input[name="action"]').val();
-    
-    switch(action) {
-        case 'add_software':
-        case 'update_software':
-        case 'delete_software':
-            loadSoftwareData();
-            break;
-        case 'add_strategy':
-        case 'update_strategy':
-        case 'delete_strategy':
-            loadStrategiesData();
-            break;
-        case 'add_signal':
-        case 'update_signal':
-        case 'delete_signal':
-            loadSignalsData();
-            break;
-        case 'add_service':
-        case 'update_service':
-        case 'delete_service':
-            loadServicesData();
-            break;
-        case 'add_review':
-        case 'approve_review':
-        case 'toggle_featured':
-        case 'delete_review':
-            loadReviewsData();
-            break;
-        case 'disable_user':
-        case 'enable_user':
-            loadUsersData();
-            break;
-        case 'update_weekly_number':
-        case 'process_payout':
-            loadAffiliateData();
-            break;
-    }
-    
-    updateActivityData();
-    updateQuickStats();
-}
-
-// ================== TAB-SPECIFIC DATA LOADING ==================
-function loadUsersData() {
-    $.ajax({
-        url: '/admin/ajax/users-data/',
-        type: 'GET',
-        success: function(response) {
-            if (response.success) {
-                console.log('Users data loaded:', response.users.length, 'users');
-            }
-        }
-    });
-}
-
-function loadRequestsData() {
-    $.ajax({
-        url: '/admin/ajax/requests-data/',
-        type: 'GET',
-        success: function(response) {
-            if (response.success) {
-                console.log('Requests data loaded:', response.requests.length, 'requests');
-            }
-        }
-    });
-}
-
-function loadReviewsData() {
-    console.log('Loading reviews data...');
-}
-
-function loadAffiliateData() {
-    console.log('Loading affiliate data...');
-}
-
-function loadSoftwareData() {
-    if (isStaffUser) return;
-    console.log('Loading software data...');
-}
-
-function loadStrategiesData() {
-    if (isStaffUser) return;
-    console.log('Loading strategies data...');
-}
-
-function loadSignalsData() {
-    if (isStaffUser) return;
-    console.log('Loading signals data...');
-}
-
-function loadServicesData() {
-    if (isStaffUser) return;
-    console.log('Loading services data...');
-}
-
-// ================== SOFTWARE MANAGEMENT ==================
-function initializeSoftwareManagement() {
-    if (isStaffUser) return;
-    
-    $('#software_file').on('change', function(e) {
-        const file = e.target.files[0];
-        const label = $('#software_file_label');
-        const validation = validateFileUpload(this);
-        
-        if (file) {
-            if (validation.valid) {
-                label.html('<i class="fas fa-file"></i> ' + file.name);
-                const fileSize = (file.size / (1024 * 1024)).toFixed(2);
-                
-                if (file.size > 10 * 1024 * 1024) {
-                    $('#file_size_warning').show().html(
-                        `<i class="fas fa-exclamation-triangle"></i> Large file: ${fileSize}MB - Upload may take longer`
-                    );
-                } else {
-                    $('#file_size_warning').hide();
-                }
-            } else {
-                showAjaxAlert('error', validation.error);
-                $(this).val('');
-                label.html('<i class="fas fa-cloud-upload-alt"></i> Choose software file...');
-                $('#file_size_warning').hide();
-            }
-        } else {
-            label.html('<i class="fas fa-cloud-upload-alt"></i> Choose software file...');
-            $('#file_size_warning').hide();
-        }
-    });
-
-    $('#software_thumbnail').on('change', function(e) {
-        const file = e.target.files[0];
-        const label = $('#software_thumbnail_label');
-        const preview = $('#thumbnail_preview');
-        const previewImage = $('#preview_image');
-        
-        if (file) {
-            label.html('<i class="fas fa-image"></i> ' + file.name);
             
-            if (file.type.match('image.*')) {
-                const reader = new FileReader();
-                reader.onload = function(e) {
-                    previewImage.attr('src', e.target.result);
-                    preview.show();
-                }
-                reader.readAsDataURL(file);
-            }
-        } else {
-            label.html('<i class="fas fa-image"></i> Choose thumbnail...');
-            preview.hide();
-        }
-    });
+            const targetTab = $(this).data('tab');
+            switchToTab(targetTab);
+        });
 
-    $('#softwareUploadForm').on('submit', function(e) {
-        const fileInput = $('#software_file')[0];
-        if (!fileInput.files.length) {
-            e.preventDefault();
-            showAjaxAlert('error', 'Please select a software file to upload.');
-            fileInput.focus();
+        $('.small-box-footer[data-tab]').on('click', function(e) {
+            if ($(this).hasClass('disabled')) {
+                e.preventDefault();
+                return false;
+            }
+            
+            const targetTab = $(this).data('tab');
+            switchToTab(targetTab);
+        });
+    }
+
+    function switchToTab(tabName) {
+        // Server-side access control check
+        const restrictedSections = ['strategies', 'signals', 'classes', 'services', 'software', 
+                                   'blog', 'tradewise-card', 'merchandise', 'tradewise-coin', 'reviews'];
+        
+        if (isStaffUser && restrictedSections.includes(tabName)) {
+            showAlert('error', `❌ Access Denied: The "${formatTabName(tabName)}" section is restricted to administrators only.`);
             return false;
         }
-    });
-}
-
-function validateFileUpload(fileInput, maxSizeMB = 50) {
-    const file = fileInput.files[0];
-    if (!file) return { valid: false, error: 'Please select a file' };
-    
-    const maxSize = maxSizeMB * 1024 * 1024;
-    const allowedTypes = [
-        'application/zip', 
-        'application/x-rar-compressed',
-        'application/pdf',
-        'application/msword',
-        'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
-        'application/octet-stream'
-    ];
-    
-    if (file.size > maxSize) {
-        return { 
-            valid: false, 
-            error: `File size must be less than ${maxSizeMB}MB` 
-        };
+        
+        // Hide all tabs
+        $('.content-tab').removeClass('active');
+        $('.nav-link').removeClass('active');
+        
+        // Show target tab
+        $(`#${tabName}`).addClass('active');
+        $(`[data-tab="${tabName}"]`).addClass('active');
+        
+        console.log('📝 Switched to ' + formatTabName(tabName));
+        return true;
     }
-    
-    const fileName = file.name.toLowerCase();
-    const allowedExtensions = ['.exe', '.zip', '.rar', '.pdf', '.doc', '.docx', '.mt4', '.mt5', '.mq4', '.mq5'];
-    const hasValidExtension = allowedExtensions.some(ext => fileName.endsWith(ext));
-    
-    if (!hasValidExtension && !allowedTypes.includes(file.type)) {
-        return { 
-            valid: false, 
-            error: 'Invalid file type. Please upload a supported file format.' 
-        };
-    }
-    
-    return { valid: true };
-}
 
-function showSoftwareDetails(softwareId) {
-    $.ajax({
-        url: `/admin/ajax/software-details/${softwareId}/`,
-        type: 'GET',
-        success: function(response) {
-            $('#softwareDetailsContent').html(response.html);
-            $('#softwareDetailsModal').modal('show');
-        },
-        error: function() {
-            showAjaxAlert('error', 'Failed to load software details.');
+    function formatTabName(tabName) {
+        return tabName.split('-').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
+    }
+
+    // ================== CHART SYSTEM - 100% STATIC ==================
+    function initializeCharts() {
+        console.log('📊 Initializing static charts with Django data...');
+        
+        // Revenue Chart - USING ONLY DJANGO CONTEXT DATA
+        const revenueCtx = document.getElementById('revenueChart');
+        if (revenueCtx) {
+            revenueChart = new Chart(revenueCtx, {
+                type: 'line',
+                data: {{ revenue_chart_data|safe }},
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { display: false },
+                        tooltip: {
+                            mode: 'index',
+                            intersect: false,
+                            callbacks: {
+                                label: function(context) {
+                                    return `KES ${context.parsed.y.toLocaleString()}`;
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            ticks: {
+                                callback: function(value) {
+                                    return 'KES ' + value.toLocaleString();
+                                }
+                            },
+                            grid: { color: 'rgba(0,0,0,0.1)' }
+                        },
+                        x: {
+                            grid: { color: 'rgba(0,0,0,0.1)' }
+                        }
+                    },
+                    interaction: { intersect: false, mode: 'nearest' }
+                }
+            });
+            
+            // Show static data info
+            $('#chartLastUpdated').text('Static data loaded: ' + new Date().toLocaleString());
         }
-    });
-}
 
-function editSoftware(softwareId) {
-    showAjaxAlert('info', 'Edit functionality coming soon!');
-}
-
-function deleteSoftware(softwareId, softwareName) {
-    if (isStaffUser) {
-        showAjaxAlert('error', '❌ Access Denied: This action requires administrator privileges.');
-        return;
+        // Service Distribution Chart - STATIC
+        const serviceCtx = document.getElementById('serviceDistributionChart');
+        if (serviceCtx) {
+            serviceDistributionChart = new Chart(serviceCtx, {
+                type: 'doughnut',
+                data: {{ service_distribution_data|safe }},
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: {
+                            position: 'bottom',
+                            labels: { padding: 20, usePointStyle: true }
+                        }
+                    },
+                    cutout: '60%'
+                }
+            });
+        }
     }
-    
-    if (confirm(`Are you sure you want to delete "${softwareName}"? This action cannot be undone.`)) {
-        const form = document.createElement('form');
-        form.method = 'POST';
-        form.action = '';
-        
-        const csrfToken = getCookie('csrftoken');
-        const csrfInput = document.createElement('input');
-        csrfInput.type = 'hidden';
-        csrfInput.name = 'csrfmiddlewaretoken';
-        csrfInput.value = csrfToken;
-        form.appendChild(csrfInput);
-        
-        const actionInput = document.createElement('input');
-        actionInput.type = 'hidden';
-        actionInput.name = 'action';
-        actionInput.value = 'delete_software';
-        form.appendChild(actionInput);
-        
-        const idInput = document.createElement('input');
-        idInput.type = 'hidden';
-        idInput.name = 'item_id';
-        idInput.value = softwareId;
-        form.appendChild(idInput);
-        
-        document.body.appendChild(form);
-        form.submit();
-    }
-}
 
-function trackDownload(softwareId) {
-    $.ajax({
-        url: `/admin/track-download/${softwareId}/`,
-        type: 'POST',
-        data: { csrfmiddlewaretoken: getCookie('csrftoken') },
-        success: function(response) {
-            if (response.success) {
-                console.log('Download tracked for software ID:', softwareId);
+    // ================== MANUAL REFRESH BUTTONS ==================
+    function refreshRevenueData() {
+        console.log('🔄 Manual refresh: Revenue data');
+        showAlert('info', 'Refreshing revenue data...');
+        
+        // Simple page reload for fresh data
+        setTimeout(() => {
+            window.location.reload();
+        }, 1000);
+    }
+
+    function refreshQuickStats() {
+        console.log('🔄 Manual refresh: Quick stats');
+        showAlert('info', 'Refreshing statistics...');
+        
+        // Simple page reload
+        setTimeout(() => {
+            window.location.reload();
+        }, 1000);
+    }
+
+    function refreshActivities() {
+        console.log('🔄 Manual refresh: Activities');
+        showAlert('info', 'Refreshing activities...');
+        
+        // Page reload for fresh data
+        setTimeout(() => {
+            window.location.reload();
+        }, 1000);
+    }
+
+    // ================== UTILITY FUNCTIONS ==================
+    function showAlert(type, message) {
+        const alertClass = type === 'success' ? 'alert-success' : 
+                          type === 'error' ? 'alert-danger' : 
+                          type === 'warning' ? 'alert-warning' : 'alert-info';
+        
+        const icon = type === 'success' ? 'fa-check-circle' :
+                    type === 'error' ? 'fa-exclamation-circle' :
+                    type === 'warning' ? 'fa-exclamation-triangle' : 'fa-info-circle';
+        
+        const alertHtml = `
+            <div class="alert ${alertClass} alert-dismissible fade show ajax-alert" role="alert">
+                <strong><i class="fas ${icon}"></i> ${type === 'success' ? 'Success!' : type === 'error' ? 'Error!' : 'Notice!'}</strong> 
+                ${message}
+                <button type="button" class="close" data-dismiss="alert">
+                    <span>&times;</span>
+                </button>
+            </div>
+        `;
+        
+        $('#ajaxMessagesContainer').html(alertHtml);
+        
+        setTimeout(() => {
+            $('.ajax-alert').alert('close');
+        }, 5000);
+    }
+
+    function updateDateTime() {
+        const now = new Date();
+        $('#currentDateTime').text(now.toLocaleString());
+        setTimeout(updateDateTime, 1000);
+    }
+
+    function adjustFooter() {
+        const contentHeight = $('.content-wrapper').height();
+        const windowHeight = $(window).height();
+        
+        if (contentHeight < windowHeight - 100) {
+            $('footer').addClass('fixed-bottom');
+        } else {
+            $('footer').removeClass('fixed-bottom');
+        }
+    }
+
+    // ================== COMPATIBILITY FUNCTIONS ==================
+    function readURL(input, previewId) {
+        if (input.files && input.files[0]) {
+            var reader = new FileReader();
+            reader.onload = function(e) {
+                $(previewId).attr('src', e.target.result);
+                $(previewId).show();
+            }
+            reader.readAsDataURL(input.files[0]);
+        }
+    }
+
+    function deleteItem(type, id, name) {
+        if (isStaffUser) {
+            showAlert('error', '❌ Access Denied: This action requires administrator privileges.');
+            return;
+        }
+        
+        if (confirm(`Are you sure you want to delete "${name}"? This action cannot be undone.`)) {
+            // Traditional form submission
+            const form = document.createElement('form');
+            form.method = 'POST';
+            form.action = "{% url 'admin_dashboard' %}";
+            
+            const csrf = document.createElement('input');
+            csrf.type = 'hidden';
+            csrf.name = 'csrfmiddlewaretoken';
+            csrf.value = getCookie('csrftoken');
+            form.appendChild(csrf);
+            
+            const action = document.createElement('input');
+            action.type = 'hidden';
+            action.name = 'action';
+            action.value = `delete_${type}`;
+            form.appendChild(action);
+            
+            const itemId = document.createElement('input');
+            itemId.type = 'hidden';
+            itemId.name = 'item_id';
+            itemId.value = id;
+            form.appendChild(itemId);
+            
+            document.body.appendChild(form);
+            form.submit();
+        }
+    }
+
+    // CSRF Token function
+    function getCookie(name) {
+        let cookieValue = null;
+        if (document.cookie && document.cookie !== '') {
+            const cookies = document.cookie.split(';');
+            for (let i = 0; i < cookies.length; i++) {
+                const cookie = cookies[i].trim();
+                if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
             }
         }
-    });
-}
-
-function showImageModal(imageUrl, title) {
-    $('#modalPreviewImage').attr('src', imageUrl);
-    $('#imagePreviewTitle').text(title);
-    $('#imagePreviewModal').modal('show');
-}
-
-// ================== UTILITY FUNCTIONS ==================
-function showLoading(show) {
-    if (show) {
-        $('#globalLoading').fadeIn();
-    } else {
-        $('#globalLoading').fadeOut();
+        return cookieValue;
     }
-}
 
-function showAjaxAlert(type, message) {
-    const alertClass = type === 'success' ? 'alert-success' : 
-                      type === 'error' ? 'alert-danger' : 
-                      type === 'warning' ? 'alert-warning' : 'alert-info';
-    
-    const icon = type === 'success' ? 'fa-check-circle' :
-                type === 'error' ? 'fa-exclamation-circle' :
-                type === 'warning' ? 'fa-exclamation-triangle' : 'fa-info-circle';
-    
-    const alertHtml = `
-        <div class="alert ${alertClass} alert-dismissible fade show ajax-alert" role="alert">
-            <strong><i class="fas ${icon}"></i> ${type === 'success' ? 'Success!' : type === 'error' ? 'Error!' : 'Notice!'}</strong> 
-            ${message}
-            <button type="button" class="close" data-dismiss="alert">
-                <span>&times;</span>
-            </button>
-        </div>
-    `;
-    
-    $('#ajaxMessagesContainer').html(alertHtml);
-    
-    setTimeout(() => {
-        $('.ajax-alert').alert('close');
-    }, 5000);
-}
+    // Window resize handler
+    $(window).on('resize', adjustFooter);
 
-function updateDateTime() {
-    const now = new Date();
-    $('#currentDateTime').text(now.toLocaleString());
-    setTimeout(updateDateTime, 1000);
-}
-
-function adjustFooter() {
-    const contentHeight = $('.content-wrapper').height();
-    const windowHeight = $(window).height();
-    
-    if (contentHeight < windowHeight - 100) {
-        $('footer').addClass('fixed-bottom');
-    } else {
-        $('footer').removeClass('fixed-bottom');
-    }
-}
-
-function logAdminAction(description) {
-    console.log('📝 Admin Action:', description);
-}
-
-// ================== COMPATIBILITY FUNCTIONS ==================
-function readURL(input, previewId) {
-    if (input.files && input.files[0]) {
-        var reader = new FileReader();
-        reader.onload = function(e) {
-            $(previewId).attr('src', e.target.result);
-            $(previewId).show();
-        }
-        reader.readAsDataURL(input.files[0]);
-    }
-}
-
-function deleteItem(type, id) {
-    if (isStaffUser) {
-        showAjaxAlert('error', '❌ Access Denied: This action requires administrator privileges.');
-        return;
-    }
-    
-    if (confirm(`Are you sure you want to delete this ${type}?`)) {
-        const form = document.createElement('form');
-        form.method = 'POST';
-        form.action = "{% url 'admin_dashboard' %}";
-        
-        const csrf = document.createElement('input');
-        csrf.type = 'hidden';
-        csrf.name = 'csrfmiddlewaretoken';
-        csrf.value = getCookie('csrftoken');
-        form.appendChild(csrf);
-        
-        const action = document.createElement('input');
-        action.type = 'hidden';
-        action.name = 'action';
-        action.value = `delete_${type}`;
-        form.appendChild(action);
-        
-        const itemId = document.createElement('input');
-        itemId.type = 'hidden';
-        itemId.name = 'item_id';
-        itemId.value = id;
-        form.appendChild(itemId);
-        
-        document.body.appendChild(form);
-        form.submit();
-    }
-}
-
-// Edit functions
-function editStrategy(id) { showAjaxAlert('info', 'Edit strategy functionality coming soon!'); }
-function editSignal(id) { showAjaxAlert('info', 'Edit signal functionality coming soon!'); }
-function editClass(id) { showAjaxAlert('info', 'Edit class functionality coming soon!'); }
-function editService(id) { showAjaxAlert('info', 'Edit service functionality coming soon!'); }
-function editBlog(id) { showAjaxAlert('info', 'Edit blog functionality coming soon!'); }
-function editMerchandise(id) { showAjaxAlert('info', 'Edit merchandise functionality coming soon!'); }
-
-// User management functions
-function disableUser(userId) {
-    if (confirm('Are you sure you want to disable this user account?')) {
-        showAjaxAlert('info', 'User disable functionality coming soon!');
-    }
-}
-
-function enableUser(userId) {
-    if (confirm('Are you sure you want to enable this user account?')) {
-        showAjaxAlert('info', 'User enable functionality coming soon!');
-    }
-}
-
-function resetUserPassword(userId) {
-    if (confirm('Send password reset email to this user?')) {
-        showAjaxAlert('info', 'Password reset functionality coming soon!');
-    }
-}
-
-function viewUserDetails(userId) {
-    showAjaxAlert('info', 'User details functionality coming soon!');
-}
-
-// Window resize handler
-$(window).on('resize', adjustFooter);
-
-// Cleanup on page unload
-$(window).on('beforeunload', function() {
-    Object.values(liveUpdateIntervals).forEach(interval => {
-        clearInterval(interval);
-    });
-});
-
-// ================== EMERGENCY STAFF DETECTION ==================
-setTimeout(function() {
-    console.log('🔄 Running final staff access check...');
-    
-    // Final verification - if staff restrictions should be applied but aren't visible
-    const shouldBeStaff = "{{ is_staff_user }}" === "True" || ("{{ request.user.is_staff }}" === "True" && "{{ request.user.is_superuser }}" !== "True");
-    
-    if (shouldBeStaff && !$('.staff-mode-indicator').length) {
-        console.log('🆘 EMERGENCY: Applying staff restrictions via fallback');
-        isStaffUser = true;
-        applyStaffRestrictions();
-        showStaffRestrictionNotice();
-    }
-}, 2000);
 </script>
-
 <style>
     /* Staff restriction styles */
 .nav-item.disabled {
@@ -4852,5 +3210,486 @@ $(document).ready(function() {
     }
 });
 </script>
+
+<script>
+  // ================== ADMIN ACTION FUNCTIONS - TRADITIONAL FORMS ==================
+
+// Edit Functions - Show alerts for now
+function editStrategy(id) {
+    alert('Edit Strategy: STR' + id.toString().padStart(3, '0') + '\n\nThis will open the edit form.');
+    // TODO: Implement actual edit modal
+}
+
+function editSignal(id) {
+    alert('Edit Signal: SIG' + id.toString().padStart(3, '0') + '\n\nThis will open the edit form.');
+}
+
+function editBlog(id) {
+    alert('Edit Blog: BLG' + id.toString().padStart(3, '0') + '\n\nThis will open the edit form.');
+}
+
+function editSoftware(id) {
+    alert('Edit Software: SW' + id.toString().padStart(3, '0') + '\n\nThis will open the edit form.');
+}
+
+function editMerchandise(id) {
+    alert('Edit Merchandise: MCH' + id.toString().padStart(3, '0') + '\n\nThis will open the edit form.');
+}
+
+// Delete Function - Traditional Form Submission
+function deleteItem(type, id) {
+    const itemCode = getItemCode(type, id);
+    
+    if (confirm(`Are you sure you want to delete ${itemCode}? This action cannot be undone.`)) {
+        // Create a traditional form submission
+        const form = document.createElement('form');
+        form.method = 'POST';
+        form.action = "{% url 'admin_dashboard' %}";
+        
+        // Add CSRF token
+        const csrfToken = document.createElement('input');
+        csrfToken.type = 'hidden';
+        csrfToken.name = 'csrfmiddlewaretoken';
+        csrfToken.value = getCookie('csrftoken');
+        form.appendChild(csrfToken);
+        
+        // Add action
+        const actionInput = document.createElement('input');
+        actionInput.type = 'hidden';
+        actionInput.name = 'action';
+        actionInput.value = `delete_${type}`;
+        form.appendChild(actionInput);
+        
+        // Add item ID
+        const idInput = document.createElement('input');
+        idInput.type = 'hidden';
+        idInput.name = 'item_id';
+        idInput.value = id;
+        form.appendChild(idInput);
+        
+        // Add item name for confirmation
+        const nameInput = document.createElement('input');
+        nameInput.type = 'hidden';
+        nameInput.name = 'item_name';
+        nameInput.value = itemCode;
+        form.appendChild(nameInput);
+        
+        // Submit the form
+        document.body.appendChild(form);
+        form.submit();
+    }
+}
+
+// Helper function to generate item codes
+function getItemCode(type, id) {
+    const codes = {
+        'strategy': 'STR' + id.toString().padStart(3, '0'),
+        'signal': 'SIG' + id.toString().padStart(3, '0'),
+        'blog': 'BLG' + id.toString().padStart(3, '0'),
+        'software': 'SW' + id.toString().padStart(3, '0'),
+        'merchandise': 'MCH' + id.toString().padStart(3, '0'),
+        'review': 'RV' + id.toString().padStart(4, '0')
+    };
+    return codes[type] || type + ' #' + id;
+}
+
+// CSRF Token Helper
+function getCookie(name) {
+    let cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+        const cookies = document.cookie.split(';');
+        for (let i = 0; i < cookies.length; i++) {
+            const cookie = cookies[i].trim();
+            if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
+            }
+        }
+    }
+    return cookieValue;
+}
+
+// ================== REQUEST MANAGEMENT ==================
+
+function viewRequest(id, type) {
+    alert(`View Request: ${getRequestCode(type, id)}\nType: ${type}\n\nThis will show request details.`);
+}
+
+function updateRequestStatus(id, status, type) {
+    if (confirm(`Mark ${getRequestCode(type, id)} as ${status.toUpperCase()}?`)) {
+        const form = document.createElement('form');
+        form.method = 'POST';
+        form.action = "{% url 'admin_dashboard' %}";
+        
+        const csrfToken = document.createElement('input');
+        csrfToken.type = 'hidden';
+        csrfToken.name = 'csrfmiddlewaretoken';
+        csrfToken.value = getCookie('csrftoken');
+        form.appendChild(crfToken);
+        
+        const actionInput = document.createElement('input');
+        actionInput.type = 'hidden';
+        actionInput.name = 'action';
+        actionInput.value = 'update_request_status';
+        form.appendChild(actionInput);
+        
+        const idInput = document.createElement('input');
+        idInput.type = 'hidden';
+        idInput.name = 'request_id';
+        idInput.value = id;
+        form.appendChild(idInput);
+        
+        const statusInput = document.createElement('input');
+        statusInput.type = 'hidden';
+        statusInput.name = 'status';
+        statusInput.value = status;
+        form.appendChild(statusInput);
+        
+        const typeInput = document.createElement('input');
+        typeInput.type = 'hidden';
+        typeInput.name = 'request_type';
+        typeInput.value = type;
+        form.appendChild(typeInput);
+        
+        document.body.appendChild(form);
+        form.submit();
+    }
+}
+
+function getRequestCode(type, id) {
+    if (type.includes('Service')) return 'REQ' + id.toString().padStart(3, '0');
+    if (type.includes('Consultation')) return 'CON' + id.toString().padStart(3, '0');
+    if (type.includes('Coaching')) return 'CLS' + id.toString().padStart(3, '0');
+    return 'REV' + id.toString().padStart(3, '0');
+}
+
+// ================== SOFTWARE MANAGEMENT ==================
+
+function showSoftwareDetails(id) {
+    alert(`Software Details: SW${id.toString().padStart(3, '0')}\n\nThis will show software details.`);
+}
+
+function trackDownload(id) {
+    // Traditional form submission for download tracking
+    const form = document.createElement('form');
+    form.method = 'POST';
+    form.action = "{% url 'admin_dashboard' %}";
+    
+    const csrfToken = document.createElement('input');
+    csrfToken.type = 'hidden';
+    csrfToken.name = 'csrfmiddlewaretoken';
+    csrfToken.value = getCookie('csrftoken');
+    form.appendChild(csrfToken);
+    
+    const actionInput = document.createElement('input');
+    actionInput.type = 'hidden';
+    actionInput.name = 'action';
+    actionInput.value = 'track_download';
+    form.appendChild(actionInput);
+    
+    const idInput = document.createElement('input');
+    idInput.type = 'hidden';
+    idInput.name = 'software_id';
+    idInput.value = id;
+    form.appendChild(idInput);
+    
+    document.body.appendChild(form);
+    form.submit();
+}
+
+function deleteSoftware(id, name) {
+    if (confirm(`Are you sure you want to delete "${name}"? This will remove the software permanently.`)) {
+        deleteItem('software', id);
+    }
+}
+
+// ================== REVIEW MANAGEMENT ==================
+
+function approveReview(id) {
+    if (confirm('Approve this review?')) {
+        updateReviewStatus(id, 'approve');
+    }
+}
+
+function toggleFeatured(id, feature) {
+    const action = feature ? 'feature' : 'unfeature';
+    const message = feature ? 'Feature this review?' : 'Remove from featured?';
+    
+    if (confirm(message)) {
+        updateReviewStatus(id, action);
+    }
+}
+
+function viewReviewDetails(id) {
+    alert(`Review Details: RV${id.toString().padStart(4, '0')}\n\nThis will show review details.`);
+}
+
+function deleteReview(id, name) {
+    if (confirm(`Delete review by "${name}"?`)) {
+        deleteItem('review', id);
+    }
+}
+
+function updateReviewStatus(id, action) {
+    const form = document.createElement('form');
+    form.method = 'POST';
+    form.action = "{% url 'admin_dashboard' %}";
+    
+    const csrfToken = document.createElement('input');
+    csrfToken.type = 'hidden';
+    csrfToken.name = 'csrfmiddlewaretoken';
+    csrfToken.value = getCookie('csrftoken');
+    form.appendChild(csrfToken);
+    
+    const actionInput = document.createElement('input');
+    actionInput.type = 'hidden';
+    actionInput.name = 'action';
+    actionInput.value = 'review_action';
+    form.appendChild(actionInput);
+    
+    const idInput = document.createElement('input');
+    idInput.type = 'hidden';
+    idInput.name = 'review_id';
+    idInput.value = id;
+    form.appendChild(idInput);
+    
+    const statusInput = document.createElement('input');
+    statusInput.type = 'hidden';
+    statusInput.name = 'review_action';
+    statusInput.value = action;
+    form.appendChild(statusInput);
+    
+    document.body.appendChild(form);
+    form.submit();
+}
+
+// ================== USER MANAGEMENT ==================
+
+function viewUserDetails(userId) {
+    alert(`User Details: USR${userId.toString().padStart(3, '0')}\n\nThis will show user details.`);
+}
+
+function disableUser(userId) {
+    if (confirm('Disable this user account? The user will not be able to log in.')) {
+        userAction(userId, 'disable_user');
+    }
+}
+
+function enableUser(userId) {
+    if (confirm('Enable this user account? The user will be able to log in again.')) {
+        userAction(userId, 'enable_user');
+    }
+}
+
+function resetUserPassword(userId) {
+    if (confirm('Send password reset email to this user?')) {
+        userAction(userId, 'reset_password');
+    }
+}
+
+function userAction(userId, action) {
+    const form = document.createElement('form');
+    form.method = 'POST';
+    form.action = "{% url 'admin_dashboard' %}";
+    
+    const csrfToken = document.createElement('input');
+    csrfToken.type = 'hidden';
+    csrfToken.name = 'csrfmiddlewaretoken';
+    csrfToken.value = getCookie('csrftoken');
+    form.appendChild(csrfToken);
+    
+    const actionInput = document.createElement('input');
+    actionInput.type = 'hidden';
+    actionInput.name = 'action';
+    actionInput.value = action;
+    form.appendChild(actionInput);
+    
+    const idInput = document.createElement('input');
+    idInput.type = 'hidden';
+    idInput.name = 'user_id';
+    idInput.value = userId;
+    form.appendChild(idInput);
+    
+    document.body.appendChild(form);
+    form.submit();
+}
+
+// ================== AFFILIATE MANAGEMENT ==================
+
+function processPayout(id, status) {
+    const actionText = status === 'approved' ? 'approve' : 'reject';
+    if (confirm(`Are you sure you want to ${actionText} this payout?`)) {
+        const form = document.createElement('form');
+        form.method = 'POST';
+        form.action = "{% url 'admin_dashboard' %}";
+        
+        const csrfToken = document.createElement('input');
+        csrfToken.type = 'hidden';
+        csrfToken.name = 'csrfmiddlewaretoken';
+        csrfToken.value = getCookie('csrftoken');
+        form.appendChild(csrfToken);
+        
+        const actionInput = document.createElement('input');
+        actionInput.type = 'hidden';
+        actionInput.name = 'action';
+        actionInput.value = 'process_payout';
+        form.appendChild(actionInput);
+        
+        const idInput = document.createElement('input');
+        idInput.type = 'hidden';
+        idInput.name = 'payout_id';
+        idInput.value = id;
+        form.appendChild(idInput);
+        
+        const statusInput = document.createElement('input');
+        statusInput.type = 'hidden';
+        statusInput.name = 'payout_status';
+        statusInput.value = status;
+        form.appendChild(statusInput);
+        
+        document.body.appendChild(form);
+        form.submit();
+    }
+}
+
+function viewPayoutDetails(id) {
+    alert(`View Payout Details: PO${id.toString().padStart(4, '0')}\n\nThis will show payout details.`);
+}
+
+function viewAffiliateDetails(id) {
+    alert(`View Affiliate Details: USR${id.toString().padStart(3, '0')}\n\nThis will show affiliate details.`);
+}
+
+// ================== REFERRAL APPROVAL FUNCTIONS ==================
+
+function approveReferral(referralId) {
+    if (confirm('Approve this referral and award 50 coins?')) {
+        const form = document.createElement('form');
+        form.method = 'POST';
+        form.action = "{% url 'admin_dashboard' %}";
+        
+        const csrfToken = document.createElement('input');
+        csrfToken.type = 'hidden';
+        csrfToken.name = 'csrfmiddlewaretoken';
+        csrfToken.value = getCookie('csrftoken');
+        form.appendChild(csrfToken);
+        
+        const actionInput = document.createElement('input');
+        actionInput.type = 'hidden';
+        actionInput.name = 'action';
+        actionInput.value = 'approve_referral';
+        form.appendChild(actionInput);
+        
+        const idInput = document.createElement('input');
+        idInput.type = 'hidden';
+        idInput.name = 'referral_id';
+        idInput.value = referralId;
+        form.appendChild(idInput);
+        
+        document.body.appendChild(form);
+        form.submit();
+    }
+}
+
+function approveAllReferrals() {
+    if (confirm('Approve ALL pending referrals and award 50 coins each?')) {
+        const form = document.createElement('form');
+        form.method = 'POST';
+        form.action = "{% url 'admin_dashboard' %}";
+        
+        const csrfToken = document.createElement('input');
+        csrfToken.type = 'hidden';
+        csrfToken.name = 'csrfmiddlewaretoken';
+        csrfToken.value = getCookie('csrftoken');
+        form.appendChild(csrfToken);
+        
+        const actionInput = document.createElement('input');
+        actionInput.type = 'hidden';
+        actionInput.name = 'action';
+        actionInput.value = 'approve_all_referrals';
+        form.appendChild(actionInput);
+        
+        document.body.appendChild(form);
+        form.submit();
+    }
+}
+
+// ================== SERVICE PAYMENT FUNCTIONS ==================
+
+function viewServicePaymentDetails(id) {
+    alert(`Service Payment Details: SP${id.toString().padStart(4, '0')}\n\nThis will show payment details.`);
+}
+
+function sendServiceOnboardingEmail(id) {
+    if (confirm('Send onboarding email for this service?')) {
+        const form = document.createElement('form');
+        form.method = 'POST';
+        form.action = "{% url 'admin_dashboard' %}";
+        
+        const csrfToken = document.createElement('input');
+        csrfToken.type = 'hidden';
+        csrfToken.name = 'csrfmiddlewaretoken';
+        csrfToken.value = getCookie('csrftoken');
+        form.appendChild(csrfToken);
+        
+        const actionInput = document.createElement('input');
+        actionInput.type = 'hidden';
+        actionInput.name = 'action';
+        actionInput.value = 'send_onboarding_email';
+        form.appendChild(actionInput);
+        
+        const idInput = document.createElement('input');
+        idInput.type = 'hidden';
+        idInput.name = 'payment_id';
+        idInput.value = id;
+        form.appendChild(idInput);
+        
+        document.body.appendChild(form);
+        form.submit();
+    }
+}
+
+function addManualPayment(id) {
+    const amount = prompt('Enter manual payment amount:');
+    if (amount && !isNaN(amount)) {
+        const form = document.createElement('form');
+        form.method = 'POST';
+        form.action = "{% url 'admin_dashboard' %}";
+        
+        const csrfToken = document.createElement('input');
+        csrfToken.type = 'hidden';
+        csrfToken.name = 'csrfmiddlewaretoken';
+        csrfToken.value = getCookie('csrftoken');
+        form.appendChild(csrfToken);
+        
+        const actionInput = document.createElement('input');
+        actionInput.type = 'hidden';
+        actionInput.name = 'action';
+        actionInput.value = 'add_manual_payment';
+        form.appendChild(actionInput);
+        
+        const idInput = document.createElement('input');
+        idInput.type = 'hidden';
+        idInput.name = 'payment_id';
+        idInput.value = id;
+        form.appendChild(idInput);
+        
+        const amountInput = document.createElement('input');
+        amountInput.type = 'hidden';
+        amountInput.name = 'amount';
+        amountInput.value = amount;
+        form.appendChild(amountInput);
+        
+        document.body.appendChild(form);
+        form.submit();
+    }
+}
+
+// ================== INITIALIZATION ==================
+
+console.log('🛠️ Admin action functions loaded successfully!');
+console.log('✅ All edit/delete buttons should now work with traditional form submissions');
+</script>
+
 </body>
 </html>

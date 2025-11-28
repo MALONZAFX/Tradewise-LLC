@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <style>
+        body { font-family: Arial, sans-serif; line-height: 1.6; }
+        .container { max-width: 600px; margin: 0 auto; padding: 20px; }
+        .header { background: #3498db; color: white; padding: 20px; text-align: center; }
+        .content { background: #f8f9fa; padding: 20px; }
+        .review-box { background: white; padding: 15px; border-left: 4px solid #3498db; margin: 10px 0; }
+        .rating { color: #f39c12; font-size: 18px; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h2>📝 New Review Submitted</h2>
+        </div>
+        <div class="content">
+            <p>Hello Admin,</p>
+            <p>A new review has been submitted and is awaiting your approval:</p>
+            
+            <div class="review-box">
+                <h3>Review Details</h3>
+                <p><strong>Reviewer:</strong> {{ review.author_name }}</p>
+                <p><strong>Role:</strong> {{ review.user_role }}</p>
+                <p><strong>Email:</strong> {{ review.email|default:"Not provided" }}</p>
+                <p><strong>Rating:</strong> <span class="rating">{{ review.rating }}/5 ★</span></p>
+                <p><strong>Review:</strong> "{{ review.content }}"</p>
+                <p><strong>Submitted:</strong> {{ review.created_at|date:"F j, Y g:i A" }}</p>
+            </div>
+            
+            <p>Please log in to the admin dashboard to approve or reject this review.</p>
+            
+            <a href="https://www.tradewise-hub.com/admin-dashboard/" 
+               style="background: #3498db; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px;">
+               Go to Admin Dashboard
+            </a>
+        </div>
+    </div>
+</body>
+</html>

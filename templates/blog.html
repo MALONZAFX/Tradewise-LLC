@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TradeWise Blog - Trading Insights & Market Analysis</title>
+    <!-- Bootstrap 5 -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-blue: #3498db;
+            --dark-blue: #2c3e50;
+            --accent-blue: #2980b9;
+            --light-blue: #ecf0f1;
+            --gradient-primary: linear-gradient(135deg, #3498db 0%, #2c3e50 100%);
+            --gradient-accent: linear-gradient(135deg, #2980b9 0%, #34495e 100%);
+            --shadow-primary: 0 10px 30px rgba(52, 152, 219, 0.15);
+            --shadow-hover: 0 20px 40px rgba(52, 152, 219, 0.25);
+        }
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+            min-height: 100vh;
+        }
+        
+        /* Premium Navigation */
+        .navbar-custom {
+            background: linear-gradient(135deg, #2c3e50 0%, #3498db 100%) !important;
+            box-shadow: 0 2px 30px rgba(52, 152, 219, 0.3);
+        }
+        
+        .navbar-brand {
+            font-weight: 800;
+            font-size: 1.6rem !important;
+        }
+        
+        /* Premium Header */
+        .blog-header {
+            background: var(--gradient-primary);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .blog-header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 100" fill="%23ffffff" opacity="0.1"><polygon points="0,0 1000,50 1000,100 0,100"/></svg>');
+            background-size: cover;
+        }
+        
+        /* Premium Cards */
+        .blog-card {
+            background: white;
+            border: none;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: var(--shadow-primary);
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            position: relative;
+        }
+        
+        .blog-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: var(--gradient-primary);
+            transform: scaleX(0);
+            transition: transform 0.3s ease;
+        }
+        
+        .blog-card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-hover);
+        }
+        
+        .blog-card:hover::before {
+            transform: scaleX(1);
+        }
+        
+        /* Image Styles */
+        .blog-image {
+            height: 220px;
+            overflow: hidden;
+            position: relative;
+        }
+        
+        .blog-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.4s ease;
+        }
+        
+        .blog-card:hover .blog-image img {
+            transform: scale(1.05);
+        }
+        
+        /* Default Image Placeholder */
+        .image-placeholder {
+            background: var(--gradient-accent);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+        }
+        
+        /* Content Styling */
+        .blog-title {
+            font-weight: 700;
+            color: var(--dark-blue);
+            line-height: 1.3;
+            margin-bottom: 15px;
+            font-size: 1.3rem;
+        }
+        
+        .blog-excerpt {
+            color: #64748b;
+            line-height: 1.6;
+            margin-bottom: 15px;
+            font-size: 0.95rem;
+        }
+        
+        .blog-full-content {
+            color: #2d3748;
+            line-height: 1.7;
+            display: none;
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 1px solid #e2e8f0;
+        }
+        
+        .blog-full-content.show {
+            display: block;
+        }
+        
+        /* Read More Button */
+        .read-more-btn {
+            background: var(--gradient-primary);
+            border: none;
+            border-radius: 25px;
+            padding: 8px 20px;
+            font-weight: 600;
+            color: white;
+            transition: all 0.3s ease;
+            font-size: 0.9rem;
+        }
+        
+        .read-more-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(52, 152, 219, 0.4);
+            color: white;
+        }
+        
+        .read-more-btn .less-text {
+            display: none;
+        }
+        
+        .read-more-btn.expanded .more-text {
+            display: none;
+        }
+        
+        .read-more-btn.expanded .less-text {
+            display: inline;
+        }
+        
+        /* Meta Info */
+        .blog-meta {
+            border-top: 1px solid #f1f5f9;
+            padding-top: 15px;
+            margin-top: 15px;
+        }
+        
+        .author {
+            font-weight: 600;
+            color: var(--primary-blue);
+            font-size: 0.9rem;
+        }
+        
+        .date {
+            color: #94a3b8;
+            font-size: 0.85rem;
+        }
+        
+        /* Empty State */
+        .empty-state {
+            background: white;
+            border-radius: 20px;
+            padding: 60px 40px;
+            box-shadow: var(--shadow-primary);
+            border: 2px dashed #e2e8f0;
+        }
+        
+        /* Footer */
+        .footer-custom {
+            background: var(--dark-blue);
+            color: white;
+            margin-top: 80px;
+        }
+    </style>
+</head>
+<body>
+    <!-- Premium Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-dark navbar-custom fixed-top">
+        <div class="container">
+            <a class="navbar-brand" href="/">
+                <i class="fas fa-chart-line me-2"></i>
+                TradeWise
+            </a>
+            <div class="navbar-nav ms-auto">
+                <a class="nav-link me-3" href="/">Home</a>
+                <a class="nav-link active me-3" href="/blog/">Blog</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Premium Blog Header -->
+    <section class="blog-header py-6" style="padding-top: 100px !important;">
+        <div class="container position-relative">
+            <div class="row">
+                <div class="col-12 text-center text-white">
+                    <h1 class="display-4 fw-bold mb-4">TradeWise Insights</h1>
+                    <p class="lead mb-4 fs-5">Master the markets with expert analysis, trading strategies, and market intelligence</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Premium Blog Posts -->
+    <section class="blog-posts py-5">
+        <div class="container">
+            {% if posts %}
+            <div class="row g-4">
+                {% for post in posts %}
+                <div class="col-md-6 col-lg-4">
+                    <div class="blog-card h-100">
+                        {% if post.featured_image %}
+                        <div class="blog-image">
+                            <img src="{{ post.featured_image.url }}" alt="{{ post.title }}">
+                        </div>
+                        {% else %}
+                        <div class="blog-image image-placeholder">
+                            <i class="fas fa-chart-line fa-3x"></i>
+                        </div>
+                        {% endif %}
+                        
+                        <div class="blog-content p-4">
+                            <h5 class="blog-title">{{ post.title }}</h5>
+                            
+                            <!-- Excerpt (Short Preview) -->
+                            <div class="blog-excerpt">
+                                {{ post.content|truncatewords:30 }}
+                            </div>
+                            
+                            <!-- Full Content (Hidden by default) -->
+                            <div class="blog-full-content" id="full-content-{{ forloop.counter }}">
+                                {{ post.content|linebreaks }}
+                            </div>
+                            
+                            <!-- Read More Button -->
+                            <div class="text-center">
+                                <button class="read-more-btn" onclick="toggleContent({{ forloop.counter }})">
+                                    <span class="more-text">Read More <i class="fas fa-chevron-down ms-1"></i></span>
+                                    <span class="less-text">Show Less <i class="fas fa-chevron-up ms-1"></i></span>
+                                </button>
+                            </div>
+                            
+                            <div class="blog-meta d-flex justify-content-between align-items-center">
+                                <span class="author">
+                                    <i class="fas fa-user me-1"></i>{{ post.author }}
+                                </span>
+                                <span class="date">
+                                    <i class="fas fa-calendar me-1"></i>{{ post.created_at|date:"M d, Y" }}
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+            {% else %}
+            <div class="row">
+                <div class="col-12">
+                    <div class="empty-state text-center">
+                        <div class="mb-4">
+                            <i class="fas fa-chart-line fa-4x" style="color: var(--primary-blue);"></i>
+                        </div>
+                        <h3 class="mb-3" style="color: var(--dark-blue);">Content Coming Soon</h3>
+                        <p class="text-muted mb-4">We're crafting premium trading insights and market analysis to help you succeed.</p>
+                        <a href="/" class="btn read-more-btn">
+                            <i class="fas fa-home me-2"></i>Back to Home
+                        </a>
+                    </div>
+                </div>
+            </div>
+            {% endif %}
+        </div>
+    </section>
+
+    <!-- Premium Footer -->
+    <footer class="footer-custom py-4">
+        <div class="container">
+            <div class="row">
+                <div class="col-12 text-center">
+                    <p class="mb-0">&copy; 2025 TradeWise LLC. Professional Trading Insights</p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- JavaScript for Read More Toggle -->
+    <script>
+        function toggleContent(postId) {
+            const fullContent = document.getElementById('full-content-' + postId);
+            const button = fullContent.previousElementSibling.querySelector('.read-more-btn');
+            
+            // Toggle content visibility
+            fullContent.classList.toggle('show');
+            
+            // Toggle button text
+            button.classList.toggle('expanded');
+            
+            // Smooth scroll to content if expanding
+            if (fullContent.classList.contains('show')) {
+                fullContent.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+            }
+        }
+    </script>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

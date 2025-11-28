@@ -3,77 +3,465 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>{{ category_name }} | Shop</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TradeWise Merchandise Shop - Premium Trading Apparel & Accessories</title>
+    
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    
     <style>
+        :root {
+            --primary-blue: #2c3e50;
+            --secondary-blue: #3498db;
+            --accent-green: #27ae60;
+            --accent-red: #e74c3c;
+            --light-bg: #f8f9fa;
+            --dark-text: #2c3e50;
+            --light-text: #7f8c8d;
+        }
+        
         body {
-            background-color: #f8f9fa;
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            color: var(--dark-text);
         }
-        .product-card {
+        
+        .tradewise-navbar {
+            background: linear-gradient(135deg, var(--primary-blue) 0%, #1a2530 100%);
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+        }
+        
+        .shop-hero {
+            background: linear-gradient(135deg, var(--primary-blue) 0%, var(--secondary-blue) 100%);
+            color: white;
+            padding: 80px 0;
+            text-align: center;
+            margin-bottom: 50px;
+        }
+        
+        .category-section {
+            margin-bottom: 60px;
+        }
+        
+        .category-header {
             background: white;
-            border-radius: 12px;
-            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.05);
+            padding: 25px;
+            border-radius: 15px;
+            margin-bottom: 30px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+            border-left: 5px solid var(--secondary-blue);
+        }
+        
+        .merchandise-card {
+            background: white;
+            border-radius: 15px;
             overflow: hidden;
-            transition: transform 0.3s ease;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+            transition: all 0.3s ease;
+            border: none;
+            height: 100%;
         }
-        .product-card:hover {
-            transform: translateY(-5px);
+        
+        .merchandise-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 15px 40px rgba(0,0,0,0.15);
         }
-        .product-image {
+        
+        .merchandise-image {
             height: 250px;
             object-fit: cover;
             width: 100%;
         }
-        .product-body {
-            padding: 1.5rem;
-        }
-        .product-title {
+        
+        .category-badge {
+            background: var(--secondary-blue);
+            color: white;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
             font-weight: 600;
-            font-size: 1.2rem;
-            margin-bottom: 0.5rem;
+            position: absolute;
+            top: 15px;
+            left: 15px;
         }
-        .product-price {
-            font-weight: bold;
-            color: #3498db;
-            font-size: 1.1rem;
+        
+        .featured-badge {
+            background: var(--accent-red);
+            color: white;
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 0.7rem;
+            font-weight: 600;
+            position: absolute;
+            top: 15px;
+            right: 15px;
         }
-        .btn-buy {
-            background: linear-gradient(135deg, #3498db, #2c3e50);
+        
+        .stock-badge {
+            position: absolute;
+            bottom: 15px;
+            right: 15px;
+            background: rgba(39, 174, 96, 0.95);
+            color: white;
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 0.7rem;
+            font-weight: 600;
+        }
+        
+        .out-of-stock {
+            background: rgba(231, 76, 60, 0.95) !important;
+        }
+        
+        .price-tag {
+            font-size: 1.4rem;
+            font-weight: 800;
+            color: var(--accent-red);
+        }
+        
+        .buy-now-btn {
+            background: linear-gradient(135deg, var(--accent-green), #219653);
             color: white;
             border: none;
-            border-radius: 30px;
-            padding: 0.5rem 1.5rem;
-            transition: 0.3s;
+            padding: 12px 25px;
+            border-radius: 25px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            width: 100%;
         }
-        .btn-buy:hover {
-            opacity: 0.9;
+        
+        .buy-now-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(39, 174, 96, 0.3);
+        }
+        
+        .buy-now-btn:disabled {
+            background: #95a5a6;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+        
+        .empty-category {
+            text-align: center;
+            padding: 60px 20px;
+            color: var(--light-text);
+        }
+        
+        .empty-category i {
+            font-size: 4rem;
+            margin-bottom: 20px;
+            opacity: 0.5;
+        }
+        
+        .back-to-home {
+            background: linear-gradient(135deg, var(--secondary-blue), var(--primary-blue));
+            color: white;
+            text-decoration: none;
+            padding: 12px 30px;
+            border-radius: 25px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+        
+        .back-to-home:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(52, 152, 219, 0.3);
+            color: white;
         }
     </style>
 </head>
 <body>
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-dark tradewise-navbar">
+        <div class="container">
+            <a class="navbar-brand" href="{% url 'index' %}">
+                <i class="fas fa-chart-line"></i> TradeWise Shop
+            </a>
+            <div class="navbar-nav ms-auto">
+                <a class="nav-link" href="{% url 'index' %}">
+                    <i class="fas fa-home"></i> Back to Home
+                </a>
+            </div>
+        </div>
+    </nav>
 
-<section class="py-5">
-    <div class="container">
-        <h2 class="mb-4 text-center fw-bold">{{ category_name }}</h2>
-        <div class="row g-4">
-            {% for item in items %}
-            <div class="col-md-6 col-lg-4">
-                <div class="product-card h-100">
-                    <img src="{{ item.image.url }}" alt="{{ item.name }}" class="product-image">
-                    <div class="product-body">
-                        <h5 class="product-title">{{ item.name }}</h5>
-                        <p class="text-muted mb-2">{{ item.description }}</p>
-                        <div class="d-flex justify-content-between align-items-center">
-                            <span class="product-price">KES {{ item.price }}</span>
-                           <a href="{% url 'merchandise_payment' item.id %}" class="btn btn-buy">Buy Now</a>
+    <!-- Hero Section -->
+    <section class="shop-hero">
+        <div class="container">
+            <h1 class="display-4 fw-bold mb-3">TradeWise Merchandise</h1>
+            <p class="lead mb-4">Premium Trading Apparel & Accessories for the Modern Trader</p>
+            <div class="row justify-content-center">
+                <div class="col-md-8">
+                    <div class="row text-center">
+                        <div class="col-md-4 mb-3">
+                            <div class="feature-item">
+                                <i class="fas fa-shipping-fast fa-2x mb-2"></i>
+                                <h6>Free Shipping</h6>
+                                <small>Nairobi & Major Cities</small>
+                            </div>
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <div class="feature-item">
+                                <i class="fas fa-shield-alt fa-2x mb-2"></i>
+                                <h6>Secure Payment</h6>
+                                <small>Paystack Protected</small>
+                            </div>
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <div class="feature-item">
+                                <i class="fas fa-undo fa-2x mb-2"></i>
+                                <h6>Easy Returns</h6>
+                                <small>7-Day Return Policy</small>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
-            {% endfor %}
+        </div>
+    </section>
+
+    <!-- Main Shop Content -->
+    <div class="container">
+        {% for category, items in categories.items %}
+        <div class="category-section">
+            <div class="category-header">
+                <div class="row align-items-center">
+                    <div class="col-md-8">
+                        <h2 class="fw-bold mb-2">
+                            <i class="fas 
+                                {% if category == 'hoodies' %}fa-hoodie
+                                {% elif category == 't-shirts' %}fa-tshirt
+                                {% elif category == 'caps-hats' %}fa-hat-cowboy
+                                {% else %}fa-gift{% endif %} me-2"></i>
+                            {{ category|title }}
+                        </h2>
+                        <p class="text-muted mb-0">
+                            {{ items|length }} item{{ items|length|pluralize }} available
+                        </p>
+                    </div>
+                    <div class="col-md-4 text-end">
+                        <span class="badge bg-primary fs-6">{{ items|length }} Products</span>
+                    </div>
+                </div>
+            </div>
+
+            {% if items %}
+            <div class="row">
+                {% for item in items %}
+                <div class="col-xl-3 col-lg-4 col-md-6 mb-4">
+                    <div class="merchandise-card">
+                        <!-- Product Image -->
+                        <div class="position-relative">
+                            {% if item.image %}
+                                <img src="{{ item.image.url }}" class="merchandise-image" alt="{{ item.name }}">
+                            {% else %}
+                                <img src="{% static 'images/placeholder.jpg' %}" class="merchandise-image" alt="{{ item.name }}">
+                            {% endif %}
+                            
+                            <!-- Category Badge -->
+                            <div class="category-badge">
+                                {{ item.get_category_display }}
+                            </div>
+                            
+                            <!-- Featured Badge -->
+                            {% if item.is_featured %}
+                            <div class="featured-badge">
+                                <i class="fas fa-star"></i> Featured
+                            </div>
+                            {% endif %}
+                            
+                            <!-- Stock Badge -->
+                            <div class="stock-badge {% if item.stock_quantity == 0 %}out-of-stock{% endif %}">
+                                <i class="fas {% if item.stock_quantity > 0 %}fa-check-circle{% else %}fa-times-circle{% endif %}"></i>
+                                {% if item.stock_quantity > 0 %}In Stock{% else %}Out of Stock{% endif %}
+                            </div>
+                        </div>
+
+                        <!-- Product Info -->
+                        <div class="card-body p-4">
+                            <h5 class="card-title fw-bold mb-2">{{ item.name }}</h5>
+                            <p class="card-text text-muted mb-3">{{ item.description|truncatewords:20 }}</p>
+                            
+                            <div class="d-flex justify-content-between align-items-center mb-3">
+                                <span class="price-tag">KES {{ item.price }}</span>
+                                {% if item.stock_quantity > 0 %}
+                                <span class="text-success small">
+                                    <i class="fas fa-box"></i> {{ item.stock_quantity }} available
+                                </span>
+                                {% endif %}
+                            </div>
+
+                            <!-- Buy Button -->
+                            {% if item.stock_quantity > 0 %}
+                            <button class="buy-now-btn" 
+                                    onclick="openMerchandisePayment('{{ item.id }}', '{{ item.name }}', '{{ item.price }}', '{% if item.image %}{{ item.image.url }}{% else %}{% static 'images/placeholder.jpg' %}{% endif %}')">
+                                <i class="fas fa-shopping-cart me-2"></i>BUY NOW
+                            </button>
+                            {% else %}
+                            <button class="buy-now-btn" disabled>
+                                <i class="fas fa-clock me-2"></i>OUT OF STOCK
+                            </button>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+            {% else %}
+            <div class="empty-category">
+                <i class="fas fa-tshirt"></i>
+                <h4>No {{ category }} Available</h4>
+                <p class="text-muted">Check back soon for new {{ category }} items!</p>
+            </div>
+            {% endif %}
+        </div>
+        {% empty %}
+        <!-- Empty Shop State -->
+        <div class="text-center py-5">
+            <div class="empty-category">
+                <i class="fas fa-store-slash"></i>
+                <h3>Shop Coming Soon!</h3>
+                <p class="text-muted mb-4">We're preparing some amazing merchandise for you.</p>
+                <a href="{% url 'index' %}" class="back-to-home">
+                    <i class="fas fa-arrow-left me-2"></i>Back to Homepage
+                </a>
+            </div>
+        </div>
+        {% endfor %}
+
+        <!-- Call to Action -->
+        <div class="text-center py-5 mt-5">
+            <h3 class="fw-bold mb-3">Can't Find What You're Looking For?</h3>
+            <p class="text-muted mb-4">We're constantly adding new products. Contact us for custom orders!</p>
+            <a href="{% url 'index' %}#contact" class="back-to-home me-3">
+                <i class="fas fa-envelope me-2"></i>Contact Us
+            </a>
+            <a href="{% url 'index' %}" class="back-to-home">
+                <i class="fas fa-home me-2"></i>Back to Home
+            </a>
         </div>
     </div>
-</section>
 
+    <!-- Payment Modal (Same as your homepage) -->
+    <div class="modal fade" id="merchandisePaymentModal" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header" style="background: linear-gradient(135deg, #3498db, #2c3e50); color: white;">
+                    <h5 class="modal-title">
+                        <i class="fas fa-credit-card"></i> Complete Your Purchase
+                    </h5>
+                    <button type="button" class="close text-white" data-dismiss="modal">&times;</button>
+                </div>
+                
+                <form method="POST" action="{% url 'process_merchandise_payment' %}">
+                    {% csrf_token %}
+                    <input type="hidden" name="item_id" id="paymentItemId">
+                    <input type="hidden" name="amount" id="paymentAmount">
+                    
+                    <div class="modal-body">
+                        <!-- Product Summary -->
+                        <div class="product-summary" style="display: flex; align-items: center; gap: 15px; padding: 15px; background: #f8f9fa; border-radius: 10px; margin-bottom: 20px;">
+                            <img id="paymentProductImage" src="" alt="Product" style="width: 80px; height: 80px; object-fit: cover; border-radius: 8px;">
+                            <div>
+                                <h6 id="paymentProductName" style="margin: 0; color: #2c3e50; font-weight: 600;"></h6>
+                                <p id="paymentProductPrice" style="margin: 5px 0 0; color: #e74c3c; font-weight: 600; font-size: 1.2rem;"></p>
+                            </div>
+                        </div>
+
+                        <!-- Customer Information -->
+                        <div class="form-group">
+                            <label for="customerEmail" style="font-weight: 600;">Email Address *</label>
+                            <input type="email" class="form-control" id="customerEmail" name="email" required placeholder="your@email.com">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="customerPhone" style="font-weight: 600;">Phone Number *</label>
+                            <input type="tel" class="form-control" id="customerPhone" name="phone" required placeholder="07XXXXXXXX">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="shippingAddress" style="font-weight: 600;">Shipping Address *</label>
+                            <textarea class="form-control" id="shippingAddress" name="address" rows="3" required placeholder="Your complete shipping address including town/city"></textarea>
+                        </div>
+
+                        <!-- Payment Security -->
+                        <div class="payment-security" style="display: flex; justify-content: space-between; align-items: center; padding: 15px; background: #f8f9fa; border-radius: 8px;">
+                            <div class="security-badge" style="display: flex; align-items: center; gap: 8px; color: #28a745; font-weight: 600;">
+                                <i class="fas fa-lock"></i>
+                                <span>Secured by Paystack</span>
+                            </div>
+                            <div class="payment-methods" style="display: flex; gap: 8px;">
+                                <i class="fab fa-cc-visa" style="font-size: 1.2rem; color: #6c757d;"></i>
+                                <i class="fab fa-cc-mastercard" style="font-size: 1.2rem; color: #6c757d;"></i>
+                                <i class="fas fa-mobile-alt" style="font-size: 1.2rem; color: #6c757d;"></i>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">
+                            <i class="fas fa-times"></i> Cancel
+                        </button>
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-credit-card"></i> Pay with Paystack
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap & jQuery -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script>
+    function openMerchandisePayment(itemId, itemName, itemPrice, itemImage) {
+        console.log('Opening payment for:', itemName, 'Price:', itemPrice);
+        
+        // Set modal content
+        document.getElementById('paymentItemId').value = itemId;
+        document.getElementById('paymentAmount').value = itemPrice;
+        document.getElementById('paymentProductName').textContent = itemName;
+        document.getElementById('paymentProductPrice').textContent = 'KES ' + itemPrice;
+        
+        // Set product image
+        const productImage = document.getElementById('paymentProductImage');
+        if (itemImage && itemImage !== 'None') {
+            productImage.src = itemImage;
+            productImage.alt = itemName;
+        } else {
+            productImage.src = '{% static 'images/placeholder.jpg' %}';
+        }
+        
+        // Clear form fields
+        document.getElementById('customerEmail').value = '';
+        document.getElementById('customerPhone').value = '';
+        document.getElementById('shippingAddress').value = '';
+        
+        // Show modal
+        $('#merchandisePaymentModal').modal('show');
+    }
+
+    // Add hover effects
+    document.addEventListener('DOMContentLoaded', function() {
+        const merchCards = document.querySelectorAll('.merchandise-card');
+        
+        merchCards.forEach(card => {
+            card.addEventListener('mouseenter', function() {
+                this.style.transform = 'translateY(-8px)';
+            });
+            
+            card.addEventListener('mouseleave', function() {
+                this.style.transform = 'translateY(0)';
+            });
+        });
+    });
+    </script>
 </body>
 </html>

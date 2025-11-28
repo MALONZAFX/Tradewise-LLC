@@ -1,49 +1,83 @@
 <!-- templates/admin_modals.html -->
+<!-- TRADEWISE ADMIN MODALS - 100% TRADITIONAL FORMS -->
+
 <!-- Add Strategy Modal -->
-<div class="modal fade" id="addStrategyModal" tabindex="-1" role="dialog">
-    <div class="modal-dialog modal-lg" role="document">
+<div class="modal fade" id="addStrategyModal" tabindex="-1">
+    <div class="modal-dialog modal-lg">
         <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title">Add New Trading Strategy</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
+            <div class="modal-header bg-gradient-primary text-white">
+                <h5 class="modal-title">
+                    <i class="fas fa-chess-knight"></i> Add New Strategy
+                </h5>
+                <button type="button" class="close text-white" data-dismiss="modal">&times;</button>
             </div>
             <form method="POST" action="{% url 'admin_dashboard' %}" enctype="multipart/form-data">
                 {% csrf_token %}
                 <input type="hidden" name="action" value="add_strategy">
                 <div class="modal-body">
                     <div class="form-group">
-                        <label for="strategyTitle">Strategy Title</label>
-                        <input type="text" class="form-control" id="strategyTitle" name="title" required>
+                        <label class="font-weight-bold">Strategy Title *</label>
+                        <input type="text" name="title" class="form-control" placeholder="Enter strategy name" required>
                     </div>
                     <div class="form-group">
-                        <label for="strategyDescription">Description</label>
-                        <textarea class="form-control" id="strategyDescription" name="description" rows="4" required></textarea>
+                        <label class="font-weight-bold">Description *</label>
+                        <textarea name="description" class="form-control" rows="3" placeholder="Describe this strategy..." required></textarea>
                     </div>
                     <div class="row">
                         <div class="col-md-6">
                             <div class="form-group">
-                                <label for="strategyPriceUSD">Price (USD)</label>
-                                <input type="number" class="form-control" id="strategyPriceUSD" name="price_usd" step="0.01" required>
+                                <label class="font-weight-bold">Price (USD) *</label>
+                                <input type="number" name="price_usd" class="form-control" step="0.01" placeholder="0.00" required>
                             </div>
                         </div>
                         <div class="col-md-6">
                             <div class="form-group">
-                                <label for="strategyPriceKES">Price (KES)</label>
-                                <input type="number" class="form-control" id="strategyPriceKES" name="price_kes" step="0.01" required>
+                                <label class="font-weight-bold">Price (KES) *</label>
+                                <input type="number" name="price_kes" class="form-control" step="0.01" placeholder="0.00" required>
                             </div>
                         </div>
                     </div>
                     <div class="form-group">
-                        <label for="strategyImage">Image</label>
-                        <input type="file" class="form-control" id="strategyImage" name="image" accept="image/*">
-                        <img id="strategyImagePreview" class="image-preview" src="#" alt="Image preview">
+                        <label class="font-weight-bold">Strategy Image *</label>
+                        <div class="custom-file">
+                            <input type="file" name="image" class="custom-file-input" accept="image/*" required>
+                            <label class="custom-file-label">
+                                <i class="fas fa-image"></i> Choose strategy image...
+                            </label>
+                        </div>
+                        <small class="form-text text-muted">Recommended: 400x300px PNG/JPG</small>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label class="font-weight-bold">Market Type</label>
+                                <select name="market_type" class="form-control">
+                                    <option value="forex">Forex</option>
+                                    <option value="crypto">Crypto</option>
+                                    <option value="stocks">Stocks</option>
+                                    <option value="all">All Markets</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label class="font-weight-bold">Difficulty Level</label>
+                                <select name="difficulty_level" class="form-control">
+                                    <option value="beginner">Beginner</option>
+                                    <option value="intermediate">Intermediate</option>
+                                    <option value="advanced">Advanced</option>
+                                </select>
+                            </div>
+                        </div>
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                    <button type="submit" class="btn btn-gradient-primary">Save Strategy</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">
+                        <i class="fas fa-times"></i> Cancel
+                    </button>
+                    <button type="submit" class="btn btn-gradient-primary">
+                        <i class="fas fa-plus"></i> Add Strategy
+                    </button>
                 </div>
             </form>
         </div>
@@ -51,50 +85,82 @@
 </div>
 
 <!-- Add Signal Modal -->
-<div class="modal fade" id="addSignalModal" tabindex="-1" role="dialog">
-    <div class="modal-dialog modal-lg" role="document">
+<div class="modal fade" id="addSignalModal" tabindex="-1">
+    <div class="modal-dialog modal-lg">
         <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title">Add New Trading Signal</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
+            <div class="modal-header bg-gradient-primary text-white">
+                <h5 class="modal-title">
+                    <i class="fas fa-bell"></i> Add New Signal
+                </h5>
+                <button type="button" class="close text-white" data-dismiss="modal">&times;</button>
             </div>
             <form method="POST" action="{% url 'admin_dashboard' %}" enctype="multipart/form-data">
                 {% csrf_token %}
                 <input type="hidden" name="action" value="add_signal">
                 <div class="modal-body">
                     <div class="form-group">
-                        <label for="signalTitle">Signal Title</label>
-                        <input type="text" class="form-control" id="signalTitle" name="title" required>
+                        <label class="font-weight-bold">Signal Title *</label>
+                        <input type="text" name="title" class="form-control" placeholder="Enter signal name" required>
                     </div>
                     <div class="form-group">
-                        <label for="signalDescription">Description</label>
-                        <textarea class="form-control" id="signalDescription" name="description" rows="4" required></textarea>
+                        <label class="font-weight-bold">Description *</label>
+                        <textarea name="description" class="form-control" rows="3" placeholder="Describe this signal service..." required></textarea>
                     </div>
                     <div class="row">
                         <div class="col-md-6">
                             <div class="form-group">
-                                <label for="signalPriceUSD">Price (USD)</label>
-                                <input type="number" class="form-control" id="signalPriceUSD" name="price_usd" step="0.01" required>
+                                <label class="font-weight-bold">Price (USD) *</label>
+                                <input type="number" name="price_usd" class="form-control" step="0.01" placeholder="0.00" required>
                             </div>
                         </div>
                         <div class="col-md-6">
                             <div class="form-group">
-                                <label for="signalPriceKES">Price (KES)</label>
-                                <input type="number" class="form-control" id="signalPriceKES" name="price_kes" step="0.01" required>
+                                <label class="font-weight-bold">Price (KES) *</label>
+                                <input type="number" name="price_kes" class="form-control" step="0.01" placeholder="0.00" required>
                             </div>
                         </div>
                     </div>
                     <div class="form-group">
-                        <label for="signalImage">Image</label>
-                        <input type="file" class="form-control" id="signalImage" name="image" accept="image/*">
-                        <img id="signalImagePreview" class="image-preview" src="#" alt="Image preview">
+                        <label class="font-weight-bold">Signal Image *</label>
+                        <div class="custom-file">
+                            <input type="file" name="image" class="custom-file-input" accept="image/*" required>
+                            <label class="custom-file-label">
+                                <i class="fas fa-image"></i> Choose signal image...
+                            </label>
+                        </div>
+                        <small class="form-text text-muted">Recommended: 400x300px PNG/JPG</small>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label class="font-weight-bold">Forex Accuracy (%)</label>
+                                <input type="number" name="accuracy_forex" class="form-control" min="0" max="100" value="80">
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label class="font-weight-bold">Crypto Accuracy (%)</label>
+                                <input type="number" name="accuracy_crypto" class="form-control" min="0" max="100" value="75">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="font-weight-bold">Signal Type</label>
+                        <select name="signal_type" class="form-control">
+                            <option value="forex">Forex Signals</option>
+                            <option value="crypto">Crypto Signals</option>
+                            <option value="stocks">Stock Signals</option>
+                            <option value="all">All Markets</option>
+                        </select>
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                    <button type="submit" class="btn btn-gradient-primary">Save Signal</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">
+                        <i class="fas fa-times"></i> Cancel
+                    </button>
+                    <button type="submit" class="btn btn-gradient-primary">
+                        <i class="fas fa-plus"></i> Add Signal
+                    </button>
                 </div>
             </form>
         </div>
@@ -102,109 +168,153 @@
 </div>
 
 <!-- Add Class Modal -->
-<div class="modal fade" id="addClassModal" tabindex="-1" role="dialog">
-    <div class="modal-dialog modal-lg" role="document">
+<div class="modal fade" id="addClassModal" tabindex="-1">
+    <div class="modal-dialog modal-lg">
         <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title">Add New Trading Class</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
+            <div class="modal-header bg-gradient-primary text-white">
+                <h5 class="modal-title">
+                    <i class="fas fa-graduation-cap"></i> Add New Trading Class
+                </h5>
+                <button type="button" class="close text-white" data-dismiss="modal">&times;</button>
             </div>
             <form method="POST" action="{% url 'admin_dashboard' %}" enctype="multipart/form-data">
                 {% csrf_token %}
                 <input type="hidden" name="action" value="add_class">
                 <div class="modal-body">
                     <div class="form-group">
-                        <label for="classTitle">Class Title</label>
-                        <input type="text" class="form-control" id="classTitle" name="title" required>
+                        <label class="font-weight-bold">Class Title *</label>
+                        <input type="text" name="title" class="form-control" placeholder="Enter class name" required>
                     </div>
                     <div class="form-group">
-                        <label for="classDescription">Description</label>
-                        <textarea class="form-control" id="classDescription" name="description" rows="4" required></textarea>
+                        <label class="font-weight-bold">Description *</label>
+                        <textarea name="description" class="form-control" rows="4" placeholder="Describe this trading class..." required></textarea>
                     </div>
                     <div class="row">
                         <div class="col-md-6">
                             <div class="form-group">
-                                <label for="classPrice">Price (USD)</label>
-                                <input type="number" class="form-control" id="classPrice" name="price" step="0.01" required>
+                                <label class="font-weight-bold">Price (USD) *</label>
+                                <input type="number" name="price" class="form-control" step="0.01" placeholder="0.00" required>
                             </div>
                         </div>
                         <div class="col-md-6">
                             <div class="form-group">
-                                <label for="classDuration">Duration</label>
-                                <input type="text" class="form-control" id="classDuration" name="duration" placeholder="e.g., 4 weeks, 2 months" required>
+                                <label class="font-weight-bold">Duration *</label>
+                                <input type="text" name="duration" class="form-control" placeholder="e.g., 4 weeks, 2 months" required>
                             </div>
                         </div>
                     </div>
                     <div class="form-group">
-                        <label for="classImage">Image</label>
-                        <input type="file" class="form-control" id="classImage" name="image" accept="image/*">
-                        <img id="classImagePreview" class="image-preview" src="#" alt="Image preview">
+                        <label class="font-weight-bold">Class Image</label>
+                        <div class="custom-file">
+                            <input type="file" name="image" class="custom-file-input" accept="image/*">
+                            <label class="custom-file-label">
+                                <i class="fas fa-image"></i> Choose class image...
+                            </label>
+                        </div>
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                    <button type="submit" class="btn btn-gradient-primary">Save Class</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">
+                        <i class="fas fa-times"></i> Cancel
+                    </button>
+                    <button type="submit" class="btn btn-gradient-primary">
+                        <i class="fas fa-plus"></i> Add Class
+                    </button>
                 </div>
             </form>
         </div>
     </div>
 </div>
 
-<!-- Add Software Modal -->
-<div class="modal fade" id="addSoftwareModal" tabindex="-1" role="dialog">
-    <div class="modal-dialog modal-lg" role="document">
+<!-- FIXED SOFTWARE MODAL - TRADITIONAL FORM -->
+<div class="modal fade" id="addSoftwareModal" tabindex="-1">
+    <div class="modal-dialog modal-lg">
         <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title">Add New Software/Tool</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
+            <div class="modal-header bg-gradient-primary text-white">
+                <h5 class="modal-title">
+                    <i class="fas fa-download"></i> Add New Software
+                </h5>
+                <button type="button" class="close text-white" data-dismiss="modal">&times;</button>
             </div>
             <form method="POST" action="{% url 'admin_dashboard' %}" enctype="multipart/form-data">
                 {% csrf_token %}
                 <input type="hidden" name="action" value="add_software">
                 <div class="modal-body">
                     <div class="form-group">
-                        <label for="softwareName">Software Name</label>
-                        <input type="text" class="form-control" id="softwareName" name="name" required>
+                        <label class="font-weight-bold">Software Name *</label>
+                        <input type="text" name="name" class="form-control" placeholder="Enter software name" required>
                     </div>
                     <div class="form-group">
-                        <label for="softwareDescription">Description</label>
-                        <textarea class="form-control" id="softwareDescription" name="description" rows="3" required></textarea>
+                        <label class="font-weight-bold">Description *</label>
+                        <textarea name="description" class="form-control" rows="3" placeholder="Describe this software..." required></textarea>
                     </div>
                     <div class="row">
                         <div class="col-md-6">
                             <div class="form-group">
-                                <label for="softwareVersion">Version</label>
-                                <input type="text" class="form-control" id="softwareVersion" name="version" value="1.0" required>
+                                <label class="font-weight-bold">Version *</label>
+                                <input type="text" name="version" class="form-control" placeholder="e.g., v1.2" required>
                             </div>
                         </div>
                         <div class="col-md-6">
                             <div class="form-group">
-                                <label for="softwareType">File Type</label>
-                                <select class="form-control" id="softwareType" name="file_type" required>
-                                    <option value="software">Software</option>
-                                    <option value="ebook">E-Book</option>
+                                <label class="font-weight-bold">Software Type *</label>
+                                <select name="file_type" class="form-control" required>
+                                    <option value="software">Trading Software</option>
                                     <option value="indicator">Trading Indicator</option>
-                                    <option value="template">Template</option>
+                                    <option value="bot">Trading Bot</option>
+                                    <option value="ebook">E-book/Guide</option>
+                                    <option value="tool">Analysis Tool</option>
                                 </select>
                             </div>
                         </div>
                     </div>
+                    
                     <div class="form-group">
-                        <label for="softwareFile">Software File</label>
-                        <input type="file" class="form-control" id="softwareFile" name="file" required>
+                        <label class="font-weight-bold">Software File *</label>
+                        <div class="custom-file">
+                            <input type="file" name="file" class="custom-file-input" accept=".zip,.rar,.exe,.mq4,.mq5,.pdf,.doc,.docx" required>
+                            <label class="custom-file-label">
+                                <i class="fas fa-file"></i> Choose software file...
+                            </label>
+                        </div>
+                        <small class="form-text text-muted">Accepted: ZIP, RAR, EXE, MQ4, MQ5, PDF, DOC files</small>
                     </div>
+                    
                     <div class="form-group">
-                        <label for="softwareThumbnail">Thumbnail (Optional)</label>
-                        <input type="file" class="form-control" id="softwareThumbnail" name="thumbnail" accept="image/*">
+                        <label class="font-weight-bold">Software Thumbnail *</label>
+                        <div class="custom-file">
+                            <input type="file" name="thumbnail" class="custom-file-input" accept="image/*" required>
+                            <label class="custom-file-label">
+                                <i class="fas fa-image"></i> Choose thumbnail...
+                            </label>
+                        </div>
+                        <small class="form-text text-muted">Recommended: 400x300px PNG/JPG</small>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="font-weight-bold">Compatibility *</label>
+                        <input type="text" name="compatibility" class="form-control" placeholder="e.g., Windows, MT4, MT5" value="Windows, MT4, MT5" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="font-weight-bold">System Requirements *</label>
+                        <textarea name="requirements" class="form-control" rows="2" placeholder="e.g., Windows 10+, 4GB RAM" required>Windows 10/11, MetaTrader 4/5</textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <div class="custom-control custom-switch">
+                            <input type="checkbox" name="is_free" class="custom-control-input" id="isFreeCheck" checked>
+                            <label class="custom-control-label font-weight-bold" for="isFreeCheck">This is free software</label>
+                        </div>
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                    <button type="submit" class="btn btn-gradient-primary">Save Software</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">
+                        <i class="fas fa-times"></i> Cancel
+                    </button>
+                    <button type="submit" class="btn btn-gradient-primary">
+                        <i class="fas fa-plus"></i> Add Software
+                    </button>
                 </div>
             </form>
         </div>
@@ -212,86 +322,61 @@
 </div>
 
 <!-- Add Blog Modal -->
-<div class="modal fade" id="addBlogModal" tabindex="-1" role="dialog">
-    <div class="modal-dialog modal-lg" role="document">
+<div class="modal fade" id="addBlogModal" tabindex="-1">
+    <div class="modal-dialog modal-lg">
         <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title">Add New Blog Post</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
+            <div class="modal-header bg-gradient-primary text-white">
+                <h5 class="modal-title">
+                    <i class="fas fa-blog"></i> Add New Blog Post
+                </h5>
+                <button type="button" class="close text-white" data-dismiss="modal">&times;</button>
             </div>
             <form method="POST" action="{% url 'admin_dashboard' %}" enctype="multipart/form-data">
                 {% csrf_token %}
                 <input type="hidden" name="action" value="add_blog">
                 <div class="modal-body">
                     <div class="form-group">
-                        <label for="blogTitle">Blog Title</label>
-                        <input type="text" class="form-control" id="blogTitle" name="title" required>
+                        <label class="font-weight-bold">Blog Title *</label>
+                        <input type="text" name="title" class="form-control" placeholder="Enter blog title" required>
                     </div>
                     <div class="form-group">
-                        <label for="blogContent">Content</label>
-                        <textarea class="form-control" id="blogContent" name="content" rows="6" required></textarea>
+                        <label class="font-weight-bold">Content *</label>
+                        <textarea name="content" class="form-control" rows="6" placeholder="Write your blog content..." required></textarea>
                     </div>
+                    
                     <div class="row">
                         <div class="col-md-6">
                             <div class="form-group">
-                                <label for="blogAuthor">Author</label>
-                                <input type="text" class="form-control" id="blogAuthor" name="author" value="TradeWise Team">
+                                <label class="font-weight-bold">Author</label>
+                                <input type="text" name="author" class="form-control" value="TradeWise Team">
                             </div>
                         </div>
                         <div class="col-md-6">
                             <div class="form-group">
-                                <label for="blogImage">Featured Image</label>
-                                <input type="file" class="form-control" id="blogImage" name="image" accept="image/*" required>
+                                <label class="font-weight-bold">Featured Image *</label>
+                                <div class="custom-file">
+                                    <input type="file" name="featured_image" class="custom-file-input" accept="image/*" required>
+                                    <label class="custom-file-label">
+                                        <i class="fas fa-image"></i> Choose featured image...
+                                    </label>
+                                </div>
                             </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="custom-control custom-switch">
+                            <input type="checkbox" name="is_published" class="custom-control-input" id="blogPublished" checked>
+                            <label class="custom-control-label font-weight-bold" for="blogPublished">Publish immediately</label>
                         </div>
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                    <button type="submit" class="btn btn-gradient-primary">Publish Blog Post</button>
-                </div>
-            </form>
-        </div>
-    </div>
-</div>
-
-<!-- Edit User Modal -->
-<div class="modal fade" id="editUserModal" tabindex="-1" role="dialog">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title">Edit User</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <form method="POST" action="{% url 'admin_dashboard' %}">
-                {% csrf_token %}
-                <input type="hidden" name="action" value="edit_user">
-                <input type="hidden" id="editUserId" name="user_id">
-                <div class="modal-body">
-                    <div class="form-group">
-                        <label for="editFirstName">First Name</label>
-                        <input type="text" class="form-control" id="editFirstName" name="first_name" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="editSecondName">Second Name</label>
-                        <input type="text" class="form-control" id="editSecondName" name="second_name" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="editEmail">Email</label>
-                        <input type="email" class="form-control" id="editEmail" name="email" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="editPhone">Phone</label>
-                        <input type="text" class="form-control" id="editPhone" name="phone">
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                    <button type="submit" class="btn btn-gradient-primary">Update User</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">
+                        <i class="fas fa-times"></i> Cancel
+                    </button>
+                    <button type="submit" class="btn btn-gradient-primary">
+                        <i class="fas fa-plus"></i> Publish Blog Post
+                    </button>
                 </div>
             </form>
         </div>
@@ -299,34 +384,34 @@
 </div>
 
 <!-- Add Service Modal -->
-<div class="modal fade" id="addServiceModal" tabindex="-1" role="dialog">
-    <div class="modal-dialog modal-lg" role="document">
+<div class="modal fade" id="addServiceModal" tabindex="-1">
+    <div class="modal-dialog modal-lg">
         <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title">Add New Service</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
+            <div class="modal-header bg-gradient-primary text-white">
+                <h5 class="modal-title">
+                    <i class="fas fa-cogs"></i> Add New Service
+                </h5>
+                <button type="button" class="close text-white" data-dismiss="modal">&times;</button>
             </div>
             <form method="POST" action="{% url 'admin_dashboard' %}" enctype="multipart/form-data">
                 {% csrf_token %}
                 <input type="hidden" name="action" value="add_service">
                 <div class="modal-body">
                     <div class="form-group">
-                        <label for="serviceTitle">Service Title</label>
-                        <input type="text" class="form-control" id="serviceTitle" name="title" required>
+                        <label class="font-weight-bold">Service Title *</label>
+                        <input type="text" name="title" class="form-control" placeholder="Enter service name" required>
                     </div>
                     <div class="form-group">
-                        <label for="serviceDescription">Description</label>
-                        <textarea class="form-control" id="serviceDescription" name="description" rows="4" required></textarea>
+                        <label class="font-weight-bold">Description *</label>
+                        <textarea name="description" class="form-control" rows="4" placeholder="Describe this service..." required></textarea>
                     </div>
                     <div class="form-group">
-                        <label for="servicePriceLabel">Price Label</label>
-                        <input type="text" class="form-control" id="servicePriceLabel" name="price_label" placeholder="e.g., $99/month, Custom pricing" required>
+                        <label class="font-weight-bold">Price Label *</label>
+                        <input type="text" name="price_label" class="form-control" placeholder="e.g., $99/month, Custom pricing" required>
                     </div>
                     <div class="form-group">
-                        <label for="serviceCategory">Category</label>
-                        <select class="form-control" id="serviceCategory" name="category" required>
+                        <label class="font-weight-bold">Category *</label>
+                        <select name="category" class="form-control" required>
                             <option value="copytrading">Copy Trading</option>
                             <option value="livetrading">Live Trading</option>
                             <option value="signals">Signal Service</option>
@@ -335,10 +420,23 @@
                             <option value="others">Other Services</option>
                         </select>
                     </div>
+                    <div class="form-group">
+                        <label class="font-weight-bold">Service Image</label>
+                        <div class="custom-file">
+                            <input type="file" name="image" class="custom-file-input" accept="image/*">
+                            <label class="custom-file-label">
+                                <i class="fas fa-image"></i> Choose service image...
+                            </label>
+                        </div>
+                    </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                    <button type="submit" class="btn btn-gradient-primary">Save Service</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">
+                        <i class="fas fa-times"></i> Cancel
+                    </button>
+                    <button type="submit" class="btn btn-gradient-primary">
+                        <i class="fas fa-plus"></i> Save Service
+                    </button>
                 </div>
             </form>
         </div>
@@ -346,26 +444,26 @@
 </div>
 
 <!-- Add Merchandise Modal -->
-<div class="modal fade" id="addMerchandiseModal" tabindex="-1" role="dialog">
-    <div class="modal-dialog modal-lg" role="document">
+<div class="modal fade" id="addMerchandiseModal" tabindex="-1">
+    <div class="modal-dialog modal-lg">
         <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title">Add New Merchandise</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
+            <div class="modal-header bg-gradient-primary text-white">
+                <h5 class="modal-title">
+                    <i class="fas fa-tshirt"></i> Add New Merchandise
+                </h5>
+                <button type="button" class="close text-white" data-dismiss="modal">&times;</button>
             </div>
             <form method="POST" action="{% url 'admin_dashboard' %}" enctype="multipart/form-data">
                 {% csrf_token %}
                 <input type="hidden" name="action" value="add_merchandise">
                 <div class="modal-body">
                     <div class="form-group">
-                        <label for="merchandiseName">Product Name</label>
-                        <input type="text" class="form-control" id="merchandiseName" name="name" required>
+                        <label class="font-weight-bold">Product Name *</label>
+                        <input type="text" name="name" class="form-control" placeholder="Enter product name" required>
                     </div>
                     <div class="form-group">
-                        <label for="merchandiseCategory">Category</label>
-                        <select class="form-control" id="merchandiseCategory" name="category" required>
+                        <label class="font-weight-bold">Category *</label>
+                        <select name="category" class="form-control" required>
                             <option value="caps-hats">Caps & Hats</option>
                             <option value="hoodies">Hoodies</option>
                             <option value="t-shirts">T-Shirts</option>
@@ -373,38 +471,64 @@
                         </select>
                     </div>
                     <div class="form-group">
-                        <label for="merchandiseDescription">Description</label>
-                        <textarea class="form-control" id="merchandiseDescription" name="description" rows="3" required></textarea>
+                        <label class="font-weight-bold">Description *</label>
+                        <textarea name="description" class="form-control" rows="3" placeholder="Describe this product..." required></textarea>
                     </div>
                     <div class="form-group">
-                        <label for="merchandisePrice">Price (KES)</label>
-                        <input type="number" class="form-control" id="merchandisePrice" name="price" required>
+                        <label class="font-weight-bold">Price (KES) *</label>
+                        <input type="number" name="price" class="form-control" placeholder="0" required>
                     </div>
                     <div class="form-group">
-                        <label for="merchandiseImage">Product Image</label>
-                        <input type="file" class="form-control" id="merchandiseImage" name="image" accept="image/*" required>
+                        <label class="font-weight-bold">Product Image *</label>
+                        <div class="custom-file">
+                            <input type="file" name="image" class="custom-file-input" accept="image/*" required>
+                            <label class="custom-file-label">
+                                <i class="fas fa-image"></i> Choose product image...
+                            </label>
+                        </div>
+                        <div class="form-group">
+                            <label class="font-weight-bold">Stock Quantity *</label>
+                            <input type="number" name="stock_quantity" class="form-control" value="100" min="0" required>
+                            <small class="form-text text-muted">Number of items available</small>
+                        </div>
+                        <div class="form-check mb-3">
+                            <input type="checkbox" name="is_available" class="form-check-input" id="is_available" checked>
+                            <label class="form-check-label font-weight-bold" for="is_available">
+                                Available for Sale
+                            </label>
+                        </div>
+                <div class="form-check mb-3">
+                    <input type="checkbox" name="is_featured" class="form-check-input" id="is_featured" checked>
+                    <label class="form-check-label font-weight-bold" for="is_featured">
+                         Featured on Homepage
+                    </label>
+                </div>
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                    <button type="submit" class="btn btn-gradient-primary">Save Merchandise</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">
+                        <i class="fas fa-times"></i> Cancel
+                    </button>
+                    <button type="submit" class="btn btn-gradient-primary">
+                        <i class="fas fa-plus"></i> Save Merchandise
+                    </button>
                 </div>
+                <!-- Add this to your addMerchandiseModal -->
+
             </form>
         </div>
     </div>
 </div>
 
 <!-- Add Review Modal -->
-<div class="modal fade" id="addReviewModal" tabindex="-1" role="dialog">
-    <div class="modal-dialog modal-lg" role="document">
+<div class="modal fade" id="addReviewModal" tabindex="-1">
+    <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header bg-gradient-primary text-white">
                 <h5 class="modal-title">
-                    <i class="fas fa-plus"></i> Add New Review
+                    <i class="fas fa-star"></i> Add New Review
                 </h5>
-                <button type="button" class="close text-white" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
+                <button type="button" class="close text-white" data-dismiss="modal">&times;</button>
             </div>
             <form method="POST" action="{% url 'admin_dashboard' %}" enctype="multipart/form-data">
                 {% csrf_token %}
@@ -413,14 +537,14 @@
                     <div class="row">
                         <div class="col-md-6">
                             <div class="form-group">
-                                <label for="reviewAuthorName">Reviewer Name *</label>
-                                <input type="text" class="form-control" id="reviewAuthorName" name="author_name" required>
+                                <label class="font-weight-bold">Reviewer Name *</label>
+                                <input type="text" name="author_name" class="form-control" placeholder="Enter reviewer name" required>
                             </div>
                         </div>
                         <div class="col-md-6">
                             <div class="form-group">
-                                <label for="reviewUserRole">User Role *</label>
-                                <select class="form-control" id="reviewUserRole" name="user_role" required>
+                                <label class="font-weight-bold" for="user_role">User Role *</label>
+                                <select name="user_role" class="form-control" required>
                                     <option value="">Select Role</option>
                                     <option value="Beginner Trader">Beginner Trader</option>
                                     <option value="Intermediate Trader">Intermediate Trader</option>
@@ -434,14 +558,14 @@
                     </div>
                     
                     <div class="form-group">
-                        <label for="reviewEmail">Email Address</label>
-                        <input type="email" class="form-control" id="reviewEmail" name="email">
+                        <label class="font-weight-bold">Email Address</label>
+                        <input type="email" name="email" class="form-control" placeholder="reviewer@email.com">
                     </div>
                     
                     <div class="form-group">
-                        <label>Rating *</label>
+                        <label class="font-weight-bold">Rating *</label>
                         <div class="star-rating-input-large">
-                            <input type="radio" id="star5" name="rating" value="5">
+                            <input type="radio" id="star5" name="rating" value="5" required>
                             <label class="star-label" for="star5">★</label>
                             <input type="radio" id="star4" name="rating" value="4">
                             <label class="star-label" for="star4">★</label>
@@ -456,15 +580,15 @@
                     </div>
                     
                     <div class="form-group">
-                        <label for="reviewContent">Review Content *</label>
-                        <textarea class="form-control" id="reviewContent" name="content" rows="4" required placeholder="Enter the review content..."></textarea>
+                        <label class="font-weight-bold">Review Content *</label>
+                        <textarea name="content" class="form-control" rows="4" placeholder="Enter the review content..." required></textarea>
                     </div>
                     
                     <div class="form-group">
-                        <label for="reviewAvatar">Reviewer Avatar (Optional)</label>
+                        <label class="font-weight-bold">Reviewer Avatar (Optional)</label>
                         <div class="custom-file">
-                            <input type="file" class="custom-file-input" id="reviewAvatar" name="image" accept="image/*">
-                            <label class="custom-file-label" for="reviewAvatar">
+                            <input type="file" name="image" class="custom-file-input" accept="image/*">
+                            <label class="custom-file-label">
                                 <i class="fas fa-image"></i> Choose avatar...
                             </label>
                         </div>
@@ -475,7 +599,7 @@
                             <div class="form-group">
                                 <div class="custom-control custom-switch">
                                     <input type="checkbox" class="custom-control-input" id="reviewApproved" name="is_approved" checked>
-                                    <label class="custom-control-label" for="reviewApproved">Approved</label>
+                                    <label class="custom-control-label font-weight-bold" for="reviewApproved">Approved</label>
                                 </div>
                             </div>
                         </div>
@@ -483,7 +607,7 @@
                             <div class="form-group">
                                 <div class="custom-control custom-switch">
                                     <input type="checkbox" class="custom-control-input" id="reviewFeatured" name="is_featured">
-                                    <label class="custom-control-label" for="reviewFeatured">Featured</label>
+                                    <label class="custom-control-label font-weight-bold" for="reviewFeatured">Featured</label>
                                 </div>
                             </div>
                         </div>
@@ -502,18 +626,15 @@
     </div>
 </div>
 
-
 <!-- User Details Modal -->
-<div class="modal fade" id="userDetailsModal" tabindex="-1" role="dialog" aria-labelledby="userDetailsModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-lg" role="document">
+<div class="modal fade" id="userDetailsModal" tabindex="-1">
+    <div class="modal-dialog modal-lg">
         <div class="modal-content">
-            <div class="modal-header bg-primary text-white">
-                <h5 class="modal-title" id="userDetailsModalLabel">
+            <div class="modal-header bg-gradient-primary text-white">
+                <h5 class="modal-title">
                     <i class="fas fa-user-circle"></i> User Details
                 </h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true" class="text-white">&times;</span>
-                </button>
+                <button type="button" class="close text-white" data-dismiss="modal">&times;</button>
             </div>
             <div class="modal-body">
                 <div class="row">
@@ -589,22 +710,7 @@
                             </div>
                             <div class="card-body">
                                 <div id="userDetailsAffiliate" class="text-center py-2">
-                                    <span class="text-muted">Loading...</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="row mt-3">
-                    <div class="col-12">
-                        <div class="card">
-                            <div class="card-header bg-light">
-                                <h6 class="mb-0"><i class="fas fa-tools"></i> Quick Actions</h6>
-                            </div>
-                            <div class="card-body">
-                                <div id="userDetailsActions" class="text-center py-2">
-                                    <span class="text-muted">Loading actions...</span>
+                                    <span class="text-muted">Loading affiliate data...</span>
                                 </div>
                             </div>
                         </div>
@@ -622,3 +728,145 @@
         </div>
     </div>
 </div>
+
+<!-- Image Preview Modal -->
+<div class="modal fade" id="imagePreviewModal" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header bg-gradient-primary text-white">
+                <h5 class="modal-title" id="imagePreviewTitle">Image Preview</h5>
+                <button type="button" class="close text-white" data-dismiss="modal">&times;</button>
+            </div>
+            <div class="modal-body text-center">
+                <img id="modalPreviewImage" src="" alt="Preview" class="img-fluid" style="max-height: 70vh;">
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Success Alert Template -->
+<div class="alert alert-success alert-dismissible fade show ajax-alert" role="alert" style="display: none;">
+    <strong><i class="fas fa-check-circle"></i> Success!</strong> 
+    <span id="successMessage">Operation completed successfully.</span>
+    <button type="button" class="close" data-dismiss="alert">
+        <span>&times;</span>
+    </button>
+</div>
+
+<!-- Error Alert Template -->
+<div class="alert alert-danger alert-dismissible fade show ajax-alert" role="alert" style="display: none;">
+    <strong><i class="fas fa-exclamation-circle"></i> Error!</strong> 
+    <span id="errorMessage">An error occurred.</span>
+    <button type="button" class="close" data-dismiss="alert">
+        <span>&times;</span>
+    </button>
+</div>
+
+<style>
+.bg-gradient-primary {
+    background: linear-gradient(135deg, #3498db, #2c3e50) !important;
+}
+
+.btn-gradient-primary {
+    background: linear-gradient(135deg, #3498db, #2c3e50);
+    color: white;
+    border: none;
+}
+
+.btn-gradient-primary:hover {
+    background: linear-gradient(135deg, #2980b9, #1a252f);
+    color: white;
+}
+
+.star-rating-input-large {
+    direction: rtl;
+    display: inline-block;
+    font-size: 2rem;
+}
+
+.star-rating-input-large input {
+    display: none;
+}
+
+.star-rating-input-large .star-label {
+    color: #ddd;
+    font-size: 2.5rem;
+    padding: 0 8px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.star-rating-input-large input:checked ~ .star-label,
+.star-rating-input-large input:hover ~ .star-label {
+    color: #f1c40f;
+}
+
+.star-rating-input-large .star-label:hover,
+.star-rating-input-large .star-label:hover ~ .star-label {
+    color: #f1c40f;
+}
+
+.custom-file-label::after {
+    content: "Browse";
+}
+
+.ajax-alert {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 9999;
+    min-width: 300px;
+    animation: slideInRight 0.5s ease;
+}
+
+@keyframes slideInRight {
+    from { transform: translateX(100%); }
+    to { transform: translateX(0); }
+}
+</style>
+
+<script>
+// Simple file input label update
+document.addEventListener('DOMContentLoaded', function() {
+    // Update file input labels
+    const fileInputs = document.querySelectorAll('.custom-file-input');
+    fileInputs.forEach(input => {
+        input.addEventListener('change', function() {
+            const fileName = this.files[0] ? this.files[0].name : 'Choose file...';
+            const label = this.nextElementSibling;
+            label.textContent = fileName;
+        });
+    });
+
+    // Simple image preview for class image
+    const classImageInput = document.getElementById('classImage');
+    if (classImageInput) {
+        classImageInput.addEventListener('change', function() {
+            const preview = document.getElementById('classImagePreview');
+            if (this.files && this.files[0]) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    preview.src = e.target.result;
+                    preview.style.display = 'block';
+                }
+                reader.readAsDataURL(this.files[0]);
+            }
+        });
+    }
+});
+
+// Simple image preview modal
+function showImageModal(imageUrl, title) {
+    document.getElementById('modalPreviewImage').src = imageUrl;
+    document.getElementById('imagePreviewTitle').textContent = title;
+    $('#imagePreviewModal').modal('show');
+}
+
+// Simple print function for user details
+function printUserDetails() {
+    window.print();
+}
+</script>

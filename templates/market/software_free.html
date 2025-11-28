@@ -1,0 +1,363 @@
+<!-- IN market/software_free.html - REPLACE ENTIRE FILE -->
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Free Trading Software - TradeWise</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <style>
+        :root {
+            --primary-blue: #3498db;
+            --dark-blue: #2c3e50;
+            --gradient-main: linear-gradient(135deg, #2c3e50 0%, #3498db 100%);
+            --light-bg: #f8fafc;
+            --dark-text: #1e293b;
+            --purple: #8b5cf6;
+            --green: #10b981;
+            --orange: #f59e0b;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        body { background-color: var(--light-bg); color: var(--dark-text); line-height: 1.6; }
+
+        .nav { background: var(--dark-blue); padding: 15px 20px; display:flex; justify-content:space-between; align-items:center; }
+        .nav-logo { color:white; font-size:1.3rem; font-weight:700; text-decoration:none }
+        .nav-logo span { color: var(--primary-blue); }
+
+        .container { max-width: 1200px; margin: 40px auto; padding: 0 20px; }
+        
+        .back-home { 
+            display: inline-flex; 
+            align-items: center; 
+            gap: 8px; 
+            background: var(--gradient-main); 
+            color: white; 
+            padding: 12px 20px; 
+            border-radius: 6px; 
+            text-decoration: none; 
+            font-weight: 600; 
+            margin-bottom: 30px; 
+        }
+
+        .software-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 30px;
+            margin-top: 30px;
+        }
+
+        .software-card {
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .software-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+        }
+
+        .software-image {
+            width: 100%;
+            height: 200px;
+            overflow: hidden;
+        }
+
+        .software-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .software-content {
+            padding: 25px;
+        }
+
+        .software-content h3 {
+            color: var(--dark-blue);
+            margin-bottom: 10px;
+            font-size: 1.3rem;
+        }
+
+        .software-meta {
+            display: flex;
+            justify-content: space-between;
+            margin: 15px 0;
+            font-size: 0.9rem;
+            color: #666;
+        }
+
+        .software-type {
+            background: #f1f5f9;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-weight: 500;
+        }
+
+        .software-type.bot { background: #e3f2fd; color: #1976d2; }
+        .software-type.tool { background: #e8f5e8; color: #2e7d32; }
+        .software-type.indicator { background: #fff3e0; color: #ef6c00; }
+        .software-type.ebook { background: #f3e5f5; color: #7b1fa2; }
+
+        .software-stats {
+            display: flex;
+            justify-content: space-between;
+            margin: 15px 0;
+            font-size: 0.85rem;
+            color: #666;
+        }
+
+        .download-count {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .compatibility {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            color: #666;
+        }
+
+        .software-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        .btn {
+            padding: 10px 16px;
+            border: none;
+            border-radius: 6px;
+            font-weight: 600;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            flex: 1;
+            justify-content: center;
+            transition: all 0.3s ease;
+        }
+
+        .btn.download {
+            background: var(--purple);
+            color: white;
+        }
+
+        .btn.download:hover {
+            background: #7c3aed;
+        }
+
+        .btn.details {
+            background: var(--primary-blue);
+            color: white;
+        }
+
+        .btn.details:hover {
+            background: #2980b9;
+        }
+
+        .btn.back {
+            background: transparent;
+            color: var(--primary-blue);
+            border: 2px solid var(--primary-blue);
+        }
+
+        .free-badge {
+            background: var(--green);
+            color: white;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+
+        .upgrade-banner {
+            background: var(--gradient-main);
+            color: white;
+            padding: 40px;
+            border-radius: 12px;
+            text-align: center;
+            margin: 50px 0;
+        }
+
+        .btn-upgrade {
+            display: inline-block;
+            background: white;
+            color: var(--dark-blue);
+            padding: 12px 30px;
+            border-radius: 6px;
+            text-decoration: none;
+            font-weight: 700;
+            margin-top: 20px;
+            transition: transform 0.2s ease;
+        }
+
+        .btn-upgrade:hover {
+            transform: scale(1.05);
+        }
+    </style>
+</head>
+<body>
+    <nav class="nav">
+        <a class="nav-logo" href="{% url 'index' %}">Trade<span>Wise</span></a>
+    </nav>
+
+    <div class="container">
+        <a href="{% url 'market_hub' %}" class="back-home">
+            <i class="fas fa-arrow-left"></i> Back to Market Hub
+        </a>
+
+        <h1>Free Trading Software</h1>
+        <p>Download our free trading tools and bots. Upgrade to VIP for premium features and advanced tools.</p>
+
+        <div class="software-grid">
+            <!-- DYNAMIC SOFTWARE FROM DATABASE -->
+            {% for software in software_list %}
+            <div class="software-card">
+                <div class="software-image">
+                    {% if software.thumbnail %}
+                        <img src="{{ software.thumbnail.url }}" alt="{{ software.name }}">
+                    {% else %}
+                        <img src="{% static 'images/software-placeholder.jpg' %}" alt="{{ software.name }}">
+                    {% endif %}
+                </div>
+                <div class="software-content">
+                    <div style="display: flex; justify-content: between; align-items: start; margin-bottom: 10px;">
+                        <h3>{{ software.name }}</h3>
+                        <span class="free-badge">FREE</span>
+                    </div>
+                    
+                    <div class="software-meta">
+                        <span class="software-type {{ software.file_type }}">
+                            {{ software.get_file_type_display|default:"Software" }}
+                        </span>
+                        <span class="version">Version {{ software.version }}</span>
+                    </div>
+
+                    <div class="software-stats">
+                        <div class="download-count">
+                            <i class="fas fa-download"></i>
+                            {{ software.download_count|default:0 }} downloads
+                        </div>
+                        {% if software.compatibility %}
+                        <div class="compatibility">
+                            <i class="fas fa-desktop"></i>
+                            {{ software.compatibility }}
+                        </div>
+                        {% endif %}
+                    </div>
+
+                    <p>{{ software.description }}</p>
+                    
+                    <div class="software-actions">
+                        <button class="btn download" onclick="downloadSoftware({{ software.id }})">
+                            <i class="fas fa-download"></i> Download
+                        </button>
+                        <button class="btn details" onclick="showSoftwareDetails({{ software.id }})">
+                            <i class="fas fa-info-circle"></i> Details
+                        </button>
+                    </div>
+                </div>
+            </div>
+            {% empty %}
+            <!-- FALLBACK IF NO SOFTWARE -->
+            <div class="software-card">
+                <div class="software-image">
+                    <img src="{% static 'images/bot-sample.jpg' %}" alt="Trend Bot">
+                </div>
+                <div class="software-content">
+                    <div style="display: flex; justify-content: between; align-items: start; margin-bottom: 10px;">
+                        <h3>Trend Following Bot</h3>
+                        <span class="free-badge">FREE</span>
+                    </div>
+                    <div class="software-meta">
+                        <span class="software-type bot">Trading Bot</span>
+                        <span class="version">Version v1.2</span>
+                    </div>
+                    <div class="software-stats">
+                        <div class="download-count">
+                            <i class="fas fa-download"></i>
+                            150 downloads
+                        </div>
+                        <div class="compatibility">
+                            <i class="fas fa-desktop"></i>
+                            MT4, Windows
+                        </div>
+                    </div>
+                    <p>Automated trend following bot with basic risk management features.</p>
+                    <div class="software-actions">
+                        <button class="btn download" onclick="downloadSoftware('trend-bot-free')">
+                            <i class="fas fa-download"></i> Download
+                        </button>
+                        <button class="btn details" onclick="showSoftwareDetails('trend-bot-free')">
+                            <i class="fas fa-info-circle"></i> Details
+                        </button>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+
+        <div class="upgrade-banner">
+            <h2>Ready for Premium Software?</h2>
+            <p>Upgrade to VIP and get access to advanced trading bots, custom indicators, and exclusive tools with premium features.</p>
+            <a href="/market" class="btn-upgrade">Upgrade to VIP Now</a>
+        </div>
+    </div>
+
+    <script>
+        function downloadSoftware(softwareId) {
+            // Track download and get download URL
+            fetch(`/ajax/track-download/${softwareId}/`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': '{{ csrf_token }}',
+                    'X-Requested-With': 'XMLHttpRequest'
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    alert('Download started! Your download should begin shortly.');
+                    // Start download
+                    if (data.download_url && data.download_url !== '#') {
+                        window.location.href = data.download_url;
+                    }
+                } else {
+                    alert('Download Error: ' + (data.error || 'Please try again later.'));
+                }
+            })
+            .catch(error => {
+                alert('Download Error: Please try again later.');
+            });
+        }
+
+        function showSoftwareDetails(softwareId) {
+            // Fetch software details via AJAX
+            fetch(`/ajax/software-details/${softwareId}/`)
+            .then(response => response.json())
+            .then(data => {
+                if (data.html) {
+                    // Show details in modal (you can implement a modal)
+                    alert('Software details loaded. Implement modal display here.');
+                    console.log('Software details:', data.html);
+                } else {
+                    alert('Unable to load software details.');
+                }
+            })
+            .catch(error => {
+                alert('Error loading software details.');
+            });
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,376 @@
+<!-- templates/emails/admin_payout_notification.html -->
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>New Payout Request - TradeWise</title>
+    <style>
+        /* Base Styles */
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 0;
+            background-color: #f8f9fa;
+            color: #2c3e50;
+        }
+        
+        .email-container {
+            max-width: 600px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+        
+        /* Header */
+        .email-header {
+            background: linear-gradient(135deg, #3498db 0%, #2c3e50 100%);
+            padding: 30px 20px;
+            text-align: center;
+            color: white;
+        }
+        
+        .logo {
+            font-size: 28px;
+            font-weight: 800;
+            margin-bottom: 10px;
+            letter-spacing: 1px;
+        }
+        
+        .logo-subtitle {
+            font-size: 14px;
+            opacity: 0.9;
+            font-weight: 500;
+        }
+        
+        .notification-badge {
+            display: inline-block;
+            background: rgba(255,255,255,0.2);
+            padding: 8px 20px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: 600;
+            margin-top: 15px;
+        }
+        
+        /* Content */
+        .email-content {
+            padding: 40px 30px;
+        }
+        
+        .section {
+            margin-bottom: 30px;
+        }
+        
+        .section-title {
+            color: #3498db;
+            font-size: 18px;
+            font-weight: 700;
+            margin-bottom: 15px;
+            padding-bottom: 8px;
+            border-bottom: 2px solid #e9ecef;
+            display: flex;
+            align-items: center;
+        }
+        
+        .section-title i {
+            margin-right: 10px;
+            font-size: 20px;
+        }
+        
+        .info-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-bottom: 10px;
+        }
+        
+        .info-item {
+            background: #f8f9fa;
+            padding: 12px 15px;
+            border-radius: 8px;
+            border-left: 4px solid #3498db;
+        }
+        
+        .info-label {
+            font-size: 12px;
+            font-weight: 600;
+            color: #64748b;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 4px;
+        }
+        
+        .info-value {
+            font-size: 14px;
+            font-weight: 600;
+            color: #2c3e50;
+        }
+        
+        /* Payout Details Card */
+        .payout-card {
+            background: linear-gradient(135deg, #2ecc71 0%, #27ae60 100%);
+            color: white;
+            padding: 25px;
+            border-radius: 12px;
+            text-align: center;
+            margin: 20px 0;
+        }
+        
+        .payout-amount {
+            font-size: 32px;
+            font-weight: 800;
+            margin: 10px 0;
+        }
+        
+        .payout-coins {
+            font-size: 18px;
+            opacity: 0.9;
+            font-weight: 600;
+        }
+        
+        /* Payment Method Card */
+        .payment-card {
+            background: white;
+            border: 2px solid #e9ecef;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 15px 0;
+        }
+        
+        .payment-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+        
+        .payment-icon {
+            width: 40px;
+            height: 40px;
+            background: rgba(52, 152, 219, 0.1);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 15px;
+        }
+        
+        .payment-icon i {
+            color: #3498db;
+            font-size: 18px;
+        }
+        
+        .payment-title {
+            font-weight: 700;
+            color: #2c3e50;
+            font-size: 16px;
+        }
+        
+        .payment-details {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            font-weight: 600;
+            color: #2c3e50;
+        }
+        
+        /* Action Button */
+        .action-section {
+            text-align: center;
+            margin: 30px 0;
+            padding: 25px;
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            border-radius: 10px;
+        }
+        
+        .action-button {
+            display: inline-block;
+            background: linear-gradient(135deg, #3498db 0%, #2c3e50 100%);
+            color: white;
+            padding: 14px 35px;
+            text-decoration: none;
+            border-radius: 8px;
+            font-weight: 700;
+            font-size: 16px;
+            transition: all 0.3s ease;
+        }
+        
+        .action-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(52, 152, 219, 0.3);
+        }
+        
+        /* Footer */
+        .email-footer {
+            background: #2c3e50;
+            color: white;
+            padding: 25px 20px;
+            text-align: center;
+        }
+        
+        .footer-logo {
+            font-size: 20px;
+            font-weight: 800;
+            margin-bottom: 10px;
+            letter-spacing: 1px;
+        }
+        
+        .footer-text {
+            font-size: 12px;
+            opacity: 0.8;
+            line-height: 1.5;
+        }
+        
+        .footer-contact {
+            margin-top: 15px;
+            font-size: 12px;
+            opacity: 0.7;
+        }
+        
+        /* Responsive */
+        @media (max-width: 600px) {
+            .email-content {
+                padding: 25px 20px;
+            }
+            
+            .info-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .payout-amount {
+                font-size: 28px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="email-container">
+        <!-- Header -->
+        <div class="email-header">
+            <div class="logo">TRADEWISE</div>
+            <div class="logo-subtitle">The Wisest Choice</div>
+            <div class="notification-badge">
+                <i class="fas fa-money-bill-wave"></i> New Payout Request
+            </div>
+        </div>
+        
+        <!-- Content -->
+        <div class="email-content">
+            <!-- Affiliate Information -->
+            <div class="section">
+                <div class="section-title">
+                    <i class="fas fa-user-circle"></i> Affiliate Information
+                </div>
+                <div class="info-grid">
+                    <div class="info-item">
+                        <div class="info-label">Affiliate Name</div>
+                        <div class="info-value">{{ payout.user.first_name }} {{ payout.user.second_name }}</div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label">TradeWise Number</div>
+                        <div class="info-value">{{ payout.user.account_number }}</div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label">Email Address</div>
+                        <div class="info-value">{{ payout.user.email }}</div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label">Phone Number</div>
+                        <div class="info-value">{{ payout.user.phone|default:"Not provided" }}</div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Payout Amount -->
+            <div class="payout-card">
+                <div style="font-size: 14px; opacity: 0.9;">TOTAL PAYOUT AMOUNT</div>
+                <div class="payout-amount">KES {{ payout.amount_kes }}</div>
+                <div class="payout-coins">{{ payout.coin_amount }} TWC Coins</div>
+            </div>
+            
+            <!-- Payment Method -->
+            <div class="section">
+                <div class="section-title">
+                    <i class="fas fa-credit-card"></i> Payment Details
+                </div>
+                <div class="payment-card">
+                    <div class="payment-header">
+                        <div class="payment-icon">
+                            {% if payout.payment_method == 'mpesa' %}
+                                <i class="fas fa-mobile-alt"></i>
+                            {% elif payout.payment_method == 'bank' %}
+                                <i class="fas fa-university"></i>
+                            {% elif payout.payment_method == 'paypal' %}
+                                <i class="fab fa-paypal"></i>
+                            {% endif %}
+                        </div>
+                        <div class="payment-title">
+                            {{ payout.get_payment_method_display }}
+                        </div>
+                    </div>
+                    <div class="payment-details">
+                        {% if payout.payment_method == 'mpesa' %}
+                            {{ payout.mpesa_number }}
+                        {% elif payout.payment_method == 'bank' %}
+                            {{ payout.bank_name }}<br>
+                            {{ payout.bank_account }}
+                        {% elif payout.payment_method == 'paypal' %}
+                            {{ payout.paypal_email }}
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Request Details -->
+            <div class="section">
+                <div class="section-title">
+                    <i class="fas fa-clock"></i> Request Details
+                </div>
+                <div class="info-grid">
+                    <div class="info-item">
+                        <div class="info-label">Request ID</div>
+                        <div class="info-value">PO{{ payout.id|stringformat:"04d" }}</div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label">Request Date</div>
+                        <div class="info-value">{{ payout.created_at|date:"F d, Y" }}</div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label">Request Time</div>
+                        <div class="info-value">{{ payout.created_at|date:"H:i A" }}</div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label">Status</div>
+                        <div class="info-value" style="color: #f39c12; font-weight: 700;">Pending Review</div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Action Section -->
+            <div class="action-section">
+                <h3 style="margin-bottom: 20px; color: #2c3e50;">Ready for Review</h3>
+                <p style="color: #64748b; margin-bottom: 20px;">This payout request is awaiting your approval in the admin dashboard.</p>
+                <a href="http://127.0.0.1:8000/admin-dashboard/" class="action-button">
+                    <i class="fas fa-tachometer-alt me-2"></i>Review in Admin Dashboard
+                </a>
+            </div>
+        </div>
+        
+        <!-- Footer -->
+        <div class="email-footer">
+            <div class="footer-logo">TRADEWISE</div>
+            <div class="footer-text">
+                This is an automated notification from the TradeWise Affiliate System.<br>
+                Please do not reply to this email.
+            </div>
+            <div class="footer-contact">
+                TradeWise LLC • support@trade-wise.co.ke • +254 742 962 615
+            </div>
+        </div>
+    </div>
+</body>
+</html>

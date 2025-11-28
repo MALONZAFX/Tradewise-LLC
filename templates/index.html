@@ -1061,16 +1061,13 @@ form.addEventListener('submit', function(e) {
 </script>
 
 
-<!-- TradeWise Membership Card Section - FULLY COMPLIANT -->
+<!-- TradeWise Membership Card Section - BULLETPROOF TEMPLATE ONLY -->
 <div class="card-section py-5" style="background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%); padding: 80px 0;">
     <div class="container">
         <div class="row justify-content-center">
             <div class="col-lg-10 text-center mb-5">
                 <h2 style="font-size: 2.5rem; font-weight: 700; color: #2c3e50;">Your Exclusive <span style="color: #3498db;">TradeWise Membership</span></h2>
                 <p class="mt-3" style="font-size: 1.1rem; color: #7f8c8d;">Every trader receives this premium membership card upon signing up</p>
-                <button id="refreshCardBtn" class="btn btn-outline-primary btn-sm mt-2" onclick="loadCardData()" style="border-radius: 20px;">
-                    <i class="fas fa-sync-alt"></i> Refresh Card Data
-                </button>
             </div>
         </div>
         
@@ -1078,21 +1075,57 @@ form.addEventListener('submit', function(e) {
             <!-- Card on the Left -->
             <div class="col-lg-6 mb-4 mb-lg-0">
                 <div id="cardContainer">
-                    <!-- Dynamic Card Content - Loaded via AJAX -->
-                    <div id="cardLoading" class="text-center" style="display: none;">
-                        <div class="spinner-border text-primary" role="status">
-                            <span class="visually-hidden">Loading...</span>
-                        </div>
-                        <p class="mt-2">Loading card data...</p>
-                    </div>
-                    
-                    <div id="cardContent">
-                        <!-- Initial loading content -->
-                        <div style="text-align: center; padding: 40px;">
-                            <div class="spinner-border text-primary" role="status">
-                                <span class="visually-hidden">Loading...</span>
+                    <!-- BULLETPROOF CARD - ALWAYS WORKS -->
+                    <div class="membership-card" style="background: linear-gradient(145deg, #1a2a4f 0%, #0d1a33 100%); border-radius: 20px; padding: 30px; box-shadow: 0 15px 40px rgba(0,0,0,0.2); position: relative; overflow: hidden; color: white; max-width: 500px; margin: 0 auto;">
+                        <!-- Card Watermark -->
+                        <div style="position: absolute; top: 80px; right: -10px; opacity: 0.1; font-size: 5rem; font-weight: 700; color: white; transform: rotate(15deg);">TRADEWISE</div>
+                        
+                        <!-- Card Content -->
+                        <div class="card-content" style="position: relative; z-index: 2;">
+                            <!-- Logo -->
+                            <div class="mb-4" style="display: flex; align-items: center;">
+                                <div style="height: 50px; width: 150px; background: rgba(255,255,255,0.2); border-radius: 10px; display: flex; align-items: center; justify-content: center; margin-right: 15px;">
+                                    {% load static %}
+                                    <img src="{% static 'images/TRADE-WISE-FINAL-TRANSPARENT.png' %}" alt="TradeWise" style="height: 70px; width: auto; max-width: 130px; object-fit: contain;">
+                                </div>
+                                <div style="font-size: 1.2rem; font-weight: 600;">The Wisest Choice</div>
                             </div>
-                            <p class="mt-2">Loading your membership card...</p>
+                            
+                            <!-- Card Number -->
+                            <div class="mb-4" style="background: rgba(255,255,255,0.15); padding: 15px; border-radius: 10px;">
+                                <div style="font-size: 0.9rem; margin-bottom: 5px; opacity: 0.8;">TRADEWISE CARD</div>
+                                <div style="font-size: 1.5rem; letter-spacing: 3px; font-weight: 600;">
+                                    <!-- ACTUAL DATA WITH FALLBACK -->
+                                    {{ tradewise_card.card_number|default:"6734 5590 1234 5678" }}
+                                </div>
+                            </div>
+                            
+                            <!-- Capital Available -->
+                            <div class="mb-4">
+                                <div style="font-size: 0.9rem; opacity: 0.8;">CAPITAL AVAILABLE</div>
+                                <div style="font-size: 2rem; font-weight: 700;">
+                                    <!-- ACTUAL DATA WITH FALLBACK -->
+                                    {{ tradewise_card.capital_available|default:"$500,000" }}
+                                </div>
+                            </div>
+                            
+                            <!-- Partner Info -->
+                            <div style="display: flex; justify-content: space-between; align-items: flex-end;">
+                                <div>
+                                    <div style="font-size: 0.9rem; opacity: 0.8;">PARTNER</div>
+                                    <div style="font-size: 1.2rem; font-weight: 600;">
+                                        <!-- ACTUAL DATA WITH FALLBACK -->
+                                        {{ tradewise_card.partner_name|default:"SPALIS FX" }}
+                                    </div>
+                                </div>
+                                <div>
+                                    <div style="font-size: 0.9rem; opacity: 0.8;">CONTACT</div>
+                                    <div style="font-size: 1.2rem; font-weight: 600;">
+                                        <!-- ACTUAL DATA WITH FALLBACK -->
+                                        {{ tradewise_card.contact_number|default:"+254742962615" }}
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -1134,7 +1167,7 @@ form.addEventListener('submit', function(e) {
                             <p style="color: #7f8c8d; line-height: 1.6; margin: 0;">Unlock exclusive trading courses, mentorship programs, and advanced strategies</p>
                         </div>
                     </div>
-  
+
                     <div class="benefit-item" style="display: flex; align-items: flex-start;">
                         <div style="margin-right: 20px; color: #3498db; font-size: 1.8rem; min-width: 30px;">✓</div>
                         <div>
@@ -1155,316 +1188,7 @@ form.addEventListener('submit', function(e) {
     </div>
 </div>
 
-<!-- Toast Container for Notifications -->
-<div class="toast-container position-fixed top-0 end-0 p-3">
-    <div id="cardToast" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
-        <div class="toast-header">
-            <strong class="me-auto" id="toastTitle">TradeWise Card</strong>
-            <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
-        </div>
-        <div class="toast-body" id="toastMessage">
-            Card data loaded successfully!
-        </div>
-    </div>
-</div>
-
-<script>
-// CSRF Token setup
-function getCSRFToken() {
-    const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]');
-    return csrfToken ? csrfToken.value : '';
-}
-
-// Toast notification system
-function showToast(title, message, type = 'info') {
-    const toast = document.getElementById('cardToast');
-    const toastTitle = document.getElementById('toastTitle');
-    const toastMessage = document.getElementById('toastMessage');
-    
-    if (!toast || !toastTitle || !toastMessage) {
-        console.warn('Toast elements not found');
-        return;
-    }
-    
-    // Set toast content
-    toastTitle.textContent = title;
-    toastMessage.textContent = message;
-    
-    // Set toast color based on type
-    toast.className = `toast ${type}`;
-    
-    // Show toast
-    try {
-        const bsToast = new bootstrap.Toast(toast);
-        bsToast.show();
-    } catch (error) {
-        console.warn('Bootstrap Toast not available:', error);
-        // Fallback: show simple alert
-        alert(`${title}: ${message}`);
-    }
-}
-
-// Enhanced card data loading with better error handling
-function loadCardData() {
-    const cardContent = document.getElementById('cardContent');
-    const cardLoading = document.getElementById('cardLoading');
-    const refreshBtn = document.getElementById('refreshCardBtn');
-    
-    if (!cardContent || !cardLoading || !refreshBtn) {
-        console.error('Required card elements not found');
-        return;
-    }
-    
-    // Show loading state
-    cardContent.style.display = 'none';
-    cardLoading.style.display = 'block';
-    refreshBtn.disabled = true;
-    refreshBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Loading...';
-    
-    // AJAX request
-    fetch('/ajax/card-data/', {
-        method: 'GET',
-        headers: {
-            'X-Requested-With': 'XMLHttpRequest',
-            'X-CSRFToken': getCSRFToken()
-        }
-    })
-    .then(response => {
-        if (!response.ok) {
-            throw new Error(`HTTP error! status: ${response.status}`);
-        }
-        return response.json();
-    })
-    .then(data => {
-        if (data && data.success) {
-            cardContent.innerHTML = data.html;
-            showToast('Success', 'Card data loaded successfully!', 'success');
-            
-            // Re-initialize any dynamic elements in the loaded HTML
-            initializeCardElements();
-        } else {
-            // Use fallback if data is undefined or success is false
-            cardContent.innerHTML = getFallbackCardHTML();
-            const errorMsg = data && data.error ? data.error : 'No data received from server';
-            showToast('Error', errorMsg, 'error');
-        }
-    })
-    .catch(error => {
-        console.error('Card data load error:', error);
-        cardContent.innerHTML = getFallbackCardHTML();
-        showToast('Error', 'Network error loading card data', 'error');
-    })
-    .finally(() => {
-        cardLoading.style.display = 'none';
-        cardContent.style.display = 'block';
-        refreshBtn.disabled = false;
-        refreshBtn.innerHTML = '<i class="fas fa-sync-alt"></i> Refresh Card Data';
-    });
-}
-
-// Initialize card elements after loading
-function initializeCardElements() {
-    // Re-attach event listeners to any dynamic elements
-    const toggleBtn = document.getElementById('toggleCardBtn');
-    if (toggleBtn) {
-        toggleBtn.onclick = toggleCardView;
-    }
-}
-
-// Enhanced fallback card HTML when AJAX fails
-function getFallbackCardHTML() {
-    return `
-        <!-- Designed Card -->
-        <div id="designedCard" class="membership-card" style="background: linear-gradient(145deg, #1a2a4f 0%, #0d1a33 100%); border-radius: 20px; padding: 30px; box-shadow: 0 15px 40px rgba(0,0,0,0.2); position: relative; overflow: hidden; color: white; max-width: 500px; margin: 0 auto;">
-            <!-- Card Watermark -->
-            <div style="position: absolute; top: -30px; right: -30px; opacity: 0.1; font-size: 12rem; font-weight: 700; color: white; transform: rotate(15deg);">TRADE</div>
-            
-            <!-- Card Content -->
-            <div class="card-content" style="position: relative; z-index: 2;">
-                <!-- Logo -->
-                <div class="mb-4" style="display: flex; align-items: center;">
-                    <div style="height: 50px; width: 150px; background: rgba(255,255,255,0.2); border-radius: 10px; display: flex; align-items: center; justify-content: center; margin-right: 15px;">
-                        <span style="color: white; font-weight: bold;">TRADEWISE</span>
-                    </div>
-                    <div style="font-size: 1.2rem; font-weight: 600;">The Wisest Choice</div>
-                </div>
-                
-                <!-- Card Number -->
-                <div class="mb-4" style="background: rgba(255,255,255,0.15); padding: 15px; border-radius: 10px;">
-                    <div style="font-size: 0.9rem; margin-bottom: 5px; opacity: 0.8;">TRADEWISE CARD</div>
-                    <div style="font-size: 1.5rem; letter-spacing: 3px; font-weight: 600;">
-                        6734 5590 1234 5678
-                    </div>
-                </div>
-                
-                <!-- Capital Available -->
-                <div class="mb-4">
-                    <div style="font-size: 0.9rem; opacity: 0.8;">CAPITAL AVAILABLE</div>
-                    <div style="font-size: 2rem; font-weight: 700;">
-                        $500,000
-                    </div>
-                </div>
-                
-                <!-- Partner Info -->
-                <div style="display: flex; justify-content: space-between; align-items: flex-end;">
-                    <div>
-                        <div style="font-size: 0.9rem; opacity: 0.8;">PARTNER</div>
-                        <div style="font-size: 1.2rem; font-weight: 600;">
-                            SPALIS FX
-                        </div>
-                    </div>
-                    <div>
-                        <div style="font-size: 0.9rem; opacity: 0.8;">CONTACT</div>
-                        <div style="font-size: 1.2rem; font-weight: 600;">
-                            +254742962615
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        
-        <!-- Real Card Image (hidden by default) -->
-        <div id="realCard" style="display: none; text-align: center;">
-            <div style="background: linear-gradient(145deg, #2c3e50 0%, #3498db 100%); border-radius: 20px; padding: 40px; color: white; max-width: 500px; margin: 0 auto;">
-                <h3 style="margin-bottom: 20px;">Physical Card</h3>
-                <p>Your physical TradeWise membership card</p>
-                <div style="font-size: 3rem; margin: 20px 0;">💳</div>
-                <p style="font-size: 0.9rem; opacity: 0.8;">Contact support to receive your physical card</p>
-            </div>
-        </div>
-        
-        <!-- Toggle Button -->
-        <div style="text-align: center; margin-top: 30px;">
-            <button id="toggleCardBtn" class="btn-toggle-card" style="background: linear-gradient(135deg, #3498db, #2c3e50); color: white; border: none; border-radius: 30px; padding: 12px 30px; font-weight: 600; cursor: pointer; box-shadow: 0 5px 15px rgba(52, 152, 219, 0.3); transition: all 0.3s ease;">
-                <span id="btnText">Show Physical Card</span>
-                <i id="btnIcon" class="fas fa-eye" style="margin-left: 8px;"></i>
-            </button>
-        </div>
-    `;
-}
-
-// Toggle card view function with enhanced error handling
-function toggleCardView() {
-    const designedCard = document.getElementById('designedCard');
-    const realCard = document.getElementById('realCard');
-    const btnText = document.getElementById('btnText');
-    const btnIcon = document.getElementById('btnIcon');
-    
-    if (!designedCard || !realCard || !btnText || !btnIcon) {
-        console.warn('Toggle card elements not found');
-        return;
-    }
-    
-    if (designedCard.style.display !== 'none') {
-        // Switch to showing real card
-        designedCard.style.display = 'none';
-        realCard.style.display = 'block';
-        btnText.textContent = 'Show Digital Card';
-        btnIcon.className = 'fas fa-eye-slash';
-    } else {
-        // Switch back to designed card
-        designedCard.style.display = 'block';
-        realCard.style.display = 'none';
-        btnText.textContent = 'Show Physical Card';
-        btnIcon.className = 'fas fa-eye';
-    }
-}
-
-// Auto-refresh card data every 5 minutes
-function startCardAutoRefresh() {
-    setInterval(() => {
-        if (document.visibilityState === 'visible') {
-            loadCardData();
-        }
-    }, 300000); // 5 minutes
-}
-
-// Enhanced initialization with error handling
-function initializeCardSection() {
-    console.log('TradeWise Card Section - AJAX System Initialized');
-    
-    // Ensure card content has initial state
-    const cardContent = document.getElementById('cardContent');
-    if (cardContent && cardContent.innerHTML.trim() === '') {
-        cardContent.innerHTML = `
-            <div style="text-align: center; padding: 40px;">
-                <div class="spinner-border text-primary" role="status">
-                    <span class="visually-hidden">Loading...</span>
-                </div>
-                <p class="mt-2">Loading your membership card...</p>
-            </div>
-        `;
-    }
-    
-    // Load initial card data with slight delay to ensure DOM is ready
-    setTimeout(() => {
-        loadCardData();
-    }, 100);
-    
-    // Start auto-refresh
-    startCardAutoRefresh();
-}
-
-// Initialize when page loads
-document.addEventListener('DOMContentLoaded', function() {
-    // Wait a bit longer to ensure all dependencies are loaded
-    setTimeout(initializeCardSection, 500);
-});
-
-// Fallback initialization if DOMContentLoaded doesn't fire
-if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', initializeCardSection);
-} else {
-    initializeCardSection();
-}
-
-// Error boundary for the card section
-window.addEventListener('error', function(e) {
-    console.error('Card section error:', e.error);
-    const cardContent = document.getElementById('cardContent');
-    if (cardContent) {
-        cardContent.innerHTML = `
-            <div style="text-align: center; padding: 40px; background: #f8f9fa; border-radius: 10px;">
-                <h4 style="color: #dc3545;">Card Loading Error</h4>
-                <p>There was an issue loading your membership card.</p>
-                <button onclick="loadCardData()" class="btn btn-primary mt-2">Try Again</button>
-            </div>
-        `;
-    }
-});
-</script>
-
 <style>
-/* Additional styles for AJAX components */
-.spinner-border {
-    width: 3rem;
-    height: 3rem;
-}
-
-.toast {
-    background: white;
-    border-left: 4px solid #3498db;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-}
-
-.toast.success {
-    border-left-color: #28a745;
-}
-
-.toast.error {
-    border-left-color: #dc3545;
-}
-
-.toast.warning {
-    border-left-color: #ffc107;
-}
-
-.btn:disabled {
-    opacity: 0.6;
-    cursor: not-allowed;
-}
-
-/* Card animations */
 .membership-card {
     transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
@@ -1474,28 +1198,6 @@ window.addEventListener('error', function(e) {
     box-shadow: 0 20px 50px rgba(0,0,0,0.3) !important;
 }
 
-/* Toggle button styles */
-.btn-toggle-card {
-    transition: all 0.3s ease !important;
-}
-
-.btn-toggle-card:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 8px 20px rgba(52, 152, 219, 0.4) !important;
-}
-
-/* Loading animation */
-@keyframes pulse {
-    0% { opacity: 1; }
-    50% { opacity: 0.5; }
-    100% { opacity: 1; }
-}
-
-.card-loading {
-    animation: pulse 2s infinite;
-}
-
-/* Responsive design */
 @media (max-width: 768px) {
     .card-section {
         padding: 40px 0 !important;
@@ -1505,29 +1207,8 @@ window.addEventListener('error', function(e) {
         padding-left: 0 !important;
         margin-top: 40px;
     }
-    
-    .membership-card {
-        margin: 0 auto;
-        max-width: 100% !important;
-    }
-}
-
-/* Print styles */
-@media print {
-    .btn-toggle-card,
-    #refreshCardBtn {
-        display: none !important;
-    }
-    
-    .membership-card {
-        box-shadow: none !important;
-        border: 2px solid #333 !important;
-    }
 }
 </style>
-
-
-
 
 <!-- Our Pricing Section Start -->
 <div class="our-pricing bg-section">
@@ -1569,13 +1250,25 @@ window.addEventListener('error', function(e) {
                                 <h2><sup>KES</sup>5,999<sub>/month</sub></h2>
                             </div>
                             <div class="pricing-btn">
-                                <a href="{% url 'initialize_payment' 1 %}" class="btn-default btn-payment" data-plan="starter">
-                                    <span class="btn-text">join now</span>
-                                    <div class="btn-loader" style="display: none;">
-                                        <div class="spinner"></div>
-                                        Processing...
+                                <form method="POST" action="{% url 'initialize_plan_payment' %}" class="payment-form" data-plan="starter">
+                                    {% csrf_token %}
+                                    {% if not request.user.is_authenticated %}
+                                    <div class="email-field" style="margin-bottom: 10px;">
+                                        <input type="email" name="email" class="form-control" placeholder="Enter your email" required style="padding: 8px 12px; border-radius: 5px; border: 1px solid #ddd; width: 100%; font-size: 14px;">
                                     </div>
-                                </a>
+                                    {% else %}
+                                    <input type="hidden" name="email" value="{{ request.user.email }}">
+                                    {% endif %}
+                                    <input type="hidden" name="amount" value="5999">
+                                    <input type="hidden" name="plan_type" value="Starter Package">
+                                    <button type="submit" class="btn-default btn-payment">
+                                        <span class="btn-text">join now</span>
+                                        <div class="btn-loader" style="display: none;">
+                                            <div class="spinner"></div>
+                                            Processing...
+                                        </div>
+                                    </button>
+                                </form>
                             </div>
                         </div>
                         <div class="pricing-list">
@@ -1599,13 +1292,25 @@ window.addEventListener('error', function(e) {
                                 <h2><sup>KES</sup>12,999<sub>/month</sub></h2>
                             </div>
                             <div class="pricing-btn">
-                                <a href="{% url 'initialize_payment' 2 %}" class="btn-default btn-highlighted btn-payment" data-plan="pro">
-                                    <span class="btn-text">join now</span>
-                                    <div class="btn-loader" style="display: none;">
-                                        <div class="spinner"></div>
-                                        Processing...
+                                <form method="POST" action="{% url 'initialize_plan_payment' %}" class="payment-form" data-plan="pro">
+                                    {% csrf_token %}
+                                    {% if not request.user.is_authenticated %}
+                                    <div class="email-field" style="margin-bottom: 10px;">
+                                        <input type="email" name="email" class="form-control" placeholder="Enter your email" required style="padding: 8px 12px; border-radius: 5px; border: 1px solid #ddd; width: 100%; font-size: 14px;">
                                     </div>
-                                </a>
+                                    {% else %}
+                                    <input type="hidden" name="email" value="{{ request.user.email }}">
+                                    {% endif %}
+                                    <input type="hidden" name="amount" value="12999">
+                                    <input type="hidden" name="plan_type" value="Pro Trader">
+                                    <button type="submit" class="btn-default btn-highlighted btn-payment">
+                                        <span class="btn-text">join now</span>
+                                        <div class="btn-loader" style="display: none;">
+                                            <div class="spinner"></div>
+                                            Processing...
+                                        </div>
+                                    </button>
+                                </form>
                             </div>
                         </div>
                         <div class="pricing-list">
@@ -1629,13 +1334,25 @@ window.addEventListener('error', function(e) {
                                 <h2><sup>KES</sup>24,999<sub>/month</sub></h2>
                             </div>
                             <div class="pricing-btn">
-                                <a href="{% url 'initialize_payment' 3 %}" class="btn-default btn-payment" data-plan="vip">
-                                    <span class="btn-text">join now</span>
-                                    <div class="btn-loader" style="display: none;">
-                                        <div class="spinner"></div>
-                                        Processing...
+                                <form method="POST" action="{% url 'initialize_plan_payment' %}" class="payment-form" data-plan="vip">
+                                    {% csrf_token %}
+                                    {% if not request.user.is_authenticated %}
+                                    <div class="email-field" style="margin-bottom: 10px;">
+                                        <input type="email" name="email" class="form-control" placeholder="Enter your email" required style="padding: 8px 12px; border-radius: 5px; border: 1px solid #ddd; width: 100%; font-size: 14px;">
                                     </div>
-                                </a>
+                                    {% else %}
+                                    <input type="hidden" name="email" value="{{ request.user.email }}">
+                                    {% endif %}
+                                    <input type="hidden" name="amount" value="24999">
+                                    <input type="hidden" name="plan_type" value="VIP Elite">
+                                    <button type="submit" class="btn-default btn-payment">
+                                        <span class="btn-text">join now</span>
+                                        <div class="btn-loader" style="display: none;">
+                                            <div class="spinner"></div>
+                                            Processing...
+                                        </div>
+                                    </button>
+                                </form>
                             </div>
                         </div>
                         <div class="pricing-list">
@@ -1678,7 +1395,7 @@ window.addEventListener('error', function(e) {
             <div class="orbit"></div>
             <div class="bitcoin"></div>
         </div>
-        <h3>Preparing Your Payment</h3>
+        <h3 style="color: #ffffff;">Preparing Your Payment</h3>
         <p>Securely connecting to payment gateway...</p>
         <div class="progress-container">
             <div class="progress-bar"></div>
@@ -1697,7 +1414,7 @@ window.addEventListener('error', function(e) {
         position: absolute;
         top: -10px;
         right: 20px;
-        background: linear-gradient(45deg, #0056b3, #003d82);
+        background: linear-gradient(45deg, #3498db, #2c3e50);
         color: white;
         padding: 5px 15px;
         border-radius: 15px;
@@ -1721,6 +1438,7 @@ window.addEventListener('error', function(e) {
         position: relative;
         overflow: hidden;
         transition: all 0.3s ease;
+        cursor: pointer;
     }
 
     .btn-payment .btn-loader {
@@ -1752,14 +1470,14 @@ window.addEventListener('error', function(e) {
         100% { transform: rotate(360deg); }
     }
 
-    /* Payment Loading Modal */
+    /* Payment Loading Modal - TRADEWISE THEME COLORS */
     .payment-loading-modal {
         position: fixed;
         top: 0;
         left: 0;
         width: 100%;
         height: 100%;
-        background: rgba(0, 86, 179, 0.95);
+        background: rgba(52, 152, 219, 0.95);
         display: flex;
         justify-content: center;
         align-items: center;
@@ -1769,10 +1487,12 @@ window.addEventListener('error', function(e) {
 
     .loading-content {
         text-align: center;
-        background: rgba(255,255,255,0.1);
+        background: #1a2530;
         padding: 40px;
         border-radius: 20px;
         backdrop-filter: blur(10px);
+        border: 2px solid #3498db;
+        color: #ffffff;
     }
 
     .crypto-loader {
@@ -1786,7 +1506,7 @@ window.addEventListener('error', function(e) {
         position: absolute;
         width: 100%;
         height: 100%;
-        border: 2px solid rgba(255,255,255,0.3);
+        border: 2px solid rgba(52, 152, 219, 0.6);
         border-radius: 50%;
         animation: orbit 3s linear infinite;
     }
@@ -1798,6 +1518,7 @@ window.addEventListener('error', function(e) {
         left: 10%;
         animation-duration: 2s;
         animation-direction: reverse;
+        border-color: rgba(46, 204, 113, 0.6);
     }
 
     .orbit:nth-child(3) {
@@ -1806,13 +1527,14 @@ window.addEventListener('error', function(e) {
         top: 20%;
         left: 20%;
         animation-duration: 1.5s;
+        border-color: rgba(155, 89, 182, 0.6);
     }
 
     .bitcoin {
         position: absolute;
         width: 20px;
         height: 20px;
-        background: #f2a900;
+        background: #f1c40f;
         border-radius: 50%;
         top: 0;
         left: 50%;
@@ -1827,7 +1549,7 @@ window.addEventListener('error', function(e) {
 
     @keyframes bitcoin-pulse {
         0%, 100% { transform: translateX(-50%) scale(1); }
-        50% { transform: translateX(-50%) scale(1.2); box-shadow: 0 0 20px #f2a900; }
+        50% { transform: translateX(-50%) scale(1.2); box-shadow: 0 0 20px #f1c40f; }
     }
 
     .progress-container {
@@ -1841,7 +1563,7 @@ window.addEventListener('error', function(e) {
 
     .progress-bar {
         height: 100%;
-        background: linear-gradient(90deg, #00ff88, #00ccff);
+        background: linear-gradient(90deg, #3498db, #2ecc71);
         border-radius: 3px;
         animation: progress 2s ease-in-out infinite;
     }
@@ -1862,13 +1584,14 @@ window.addEventListener('error', function(e) {
     .dot {
         width: 10px;
         height: 10px;
-        background: white;
+        background: #3498db;
         border-radius: 50%;
         animation: dot-bounce 1.4s infinite ease-in-out;
     }
 
-    .dot:nth-child(1) { animation-delay: -0.32s; }
-    .dot:nth-child(2) { animation-delay: -0.16s; }
+    .dot:nth-child(1) { animation-delay: -0.32s; background: #3498db; }
+    .dot:nth-child(2) { animation-delay: -0.16s; background: #2ecc71; }
+    .dot:nth-child(3) { animation-delay: 0s; background: #f1c40f; }
 
     @keyframes dot-bounce {
         0%, 80%, 100% { transform: scale(0); }
@@ -1907,108 +1630,67 @@ window.addEventListener('error', function(e) {
     }
 
     .pricing-features i {
-        color: #0056b3;
+        color: #3498db;
         margin-right: 10px;
     }
 
-    /* Enhanced expertise icons */
-    .expertise-icon {
-        width: 60px;
-        height: 60px;
-        background: #f5f5f5;
-        border-radius: 50%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        margin-bottom: 15px;
-        font-size: 24px;
-        color: #0056b3;
-        transition: all 0.3s ease;
-    }
-    
-    .expertise-item:hover .expertise-icon {
-        background: #0056b3;
-        color: white;
-        transform: scale(1.1);
+    /* Email field styling */
+    .email-field input:focus {
+        border-color: #3498db !important;
+        outline: none;
+        box-shadow: 0 0 0 2px rgba(52, 152, 219, 0.2);
     }
 </style>
 
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-    // Add click handlers to payment buttons
-    const paymentButtons = document.querySelectorAll('.btn-payment');
+    // Handle form submission with proper loading states
+    const paymentForms = document.querySelectorAll('.payment-form');
     
-    paymentButtons.forEach(button => {
-        button.addEventListener('click', function(e) {
-            const plan = this.getAttribute('data-plan');
+    paymentForms.forEach(form => {
+        form.addEventListener('submit', function(e) {
+            // Show loading state immediately
+            const button = this.querySelector('.btn-payment');
+            const btnText = button.querySelector('.btn-text');
+            const btnLoader = button.querySelector('.btn-loader');
             
-            // Show loading state on button
-            this.classList.add('loading');
+            button.classList.add('loading');
+            btnText.style.display = 'none';
+            btnLoader.style.display = 'flex';
+            button.disabled = true;
             
-            // Show payment loading modal
+            // Show loading modal
             const loadingModal = document.getElementById('paymentLoading');
-            loadingModal.style.display = 'flex';
+            if (loadingModal) {
+                loadingModal.style.display = 'flex';
+                
+                // Update modal content based on plan
+                const plan = this.getAttribute('data-plan');
+                const planTitles = {
+                    'starter': 'Starter Package - KES 5,999',
+                    'pro': 'Pro Trader - KES 12,999', 
+                    'vip': 'VIP Elite - KES 24,999'
+                };
+                
+                loadingModal.querySelector('h3').textContent = `Processing ${planTitles[plan]}`;
+            }
             
-            // Update modal content based on plan
-            const planTitles = {
-                'starter': 'Starter Package - KES 5,999',
-                'pro': 'Pro Trader - KES 12,999', 
-                'vip': 'VIP Elite - KES 24,999'
-            };
-            
-            loadingModal.querySelector('h3').textContent = `Processing ${planTitles[plan]}`;
-            
-            // Simulate processing before redirect (in real scenario, this would be the form submission)
-            setTimeout(() => {
-                // The actual redirect will happen via the link href
-                // This is just for the loading animation
-            }, 2000);
+            // Let the form submit naturally - DON'T prevent default
+            // The form will redirect to Paystack automatically
         });
     });
     
-    // Add some interactive animations
+    // Add hover animations only (no click handlers)
     const pricingBoxes = document.querySelectorAll('.pricing-box');
     
     pricingBoxes.forEach(box => {
         box.addEventListener('mouseenter', function() {
-            this.style.transform = 'translateY(-10px)';
+            this.style.transform = 'translateY(-5px)';
         });
         
         box.addEventListener('mouseleave', function() {
             this.style.transform = 'translateY(0)';
         });
-    });
-    
-    // Animate numbers counting up
-    function animateValue(element, start, end, duration) {
-        let startTimestamp = null;
-        const step = (timestamp) => {
-            if (!startTimestamp) startTimestamp = timestamp;
-            const progress = Math.min((timestamp - startTimestamp) / duration, 1);
-            const value = Math.floor(progress * (end - start) + start);
-            element.textContent = value.toLocaleString();
-            if (progress < 1) {
-                window.requestAnimationFrame(step);
-            }
-        };
-        window.requestAnimationFrame(step);
-    }
-    
-    // Animate pricing numbers when in viewport
-    const observer = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-            if (entry.isIntersecting) {
-                const priceElement = entry.target.querySelector('h2');
-                const priceText = priceElement.textContent;
-                const price = parseInt(priceText.replace(/[^\d]/g, ''));
-                animateValue(priceElement, 0, price, 2000);
-                observer.unobserve(entry.target);
-            }
-        });
-    });
-    
-    pricingBoxes.forEach(box => {
-        observer.observe(box);
     });
 });
 </script>
@@ -2149,121 +1831,137 @@ document.addEventListener('DOMContentLoaded', function() {
    
 
 {% load static %}
-{% load custom_filters %}
 
-<!-- TradeWise Merchandise Gallery -->
-<div class="merch-gallery-section" style="background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%); padding: 80px 0;">
+<!-- TradeWise Merchandise Section -->
+<div class="merchandise-section py-5" style="background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);">
     <div class="container">
-        <!-- Section Title -->
+        <!-- Section Header -->
         <div class="row mb-5">
             <div class="col-12 text-center">
-                <h2 class="merch-section-title">
+                <h2 class="section-title" style="font-size: 2.5rem; font-weight: 700; color: #2c3e50;">
                     TradeWise Merchandise
                 </h2>
-                <p class="merch-section-subtitle">
-                    Premium trading apparel and accessories
+                <p class="section-subtitle" style="font-size: 1.1rem; color: #7f8c8d;">
+                    Premium Trading Apparel & Accessories
                 </p>
+                <a href="/shop/" class="btn btn-outline-primary mt-3">
+                    <i class="fas fa-store"></i> View All Products
+                </a>
             </div>
         </div>
-        
-        <div class="row align-items-center">
-            <!-- Left Column - Product Thumbnails -->
-            <div class="col-lg-2">
-                <div class="merch-thumbnail-container">
-                    {% for category in all_categories %}
-                    <div class="merch-thumbnail {% if forloop.first %}merch-active{% endif %}" data-target="{{ category }}">
-                        {% with item=category_items|get_item:category %}
-                            {% if item %}
-                                {% if item.image %}
-                                    <img src="{{ item.image.url }}" alt="{{ item.name }}">
+
+        <!-- Merchandise Grid -->
+        <div class="row">
+            {% for item in featured_merchandise %}
+            <div class="col-lg-3 col-md-6 mb-4">
+                <div class="merch-card" style="background: white; border-radius: 15px; overflow: hidden; box-shadow: 0 5px 15px rgba(0,0,0,0.1); transition: all 0.3s ease;">
+                    <!-- Product Image -->
+                    <div class="merch-image-container" style="height: 250px; overflow: hidden; position: relative;">
+                        {% if item.image %}
+                            <img src="{{ item.image.url }}" alt="{{ item.name }}" 
+                                 style="width: 100%; height: 100%; object-fit: cover; transition: transform 0.3s ease;">
+                        {% else %}
+                            <img src="{% static 'images/placeholder.jpg' %}" alt="{{ item.name }}"
+                                 style="width: 100%; height: 100%; object-fit: cover;">
+                        {% endif %}
+                        
+                        <!-- Category Badge -->
+                        <div class="category-badge" style="position: absolute; top: 15px; left: 15px; background: #3498db; color: white; padding: 5px 12px; border-radius: 20px; font-size: 0.8rem; font-weight: 600;">
+                            {{ item.get_category_display }}
+                        </div>
+                        
+                        <!-- Featured Badge -->
+                        {% if item.is_featured %}
+                        <div class="featured-badge" style="position: absolute; top: 15px; right: 15px; background: #e74c3c; color: white; padding: 5px 10px; border-radius: 20px; font-size: 0.7rem; font-weight: 600;">
+                            <i class="fas fa-star"></i> Featured
+                        </div>
+                        {% endif %}
+                    </div>
+
+                    <!-- Product Info -->
+                    <div class="merch-info" style="padding: 20px;">
+                        <h5 class="product-name" style="font-size: 1.2rem; font-weight: 600; color: #2c3e50; margin-bottom: 10px;">
+                            {{ item.name }}
+                        </h5>
+                        
+                        <p class="product-description" style="color: #7f8c8d; font-size: 0.9rem; margin-bottom: 15px; line-height: 1.4;">
+                            {{ item.description|truncatewords:15 }}
+                        </p>
+                        
+                        <!-- Price & Stock -->
+                        <div class="price-stock-row" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+                            <div class="price" style="font-size: 1.3rem; font-weight: 700; color: #e74c3c;">
+                                KES {{ item.price }}
+                            </div>
+                            
+                            <div class="stock-info" style="font-size: 0.8rem; color: #27ae60;">
+                                {% if item.stock_quantity > 0 %}
+                                    <i class="fas fa-check-circle"></i> In Stock
                                 {% else %}
-                                    <img src="{% static 'images/placeholder.jpg' %}" alt="{{ item.name }}">
+                                    <i class="fas fa-times-circle"></i> Out of Stock
                                 {% endif %}
-                            {% else %}
-                                <img src="{% static 'images/placeholder.jpg' %}" alt="{{ category }}">
-                            {% endif %}
-                        {% endwith %}
-                        <div class="merch-thumb-label">{{ category|title }}</div>
+                            </div>
+                        </div>
+
+                        <!-- Buy Button -->
+                        {% if item.stock_quantity > 0 %}
+                        <button class="buy-now-btn w-100" 
+                                onclick="openMerchandisePayment('{{ item.id }}', '{{ item.name }}', '{{ item.price }}', '{% if item.image %}{{ item.image.url }}{% else %}{% static 'images/placeholder.jpg' %}{% endif %}')"
+                                style="background: linear-gradient(135deg, #28a745, #20c997); color: white; border: none; padding: 12px 20px; border-radius: 25px; font-weight: 600; cursor: pointer; transition: all 0.3s ease; display: flex; align-items: center; justify-content: center; gap: 8px;">
+                            <i class="fas fa-shopping-cart"></i>
+                            BUY NOW
+                        </button>
+                        {% else %}
+                        <button class="out-of-stock-btn w-100" disabled
+                                style="background: #95a5a6; color: white; border: none; padding: 12px 20px; border-radius: 25px; font-weight: 600; cursor: not-allowed;">
+                            <i class="fas fa-clock"></i>
+                            OUT OF STOCK
+                        </button>
+                        {% endif %}
                     </div>
-                    {% endfor %}
                 </div>
             </div>
-
-            <!-- Center Column - Main Product Display -->
-            <div class="col-lg-8">
-                <div class="merch-main-display">
-                    {% for category in all_categories %}
-                    <div class="merch-category-slide {% if forloop.first %}merch-active{% endif %}" id="merch-{{ category }}">
-                        {% with items=category_items_grid|get_item:category %}
-                            {% if items %}
-                                {% for item in items %}
-                                <div class="merch-product-slide {% if forloop.first %}merch-active{% endif %}" data-category="{{ category }}" data-item-id="{{ item.id }}">
-                                    {% if item.image %}
-                                        <img src="{{ item.image.url }}" alt="{{ item.name }}" class="merch-slide-image">
-                                    {% else %}
-                                        <img src="{% static 'images/placeholder.jpg' %}" alt="{{ item.name }}" class="merch-slide-image">
-                                    {% endif %}
-                                    <div class="merch-slide-overlay">
-                                        <h3 class="merch-product-title">{{ item.name }}</h3>
-                                        <p class="merch-product-desc">{{ item.description|truncatewords:12 }}</p>
-                                        <div class="merch-price-section">
-                                            <div class="merch-price-tag">KES {{ item.price }}</div>
-                                            <button class="merch-buy-btn" data-item-id="{{ item.id }}" data-item-name="{{ item.name }}" data-item-price="{{ item.price }}" data-item-image="{% if item.image %}{{ item.image.url }}{% else %}{% static 'images/placeholder.jpg' %}{% endif %}">
-                                                <i class="fas fa-shopping-cart"></i> Buy Now
-                                            </button>
-                                        </div>
-                                    </div>
-                                </div>
-                                {% endfor %}
-                            {% else %}
-                                <!-- Fallback when no items in category -->
-                                <div class="merch-product-slide merch-active" data-category="{{ category }}">
-                                    <img src="{% static 'images/merch-placeholder.jpg' %}" alt="{{ category }}" class="merch-slide-image">
-                                    <div class="merch-slide-overlay">
-                                        <h3 class="merch-product-title">{{ category|title }} Collection</h3>
-                                        <p class="merch-product-desc">Premium {{ category }} collection coming soon</p>
-                                        <div class="merch-price-tag">COMING SOON</div>
-                                    </div>
-                                </div>
-                            {% endif %}
-                        {% endwith %}
-                    </div>
-                    {% endfor %}
+            {% empty %}
+            <!-- Empty State -->
+            <div class="col-12 text-center py-5">
+                <div class="empty-state" style="color: #7f8c8d;">
+                    <i class="fas fa-tshirt" style="font-size: 4rem; margin-bottom: 20px;"></i>
+                    <h4>No Merchandise Available</h4>
+                    <p>Check back soon for new trading apparel and accessories!</p>
                 </div>
             </div>
+            {% endfor %}
+        </div>
 
-            <!-- Right Column - Quick Info (ONLY 3 ITEMS) -->
-            <div class="col-lg-2">
-                <div class="merch-quick-info">
-                    <div class="merch-info-card">
-                        <div class="info-icon">
-                            <i class="fas fa-shipping-fast"></i>
-                        </div>
-                        <h4>Free Shipping</h4>
-                        <p>Nairobi & major cities</p>
+        <!-- Quick Info Cards -->
+        <div class="row mt-5">
+            <div class="col-md-4 mb-3">
+                <div class="info-card text-center" style="background: white; padding: 30px 20px; border-radius: 15px; box-shadow: 0 3px 10px rgba(0,0,0,0.1);">
+                    <div class="info-icon" style="width: 60px; height: 60px; background: #3498db; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 15px;">
+                        <i class="fas fa-shipping-fast" style="color: white; font-size: 1.5rem;"></i>
                     </div>
-                    
-                    <div class="merch-info-card">
-                        <div class="info-icon">
-                            <i class="fas fa-shield-alt"></i>
-                        </div>
-                        <h4>Secure Payment</h4>
-                        <p>Paystack Protected</p>
+                    <h5 style="color: #2c3e50; font-weight: 600;">Free Shipping</h5>
+                    <p style="color: #7f8c8d; margin: 0;">Nairobi & Major Cities</p>
+                </div>
+            </div>
+            
+            <div class="col-md-4 mb-3">
+                <div class="info-card text-center" style="background: white; padding: 30px 20px; border-radius: 15px; box-shadow: 0 3px 10px rgba(0,0,0,0.1);">
+                    <div class="info-icon" style="width: 60px; height: 60px; background: #e74c3c; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 15px;">
+                        <i class="fas fa-shield-alt" style="color: white; font-size: 1.5rem;"></i>
                     </div>
-                    
-                    <div class="merch-info-card">
-                        <div class="info-icon">
-                            <i class="fas fa-undo"></i>
-                        </div>
-                        <h4>Easy Returns</h4>
-                        <p>7-day return policy</p>
+                    <h5 style="color: #2c3e50; font-weight: 600;">Secure Payment</h5>
+                    <p style="color: #7f8c8d; margin: 0;">Paystack Protected</p>
+                </div>
+            </div>
+            
+            <div class="col-md-4 mb-3">
+                <div class="info-card text-center" style="background: white; padding: 30px 20px; border-radius: 15px; box-shadow: 0 3px 10px rgba(0,0,0,0.1);">
+                    <div class="info-icon" style="width: 60px; height: 60px; background: #27ae60; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 15px;">
+                        <i class="fas fa-undo" style="color: white; font-size: 1.5rem;"></i>
                     </div>
-
-                    <div class="merch-indicators">
-                        {% for category in all_categories %}
-                        <div class="merch-indicator {% if forloop.first %}merch-active{% endif %}" data-target="{{ category }}"></div>
-                        {% endfor %}
-                    </div>
+                    <h5 style="color: #2c3e50; font-weight: 600;">Easy Returns</h5>
+                    <p style="color: #7f8c8d; margin: 0;">7-Day Return Policy</p>
                 </div>
             </div>
         </div>
@@ -2271,671 +1969,178 @@ document.addEventListener('DOMContentLoaded', function() {
 </div>
 
 <!-- Payment Modal -->
-<div class="modal fade" id="paymentModal" tabindex="-1">
+<div class="modal fade" id="merchandisePaymentModal" tabindex="-1">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title">Complete Your Purchase</h5>
-                <button type="button" class="close" data-dismiss="modal">
-                    <span>&times;</span>
-                </button>
+            <div class="modal-header" style="background: linear-gradient(135deg, #3498db, #2c3e50); color: white;">
+                <h5 class="modal-title">
+                    <i class="fas fa-credit-card"></i> Complete Your Purchase
+                </h5>
+                <button type="button" class="close text-white" data-dismiss="modal">&times;</button>
             </div>
-            <div class="modal-body">
-                <div class="product-summary">
-                    <img id="modalProductImage" src="" alt="Product" class="product-image">
-                    <div class="product-details">
-                        <h6 id="modalProductName"></h6>
-                        <p class="product-price" id="modalProductPrice"></p>
-                    </div>
-                </div>
+            
+            <form method="POST" action="{% url 'process_merchandise_payment' %}">
+                {% csrf_token %}
+                <input type="hidden" name="item_id" id="paymentItemId">
+                <input type="hidden" name="amount" id="paymentAmount">
                 
-                <form id="paymentForm" method="POST">
-                    {% csrf_token %}
-                    <input type="hidden" name="item_id" id="modalItemId">
-                    <input type="hidden" name="amount" id="modalAmount">
-                    
+                <div class="modal-body">
+                    <!-- Product Summary -->
+                    <div class="product-summary" style="display: flex; align-items: center; gap: 15px; padding: 15px; background: #f8f9fa; border-radius: 10px; margin-bottom: 20px;">
+                        <img id="paymentProductImage" src="" alt="Product" style="width: 80px; height: 80px; object-fit: cover; border-radius: 8px;">
+                        <div>
+                            <h6 id="paymentProductName" style="margin: 0; color: #2c3e50; font-weight: 600;"></h6>
+                            <p id="paymentProductPrice" style="margin: 5px 0 0; color: #e74c3c; font-weight: 600; font-size: 1.2rem;"></p>
+                        </div>
+                    </div>
+
+                    <!-- Customer Information -->
                     <div class="form-group">
-                        <label for="customerEmail">Email Address</label>
+                        <label for="customerEmail" style="font-weight: 600;">Email Address *</label>
                         <input type="email" class="form-control" id="customerEmail" name="email" required placeholder="your@email.com">
                     </div>
                     
                     <div class="form-group">
-                        <label for="customerPhone">Phone Number</label>
+                        <label for="customerPhone" style="font-weight: 600;">Phone Number *</label>
                         <input type="tel" class="form-control" id="customerPhone" name="phone" required placeholder="07XXXXXXXX">
                     </div>
                     
                     <div class="form-group">
-                        <label for="shippingAddress">Shipping Address</label>
-                        <textarea class="form-control" id="shippingAddress" name="address" rows="3" required placeholder="Your complete shipping address"></textarea>
+                        <label for="shippingAddress" style="font-weight: 600;">Shipping Address *</label>
+                        <textarea class="form-control" id="shippingAddress" name="address" rows="3" required placeholder="Your complete shipping address including town/city"></textarea>
                     </div>
-                    
-                    <div class="payment-security">
-                        <div class="security-badge">
+
+                    <!-- Payment Security -->
+                    <div class="payment-security" style="display: flex; justify-content: space-between; align-items: center; padding: 15px; background: #f8f9fa; border-radius: 8px;">
+                        <div class="security-badge" style="display: flex; align-items: center; gap: 8px; color: #28a745; font-weight: 600;">
                             <i class="fas fa-lock"></i>
                             <span>Secured by Paystack</span>
                         </div>
-                        <div class="payment-methods">
-                            <i class="fab fa-cc-visa"></i>
-                            <i class="fab fa-cc-mastercard"></i>
-                            <i class="fas fa-mobile-alt"></i>
-                            <i class="fas fa-university"></i>
+                        <div class="payment-methods" style="display: flex; gap: 8px;">
+                            <i class="fab fa-cc-visa" style="font-size: 1.2rem; color: #6c757d;"></i>
+                            <i class="fab fa-cc-mastercard" style="font-size: 1.2rem; color: #6c757d;"></i>
+                            <i class="fas fa-mobile-alt" style="font-size: 1.2rem; color: #6c757d;"></i>
                         </div>
                     </div>
-                </form>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-                <button type="button" class="btn btn-primary" id="proceedToPaystack">
-                    <i class="fas fa-credit-card"></i> Pay with Paystack
-                </button>
-            </div>
-        </div>
-    </div>
-</div>
-
-<!-- Loading Modal -->
-<div class="modal fade" id="loadingModal" tabindex="-1">
-    <div class="modal-dialog modal-dialog-centered modal-sm">
-        <div class="modal-content">
-            <div class="modal-body text-center">
-                <div class="payment-loader">
-                    <div class="loader-spinner"></div>
-                    <h6>Processing Payment</h6>
-                    <p>Redirecting to Paystack...</p>
                 </div>
-            </div>
+                
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">
+                        <i class="fas fa-times"></i> Cancel
+                    </button>
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-credit-card"></i> Pay with Paystack
+                    </button>
+                </div>
+            </form>
         </div>
     </div>
 </div>
 
 <script>
-document.addEventListener('DOMContentLoaded', function() {
-    console.log('🛍️ Initializing merchandise gallery...');
-    initializeMerchGallery();
-    initializePaymentHandlers();
-});
-
-function initializeMerchGallery() {
-    const merchThumbnails = document.querySelectorAll('.merch-thumbnail');
-    const merchIndicators = document.querySelectorAll('.merch-indicator');
-    let merchCategoryIndex = 0;
-    let merchProductIndex = 0;
-    let merchRotateInterval;
-
-    function activateMerchCategory(target) {
-        // Hide all category slides
-        document.querySelectorAll('.merch-category-slide').forEach(slide => {
-            slide.classList.remove('merch-active');
-        });
-        
-        // Remove active class from all thumbnails and indicators
-        document.querySelectorAll('.merch-thumbnail, .merch-indicator').forEach(el => {
-            el.classList.remove('merch-active');
-        });
-        
-        // Activate current category
-        const currentSlide = document.getElementById('merch-' + target);
-        const currentThumb = document.querySelector(`.merch-thumbnail[data-target="${target}"]`);
-        const currentIndicator = document.querySelector(`.merch-indicator[data-target="${target}"]`);
-        
-        if (currentSlide) currentSlide.classList.add('merch-active');
-        if (currentThumb) currentThumb.classList.add('merch-active');
-        if (currentIndicator) currentIndicator.classList.add('merch-active');
-
-        // Reset product index
-        merchProductIndex = 0;
-        showCurrentMerchProduct();
-    }
-
-    function showCurrentMerchProduct() {
-        const activeCategory = document.querySelector('.merch-category-slide.merch-active');
-        if (!activeCategory) return;
-
-        const products = activeCategory.querySelectorAll('.merch-product-slide');
-        if (products.length === 0) return;
-
-        // Hide all products
-        products.forEach(product => {
-            product.classList.remove('merch-active');
-        });
-
-        // Show current product
-        if (products[merchProductIndex]) {
-            products[merchProductIndex].classList.add('merch-active');
-        }
-    }
-
-    function nextMerchProduct() {
-        const activeCategory = document.querySelector('.merch-category-slide.merch-active');
-        if (!activeCategory) return;
-
-        const products = activeCategory.querySelectorAll('.merch-product-slide');
-        if (products.length === 0) return;
-
-        merchProductIndex = (merchProductIndex + 1) % products.length;
-        showCurrentMerchProduct();
-    }
-
-    function startMerchRotation() {
-        merchRotateInterval = setInterval(() => {
-            const activeCategory = document.querySelector('.merch-category-slide.merch-active');
-            if (!activeCategory) return;
-
-            const products = activeCategory.querySelectorAll('.merch-product-slide');
-            if (products.length > 1) {
-                nextMerchProduct();
-            }
-        }, 4000);
-    }
-    
-    // Event listeners
-    merchThumbnails.forEach(thumb => {
-        thumb.addEventListener('click', function() {
-            const target = this.getAttribute('data-target');
-            const categories = Array.from(document.querySelectorAll('.merch-category-slide'));
-            merchCategoryIndex = categories.findIndex(slide => slide.id === 'merch-' + target);
-            activateMerchCategory(target);
-        });
-    });
-    
-    merchIndicators.forEach(ind => {
-        ind.addEventListener('click', function() {
-            const target = this.getAttribute('data-target');
-            const categories = Array.from(document.querySelectorAll('.merch-category-slide'));
-            merchCategoryIndex = categories.findIndex(slide => slide.id === 'merch-' + target);
-            activateMerchCategory(target);
-        });
-    });
-
-    // Initialize first category
-    if (merchThumbnails.length > 0) {
-        const firstTarget = merchThumbnails[0].getAttribute('data-target');
-        activateMerchCategory(firstTarget);
-    }
-
-    // Start auto-rotation
-    startMerchRotation();
-}
-
-function initializePaymentHandlers() {
-    // Buy button click handlers
-    document.querySelectorAll('.merch-buy-btn').forEach(btn => {
-        btn.addEventListener('click', function() {
-            const itemId = this.getAttribute('data-item-id');
-            const itemName = this.getAttribute('data-item-name');
-            const itemPrice = this.getAttribute('data-item-price');
-            const itemImage = this.getAttribute('data-item-image');
-            
-            openPaymentModal(itemId, itemName, itemPrice, itemImage);
-        });
-    });
-
-    // Proceed to Paystack
-    document.getElementById('proceedToPaystack').addEventListener('click', function() {
-        processPayment();
-    });
-}
-
-function openPaymentModal(itemId, itemName, itemPrice, itemImage) {
-    console.log('Opening modal with image:', itemImage); // Debug log
+// Function to open payment modal
+function openMerchandisePayment(itemId, itemName, itemPrice, itemImage) {
+    console.log('Opening payment for:', itemName, 'Price:', itemPrice);
     
     // Set modal content
-    document.getElementById('modalItemId').value = itemId;
-    document.getElementById('modalProductName').textContent = itemName;
-    document.getElementById('modalProductPrice').textContent = `KES ${itemPrice}`;
-    document.getElementById('modalAmount').value = itemPrice;
+    document.getElementById('paymentItemId').value = itemId;
+    document.getElementById('paymentAmount').value = itemPrice;
+    document.getElementById('paymentProductName').textContent = itemName;
+    document.getElementById('paymentProductPrice').textContent = 'KES ' + itemPrice;
     
-    // Set product image - FIXED
-    const modalImage = document.getElementById('modalProductImage');
+    // Set product image
+    const productImage = document.getElementById('paymentProductImage');
     if (itemImage && itemImage !== 'None') {
-        modalImage.src = itemImage;
-        modalImage.alt = itemName;
-        console.log('Modal image set to:', itemImage); // Debug log
+        productImage.src = itemImage;
+        productImage.alt = itemName;
     } else {
-        modalImage.src = '{% static 'images/placeholder.jpg' %}';
-        console.log('Using placeholder image'); // Debug log
+        productImage.src = '{% static 'images/placeholder.jpg' %}';
     }
+    
+    // Clear form fields
+    document.getElementById('customerEmail').value = '';
+    document.getElementById('customerPhone').value = '';
+    document.getElementById('shippingAddress').value = '';
     
     // Show modal
-    $('#paymentModal').modal('show');
+    $('#merchandisePaymentModal').modal('show');
 }
 
-function processPayment() {
-    const form = document.getElementById('paymentForm');
-    const formData = new FormData(form);
+// Add hover effects
+document.addEventListener('DOMContentLoaded', function() {
+    const merchCards = document.querySelectorAll('.merch-card');
     
-    // Validate form
-    const email = document.getElementById('customerEmail').value;
-    const phone = document.getElementById('customerPhone').value;
-    const address = document.getElementById('shippingAddress').value;
-    
-    if (!email || !phone || !address) {
-        alert('Please fill in all required fields');
-        return;
-    }
-    
-    // Show loading modal
-    $('#paymentModal').modal('hide');
-    $('#loadingModal').modal('show');
-    
-    // Submit to Paystack endpoint
-    fetch('/merchandise/process-payment/', {
-        method: 'POST',
-        body: formData,
-        headers: {
-            'X-Requested-With': 'XMLHttpRequest',
-            'X-CSRFToken': getCookie('csrftoken')
-        }
-    })
-    .then(response => response.json())
-    .then(data => {
-        if (data.success) {
-            // Redirect to Paystack
-            window.location.href = data.authorization_url;
-        } else {
-            $('#loadingModal').modal('hide');
-            alert('Payment initialization failed: ' + data.error);
-        }
-    })
-    .catch(error => {
-        $('#loadingModal').modal('hide');
-        console.error('Payment error:', error);
-        alert('Payment processing error. Please try again.');
-    });
-}
-
-// CSRF token helper
-function getCookie(name) {
-    let cookieValue = null;
-    if (document.cookie && document.cookie !== '') {
-        const cookies = document.cookie.split(';');
-        for (let i = 0; i < cookies.length; i++) {
-            const cookie = cookies[i].trim();
-            if (cookie.substring(0, name.length + 1) === (name + '=')) {
-                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
-                break;
+    merchCards.forEach(card => {
+        card.addEventListener('mouseenter', function() {
+            this.style.transform = 'translateY(-5px)';
+            this.style.boxShadow = '0 15px 30px rgba(0,0,0,0.15)';
+            
+            const img = this.querySelector('img');
+            if (img) {
+                img.style.transform = 'scale(1.05)';
             }
-        }
-    }
-    return cookieValue;
-}
+        });
+        
+        card.addEventListener('mouseleave', function() {
+            this.style.transform = 'translateY(0)';
+            this.style.boxShadow = '0 5px 15px rgba(0,0,0,0.1)';
+            
+            const img = this.querySelector('img');
+            if (img) {
+                img.style.transform = 'scale(1)';
+            }
+        });
+    });
+
+    // Buy button hover effects
+    const buyButtons = document.querySelectorAll('.buy-now-btn');
+    buyButtons.forEach(btn => {
+        btn.addEventListener('mouseenter', function() {
+            this.style.transform = 'translateY(-2px)';
+            this.style.boxShadow = '0 5px 15px rgba(40, 167, 69, 0.3)';
+        });
+        
+        btn.addEventListener('mouseleave', function() {
+            this.style.transform = 'translateY(0)';
+            this.style.boxShadow = 'none';
+        });
+    });
+});
 </script>
 
 <style>
-/* Clean Merchandise Styles */
-.merch-section-title {
-    font-size: 2.5rem;
-    font-weight: 700;
-    margin-bottom: 15px;
-    color: #3498db;
-    text-transform: uppercase;
-    letter-spacing: 1px;
+.merch-card:hover {
+    transform: translateY(-5px) !important;
+    box-shadow: 0 15px 30px rgba(0,0,0,0.15) !important;
 }
 
-.merch-section-subtitle {
-    font-size: 1.1rem;
-    color: #7f8c8d;
-    margin-bottom: 40px;
+.buy-now-btn:hover {
+    transform: translateY(-2px) !important;
+    box-shadow: 0 5px 15px rgba(40, 167, 69, 0.3) !important;
 }
 
-.merch-thumbnail-container {
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-}
-
-.merch-thumbnail {
-    position: relative;
-    cursor: pointer;
-    border-radius: 10px;
-    overflow: hidden;
-    transition: all 0.3s ease;
-    border: 2px solid transparent;
-}
-
-.merch-thumbnail:hover {
+.info-card:hover {
     transform: translateY(-3px);
-    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-}
-
-.merch-thumbnail img {
-    width: 100%;
-    height: 70px;
-    object-fit: cover;
-    transition: all 0.3s ease;
-}
-
-.merch-thumbnail.merch-active {
-    border-color: #3498db;
-}
-
-.merch-thumb-label {
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    background: rgba(0,0,0,0.7);
-    color: white;
-    padding: 4px 8px;
-    font-size: 10px;
-    font-weight: 600;
-    text-align: center;
-    text-transform: uppercase;
-}
-
-.merch-main-display {
-    position: relative;
-    height: 400px;
-    border-radius: 15px;
-    overflow: hidden;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-    background: white;
-}
-
-.merch-category-slide {
-    position: absolute;
-    width: 100%;
-    height: 100%;
-    display: none;
-}
-
-.merch-category-slide.merch-active {
-    display: block;
-}
-
-.merch-product-slide {
-    position: absolute;
-    width: 100%;
-    height: 100%;
-    display: none;
-}
-
-.merch-product-slide.merch-active {
-    display: block;
-}
-
-.merch-slide-image {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-}
-
-.merch-slide-overlay {
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    background: linear-gradient(to top, rgba(0,0,0,0.9), transparent);
-    color: white;
-    padding: 30px;
-}
-
-.merch-product-title {
-    font-size: 1.8rem;
-    margin-bottom: 10px;
-    font-weight: 600;
-}
-
-.merch-product-desc {
-    margin-bottom: 20px;
-    font-size: 1rem;
-    opacity: 0.9;
-    line-height: 1.4;
-}
-
-.merch-price-section {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 15px;
-}
-
-.merch-price-tag {
-    background: #e74c3c;
-    color: white;
-    padding: 8px 20px;
-    border-radius: 25px;
-    font-weight: 600;
-    font-size: 1.1rem;
-}
-
-/* FIXED Buy Button - Green and Compact */
-.merch-buy-btn {
-    background: #28a745 !important;
-    color: white;
-    border: none;
-    padding: 8px 16px !important;
-    border-radius: 20px;
-    font-weight: 600;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    font-size: 0.9rem;
-    min-width: auto;
-}
-
-.merch-buy-btn:hover {
-    background: #218838 !important;
-    transform: translateY(-2px);
-}
-
-/* Quick Info Panel - Clean 3 Items */
-.merch-quick-info {
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-    height: 100%;
-}
-
-.merch-info-card {
-    background: white;
-    padding: 15px;
-    border-radius: 8px;
-    text-align: center;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
-    transition: all 0.3s ease;
-    border-left: 3px solid #3498db;
-}
-
-.merch-info-card:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(0,0,0,0.12);
-}
-
-.info-icon {
-    width: 40px;
-    height: 40px;
-    background: #3498db;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin: 0 auto 10px;
-    color: white;
-    font-size: 1rem;
-}
-
-.merch-info-card h4 {
-    font-size: 0.95rem;
-    margin-bottom: 5px;
-    color: #2c3e50;
-    font-weight: 600;
-}
-
-.merch-info-card p {
-    font-size: 0.8rem;
-    color: #7f8c8d;
-    margin: 0;
-    line-height: 1.3;
-}
-
-.merch-indicators {
-    display: flex;
-    justify-content: center;
-    gap: 6px;
-    margin-top: 15px;
-    padding-top: 15px;
-    border-top: 1px solid #eee;
-}
-
-.merch-indicator {
-    width: 6px;
-    height: 6px;
-    border-radius: 50%;
-    background: #bdc3c7;
-    cursor: pointer;
-    transition: all 0.3s ease;
-}
-
-.merch-indicator.merch-active {
-    background: #3498db;
-    transform: scale(1.2);
-}
-
-/* Payment Modal Styles */
-.product-summary {
-    display: flex;
-    align-items: center;
-    gap: 15px;
-    margin-bottom: 20px;
-    padding: 15px;
-    background: #f8f9fa;
-    border-radius: 10px;
-}
-
-.product-image {
-    width: 80px;
-    height: 80px;
-    object-fit: cover;
-    border-radius: 8px;
-    border: 2px solid #e9ecef;
-}
-
-.product-details h6 {
-    margin: 0;
-    color: #2c3e50;
-    font-weight: 600;
-    font-size: 1.1rem;
-}
-
-.product-price {
-    margin: 5px 0 0;
-    color: #e74c3c;
-    font-weight: 600;
-    font-size: 1.2rem;
-}
-
-.payment-security {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-top: 20px;
-    padding: 15px;
-    background: #f8f9fa;
-    border-radius: 8px;
-}
-
-.security-badge {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    color: #28a745;
-    font-weight: 600;
-}
-
-.payment-methods {
-    display: flex;
-    gap: 8px;
-}
-
-.payment-methods i {
-    font-size: 1.1rem;
-    color: #6c757d;
-}
-
-/* Loading Animation */
-.payment-loader {
-    padding: 30px 20px;
-}
-
-.loader-spinner {
-    width: 50px;
-    height: 50px;
-    border: 3px solid #f3f3f3;
-    border-top: 3px solid #3498db;
-    border-radius: 50%;
-    animation: spin 1s linear infinite;
-    margin: 0 auto 20px;
-}
-
-@keyframes spin {
-    0% { transform: rotate(0deg); }
-    100% { transform: rotate(360deg); }
+    box-shadow: 0 8px 20px rgba(0,0,0,0.12) !important;
 }
 
 /* Responsive Design */
-@media (max-width: 992px) {
-    .merch-thumbnail-container {
-        flex-direction: row;
-        margin-bottom: 20px;
-        overflow-x: auto;
-        padding-bottom: 10px;
-    }
-    
-    .merch-thumbnail {
-        min-width: 80px;
-    }
-    
-    .merch-quick-info {
-        flex-direction: row;
-        margin-top: 20px;
-        gap: 10px;
-    }
-    
-    .merch-info-card {
-        flex: 1;
-        padding: 12px;
-    }
-    
-    .merch-main-display {
-        height: 350px;
-    }
-}
-
 @media (max-width: 768px) {
-    .merch-gallery-section {
-        padding: 50px 0;
+    .merchandise-section {
+        padding: 40px 0 !important;
     }
     
-    .merch-section-title {
-        font-size: 2rem;
+    .section-title {
+        font-size: 2rem !important;
     }
     
-    .merch-slide-overlay {
-        padding: 20px;
-    }
-    
-    .merch-product-title {
-        font-size: 1.4rem;
-    }
-    
-    .merch-price-section {
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 10px;
-    }
-    
-    .merch-main-display {
-        height: 300px;
-    }
-    
-    .merch-quick-info {
-        flex-direction: column;
+    .merch-card {
+        margin-bottom: 20px;
     }
 }
 </style>
+
+
 
 
    <!-- Website Navigation Video Section Start -->
@@ -2994,8 +2199,6 @@ function getCookie(name) {
     </div>
 </div>
 <!-- Website Navigation Video Section End -->
-
-
 
 
 <style>
@@ -3068,333 +2271,274 @@ function getCookie(name) {
   display: block;
 }
 </style>
+
 <!-- Copy Trading & Live Trading Request Section -->
 <section class="trading-request-section py-5" style="background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);">
-  <div class="container">
-      <div class="row justify-content-center mb-5">
-          <div class="col-lg-8 text-center">
-              <h2 class="display-5 fw-bold mb-3">Join Our <span style="color: #3498db;">Professional Trading Network</span></h2>
-              <p class="lead">Request copy trading or live trading services with our expert traders</p>
-          </div>
-      </div>
+    <div class="container">
+        <div class="row justify-content-center mb-5">
+            <div class="col-lg-8 text-center">
+                <h2 class="display-5 fw-bold mb-3">Join Our <span style="color: #3498db;">Professional Trading Network</span></h2>
+                <p class="lead">Request copy trading or live trading services with our expert traders</p>
+            </div>
+        </div>
+  
+        <div class="row g-4">
+            <!-- Copy Trading Card -->
+            <div class="col-lg-6">
+                <div class="trading-card" style="
+                    background: white;
+                    border-radius: 15px;
+                    overflow: hidden;
+                    box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+                    height: 100%;
+                    transition: all 0.3s ease;
+                ">
+                    <div class="card-header" style="
+                        background: linear-gradient(135deg, #3498db 0%, #2c3e50 100%);
+                        padding: 20px;
+                        color: white;
+                    ">
+                        <div class="d-flex align-items-center">
+                            <div class="icon-box me-3" style="
+                                width: 50px;
+                                height: 50px;
+                                background: rgba(255,255,255,0.2);
+                                border-radius: 50%;
+                                display: flex;
+                                align-items: center;
+                                justify-content: center;
+                            ">
+                                <i class="fas fa-users fa-lg"></i>
+                            </div>
+                            <h3 class="mb-0">Copy Trading</h3>
+                        </div>
+                    </div>
+                    <div class="card-body p-4">
+                        <div class="price-tag mb-4" style="
+                            background: rgba(52, 152, 219, 0.1);
+                            padding: 15px;
+                            border-radius: 10px;
+                            text-align: center;
+                        ">
+                            <h4 class="mb-1" style="color: #2c3e50;">Minimum Deposit: <span style="color: #3498db;">USD 50</span></h4>
+                            <p class="small mb-0" style="color: #7f8c8d;">+ 50% profit share on gains</p>
+                        </div>
+                        
+                        <ul class="benefits-list mb-4" style="list-style: none; padding-left: 0;">
+                            <li class="mb-2" style="display: flex; align-items: flex-start;">
+                                <i class="fas fa-check-circle me-2 mt-1" style="color: #3498db;"></i>
+                                <span>Automatically copy expert traders in real-time</span>
+                            </li>
+                            <li class="mb-2" style="display: flex; align-items: flex-start;">
+                                <i class="fas fa-check-circle me-2 mt-1" style="color: #3498db;"></i>
+                                <span>Risk management controls</span>
+                            </li>
+                            <li class="mb-2" style="display: flex; align-items: flex-start;">
+                                <i class="fas fa-check-circle me-2 mt-1" style="color: #3498db;"></i>
+                                <span>Daily performance reports</span>
+                            </li>
+                            <li class="mb-2" style="display: flex; align-items: flex-start;">
+                                <i class="fas fa-check-circle me-2 mt-1" style="color: #3498db;"></i>
+                                <span>24/7 account monitoring</span>
+                            </li>
+                        </ul>
+                        
+                        <a href="/trade?service=copy-trading" class="btn btn-primary w-100 py-3" style="
+                            border-radius: 10px;
+                            font-weight: 600;
+                            background: linear-gradient(135deg, #3498db, #2c3e50);
+                            border: none;
+                            transition: all 0.3s ease;
+                            text-decoration: none;
+                            display: inline-block;
+                            text-align: center;
+                        " onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 8px 20px rgba(52, 152, 219, 0.3)';" 
+                           onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='none';">
+                            <i class="fas fa-copy me-2"></i> Request Copy Trading
+                        </a>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Live Trading Card -->
+            <div class="col-lg-6">
+                <div class="trading-card" style="
+                    background: white;
+                    border-radius: 15px;
+                    overflow: hidden;
+                    box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+                    height: 100%;
+                    transition: all 0.3s ease;
+                ">
+                    <div class="card-header" style="
+                        background: linear-gradient(135deg, #2c3e50 0%, #3498db 100%);
+                        padding: 20px;
+                        color: white;
+                    ">
+                        <div class="d-flex align-items-center">
+                            <div class="icon-box me-3" style="
+                                width: 50px;
+                                height: 50px;
+                                background: rgba(255,255,255,0.2);
+                                border-radius: 50%;
+                                display: flex;
+                                align-items: center;
+                                justify-content: center;
+                            ">
+                                <i class="fas fa-chart-line fa-lg"></i>
+                            </div>
+                            <h3 class="mb-0">Live Trading</h3>
+                        </div>
+                    </div>
+                    <div class="card-body p-4">
+                        <div class="price-tag mb-4" style="
+                            background: rgba(52, 152, 219, 0.1);
+                            padding: 15px;
+                            border-radius: 10px;
+                            text-align: center;
+                        ">
+                            <h4 class="mb-1" style="color: #2c3e50;">Minimum Deposit: <span style="color: #3498db;">USD 100</span></h4>
+                            <p class="small mb-0" style="color: #7f8c8d;">+ 50% profit share on gains</p>
+                        </div>
+                        
+                        <ul class="benefits-list mb-4" style="list-style: none; padding-left: 0;">
+                            <li class="mb-2" style="display: flex; align-items: flex-start;">
+                                <i class="fas fa-check-circle me-2 mt-1" style="color: #3498db;"></i>
+                                <span>Personal trader manages your account</span>
+                            </li>
+                            <li class="mb-2" style="display: flex; align-items: flex-start;">
+                                <i class="fas fa-check-circle me-2 mt-1" style="color: #3498db;"></i>
+                                <span>Custom strategy based on your risk profile</span>
+                            </li>
+                            <li class="mb-2" style="display: flex; align-items: flex-start;">
+                                <i class="fas fa-check-circle me-2 mt-1" style="color: #3498db;"></i>
+                                <span>Weekly 1-on-1 consultation</span>
+                            </li>
+                            <li class="mb-2" style="display: flex; align-items: flex-start;">
+                                <i class="fas fa-check-circle me-2 mt-1" style="color: #3498db;"></i>
+                                <span>Full transparency with trade access</span>
+                            </li>
+                        </ul>
+                        
+                        <a href="/trade?service=live-trading" class="btn btn-primary w-100 py-3" style="
+                            border-radius: 10px;
+                            font-weight: 600;
+                            background: linear-gradient(135deg, #3498db, #2c3e50);
+                            border: none;
+                            transition: all 0.3s ease;
+                            text-decoration: none;
+                            display: inline-block;
+                            text-align: center;
+                        " onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 8px 20px rgba(52, 152, 219, 0.3)';" 
+                           onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='none';">
+                            <i class="fas fa-play-circle me-2"></i> Request Live Trading
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+  
+        <!-- Additional Info -->
+        <div class="row mt-5">
+            <div class="col-lg-8 mx-auto text-center">
+                <div class="info-box" style="
+                    background: white;
+                    padding: 30px;
+                    border-radius: 15px;
+                    box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+                ">
+                    <h4 class="mb-3">How It Works</h4>
+                    <div class="row">
+                        <div class="col-md-4 mb-3">
+                            <div class="step">
+                                <div class="step-icon" style="
+                                    width: 60px;
+                                    height: 60px;
+                                    background: linear-gradient(135deg, #3498db, #2c3e50);
+                                    border-radius: 50%;
+                                    display: flex;
+                                    align-items: center;
+                                    justify-content: center;
+                                    margin: 0 auto 15px;
+                                    color: white;
+                                    font-size: 1.5rem;
+                                ">
+                                    <i class="fas fa-clipboard-list"></i>
+                                </div>
+                                <h6>1. Submit Request</h6>
+                                <p class="small text-muted">Fill out the service request form</p>
+                            </div>
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <div class="step">
+                                <div class="step-icon" style="
+                                    width: 60px;
+                                    height: 60px;
+                                    background: linear-gradient(135deg, #3498db, #2c3e50);
+                                    border-radius: 50%;
+                                    display: flex;
+                                    align-items: center;
+                                    justify-content: center;
+                                    margin: 0 auto 15px;
+                                    color: white;
+                                    font-size: 1.5rem;
+                                ">
+                                    <i class="fas fa-comments"></i>
+                                </div>
+                                <h6>2. Consultation</h6>
+                                <p class="small text-muted">We contact you within 24 hours</p>
+                            </div>
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <div class="step">
+                                <div class="step-icon" style="
+                                    width: 60px;
+                                    height: 60px;
+                                    background: linear-gradient(135deg, #3498db, #2c3e50);
+                                    border-radius: 50%;
+                                    display: flex;
+                                    align-items: center;
+                                    justify-content: center;
+                                    margin: 0 auto 15px;
+                                    color: white;
+                                    font-size: 1.5rem;
+                                ">
+                                    <i class="fas fa-rocket"></i>
+                                </div>
+                                <h6>3. Start Trading</h6>
+                                <p class="small text-muted">Begin your trading journey</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+  </section>
+  
+  <style>
+  .trading-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 15px 40px rgba(0,0,0,0.12);
+  }
+  
+  .benefits-list li {
+      color: #2c3e50;
+      font-weight: 500;
+  }
+  
+  .step h6 {
+      color: #2c3e50;
+      font-weight: 600;
+      margin-bottom: 8px;
+  }
+  
+  .info-box {
+      border-left: 4px solid #3498db;
+  }
+  </style>
 
-      <div class="row g-4">
-          <!-- Copy Trading Card -->
-          <div class="col-lg-6">
-              <div class="trading-card" style="
-                  background: white;
-                  border-radius: 15px;
-                  overflow: hidden;
-                  box-shadow: 0 10px 30px rgba(0,0,0,0.08);
-                  height: 100%;
-                  transition: all 0.3s ease;
-              ">
-                  <div class="card-header" style="
-                      background: linear-gradient(135deg, #3498db 0%, #2c3e50 100%);
-                      padding: 20px;
-                      color: white;
-                  ">
-                      <div class="d-flex align-items-center">
-                          <div class="icon-box me-3" style="
-                              width: 50px;
-                              height: 50px;
-                              background: rgba(255,255,255,0.2);
-                              border-radius: 50%;
-                              display: flex;
-                              align-items: center;
-                              justify-content: center;
-                          ">
-                              <i class="fas fa-users fa-lg"></i>
-                          </div>
-                          <h3 class="mb-0">Copy Trading</h3>
-                      </div>
-                  </div>
-                  <div class="card-body p-4">
-                      <div class="price-tag mb-4" style="
-                          background: rgba(52, 152, 219, 0.1);
-                          padding: 15px;
-                          border-radius: 10px;
-                          text-align: center;
-                      ">
-                          <h4 class="mb-1" style="color: #2c3e50;">Minimum Deposit: <span style="color: #3498db;">USD 50</span></h4>
-                          <p class="small mb-0" style="color: #7f8c8d;">+ 50% profit share on gains</p>
-                      </div>
-                      
-                      <ul class="benefits-list mb-4" style="list-style: none; padding-left: 0;">
-                          <li class="mb-2" style="display: flex; align-items: flex-start;">
-                              <i class="fas fa-check-circle me-2 mt-1" style="color: #3498db;"></i>
-                              <span>Automatically copy expert traders in real-time</span>
-                          </li>
-                          <li class="mb-2" style="display: flex; align-items: flex-start;">
-                              <i class="fas fa-check-circle me-2 mt-1" style="color: #3498db;"></i>
-                              <span>Risk management controls</span>
-                          </li>
-                          <li class="mb-2" style="display: flex; align-items: flex-start;">
-                              <i class="fas fa-check-circle me-2 mt-1" style="color: #3498db;"></i>
-                              <span>Daily performance reports</span>
-                          </li>
-                          <li class="mb-2" style="display: flex; align-items: flex-start;">
-                              <i class="fas fa-check-circle me-2 mt-1" style="color: #3498db;"></i>
-                              <span>24/7 account monitoring</span>
-                          </li>
-                      </ul>
-                      
-                      <button class="btn btn-primary w-100 py-3" style="
-                          border-radius: 10px;
-                          font-weight: 600;
-                          background: linear-gradient(135deg, #3498db, #2c3e50);
-                          border: none;
-                          transition: all 0.3s ease;
-                      " data-bs-toggle="modal" data-bs-target="#copyTradingModal">
-                          <i class="fas fa-copy me-2"></i> Request Copy Trading
-                      </button>
-                  </div>
-              </div>
-          </div>
-          
-          <!-- Live Trading Card -->
-          <div class="col-lg-6">
-              <div class="trading-card" style="
-                  background: white;
-                  border-radius: 15px;
-                  overflow: hidden;
-                  box-shadow: 0 10px 30px rgba(0,0,0,0.08);
-                  height: 100%;
-                  transition: all 0.3s ease;
-              ">
-                  <div class="card-header" style="
-                      background: linear-gradient(135deg, #2c3e50 0%, #3498db 100%);
-                      padding: 20px;
-                      color: white;
-                  ">
-                      <div class="d-flex align-items-center">
-                          <div class="icon-box me-3" style="
-                              width: 50px;
-                              height: 50px;
-                              background: rgba(255,255,255,0.2);
-                              border-radius: 50%;
-                              display: flex;
-                              align-items: center;
-                              justify-content: center;
-                          ">
-                              <i class="fas fa-chart-line fa-lg"></i>
-                          </div>
-                          <h3 class="mb-0">Live Trading</h3>
-                      </div>
-                  </div>
-                  <div class="card-body p-4">
-                      <div class="price-tag mb-4" style="
-                          background: rgba(52, 152, 219, 0.1);
-                          padding: 15px;
-                          border-radius: 10px;
-                          text-align: center;
-                      ">
-                          <h4 class="mb-1" style="color: #2c3e50;">Minimum Deposit: <span style="color: #3498db;">USD 100</span></h4>
-                          <p class="small mb-0" style="color: #7f8c8d;">+ 50% profit share on gains</p>
-                      </div>
-                      
-                      <ul class="benefits-list mb-4" style="list-style: none; padding-left: 0;">
-                          <li class="mb-2" style="display: flex; align-items: flex-start;">
-                              <i class="fas fa-check-circle me-2 mt-1" style="color: #3498db;"></i>
-                              <span>Personal trader manages your account</span>
-                          </li>
-                          <li class="mb-2" style="display: flex; align-items: flex-start;">
-                              <i class="fas fa-check-circle me-2 mt-1" style="color: #3498db;"></i>
-                              <span>Custom strategy based on your risk profile</span>
-                          </li>
-                          <li class="mb-2" style="display: flex; align-items: flex-start;">
-                              <i class="fas fa-check-circle me-2 mt-1" style="color: #3498db;"></i>
-                              <span>Weekly 1-on-1 consultation</span>
-                          </li>
-                          <li class="mb-2" style="display: flex; align-items: flex-start;">
-                              <i class="fas fa-check-circle me-2 mt-1" style="color: #3498db;"></i>
-                              <span>Full transparency with trade access</span>
-                          </li>
-                      </ul>
-                      
-                      <button class="btn btn-primary w-100 py-3" style="
-                          border-radius: 10px;
-                          font-weight: 600;
-                          background: linear-gradient(135deg, #3498db, #2c3e50);
-                          border: none;
-                          transition: all 0.3s ease;
-                      " data-bs-toggle="modal" data-bs-target="#liveTradingModal">
-                          <i class="fas fa-play-circle me-2"></i> Request Live Trading
-                      </button>
-                  </div>
-              </div>
-          </div>
-      </div>
-  </div>
-</section>
 
-<!-- Copy Trading Modal -->
-<div class="modal fade" id="copyTradingModal" tabindex="-1" aria-hidden="true">
-  <div class="modal-dialog modal-dialog-centered modal-lg">
-      <div class="modal-content" style="border-radius: 15px;">
-          <div class="modal-header" style="
-              background: linear-gradient(135deg, #3498db 0%, #2c3e50 100%);
-              color: white;
-              border-bottom: none;
-              border-radius: 15px 15px 0 0;
-          ">
-              <h5 class="modal-title">Copy Trading Request</h5>
-              <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
-          </div>
-          <div class="modal-body p-4">
-              <form id="copyTradingForm" action="https://api.web3forms.com/submit" method="POST">
-                  <input type="hidden" name="access_key" value="YOUR_WEB3FORMS_KEY">
-                  <input type="hidden" name="subject" value="New Copy Trading Request">
-                  <input type="hidden" name="service_type" value="Copy Trading">
-                  
-                  <div class="row g-3">
-                      <div class="col-md-6">
-                          <label for="copyName" class="form-label">Full Name</label>
-                          <input type="text" class="form-control" id="copyName" name="name" required style="padding: 12px; border-radius: 8px;">
-                      </div>
-                      <div class="col-md-6">
-                          <label for="copyEmail" class="form-label">Email</label>
-                          <input type="email" class="form-control" id="copyEmail" name="email" required style="padding: 12px; border-radius: 8px;">
-                      </div>
-                      <div class="col-md-6">
-                          <label for="copyPhone" class="form-label">Phone</label>
-                          <input type="tel" class="form-control" id="copyPhone" name="phone" required style="padding: 12px; border-radius: 8px;">
-                      </div>
-                      <div class="col-md-6">
-                          <label for="copyBroker" class="form-label">Current Broker</label>
-                          <input type="text" class="form-control" id="copyBroker" name="broker" style="padding: 12px; border-radius: 8px;">
-                      </div>
-                      <div class="col-md-6">
-                          <label for="copyExperience" class="form-label">Trading Experience</label>
-                          <select class="form-select" id="copyExperience" name="experience" required style="padding: 12px; border-radius: 8px;">
-                              <option value="">Select...</option>
-                              <option value="Beginner">Beginner (0-1 year)</option>
-                              <option value="Intermediate">Intermediate (1-3 years)</option>
-                              <option value="Advanced">Advanced (3+ years)</option>
-                          </select>
-                      </div>
-                      <div class="col-md-6">
-                          <label for="copyAccountSize" class="form-label">Account Size (USD)</label>
-                          <select class="form-select" id="copyAccountSize" name="account_size" required style="padding: 12px; border-radius: 8px;">
-                              <option value="">Select...</option>
-                              <option value="Under 1,000">Under $1,000</option>
-                              <option value="1,000-5,000">$1,000 - $5,000</option>
-                              <option value="5,000-10,000">$5,000 - $10,000</option>
-                              <option value="10,000+">$10,000+</option>
-                          </select>
-                      </div>
-                      <div class="col-12">
-                          <label for="copyNotes" class="form-label">Additional Notes</label>
-                          <textarea class="form-control" id="copyNotes" name="notes" rows="3" style="border-radius: 8px;"></textarea>
-                      </div>
-                      <div class="col-12">
-                          <div class="form-check">
-                              <input class="form-check-input" type="checkbox" id="copyTerms" required>
-                              <label class="form-check-label" for="copyTerms">
-                                  I agree to the <a href="#" style="color: #3498db;">terms and conditions</a>
-                              </label>
-                          </div>
-                      </div>
-                      <div class="col-12 mt-4">
-                          <button type="submit" class="btn btn-primary w-100 py-3" style="
-                              border-radius: 10px;
-                              font-weight: 600;
-                              background: linear-gradient(135deg, #3498db, #2c3e50);
-                              border: none;
-                          ">
-                              <i class="fas fa-paper-plane me-2"></i> Submit Request (USD 50)
-                          </button>
-                      </div>
-                  </div>
-              </form>
-          </div>
-      </div>
-  </div>
-</div>
-
-<!-- Live Trading Modal -->
-<div class="modal fade" id="liveTradingModal" tabindex="-1" aria-hidden="true">
-  <div class="modal-dialog modal-dialog-centered modal-lg">
-      <div class="modal-content" style="border-radius: 15px;">
-          <div class="modal-header" style="
-              background: linear-gradient(135deg, #2c3e50 0%, #3498db 100%);
-              color: white;
-              border-bottom: none;
-              border-radius: 15px 15px 0 0;
-          ">
-              <h5 class="modal-title">Live Trading Request</h5>
-              <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
-          </div>
-          <div class="modal-body p-4">
-              <form id="liveTradingForm" action="https://api.web3forms.com/submit" method="POST">
-                  <input type="hidden" name="access_key" value="YOUR_WEB3FORMS_KEY">
-                  <input type="hidden" name="subject" value="New Live Trading Request">
-                  <input type="hidden" name="service_type" value="Live Trading">
-                  
-                  <div class="row g-3">
-                      <div class="col-md-6">
-                          <label for="liveName" class="form-label">Full Name</label>
-                          <input type="text" class="form-control" id="liveName" name="name" required style="padding: 12px; border-radius: 8px;">
-                      </div>
-                      <div class="col-md-6">
-                          <label for="liveEmail" class="form-label">Email</label>
-                          <input type="email" class="form-control" id="liveEmail" name="email" required style="padding: 12px; border-radius: 8px;">
-                      </div>
-                      <div class="col-md-6">
-                          <label for="livePhone" class="form-label">Phone</label>
-                          <input type="tel" class="form-control" id="livePhone" name="phone" required style="padding: 12px; border-radius: 8px;">
-                      </div>
-                      <div class="col-md-6">
-                          <label for="liveBroker" class="form-label">Current Broker</label>
-                          <input type="text" class="form-control" id="liveBroker" name="broker" style="padding: 12px; border-radius: 8px;">
-                      </div>
-                      <div class="col-md-6">
-                          <label for="liveRisk" class="form-label">Risk Tolerance</label>
-                          <select class="form-select" id="liveRisk" name="risk_tolerance" required style="padding: 12px; border-radius: 8px;">
-                              <option value="">Select...</option>
-                              <option value="Low">Low (Conservative)</option>
-                              <option value="Medium">Medium (Balanced)</option>
-                              <option value="High">High (Aggressive)</option>
-                          </select>
-                      </div>
-                      <div class="col-md-6">
-                          <label for="liveAccountSize" class="form-label">Account Size (USD)</label>
-                          <select class="form-select" id="liveAccountSize" name="account_size" required style="padding: 12px; border-radius: 8px;">
-                              <option value="">Select...</option>
-                              <option value="1,000-5,000">$1,000 - $5,000</option>
-                              <option value="5,000-10,000">$5,000 - $10,000</option>
-                              <option value="10,000-25,000">$10,000 - $25,000</option>
-                              <option value="25,000+">$25,000+</option>
-                          </select>
-                      </div>
-                      <div class="col-12">
-                          <label for="liveGoals" class="form-label">Trading Goals</label>
-                          <textarea class="form-control" id="liveGoals" name="goals" rows="3" style="border-radius: 8px;"></textarea>
-                      </div>
-                      <div class="col-12">
-                          <div class="form-check">
-                              <input class="form-check-input" type="checkbox" id="liveTerms" required>
-                              <label class="form-check-label" for="liveTerms">
-                                  I agree to the <a href="#" style="color: #3498db;">terms and conditions</a>
-                              </label>
-                          </div>
-                      </div>
-                      <div class="col-12 mt-4">
-                          <button type="submit" class="btn btn-primary w-100 py-3" style="
-                              border-radius: 10px;
-                              font-weight: 600;
-                              background: linear-gradient(135deg, #3498db, #2c3e50);
-                              border: none;
-                          ">
-                              <i class="fas fa-paper-plane me-2"></i> Submit Request (USD 100)
-                          </button>
-                      </div>
-                  </div>
-              </form>
-          </div>
-      </div>
-  </div>
-</div>
 
 <!-- Reviews & Ratings Section -->
 <section class="reviews-section py-5" style="background-color: #f8fafc;">
@@ -3409,36 +2553,102 @@ function getCookie(name) {
                     <!-- Overall Rating - Dynamic -->
                     <div class="d-flex align-items-center justify-content-center mb-4">
                         <div class="me-3">
-                            <span class="display-4 fw-bold" style="color: #2c3e50;" id="averageRating">4.8</span>
+                            <span class="display-4 fw-bold" style="color: #2c3e50;">{{ average_rating|default:"4.8" }}</span>
                             <span style="color: #64748b;">/5</span>
                         </div>
                         <div>
-                            <div class="star-rating mb-1" id="averageStars">
-                                <span style="color: #f59e0b;">★★★★★</span>
+                            <div class="star-rating mb-1">
+                                <span style="color: #f59e0b;">
+                                    {% with avg_rating=average_rating|default:4.8 %}
+                                        {% for i in "12345" %}
+                                            {% if forloop.counter <= avg_rating %}★{% else %}☆{% endif %}
+                                        {% endfor %}
+                                    {% endwith %}
+                                </span>
                             </div>
-                            <small class="text-muted" id="totalReviews">Loading reviews...</small>
+                            <small class="text-muted">Based on {{ approved_reviews.count }} reviews</small>
                         </div>
                     </div>
                 </div>
 
-                <!-- Review Cards - Dynamic -->
-                <div class="row g-4 mb-5" id="reviewsContainer">
-                    <!-- Reviews will be loaded dynamically here -->
+                <!-- Django Messages -->
+                {% if messages %}
+                <div class="row justify-content-center mb-4">
+                    <div class="col-12">
+                        {% for message in messages %}
+                        <div class="alert alert-{% if message.tags == 'error' %}danger{% else %}{{ message.tags }}{% endif %} alert-dismissible fade show">
+                            <div class="d-flex align-items-center">
+                                {% if message.tags == 'success' %}
+                                <i class="fas fa-check-circle me-2"></i>
+                                {% elif message.tags == 'error' %}
+                                <i class="fas fa-exclamation-circle me-2"></i>
+                                {% else %}
+                                <i class="fas fa-info-circle me-2"></i>
+                                {% endif %}
+                                <div>{{ message }}</div>
+                            </div>
+                            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+                {% endif %}
+
+                <!-- Review Cards -->
+                <div class="row g-4 mb-5">
+                    {% for review in approved_reviews %}
+                    <div class="col-md-4">
+                        <div class="review-card position-relative" style="background: white; border-radius: 15px; padding: 40px 20px 20px 20px; box-shadow: 0 4px 12px rgba(0,0,0,0.08); height: 200px; margin-top: 40px;">
+                            <!-- Floating Image -->
+                            <div class="reviewer-image-container position-absolute top-0 start-50 translate-middle">
+                                <img src="{{ review.image.url|default:'/static/images/default-avatar.jpg' }}" alt="{{ review.author_name|default:review.client_name }}" 
+                                     class="rounded-circle border border-4 border-white shadow-sm" 
+                                     style="width: 80px; height: 80px; object-fit: cover;">
+                            </div>
+                            
+                            <!-- Review Content -->
+                            <div class="review-content h-100 d-flex flex-column justify-content-between">
+                                <div class="review-text text-center">
+                                    <p class="mb-2" style="font-size: 0.85rem; color: #4a5568; line-height: 1.4;">
+                                        "{{ review.content }}"
+                                    </p>
+                                </div>
+                                <div class="review-footer">
+                                    <div class="reviewer-info text-center">
+                                        <h6 class="mb-1 fw-bold" style="color: #2c3e50; font-size: 0.9rem;">{{ review.author_name|default:review.client_name }}</h6>
+                                        <small class="text-muted" style="font-size: 0.75rem;">{{ review.user_role }}</small>
+                                    </div>
+                                    <div class="star-rating text-center mt-2">
+                                        <span style="color: #f59e0b;">
+                                            {% for i in "12345" %}
+                                                {% if forloop.counter <= review.rating %}★{% else %}☆{% endif %}
+                                            {% endfor %}
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {% empty %}
                     <div class="col-12 text-center">
-                        <div class="spinner-border text-primary" role="status">
-                            <span class="visually-hidden">Loading reviews...</span>
+                        <div class="alert alert-info">
+                            <i class="fas fa-info-circle"></i>
+                            <h5>No Reviews Yet</h5>
+                            <p>Be the first to share your trading experience!</p>
                         </div>
-                        <p class="mt-2 text-muted">Loading reviews...</p>
                     </div>
+                    {% endfor %}
                 </div>
 
-               <!-- Review Submission Form - Horizontal Layout -->
+               <!-- Review Submission Form - SIMPLE FORM SUBMISSION -->
 <div class="row justify-content-center mt-5">
     <div class="col-12">
         <div class="card border-0" style="background: white; border-radius: 12px; box-shadow: 0 5px 20px rgba(0,0,0,0.05);">
             <div class="card-body p-4">
                 <h4 class="text-center mb-4" style="color: #2c3e50;">Share Your Trading Experience</h4>
-                <form id="reviewForm">
+                
+                <!-- SIMPLE FORM - NO AJAX -->
+                <form method="POST" action="{% url 'submit_review' %}">
                     {% csrf_token %}
                     <div class="row align-items-end">
                         <div class="col-md-3 mb-3">
@@ -3498,75 +2708,15 @@ function getCookie(name) {
     </div>
 </div>
 
-<!-- Success Modal -->
-<div class="modal fade success-modal" id="successModal" tabindex="-1" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title">Review Submitted Successfully!</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body text-center">
-                <div class="success-icon">
-                    <i class="fas fa-check-circle"></i>
-                </div>
-                <h4 class="text-success mb-3">Thank You!</h4>
-                <p class="mb-4" id="successMessage">
-                    Your review has been submitted successfully and is awaiting approval.
-                </p>
-                <button type="button" class="btn btn-primary" data-dismiss="modal">
-                    Continue Browsing
-                </button>
-            </div>
-        </div>
-    </div>
-</div>
-
-<!-- Error Modal -->
-<div class="modal fade" id="errorModal" tabindex="-1" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content">
-            <div class="modal-header bg-danger text-white">
-                <h5 class="modal-title">Submission Error</h5>
-                <button type="button" class="close text-white" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body text-center">
-                <div class="error-icon mb-3">
-                    <i class="fas fa-exclamation-circle fa-3x text-danger"></i>
-                </div>
-                <h5 class="text-danger mb-3">Oops! Something went wrong.</h5>
-                <p class="mb-4" id="errorMessage">
-                    There was an error submitting your review. Please try again.
-                </p>
-                <button type="button" class="btn btn-danger" data-dismiss="modal">
-                    Try Again
-                </button>
-            </div>
-        </div>
-    </div>
-</div>
             </div>
         </div>
     </div>
 </section>
 
-<!-- Add this JavaScript to load reviews dynamically -->
+<!-- SIMPLE JAVASCRIPT FOR STAR RATING UI ONLY - NO FORM SUBMISSION -->
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-    // Load reviews when page loads
-    loadReviews();
-    
-    // Handle review form submission
-    document.getElementById('reviewForm').addEventListener('submit', function(e) {
-        e.preventDefault();
-        submitReview();
-    });
-    
-    // Initialize star rating
+    // Initialize star rating UI only
     initializeStarRating();
 });
 
@@ -3585,165 +2735,6 @@ function initializeStarRating() {
                 starLabels[i].classList.add('active');
             }
         });
-    });
-}
-
-function loadReviews() {
-    fetch('/api/reviews/')
-        .then(response => response.json())
-        .then(data => {
-            if (data.success) {
-                displayReviews(data.reviews);
-                updateReviewStats(data.reviews);
-            } else {
-                console.error('Failed to load reviews:', data);
-                showFallbackReviews();
-            }
-        })
-        .catch(error => {
-            console.error('Error loading reviews:', error);
-            showFallbackReviews();
-        });
-}
-
-function displayReviews(reviews) {
-    const container = document.getElementById('reviewsContainer');
-    
-    if (!reviews || reviews.length === 0) {
-        container.innerHTML = `
-            <div class="col-12 text-center">
-                <div class="alert alert-info">
-                    <i class="fas fa-info-circle"></i>
-                    <h5>No Reviews Yet</h5>
-                    <p>Be the first to share your trading experience!</p>
-                </div>
-            </div>
-        `;
-        return;
-    }
-    
-    let reviewsHTML = '';
-    
-    reviews.forEach(review => {
-        const stars = '★'.repeat(review.rating) + '☆'.repeat(5 - review.rating);
-        const imageUrl = review.image_url || '/static/images/default-avatar.jpg';
-        
-        reviewsHTML += `
-            <div class="col-md-4">
-                <div class="review-card position-relative" style="background: white; border-radius: 15px; padding: 40px 20px 20px 20px; box-shadow: 0 4px 12px rgba(0,0,0,0.08); height: 200px; margin-top: 40px;">
-                    <!-- Floating Image -->
-                    <div class="reviewer-image-container position-absolute top-0 start-50 translate-middle">
-                        <img src="${imageUrl}" alt="${review.author_name}" 
-                             class="rounded-circle border border-4 border-white shadow-sm" 
-                             style="width: 80px; height: 80px; object-fit: cover;">
-                    </div>
-                    
-                    <!-- Review Content -->
-                    <div class="review-content h-100 d-flex flex-column justify-content-between">
-                        <div class="review-text text-center">
-                            <p class="mb-2" style="font-size: 0.85rem; color: #4a5568; line-height: 1.4;">
-                                "${review.content}"
-                            </p>
-                        </div>
-                        <div class="review-footer">
-                            <div class="reviewer-info text-center">
-                                <h6 class="mb-1 fw-bold" style="color: #2c3e50; font-size: 0.9rem;">${review.author_name}</h6>
-                                <small class="text-muted" style="font-size: 0.75rem;">${review.user_role}</small>
-                            </div>
-                            <div class="star-rating text-center mt-2">
-                                <span style="color: #f59e0b; font-size: 0.9rem;">${stars}</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        `;
-    });
-    
-    container.innerHTML = reviewsHTML;
-}
-
-function updateReviewStats(reviews) {
-    if (!reviews || reviews.length === 0) {
-        document.getElementById('totalReviews').textContent = 'No reviews yet';
-        return;
-    }
-    
-    // Calculate average rating
-    const totalRating = reviews.reduce((sum, review) => sum + review.rating, 0);
-    const averageRating = (totalRating / reviews.length).toFixed(1);
-    
-    // Update UI
-    document.getElementById('averageRating').textContent = averageRating;
-    document.getElementById('totalReviews').textContent = `Based on ${reviews.length} reviews`;
-    
-    // Update stars
-    const averageStars = Math.round(averageRating);
-    const starsElement = document.getElementById('averageStars');
-    starsElement.innerHTML = '★'.repeat(averageStars) + '☆'.repeat(5 - averageStars);
-}
-
-function showFallbackReviews() {
-    const container = document.getElementById('reviewsContainer');
-    container.innerHTML = `
-        <div class="col-12 text-center">
-            <div class="alert alert-warning">
-                <i class="fas fa-exclamation-triangle"></i>
-                <h5>Unable to Load Reviews</h5>
-                <p>Please check your connection and try again.</p>
-            </div>
-        </div>
-    `;
-}
-
-function submitReview() {
-    const form = document.getElementById('reviewForm');
-    const formData = new FormData(form);
-    const submitBtn = form.querySelector('button[type="submit"]');
-    
-    // Show loading state
-    const originalText = submitBtn.innerHTML;
-    submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Submitting...';
-    submitBtn.disabled = true;
-    
-    fetch('/submit-review/', {
-        method: 'POST',
-        headers: {
-            'X-Requested-With': 'XMLHttpRequest',
-            'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value
-        },
-        body: formData
-    })
-    .then(response => response.json())
-    .then(data => {
-        if (data.success) {
-            // Show success modal
-            document.getElementById('successMessage').textContent = data.message;
-            $('#successModal').modal('show');
-            
-            // Reset form
-            form.reset();
-            
-            // Reload reviews after a delay
-            setTimeout(() => {
-                loadReviews();
-            }, 2000);
-            
-        } else {
-            // Show error modal
-            document.getElementById('errorMessage').textContent = data.message;
-            $('#errorModal').modal('show');
-        }
-    })
-    .catch(error => {
-        console.error('Error submitting review:', error);
-        document.getElementById('errorMessage').textContent = 'Network error. Please try again.';
-        $('#errorModal').modal('show');
-    })
-    .finally(() => {
-        // Restore button state
-        submitBtn.innerHTML = originalText;
-        submitBtn.disabled = false;
     });
 }
 
@@ -3795,18 +2786,30 @@ document.head.appendChild(style);
 </script>
 
 
-  <!-- Trading Blog Section - Blue Theme -->
-<section class="blog-section py-5" style="background-color: #ffffff;">
-    <div class="container" id="blog">
-        <div class="row align-items-end mb-5">
-            <div class="col-lg-6">
-                <div class="section-header">
-                    <span class="badge bg-primary bg-opacity-10 text mb-3 px-3 py-2" style="letter-spacing: 1px;background: linear-gradient(135deg, #3498db, #2c3e50);color: #ffffff;">MARKET INSIGHTS</span>
-                    <h2 class="display-5 fw-bold">Latest Trading <span style="color: #3498db;">Analysis & Signals</span></h2>
-                </div>
+  <!-- Update the blog section in your template -->
+<section class="blog-section py-5" style="background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);">
+    <div class="container">
+        <div class="row mb-5">
+            <div class="col-12 text-center">
+                <h2 class="display-5 fw-bold mb-3">Latest from Our Blog</h2>
+                <p class="lead text-muted">Stay updated with the latest trading insights and market analysis</p>
             </div>
-            <div class="col-lg-6 text-lg-end mt-4 mt-lg-0">
-                <a href="" class="btn btn-primary px-4 py-2" style="
+        </div>
+
+        <div class="row g-4" id="blogsContainer">
+            <!-- Blogs will be loaded dynamically here -->
+            <div class="col-12 text-center">
+                <div class="spinner-border text-primary" role="status">
+                    <span class="visually-hidden">Loading blogs...</span>
+                </div>
+                <p class="mt-2 text-muted">Loading blog posts...</p>
+            </div>
+        </div>
+
+        <div class="row mt-5">
+            <div class="col-12 text-center">
+                <a href="{% url 'blog' %}" class="btn btn-primary btn-lg" style="
+                    padding: 12px 30px;
                     border-radius: 30px;
                     font-weight: 600;
                     background: linear-gradient(135deg, #3498db, #2c3e50);
@@ -3815,10 +2818,46 @@ document.head.appendChild(style);
                 </a>
             </div>
         </div>
-  
-        <div class="row g-4">
-            {% if blog_posts %}
-            {% for post in blog_posts %}
+    </div>
+</section>
+
+<script>
+// Add blog loading functionality
+function loadBlogs() {
+    fetch('/api/blogs/')
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                displayBlogs(data.blogs);
+            } else {
+                console.error('Failed to load blogs:', data);
+                showFallbackBlogs();
+            }
+        })
+        .catch(error => {
+            console.error('Error loading blogs:', error);
+            showFallbackBlogs();
+        });
+}
+
+function displayBlogs(blogs) {
+    const container = document.getElementById('blogsContainer');
+    
+    if (!blogs || blogs.length === 0) {
+        container.innerHTML = `
+            <div class="col-12 text-center">
+                <p class="text-muted">No blog posts available yet. Check back soon!</p>
+            </div>
+        `;
+        return;
+    }
+    
+    let blogsHTML = '';
+    
+    blogs.forEach(blog => {
+        const imageUrl = blog.featured_image || 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAwIiBoZWlnaHQ9IjIwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSIjMzQ5OGRiIi8+PHRleHQgeD0iNTAlIiB5PSI1MCUiIGZvbnQtZmFtaWx5PSJBcmlhbCIgZm9udC1zaXplPSIxOCIgZmlsbD0id2hpdGUiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGR5PSIuM2VtIj5UUkFERUdJU0U8L3RleHQ+PC9zdmc+';
+        
+        blogsHTML += `
             <div class="col-md-6 col-lg-4">
                 <div class="blog-card h-100" style="
                     background: white;
@@ -3828,46 +2867,67 @@ document.head.appendChild(style);
                     transition: all 0.3s ease;
                 ">
                     <div class="blog-image" style="height: 200px; overflow: hidden;">
-                        {% if post.image %}
-                        <img src="{{ post.image.url }}" alt="{{ post.title }}" class="w-100 h-100 object-fit-cover">
-                        {% else %}
-                        <img src="{% static 'images/blog-placeholder.jpg' %}" alt="{{ post.title }}" class="w-100 h-100 object-fit-cover">
-                        {% endif %}
+                        <img src="${imageUrl}" alt="${blog.title}" 
+                             style="width: 100%; height: 100%; object-fit: cover;">
                     </div>
+                    
                     <div class="blog-content p-4">
-                        <div class="d-flex align-items-center mb-3">
-                            <span class="badge bg-primary bg-opacity-10 text-primary me-2">Analysis</span>
-                            <small class="text-muted">{{ post.created_at|date:"M d, Y" }}</small>
-                        </div>
-                        <h3 style="font-size: 1.3rem; margin-bottom: 1rem;">
-                            <a href="" style="color: #2c3e50; text-decoration: none;">{{ post.title }}</a>
-                        </h3>
-                        <p style="color: #64748b; margin-bottom: 1.5rem;">{{ post.content|truncatewords:20 }}</p>
-                        <a href="" class="btn btn-outline-primary w-100" style="
-                            border-radius: 30px;
-                            font-weight: 500;
+                        <h5 class="blog-title" style="
+                            font-weight: 600;
+                            margin-bottom: 15px;
+                            color: #2c3e50;
+                            line-height: 1.4;
+                        ">${blog.title}</h5>
+                        
+                        <p class="blog-excerpt" style="
+                            color: #6c757d;
+                            line-height: 1.6;
+                            margin-bottom: 20px;
                         ">
-                            Read Analysis <i class="fas fa-arrow-right ms-2"></i>
-                        </a>
+                            ${blog.excerpt}
+                        </p>
+                        
+                        <div class="blog-meta d-flex justify-content-between align-items-center" style="
+                            border-top: 1px solid #e9ecef;
+                            padding-top: 15px;
+                        ">
+                            <span class="author" style="font-weight: 500; color: #3498db;">
+                                ${blog.author}
+                            </span>
+                            <span class="date text-muted">
+                                ${blog.created_at}
+                            </span>
+                        </div>
                     </div>
                 </div>
             </div>
-            {% endfor %}
-            {% else %}
-            <div class="col-12 text-center py-5">
-                <div class="text-muted">
-                    <i class="fas fa-newspaper fa-3x mb-3"></i>
-                    <h4>No Blog Posts Yet</h4>
-                    <p>Check back later for the latest market analysis and trading insights.</p>
-                </div>
+        `;
+    });
+    
+    container.innerHTML = blogsHTML;
+}
+
+function showFallbackBlogs() {
+    const container = document.getElementById('blogsContainer');
+    container.innerHTML = `
+        <div class="col-12 text-center">
+            <div class="alert alert-warning">
+                <i class="fas fa-exclamation-triangle"></i>
+                <h5>Unable to Load Blog Posts</h5>
+                <p>Please check your connection and try again.</p>
             </div>
-            {% endif %}
         </div>
-    </div>
-  </section>
+    `;
+}
+
+// Load blogs when page loads
+document.addEventListener('DOMContentLoaded', function() {
+    loadBlogs();
+});
+</script>
 
 
-{% load static %}  <!-- ✅ ADD THIS LINE AT THE VERY TOP -->
+{% load static %} 
 
 <!-- TradeWise Future: The Next Evolution -->
 <section class="future-section" style="background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%); padding: 80px 0;">
@@ -3875,10 +2935,10 @@ document.head.appendChild(style);
       
       <!-- Left Side: Text & CTA -->
       <div class="future-content" style="flex: 1; min-width: 300px;">
-          <h2 style="font-size: 2.5rem; font-weight: 700; color: #2c3e50; margin-bottom: 20px;">
-              <span style="color: #3498db;">{{ tradewise_coin.title|default:"TradeWise Coin" }}</span>  
-              <span style="display: inline-block; background: linear-gradient(135deg, #3498db, #2c3e50); color: white; font-size: 0.65rem; padding: 3px 10px; border-radius: 10px; margin-left: 8px; vertical-align: middle; font-weight: 500; letter-spacing: 0.5px;">COMING SOON</span>
-          </h2>
+        <h3 style="font-size: 1.25rem; font-weight: 600; color: #2c3e50; display: flex; align-items: center; gap: 8px;">
+            <span style="color: #3498db;">{{ tradewise_coin.title|default:"TradeWise Coin" }}</span>
+            <span style="background: linear-gradient(135deg, #3498db, #2c3e50); color: white; font-size: 0.55rem; padding: 1px 6px; border-radius: 6px; font-weight: 500; letter-spacing: 0.2px;">COMING SOON</span>
+        </h3>
           
           {% if tradewise_coin.subtitle %}
           <p style="color: #555; line-height: 1.6; margin-bottom: 10px; font-size: 1.2rem; font-weight: 600;">

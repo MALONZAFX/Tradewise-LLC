@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Direct Paystack Test</title>
+</head>
+<body>
+    <h2>🚀 DIRECT PAYSTACK TEST</h2>
+    <form method="POST" action="{% url 'initiate_payment' %}">
+        {% csrf_token %}
+        <div>
+            <label>Email:</label>
+            <input type="email" name="email" value="test@tradewise.com" required>
+        </div>
+        <div>
+            <label>Amount (KES):</label>
+            <input type="number" name="amount" value="7800" required>
+        </div>
+        <div>
+            <label>Service:</label>
+            <input type="text" name="service" value="VIP Package" required>
+        </div>
+        <button type="submit" style="background: #3498db; color: white; padding: 15px 30px; border: none; border-radius: 5px; font-size: 18px;">
+            🔥 TEST PAYSTACK PAYMENT NOW
+        </button>
+    </form>
+</body>
+</html>

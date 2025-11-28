@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <style>
+        body { font-family: Arial, sans-serif; line-height: 1.6; }
+        .container { max-width: 600px; margin: 0 auto; padding: 20px; }
+        .header { background: #2c3e50; color: white; padding: 20px; text-align: center; }
+        .content { padding: 20px; background: #f8f9fa; }
+        .footer { padding: 20px; text-align: center; color: #666; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h2>🆕 New Service Request</h2>
+        </div>
+        <div class="content">
+            <h3>Service: {{ request.get_request_type_display }}</h3>
+            <p><strong>Customer:</strong> {{ request.name }}</p>
+            <p><strong>Email:</strong> {{ request.email }}</p>
+            <p><strong>Phone:</strong> {{ request.phone }}</p>
+            <p><strong>Message:</strong> {{ request.service_details }}</p>
+            <p><strong>Submitted:</strong> {{ request.created_at }}</p>
+        </div>
+        <div class="footer">
+            <p>Please check the admin dashboard to process this request.</p>
+        </div>
+    </div>
+</body>
+</html>

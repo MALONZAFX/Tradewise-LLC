@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TradeWise Market Hub</title>
+    <title>TradeWise Classes</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         :root {
@@ -65,26 +65,42 @@
 
         /* Hero Section */
         .classes-hero {
-            background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), 
-                        url('https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80') no-repeat center center/cover;
-            height: 40vh;
+            background: url('images/bullish-golden-1.jpg') no-repeat center center/cover;
+            height: 50vh;
             display: flex;
             align-items: center;
             justify-content: center;
+            position: relative;
             color: white;
             text-align: center;
             padding: 0 20px;
         }
 
+        .classes-hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.6);
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 2;
+            max-width: 800px;
+        }
+
         .hero-content h1 {
-            font-size: 2.5rem;
-            margin-bottom: 15px;
+            font-size: 3rem;
+            margin-bottom: 20px;
             font-weight: 800;
         }
 
         .hero-content p {
-            font-size: 1.1rem;
-            margin-bottom: 25px;
+            font-size: 1.2rem;
+            margin-bottom: 30px;
             opacity: 0.9;
         }
 
@@ -92,11 +108,11 @@
             display: inline-block;
             background: var(--gradient-main);
             color: white;
-            padding: 12px 25px;
+            padding: 15px 30px;
             border-radius: 50px;
             text-decoration: none;
             font-weight: 600;
-            font-size: 1rem;
+            font-size: 1.1rem;
             transition: all 0.3s ease;
         }
 
@@ -105,218 +121,107 @@
             transform: translateY(-3px);
         }
 
-        /* Market Section */
-        .market-section {
-            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
-            padding: 60px 0;
-        }
-
-        .container {
+        /* Classes Section */
+        .classes-section {
+            padding: 60px 20px;
             max-width: 1200px;
             margin: 0 auto;
-            padding: 0 20px;
         }
 
         .section-header {
             text-align: center;
-            margin-bottom: 40px;
+            margin-bottom: 50px;
         }
 
         .section-header h2 {
             font-size: 2.2rem;
-            margin-bottom: 10px;
-            color: var(--dark-blue);
+            margin-bottom: 15px;
+            background: var(--gradient-main);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
         }
 
-        .section-header p {
-            color: #7f8c8d;
-            max-width: 700px;
-            margin: 0 auto;
-        }
-
-        /* Cards Grid */
-        .cards-grid {
+        .classes-grid {
             display: grid;
-            grid-template-columns: repeat(2, 1fr);
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
             gap: 30px;
         }
 
-        .feature-card {
+        .class-card {
             background: white;
             border-radius: 15px;
             overflow: hidden;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.05);
             transition: all 0.3s ease;
-            display: flex;
-            flex-direction: column;
-            height: 450px; /* Reduced height */
         }
 
-        .feature-card:hover {
+        .class-card:hover {
             transform: translateY(-10px);
-            box-shadow: 0 15px 40px rgba(0,0,0,0.12);
+            box-shadow: 0 15px 40px rgba(0,0,0,0.1);
         }
 
-        .card-banner {
-            height: 160px;
-            background-size: cover;
-            background-position: center;
-            position: relative;
-        }
-
-        .card-banner::after {
-            content: '';
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            width: 100%;
-            height: 60px;
-            background: linear-gradient(to top, white, transparent);
-        }
-
-        .card-header {
-            padding: 20px 25px 10px;
-        }
-
-        .card-header h3 {
-            margin: 0;
-            font-size: 1.4rem;
-            font-weight: 600;
-            color: var(--dark-blue);
-        }
-
-        .card-header p {
-            margin: 5px 0 0;
-            color: #7f8c8d;
-            font-size: 0.9rem;
-        }
-
-        .card-body {
-            padding: 0 25px 20px;
-            flex-grow: 1;
-            display: flex;
-            flex-direction: column;
-        }
-
-        .card-content {
-            margin-bottom: 20px;
-            flex-grow: 1;
-        }
-
-        .card-content p {
-            color: #555;
-            line-height: 1.5;
-            margin-bottom: 15px;
-            font-size: 0.95rem;
-        }
-
-        .card-content ul {
-            padding-left: 20px;
-            margin-bottom: 15px;
-        }
-
-        .card-content li {
-            margin-bottom: 6px;
-            font-size: 0.9rem;
-        }
-
-        .price-tag {
-            background: #f1f8fe;
-            border-left: 4px solid #3498db;
-            padding: 12px 15px;
-            margin-bottom: 20px;
-        }
-
-        .price-tag p {
-            margin: 0;
-            font-weight: 600;
-            color: #2c3e50;
-            font-size: 0.95rem;
-        }
-
-        .card-actions {
-            display: flex;
-            gap: 15px;
-        }
-
-        .card-actions button {
-            flex: 1;
-            text-align: center;
-            border-radius: 30px;
-            padding: 10px 15px;
-            font-weight: 600;
-            cursor: pointer;
-            border: none;
-            font-size: 0.9rem;
-            transition: all 0.3s ease;
-        }
-
-        .vip-button {
-            background: #3498db;
+        .class-header {
+            background: var(--dark-blue);
             color: white;
+            padding: 25px;
+            text-align: center;
         }
 
-        .vip-button:hover {
-            background: #2980b9;
+        .class-header h3 {
+            font-size: 1.8rem;
+            margin-bottom: 10px;
         }
 
-        .preview-button {
-            background: transparent;
-            color: #3498db;
-            border: 1px solid #3498db;
+        .class-header .price {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 5px;
         }
 
-        .preview-button:hover {
-            background: #f8f9fa;
+        .class-header .duration {
+            opacity: 0.9;
+            font-size: 1rem;
         }
 
-        /* Stats Grid */
-        .stats-grid {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 10px;
+        .class-body {
+            padding: 25px;
+        }
+
+        .class-features {
+            margin-bottom: 25px;
+        }
+
+        .feature-item {
+            display: flex;
+            align-items: flex-start;
             margin-bottom: 15px;
         }
 
-        .stat-item {
-            background: #f8f9fa;
+        .feature-icon {
+            color: var(--primary-blue);
+            margin-right: 15px;
+            margin-top: 3px;
+        }
+
+        .enroll-button {
+            display: block;
+            text-align: center;
+            background: var(--gradient-main);
+            color: white;
+            padding: 12px;
             border-radius: 8px;
-            padding: 10px;
-            text-align: center;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            border: none;
+            cursor: pointer;
+            width: 100%;
+            font-size: 1.1rem;
         }
 
-        .stat-item div:first-child {
-            font-size: 1.4rem;
-            font-weight: 700;
-            color: #3498db;
-        }
-
-        .stat-item div:last-child {
-            font-size: 0.8rem;
-            color: #7f8c8d;
-        }
-
-        /* Signal Performance */
-        .signal-performance {
-            display: flex;
-            justify-content: space-around;
-            margin-bottom: 20px;
-        }
-
-        .signal-item {
-            text-align: center;
-        }
-
-        .signal-item > div:first-child {
-            width: 70px;
-            height: 70px;
-            margin: 0 auto 8px;
-            position: relative;
-        }
-
-        .signal-item > div:last-child {
-            font-size: 0.8rem;
-            color: #7f8c8d;
+        .enroll-button:hover {
+            background: var(--gradient-reverse);
+            transform: translateY(-3px);
         }
 
         /* Payment Modal */
@@ -338,97 +243,159 @@
             background: white;
             border-radius: 15px;
             width: 90%;
-            max-width: 450px;
+            max-width: 500px;
+            max-height: 90vh;
+            overflow-y: auto;
             padding: 30px;
             box-shadow: 0 15px 40px rgba(0,0,0,0.15);
-        }
-
-        .modal-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 25px;
-        }
-
-        .modal-header h3 {
-            margin: 0;
-            font-size: 1.5rem;
-            color: #2c3e50;
+            position: relative;
         }
 
         .close-modal {
-            background: none;
-            border: none;
+            position: sticky;
+            top: 10px;
+            right: 10px;
+            float: right;
             font-size: 1.5rem;
             cursor: pointer;
             color: #7f8c8d;
+            background: none;
+            border: none;
+            z-index: 1;
         }
 
-        .payment-info {
-            background: #f8f9fa;
-            border-radius: 10px;
-            padding: 20px;
-            margin-bottom: 20px;
-            text-align: center;
+        .modal-header {
+            position: sticky;
+            top: 0;
+            background: white;
+            padding-top: 10px;
+            z-index: 1;
         }
 
-        .payment-info p {
-            margin: 0;
-            font-size: 1rem;
-            color: #555;
+        .modal-header h3 {
+            font-size: 1.8rem;
+            color: var(--dark-blue);
             margin-bottom: 10px;
         }
 
-        .payment-info .highlight {
-            font-size: 1.3rem;
+        .modal-price {
+            font-size: 2rem;
             font-weight: 700;
-            color: #2c3e50;
+            color: var(--primary-blue);
+            margin-bottom: 20px;
         }
 
-        .modal-actions {
+        .payment-options {
+            margin-bottom: 30px;
+        }
+
+        .payment-option {
             display: flex;
-            gap: 15px;
-        }
-
-        .modal-actions button, .modal-actions a {
-            flex: 1;
-            text-align: center;
-            border-radius: 30px;
-            padding: 12px 15px;
-            font-weight: 600;
+            align-items: center;
+            padding: 15px;
+            border: 1px solid #eee;
+            border-radius: 10px;
+            margin-bottom: 15px;
             cursor: pointer;
-            text-decoration: none;
-            font-size: 0.95rem;
             transition: all 0.3s ease;
         }
 
-        /* Responsive Adjustments */
-        @media (max-width: 992px) {
-            .cards-grid {
-                grid-template-columns: 1fr;
-            }
-            
-            .feature-card {
-                height: auto;
-                min-height: 450px;
-            }
+        .payment-option:hover {
+            border-color: var(--primary-blue);
+            background: #f8fafc;
         }
 
+        .payment-icon {
+            font-size: 2rem;
+            margin-right: 15px;
+            color: var(--primary-blue);
+            width: 50px;
+            text-align: center;
+        }
+
+        .payment-details {
+            display: none;
+            background: #f8fafc;
+            border-radius: 10px;
+            padding: 20px;
+            margin-top: 20px;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .payment-details h4 {
+            margin-bottom: 15px;
+            color: var(--dark-blue);
+        }
+
+        .payment-info {
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+        }
+
+        .payment-info p {
+            margin-bottom: 8px;
+            font-size: 0.9rem;
+        }
+
+        .payment-info .highlight {
+            font-weight: 700;
+            color: var(--dark-blue);
+            font-size: 1.1rem;
+        }
+
+        .maintenance-notice {
+            background: #fff3cd;
+            color: #856404;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            border-left: 4px solid #ffeeba;
+        }
+
+        .confirm-button {
+            display: block;
+            text-align: center;
+            background: var(--gradient-main);
+            color: white;
+            padding: 12px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            border: none;
+            cursor: pointer;
+            width: 100%;
+            font-size: 1.1rem;
+            margin-top: 20px;
+        }
+
+        .confirm-button:hover {
+            background: var(--gradient-reverse);
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Responsive Adjustments */
         @media (max-width: 768px) {
             .hero-content h1 {
-                font-size: 2rem;
+                font-size: 2.2rem;
             }
             
             .nav {
                 padding: 15px 20px;
             }
             
-            .section-header h2 {
-                font-size: 1.8rem;
+            .classes-grid {
+                grid-template-columns: 1fr;
             }
             
-            .card-actions, .modal-actions {
-                flex-direction: column;
+            .modal-content {
+                padding: 20px;
             }
         }
     </style>
@@ -451,211 +418,915 @@
         </div>
     </section>
 
-    <!-- Modern Market Section -->
-    <div class="market-section">
-        <div class="container" id="market">
-            <div class="section-header">
-                <h2>TradeWise <span style="color: #3498db;">Market Hub</span></h2>
-                <p>Your comprehensive trading resource center</p>
+
+   <!-- Modern Market Section -->
+<div class="market-section" style="background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%); padding: 80px 0;">
+    <div class="container" style="max-width: 1200px; margin: 0 auto; padding: 0 20px;" id="market">
+        <div class="section-header" style="text-align: center; margin-bottom: 60px;">
+            <h2 style="font-size: 2.5rem; font-weight: 700; color: #2c3e50; margin-bottom: 15px;">TradeWise <span style="color: #3498db;">Market Hub</span></h2>
+            <p style="font-size: 1.1rem; color: #7f8c8d; max-width: 700px; margin: 0 auto;">Your comprehensive trading resource center</p>
+        </div>
+
+        <div class="market-features" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); gap: 30px;">
+
+            <!-- Chart Lab Card -->
+            <div class="feature-card" style="background: white; border-radius: 15px; overflow: hidden; box-shadow: 0 10px 30px rgba(0,0,0,0.08); transition: transform 0.3s ease;">
+                <div class="card-header" style="background: linear-gradient(135deg, #2c3e50, #3498db); padding: 25px; color: white;">
+                    <h3 style="margin: 0; font-size: 1.5rem; font-weight: 600;">Chart Lab</h3>
+                    <p style="margin: 10px 0 0; opacity: 0.9;">Your technical analysis training ground</p>
+                </div>
+                <div class="card-body" style="padding: 25px;">
+                    <div class="card-content" style="margin-bottom: 25px;">
+                        <p style="color: #555; line-height: 1.6; margin-bottom: 20px;">Analyses and charts with guidance from seasoned traders. Learn how to spot patterns, trends, and profitable setups.</p>
+                        <ul style="padding-left: 20px; margin-bottom: 20px;">
+                            <li style="margin-bottom: 8px;">Live chart breakdowns</li>
+                            <li style="margin-bottom: 8px;">Pattern recognition training</li>
+                            <li style="margin-bottom: 8px;">Trend analysis techniques</li>
+                        </ul>
+                        <p style="color: #555; line-height: 1.6; font-weight: 600;">Elevate your trading game with deep market insight</p>
+                    </div>
+                    <div class="price-tag" style="background: #f1f8fe; border-left: 4px solid #3498db; padding: 15px; margin-bottom: 20px;">
+                        <p style="margin: 0; font-weight: 600; color: #2c3e50;">Lifetime access for only $10 (≈ KES 1,350)</p>
+                    </div>
+                    <div class="card-actions" style="display: flex; gap: 15px; flex-wrap: wrap;">
+                        <a href="https://hub.deriv.com/tradershub/signup?t=dlqa5n7DcVEzjAYmf6wqTGNd7ZgqdRLk&utm_source=affiliate_231539&utm_medium=affiliate&utm_campaign=MyAffiliates&utm_content=&referrer=127.0.0.1"
+                           style="background: #3498db; color: white; text-decoration: none; text-align: center; border: none; border-radius: 30px; padding: 12px 15px; font-weight: 600; cursor: pointer; white-space: nowrap; flex: 1 1 auto; min-width: 120px;"
+                           target="_blank">
+                           Open Deriv
+                        </a>
+                    
+                        <a href="https://www.tradingview.com/"
+                           style="background: transparent; color: #3498db; text-decoration: none; text-align: center; border: 1px solid #3498db; border-radius: 30px; padding: 12px 15px; font-weight: 600; cursor: pointer; white-space: nowrap; flex: 1 1 auto; min-width: 120px;"
+                           target="_blank">
+                           Open TradingView
+                        </a>
+                    </div>
+                </div>
             </div>
 
-            <div class="cards-grid">
-                <!-- Chart Lab Card -->
-                <div class="feature-card">
-                    <div class="card-banner" style="background-image: url('https://images.unsplash.com/photo-1590283603385-17ffb3a7f29f?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80');"></div>
-                    <div class="card-header">
-                        <h3>Chart Lab</h3>
-                        <p>Your technical analysis training ground</p>
+            <!-- Strategies Card -->
+            <div class="feature-card" style="background: white; border-radius: 15px; overflow: hidden; box-shadow: 0 10px 30px rgba(0,0,0,0.08); transition: transform 0.3s ease;">
+                <div class="card-header" style="background: linear-gradient(135deg, #2c3e50, #3498db); padding: 25px; color: white;">
+                    <h3 style="margin: 0; font-size: 1.5rem; font-weight: 600;">Trading Strategies</h3>
+                    <p style="margin: 10px 0 0; opacity: 0.9;">Proven systems for consistent profits</p>
+                </div>
+                <div class="card-body" style="padding: 25px;">
+                    <div class="stats-grid" style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; margin-bottom: 20px;">
+                        <div class="stat-item" style="background: #f8f9fa; border-radius: 10px; padding: 15px; text-align: center;">
+                            <div style="font-size: 1.8rem; font-weight: 700; color: #3498db;">4,155+</div>
+                            <div style="font-size: 0.9rem; color: #7f8c8d;">Strategies</div>
+                        </div>
+                        <div class="stat-item" style="background: #f8f9fa; border-radius: 10px; padding: 15px; text-align: center;">
+                            <div style="font-size: 1.8rem; font-weight: 700; color: #3498db;">1,224</div>
+                            <div style="font-size: 0.9rem; color: #7f8c8d;">Forex</div>
+                        </div>
+                        <div class="stat-item" style="background: #f8f9fa; border-radius: 10px; padding: 15px; text-align: center;">
+                            <div style="font-size: 1.8rem; font-weight: 700; color: #3498db;">2,000+</div>
+                            <div style="font-size: 0.9rem; color: #7f8c8d;">Crypto</div>
+                        </div>
+                        <div class="stat-item" style="background: #f8f9fa; border-radius: 10px; padding: 15px; text-align: center;">
+                            <div style="font-size: 1.8rem; font-weight: 700; color: #3498db;">3,000+</div>
+                            <div style="font-size: 0.9rem; color: #7f8c8d;">Derivatives</div>
+                        </div>
                     </div>
-                    <div class="card-body">
-                        <div class="card-content">
-                            <p>Analyses and charts with guidance from seasoned traders. Learn how to spot patterns, trends, and profitable setups.</p>
-                            <ul>
-                                <li>Live chart breakdowns</li>
-                                <li>Pattern recognition training</li>
-                                <li>Trend analysis techniques</li>
-                            </ul>
-                        </div>
-                        <div class="price-tag">
-                            <p>Lifetime access for only $10 (≈ KES 1,350)</p>
-                        </div>
-                        <div class="card-actions">
-                            <a href="https://hub.deriv.com/tradershub/signup?t=dlqa5n7DcVEzjAYmf6wqTGNd7ZgqdRLk&utm_source=affiliate_231539&utm_medium=affiliate&utm_campaign=MyAffiliates&utm_content=&referrer=127.0.0.1"
-                               class="vip-button" target="_blank">
-                               Open Deriv
-                            </a>
-                            <a href="https://www.tradingview.com/"
-                               class="preview-button" target="_blank">
-                               Open TradingView
-                            </a>
-                        </div>
+                    <div class="price-tag" style="background: #f1f8fe; border-left: 4px solid #3498db; padding: 15px; margin-bottom: 20px;">
+                        <p style="margin: 0; font-weight: 600; color: #2c3e50;">Lifetime access for only $50 (≈ KES 7,800)</p>
+                    </div>
+                    <div class="card-actions" style="display: flex; gap: 15px;">
+                        <button onclick="showPaymentModal(50, 'Trading Strategies')" style="background: #3498db; color: white; border: none; border-radius: 30px; padding: 12px 25px; font-weight: 600; cursor: pointer; flex: 1;">VIP Access</button>
+                        <button style="background: transparent; color: #3498db; border: 1px solid #3498db; border-radius: 30px; padding: 12px 25px; font-weight: 600; cursor: pointer; flex: 1;">Free Preview</button>
                     </div>
                 </div>
+            </div>
 
-                <!-- Strategies Card -->
-                <div class="feature-card">
-                    <div class="card-banner" style="background-image: url('https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80');"></div>
-                    <div class="card-header">
-                        <h3>Trading Strategies</h3>
-                        <p>Proven systems for consistent profits</p>
-                    </div>
-                    <div class="card-body">
-                        <div class="card-content">
-                            <div class="stats-grid">
-                                <div class="stat-item">
-                                    <div>4,155+</div>
-                                    <div>Strategies</div>
-                                </div>
-                                <div class="stat-item">
-                                    <div>1,224</div>
-                                    <div>Forex</div>
-                                </div>
-                                <div class="stat-item">
-                                    <div>2,000+</div>
-                                    <div>Crypto</div>
-                                </div>
-                                <div class="stat-item">
-                                    <div>3,000+</div>
-                                    <div>Derivatives</div>
-                                </div>
+            <!-- Signals Card -->
+            <div class="feature-card" style="background: white; border-radius: 15px; overflow: hidden; box-shadow: 0 10px 30px rgba(0,0,0,0.08); transition: transform 0.3s ease;">
+                <div class="card-header" style="background: linear-gradient(135deg, #2c3e50, #3498db); padding: 25px; color: white;">
+                    <h3 style="margin: 0; font-size: 1.5rem; font-weight: 600;">Premium Signals</h3>
+                    <p style="margin: 10px 0 0; opacity: 0.9;">Real-time trading opportunities</p>
+                </div>
+                <div class="card-body" style="padding: 25px;">
+                    <div class="signal-performance" style="display: flex; justify-content: space-around; margin-bottom: 25px;">
+                        <div class="signal-item" style="text-align: center;">
+                            <div style="width: 80px; height: 80px; margin: 0 auto 10px; position: relative;">
+                                <svg width="80" height="80" viewBox="0 0 36 36" style="transform: rotate(-90deg);">
+                                    <circle cx="18" cy="18" r="15.9155" fill="none" stroke="#e6e6e6" stroke-width="3" stroke-dasharray="100 100" stroke-dashoffset="0"></circle>
+                                    <circle cx="18" cy="18" r="15.9155" fill="none" stroke="#3498db" stroke-width="3" stroke-dasharray="100 100" stroke-dashoffset="20" stroke-linecap="round"></circle>
+                                </svg>
+                                <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); font-weight: 700; font-size: 1.2rem;">80%</div>
                             </div>
-                            <p>Access thousands of proven trading strategies across all major markets.</p>
+                            <div style="font-size: 0.9rem; color: #7f8c8d;">Forex Accuracy</div>
                         </div>
-                        <div class="price-tag">
-                            <p>Lifetime access for only $50 (≈ KES 7,800)</p>
-                        </div>
-                        <div class="card-actions">
-                            <button onclick="showPaymentModal(50, 'Trading Strategies')" class="vip-button">VIP Access</button>
-                            <button class="preview-button">Free Preview</button>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Signals Card -->
-                <div class="feature-card">
-                    <div class="card-banner" style="background-image: url('https://images.unsplash.com/photo-1642790554902-16c76c4c1a3b?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80');"></div>
-                    <div class="card-header">
-                        <h3>Premium Signals</h3>
-                        <p>Real-time trading opportunities</p>
-                    </div>
-                    <div class="card-body">
-                        <div class="card-content">
-                            <div class="signal-performance">
-                                <div class="signal-item">
-                                    <div>
-                                        <svg width="70" height="70" viewBox="0 0 36 36" style="transform: rotate(-90deg);">
-                                            <circle cx="18" cy="18" r="15.9155" fill="none" stroke="#e6e6e6" stroke-width="3" stroke-dasharray="100 100" stroke-dashoffset="0"></circle>
-                                            <circle cx="18" cy="18" r="15.9155" fill="none" stroke="#3498db" stroke-width="3" stroke-dasharray="100 100" stroke-dashoffset="20" stroke-linecap="round"></circle>
-                                        </svg>
-                                        <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); font-weight: 700; font-size: 1rem;">80%</div>
-                                    </div>
-                                    <div>Forex Accuracy</div>
-                                </div>
-                                <div class="signal-item">
-                                    <div>
-                                        <svg width="70" height="70" viewBox="0 0 36 36" style="transform: rotate(-90deg);">
-                                            <circle cx="18" cy="18" r="15.9155" fill="none" stroke="#e6e6e6" stroke-width="3" stroke-dasharray="100 100" stroke-dashoffset="0"></circle>
-                                            <circle cx="18" cy="18" r="15.9155" fill="none" stroke="#3498db" stroke-width="3" stroke-dasharray="100 100" stroke-dashoffset="40" stroke-linecap="round"></circle>
-                                        </svg>
-                                        <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); font-weight: 700; font-size: 1rem;">60%</div>
-                                    </div>
-                                    <div>Crypto Accuracy</div>
-                                </div>
+                        <div class="signal-item" style="text-align: center;">
+                            <div style="width: 80px; height: 80px; margin: 0 auto 10px; position: relative;">
+                                <svg width="80" height="80" viewBox="0 0 36 36" style="transform: rotate(-90deg);">
+                                    <circle cx="18" cy="18" r="15.9155" fill="none" stroke="#e6e6e6" stroke-width="3" stroke-dasharray="100 100" stroke-dashoffset="0"></circle>
+                                    <circle cx="18" cy="18" r="15.9155" fill="none" stroke="#3498db" stroke-width="3" stroke-dasharray="100 100" stroke-dashoffset="40" stroke-linecap="round"></circle>
+                                </svg>
+                                <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); font-weight: 700; font-size: 1.2rem;">60%</div>
                             </div>
-                            <p>Receive high-probability trading signals directly to your device with detailed entry and exit points.</p>
-                        </div>
-                        <div class="price-tag">
-                            <p>Monthly access for only $50 (≈ KES 7,800)</p>
-                        </div>
-                        <div class="card-actions">
-                            <button onclick="showPaymentModal(50, 'Premium Signals')" class="vip-button">VIP Access</button>
-                            <button class="preview-button">Free Preview</button>
+                            <div style="font-size: 0.9rem; color: #7f8c8d;">Crypto Accuracy</div>
                         </div>
                     </div>
-                </div>
-
-                <!-- Trading Bots Card -->
-                <div class="feature-card">
-                    <div class="card-banner" style="background-image: url('https://images.unsplash.com/photo-1551288049-bebda4e38f71?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80');"></div>
-                    <div class="card-header">
-                        <h3>Trading Bots & Software</h3>
-                        <p>Automated trading solutions</p>
+                    <div class="price-tag" style="background: #f1f8fe; border-left: 4px solid #3498db; padding: 15px; margin-bottom: 20px;">
+                        <p style="margin: 0; font-weight: 600; color: #2c3e50;">Monthly access for only $50 (≈ KES 7,800)</p>
                     </div>
-                    <div class="card-body">
-                        <div class="card-content">
-                            <p>Access our suite of automated trading bots and software tools designed to execute trades 24/7 based on proven strategies.</p>
-                            <ul>
-                                <li>AI-powered trading algorithms</li>
-                                <li>Customizable trading parameters</li>
-                                <li>Backtesting capabilities</li>
-                                <li>Real-time performance monitoring</li>
-                            </ul>
-                        </div>
-                        <div class="price-tag">
-                            <p>Lifetime access for only $75 (≈ KES 11,700)</p>
-                        </div>
-                        <div class="card-actions">
-                            <button onclick="showPaymentModal(75, 'Trading Bots & Software')" class="vip-button">VIP Access</button>
-                            <button class="preview-button">Free Preview</button>
-                        </div>
+                    <div class="card-actions" style="display: flex; gap: 15px;">
+                        <button onclick="showPaymentModal(50, 'Premium Signals')" style="background: #3498db; color: white; border: none; border-radius: 30px; padding: 12px 25px; font-weight: 600; cursor: pointer; flex: 1;">VIP Access</button>
+                        <button style="background: transparent; color: #3498db; border: 1px solid #3498db; border-radius: 30px; padding: 12px 25px; font-weight: 600; cursor: pointer; flex: 1;">Free Preview</button>
                     </div>
                 </div>
             </div>
         </div>
     </div>
+</div>
 
-    <!-- Payment Modal -->
-    <div id="paymentModal" class="payment-modal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h3>Complete VIP Access</h3>
-                <button class="close-modal" onclick="closePaymentModal()">&times;</button>
+<!-- Payment Modal -->
+<div id="paymentModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.5); z-index: 1000; justify-content: center; align-items: center; backdrop-filter: blur(5px);">
+    <div style="background: white; border-radius: 15px; width: 90%; max-width: 450px; padding: 30px; box-shadow: 0 15px 40px rgba(0,0,0,0.15);">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px;">
+            <h3 style="margin: 0; font-size: 1.5rem; color: #2c3e50;">Complete VIP Access</h3>
+            <button onclick="closePaymentModal()" style="background: none; border: none; font-size: 1.5rem; cursor: pointer; color: #7f8c8d;">&times;</button>
+        </div>
+        
+        <div style="margin-bottom: 25px;">
+            <div style="background: #f8f9fa; border-radius: 10px; padding: 20px; margin-bottom: 20px; text-align: center;">
+                <p style="margin: 0; font-size: 1.1rem; color: #555; margin-bottom: 10px;">You're purchasing:</p>
+                <p style="margin: 0; font-size: 1.3rem; font-weight: 700; color: #2c3e50;" id="modalServiceName"></p>
             </div>
             
-            <div class="payment-info">
-                <p>You're purchasing:</p>
-                <p class="highlight" id="modalServiceName"></p>
-            </div>
-            
-            <div class="payment-info">
-                <p>Send payment to:</p>
-                <p class="highlight">+254742962615</p>
-                <p id="modalAmount"></p>
+            <div style="background: #f1f8fe; border-radius: 10px; padding: 20px; margin-bottom: 25px; text-align: center;">
+                <p style="margin: 0; font-size: 1rem; color: #555;">Send payment to:</p>
+                <p style="margin: 10px 0 0; font-size: 1.4rem; font-weight: 700; color: #3498db;">+254742962615</p>
+                <p style="margin: 5px 0 0; font-size: 1.1rem; color: #2c3e50;" id="modalAmount"></p>
             </div>
             
             <p style="color: #7f8c8d; text-align: center; margin-bottom: 20px;">
                 After payment, confirm with your transaction details for onboarding.
             </p>
-            
-            <div class="modal-actions">
-                <button onclick="closePaymentModal()" class="preview-button">Cancel</button>
-                <a href="contact.html" class="vip-button">Confirm Payment</a>
-            </div>
+        </div>
+        
+        <div style="display: flex; gap: 15px;">
+            <button onclick="closePaymentModal()" style="background: transparent; color: #3498db; border: 1px solid #3498db; border-radius: 30px; padding: 12px 25px; font-weight: 600; cursor: pointer; flex: 1;">Cancel</button>
+            <a href="contact.html" style="background: #3498db; color: white; border: none; border-radius: 30px; padding: 12px 25px; font-weight: 600; cursor: pointer; text-decoration: none; text-align: center; flex: 1;">Confirm Payment</a>
         </div>
     </div>
+</div>
 
-    <script>
-        // Payment modal functions
-        function showPaymentModal(amountUSD, serviceName) {
-            // Updated conversion rate from USD to KES (1 USD = 156 KES as of 2024)
-            const amountKES = Math.round(amountUSD * 156);
-            document.getElementById('modalServiceName').textContent = serviceName;
-            document.getElementById('modalAmount').textContent = '$' + amountUSD + ' (≈ KES ' + amountKES.toLocaleString() + ')';
-            document.getElementById('paymentModal').style.display = 'flex';
-        }
+<script>
+    // Payment modal functions
+    function showPaymentModal(amountUSD, serviceName) {
+        // Updated conversion rate from USD to KES (1 USD = 156 KES as of 2024)
+        const amountKES = Math.round(amountUSD * 156);
+        document.getElementById('modalServiceName').textContent = serviceName;
+        document.getElementById('modalAmount').textContent = '$' + amountUSD + ' (≈ KES ' + amountKES.toLocaleString() + ')';
+        document.getElementById('paymentModal').style.display = 'flex';
+    }
 
-        function closePaymentModal() {
-            document.getElementById('paymentModal').style.display = 'none';
-        }
+    function closePaymentModal() {
+        document.getElementById('paymentModal').style.display = 'none';
+    }
 
-        // Close modal when clicking outside
-        window.onclick = function(event) {
-            const modal = document.getElementById('paymentModal');
-            if (event.target == modal) {
-                closePaymentModal();
-            }
+    // Close modal when clicking outside
+    window.onclick = function(event) {
+        const modal = document.getElementById('paymentModal');
+        if (event.target == modal) {
+            closePaymentModal();
         }
-    </script>
+    }
+</script>
     
 </body>
 </html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="market-section" id="market">
+    <div class="container">
+        <!-- STRATEGIES SECTION -->
+        <div class="section-header">
+            <div>
+                <h2>Trading Strategies</h2>
+                <p>Professional trading systems and mentorship programs</p>
+            </div>
+            <button class="refresh-btn" onclick="loadStrategies()" id="refreshStrategies">
+                <i class="fas fa-sync-alt"></i> Refresh Strategies
+            </button>
+        </div>
+
+        <div class="market-row" id="strategies-container">
+            {% for strategy in strategies %}
+            <div class="market-card" data-strategy-id="{{ strategy.id }}">
+                <div class="card-image">
+                    {% if strategy.image %}
+                        <img src="{{ strategy.image.url }}" alt="{{ strategy.title }}">
+                    {% else %}
+                        <img src="{% static 'images/strategy-placeholder.jpg' %}" alt="{{ strategy.title }}">
+                    {% endif %}
+                    <div class="card-badge">Strategy Mentorship</div>
+                </div>
+                <div class="card-content">
+                    <div class="card-header">
+                        <h3>{{ strategy.title }}</h3>
+                        <div class="card-subtitle">Professional Trading System</div>
+                    </div>
+                    
+                    <div class="card-description">
+                        {{ strategy.description }}
+                    </div>
+
+                    <div class="card-meta">
+                        <span><i class="fas fa-dollar-sign"></i> ${{ strategy.price_usd }}</span>
+                        <span><i class="fas fa-coins"></i> KES {{ strategy.price_kes }}</span>
+                    </div>
+
+                    <div class="card-actions">
+                        <button class="btn primary" onclick="openMentorshipModal('Strategy', '{{ strategy.title|escapejs }}')">
+                            <i class="fas fa-user-graduate"></i> Request Mentorship
+                        </button>
+                    </div>
+                </div>
+            </div>
+            {% empty %}
+            <div class="market-card">
+                <div class="card-image">
+                    <img src="{% static 'images/strategy-placeholder.jpg' %}" alt="Custom Strategy">
+                    <div class="card-badge">Coming Soon</div>
+                </div>
+                <div class="card-content">
+                    <div class="card-header">
+                        <h3>Custom Strategy Development</h3>
+                        <div class="card-subtitle">Personalized Trading Solutions</div>
+                    </div>
+                    
+                    <div class="card-description">
+                        Get a trading strategy tailored specifically to your trading style, risk tolerance, and market preferences with complete implementation guidance.
+                    </div>
+
+                    <div class="card-actions">
+                        <button class="btn primary" onclick="openMentorshipModal('Strategy', 'Custom Strategy Development')">
+                            <i class="fas fa-user-graduate"></i> Request Development
+                        </button>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+
+        <!-- SIGNALS SECTION -->
+        <div class="section-header" style="margin-top: 60px;">
+            <div>
+                <h2>Trading Signals</h2>
+                <p>High-accuracy trading alerts and signal services</p>
+            </div>
+            <button class="refresh-btn" onclick="loadSignals()" id="refreshSignals">
+                <i class="fas fa-sync-alt"></i> Refresh Signals
+            </button>
+        </div>
+
+        <div class="market-row" id="signals-container">
+            {% for signal in signals %}
+            <div class="market-card" data-signal-id="{{ signal.id }}">
+                <div class="card-image">
+                    {% if signal.image %}
+                        <img src="{{ signal.image.url }}" alt="{{ signal.title }}">
+                    {% else %}
+                        <img src="{% static 'images/signal-placeholder.jpg' %}" alt="{{ signal.title }}">
+                    {% endif %}
+                    <div class="card-badge">Signal Service</div>
+                </div>
+                <div class="card-content">
+                    <div class="card-header">
+                        <h3>{{ signal.title }}</h3>
+                        <div class="card-subtitle">Professional Trading Signals</div>
+                    </div>
+                    
+                    <div class="card-description">
+                        {{ signal.description }}
+                    </div>
+
+                    <div class="card-meta">
+                        <span><i class="fas fa-chart-line"></i> Forex: {{ signal.accuracy_forex }}%</span>
+                        <span><i class="fas fa-coins"></i> Crypto: {{ signal.accuracy_crypto }}%</span>
+                    </div>
+
+                    <div class="card-actions">
+                        <button class="btn primary" onclick="openMentorshipModal('Signal', '{{ signal.title|escapejs }}')">
+                            <i class="fas fa-bell"></i> Request Signals
+                        </button>
+                    </div>
+                </div>
+            </div>
+            {% empty %}
+            <div class="market-card">
+                <div class="card-image">
+                    <img src="{% static 'images/signal-placeholder.jpg' %}" alt="Premium Signals">
+                    <div class="card-badge">Premium Service</div>
+                </div>
+                <div class="card-content">
+                    <div class="card-header">
+                        <h3>Premium Signal Service</h3>
+                        <div class="card-subtitle">High-Accuracy Trading Alerts</div>
+                    </div>
+                    
+                    <div class="card-description">
+                        Receive professional trading signals with detailed entry, exit, and risk management instructions across multiple markets with real-time mobile alerts.
+                    </div>
+
+                    <div class="card-actions">
+                        <button class="btn primary" onclick="openMentorshipModal('Signal', 'Premium Signal Service')">
+                            <i class="fas fa-bell"></i> Join Waitlist
+                        </button>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+
+        <!-- SOFTWARE SECTION -->
+        <div class="section-header" style="margin-top: 60px;">
+            <div>
+                <h2>Trading Tools & Software</h2>
+                <p>Download powerful trading tools, indicators, and software</p>
+            </div>
+            <button class="refresh-btn" onclick="loadSoftware()" id="refreshSoftware">
+                <i class="fas fa-sync-alt"></i> Refresh Software
+            </button>
+        </div>
+
+        <div class="market-row" id="software-container">
+            {% for software in software_list %}
+            <div class="market-card" data-software-id="{{ software.id }}">
+                <div class="card-image">
+                    {% if software.thumbnail %}
+                        <img src="{{ software.thumbnail.url }}" alt="{{ software.name }}">
+                    {% else %}
+                        <img src="{% static 'images/software-placeholder.jpg' %}" alt="{{ software.name }}">
+                    {% endif %}
+                    <div class="card-badge software">{{ software.get_file_type_display }}</div>
+                </div>
+                <div class="card-content">
+                    <div class="card-header">
+                        <h3>{{ software.name }}</h3>
+                        <div class="card-subtitle">Version {{ software.version }}</div>
+                    </div>
+                    
+                    <div class="card-description">
+                        {{ software.description }}
+                    </div>
+
+                    <div class="card-meta">
+                        <span class="download-count"><i class="fas fa-download"></i> {{ software.download_count }} downloads</span>
+                        <span><i class="fas fa-file"></i> {{ software.file.size|filesizeformat }}</span>
+                    </div>
+
+                    <div class="card-actions">
+                        <a href="{{ software.file.url }}" class="btn download" download onclick="trackDownload({{ software.id }})">
+                            <i class="fas fa-download"></i> Download
+                        </a>
+                        <button class="btn info" onclick="showSoftwareDetails({{ software.id }})">
+                            <i class="fas fa-info-circle"></i> Details
+                        </button>
+                    </div>
+                </div>
+            </div>
+            {% empty %}
+            <div class="market-card">
+                <div class="card-image">
+                    <img src="{% static 'images/software-placeholder.jpg' %}" alt="Trading Tools">
+                    <div class="card-badge software">Coming Soon</div>
+                </div>
+                <div class="card-content">
+                    <div class="card-header">
+                        <h3>Advanced Trading Tools</h3>
+                        <div class="card-subtitle">Premium Trading Software</div>
+                    </div>
+                    
+                    <div class="card-description">
+                        Get access to our exclusive trading tools, custom indicators, and automated trading systems designed to give you an edge in the markets.
+                    </div>
+
+                    <div class="card-actions">
+                        <button class="btn primary" onclick="openMentorshipModal('Software', 'Advanced Trading Tools')">
+                            <i class="fas fa-bell"></i> Get Notified
+                        </button>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+
+<!-- MENTORSHIP MODAL -->
+<div id="mentorshipModal" class="modal-backdrop" role="dialog" aria-hidden="true">
+    <div class="modal-card" role="document">
+        <button class="modal-close" onclick="closeMentorshipModal()" aria-label="Close">&times;</button>
+        
+        <div class="modal-header">
+            <h3 id="modalTitle">Request Strategy Mentorship</h3>
+            <p id="modalSubtitle">Get personalized guidance from our expert traders</p>
+        </div>
+
+        <div class="modal-content">
+            <form id="mentorshipForm" method="POST" class="ajax-form">
+                {% csrf_token %}
+                <input type="hidden" name="service_type" id="service_type_input" value="">
+                <input type="hidden" name="selected_service" id="selected_service_input" value="">
+                
+                <div class="form-group">
+                    <label for="name">Full Name *</label>
+                    <input type="text" id="name" name="name" class="form-control" placeholder="Enter your full name" required>
+                    <div class="form-error" id="nameError"></div>
+                </div>
+
+                <div class="form-group">
+                    <label for="email">Email Address *</label>
+                    <input type="email" id="email" name="email" class="form-control" placeholder="Enter your email" required>
+                    <div class="form-error" id="emailError"></div>
+                </div>
+
+                <div class="form-group">
+                    <label for="phone">Phone Number *</label>
+                    <input type="text" id="phone" name="phone" class="form-control" placeholder="Enter your phone number" required>
+                    <div class="form-error" id="phoneError"></div>
+                </div>
+
+                <div class="form-group">
+                    <label for="experience">Trading Experience Level *</label>
+                    <select id="experience" name="experience" class="form-control" required>
+                        <option value="">Select your experience level</option>
+                        <option value="beginner">Beginner (0-6 months)</option>
+                        <option value="intermediate">Intermediate (6 months - 2 years)</option>
+                        <option value="advanced">Advanced (2+ years)</option>
+                    </select>
+                    <div class="form-error" id="experienceError"></div>
+                </div>
+
+                <div class="form-group">
+                    <label for="message">Additional Notes (Optional)</label>
+                    <textarea id="message" name="message" class="form-control" rows="3" placeholder="Tell us about your trading goals or any specific requirements..."></textarea>
+                </div>
+
+                <button type="submit" class="submit-btn" id="submitBtn">
+                    <i class="fas fa-paper-plane"></i> Submit Mentorship Request
+                </button>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- SOFTWARE DETAILS MODAL -->
+<div id="softwareModal" class="modal-backdrop" role="dialog" aria-hidden="true">
+    <div class="modal-card" role="document">
+        <button class="modal-close" onclick="closeSoftwareModal()" aria-label="Close">&times;</button>
+        
+        <div class="modal-header">
+            <h3 id="softwareModalTitle">Software Details</h3>
+            <p id="softwareModalSubtitle">Complete information about this trading tool</p>
+        </div>
+
+        <div class="modal-content">
+            <div id="softwareDetailsContent">
+                <!-- Dynamic content will be loaded here -->
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ================== AJAX COMPLIANCE JAVASCRIPT ================== -->
+<script>
+    // CSRF Token setup
+    function getCSRFToken() {
+        return document.querySelector('[name=csrfmiddlewaretoken]')?.value || '';
+    }
+
+    // Global AJAX setup
+    $.ajaxSetup({
+        beforeSend: function(xhr, settings) {
+            if (!/^(GET|HEAD|OPTIONS|TRACE)$/i.test(settings.type) && !this.crossDomain) {
+                xhr.setRequestHeader("X-CSRFToken", getCSRFToken());
+            }
+        }
+    });
+
+    // Toast notification system
+    function showToast(title, message, type = 'info') {
+        const toastContainer = document.getElementById('toastContainer');
+        const toast = document.createElement('div');
+        toast.className = `toast ${type}`;
+        
+        const icons = {
+            success: 'fa-check-circle',
+            error: 'fa-exclamation-circle',
+            warning: 'fa-exclamation-triangle',
+            info: 'fa-info-circle'
+        };
+
+        toast.innerHTML = `
+            <i class="fas ${icons[type]} toast-icon"></i>
+            <div class="toast-content">
+                <div class="toast-title">${title}</div>
+                <div class="toast-message">${message}</div>
+            </div>
+            <button class="toast-close" onclick="this.parentElement.remove()">
+                <i class="fas fa-times"></i>
+            </button>
+        `;
+
+        toastContainer.appendChild(toast);
+        setTimeout(() => toast.classList.add('show'), 100);
+        setTimeout(() => {
+            if (toast.parentElement) {
+                toast.classList.remove('show');
+                setTimeout(() => toast.remove(), 300);
+            }
+        }, 5000);
+    }
+
+    // ================== AJAX LOADING FUNCTIONS ==================
+    function loadStrategies() {
+        const container = $('#strategies-container');
+        const btn = $('#refreshStrategies');
+        
+        container.addClass('loading');
+        btn.prop('disabled', true).html('<i class="fas fa-spinner fa-spin"></i> Loading...');
+        
+        $.ajax({
+            url: '{% url "ajax_market_strategies" %}',
+            type: 'GET',
+            success: function(response) {
+                if (response.success) {
+                    container.html(response.html);
+                    showToast('Success', 'Strategies updated successfully', 'success');
+                } else {
+                    showToast('Error', response.error || 'Failed to load strategies', 'error');
+                }
+            },
+            error: function(xhr, status, error) {
+                console.error('Strategies load error:', error);
+                showToast('Error', 'Failed to load strategies. Please try again.', 'error');
+            },
+            complete: function() {
+                container.removeClass('loading');
+                btn.prop('disabled', false).html('<i class="fas fa-sync-alt"></i> Refresh Strategies');
+            }
+        });
+    }
+
+    function loadSignals() {
+        const container = $('#signals-container');
+        const btn = $('#refreshSignals');
+        
+        container.addClass('loading');
+        btn.prop('disabled', true).html('<i class="fas fa-spinner fa-spin"></i> Loading...');
+        
+        $.ajax({
+            url: '{% url "ajax_market_signals" %}',
+            type: 'GET',
+            success: function(response) {
+                if (response.success) {
+                    container.html(response.html);
+                    showToast('Success', 'Signals updated successfully', 'success');
+                } else {
+                    showToast('Error', response.error || 'Failed to load signals', 'error');
+                }
+            },
+            error: function(xhr, status, error) {
+                console.error('Signals load error:', error);
+                showToast('Error', 'Failed to load signals. Please try again.', 'error');
+            },
+            complete: function() {
+                container.removeClass('loading');
+                btn.prop('disabled', false).html('<i class="fas fa-sync-alt"></i> Refresh Signals');
+            }
+        });
+    }
+
+    function loadSoftware() {
+        const container = $('#software-container');
+        const btn = $('#refreshSoftware');
+        
+        container.addClass('loading');
+        btn.prop('disabled', true).html('<i class="fas fa-spinner fa-spin"></i> Loading...');
+        
+        $.ajax({
+            url: '{% url "ajax_market_software" %}',
+            type: 'GET',
+            success: function(response) {
+                if (response.success) {
+                    container.html(response.html);
+                    showToast('Success', 'Software updated successfully', 'success');
+                } else {
+                    showToast('Error', response.error || 'Failed to load software', 'error');
+                }
+            },
+            error: function(xhr, status, error) {
+                console.error('Software load error:', error);
+                showToast('Error', 'Failed to load software. Please try again.', 'error');
+            },
+            complete: function() {
+                container.removeClass('loading');
+                btn.prop('disabled', false).html('<i class="fas fa-sync-alt"></i> Refresh Software');
+            }
+        });
+    }
+
+    // ================== MODAL FUNCTIONS ==================
+    function openMentorshipModal(type, title) {
+        const modal = document.getElementById('mentorshipModal');
+        const modalTitle = document.getElementById('modalTitle');
+        const modalSubtitle = document.getElementById('modalSubtitle');
+        
+        modal.style.display = 'flex';
+        document.body.style.overflow = 'hidden';
+        
+        if (type === 'Strategy') {
+            modalTitle.textContent = 'Request Strategy Mentorship';
+            modalSubtitle.textContent = `Get expert guidance for: ${title}`;
+        } else if (type === 'Signal') {
+            modalTitle.textContent = 'Request Signal Service';
+            modalSubtitle.textContent = `Join our signal service: ${title}`;
+        } else {
+            modalTitle.textContent = 'Request Software Access';
+            modalSubtitle.textContent = `Get notified when ${title} is available`;
+        }
+        
+        document.getElementById('service_type_input').value = type;
+        document.getElementById('selected_service_input').value = title;
+        
+        setTimeout(() => {
+            document.getElementById('name').focus();
+        }, 300);
+    }
+
+    function closeMentorshipModal() {
+        const modal = document.getElementById('mentorshipModal');
+        const form = document.getElementById('mentorshipForm');
+        
+        modal.style.display = 'none';
+        document.body.style.overflow = '';
+        form.reset();
+        
+        document.querySelectorAll('.form-error').forEach(error => {
+            error.style.display = 'none';
+        });
+        document.querySelectorAll('.form-control').forEach(input => {
+            input.classList.remove('error');
+        });
+        
+        document.getElementById('service_type_input').value = '';
+        document.getElementById('selected_service_input').value = '';
+    }
+
+    // ================== SOFTWARE FUNCTIONS ==================
+    async function showSoftwareDetails(softwareId) {
+        try {
+            showToast('Loading', 'Fetching software details...', 'info');
+            
+            const response = await fetch(`/ajax/software-details/${softwareId}/`, {
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest',
+                    'X-CSRFToken': getCSRFToken()
+                }
+            });
+
+            if (response.ok) {
+                const data = await response.json();
+                
+                if (data.html) {
+                    const modal = document.getElementById('softwareModal');
+                    const content = document.getElementById('softwareDetailsContent');
+                    const title = document.getElementById('softwareModalTitle');
+                    
+                    content.innerHTML = data.html;
+                    title.textContent = 'Software Details';
+                    modal.style.display = 'flex';
+                    document.body.style.overflow = 'hidden';
+                } else {
+                    showToast('Error', data.error || 'Failed to load details', 'error');
+                }
+            } else {
+                const errorData = await response.json();
+                showToast('Error', errorData.error || 'Failed to load software details', 'error');
+            }
+        } catch (error) {
+            console.error('Software details error:', error);
+            showToast('Network Error', 'Please check your connection and try again', 'error');
+        }
+    }
+
+    function closeSoftwareModal() {
+        const modal = document.getElementById('softwareModal');
+        modal.style.display = 'none';
+        document.body.style.overflow = '';
+    }
+
+    async function trackDownload(softwareId) {
+        try {
+            const response = await fetch(`/ajax/track-download/${softwareId}/`, {
+                method: 'POST',
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest',
+                    'X-CSRFToken': getCSRFToken(),
+                    'Content-Type': 'application/json'
+                }
+            });
+
+            if (response.ok) {
+                const data = await response.json();
+                // Update download count in UI
+                $(`[data-software-id="${softwareId}"] .download-count`).text(data.download_count + ' downloads');
+            }
+            
+            showToast('Success', 'Download started!', 'success');
+            
+        } catch (error) {
+            console.error('Download tracking error:', error);
+            showToast('Success', 'Download started!', 'success');
+        }
+    }
+
+    // ================== FORM VALIDATION ==================
+    function validateForm() {
+        let isValid = true;
+        const fields = ['name', 'email', 'phone', 'experience'];
+
+        // Reset errors
+        fields.forEach(field => {
+            const errorElement = document.getElementById(`${field}Error`);
+            const inputElement = document.getElementById(field);
+            if (errorElement) errorElement.style.display = 'none';
+            if (inputElement) inputElement.classList.remove('error');
+        });
+
+        // Validate name
+        const name = document.getElementById('name')?.value.trim();
+        if (!name) {
+            showFieldError('name', 'Full name is required');
+            isValid = false;
+        }
+
+        // Validate email
+        const email = document.getElementById('email')?.value.trim();
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!email) {
+            showFieldError('email', 'Email is required');
+            isValid = false;
+        } else if (!emailRegex.test(email)) {
+            showFieldError('email', 'Please enter a valid email address');
+            isValid = false;
+        }
+
+        // Validate phone
+        const phone = document.getElementById('phone')?.value.trim();
+        if (!phone) {
+            showFieldError('phone', 'Phone number is required');
+            isValid = false;
+        }
+
+        // Validate experience
+        const experience = document.getElementById('experience')?.value;
+        if (!experience) {
+            showFieldError('experience', 'Please select your experience level');
+            isValid = false;
+        }
+
+        return isValid;
+    }
+
+    function showFieldError(fieldName, message) {
+        const errorElement = document.getElementById(`${fieldName}Error`);
+        const inputElement = document.getElementById(fieldName);
+        if (errorElement) {
+            errorElement.textContent = message;
+            errorElement.style.display = 'block';
+        }
+        if (inputElement) {
+            inputElement.classList.add('error');
+        }
+    }
+
+    // ================== FORM SUBMISSION ==================
+    $('#mentorshipForm').on('submit', async function(e) {
+        e.preventDefault();
+        
+        if (!validateForm()) {
+            showToast('Validation Error', 'Please fix the errors in the form', 'error');
+            return;
+        }
+
+        const submitBtn = $('#submitBtn');
+        const originalText = submitBtn.html();
+        const formData = new FormData(this);
+
+        submitBtn.html('<div class="spinner"></div> Submitting...').prop('disabled', true);
+
+        try {
+            const response = await fetch("{% url 'submit_service_request' %}", {
+                method: 'POST',
+                body: formData,
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest',
+                    'X-CSRFToken': getCSRFToken()
+                }
+            });
+
+            const data = await response.json();
+
+            if (response.ok && data.success) {
+                showToast('Success!', 'Your request has been submitted! We will contact you within 24 hours.', 'success');
+                closeMentorshipModal();
+                
+                {% if user.is_authenticated %}
+                setTimeout(() => {
+                    window.location.href = "{% url 'dashboard' %}";
+                }, 2000);
+                {% endif %}
+            } else {
+                showToast('Submission Failed', data.message || 'There was an error submitting your request. Please try again.', 'error');
+                
+                if (data.errors) {
+                    Object.keys(data.errors).forEach(field => {
+                        showFieldError(field, data.errors[field]);
+                    });
+                }
+            }
+        } catch (error) {
+            console.error('Submission error:', error);
+            showToast('Network Error', 'Please check your internet connection and try again.', 'error');
+        } finally {
+            submitBtn.html(originalText).prop('disabled', false);
+        }
+    });
+
+    // ================== EVENT HANDLERS ==================
+    document.getElementById('mentorshipModal')?.addEventListener('click', function(e) {
+        if (e.target === this) closeMentorshipModal();
+    });
+
+    document.getElementById('softwareModal')?.addEventListener('click', function(e) {
+        if (e.target === this) closeSoftwareModal();
+    });
+
+    document.addEventListener('keydown', function(event) {
+        if (event.key === 'Escape') {
+            closeMentorshipModal();
+            closeSoftwareModal();
+        }
+    });
+
+    // Real-time validation
+    document.querySelectorAll('#mentorshipForm input, #mentorshipForm select').forEach(element => {
+        element.addEventListener('blur', function() {
+            if (this.value.trim() === '') {
+                const fieldName = this.id;
+                const errorElement = document.getElementById(`${fieldName}Error`);
+                if (errorElement) {
+                    errorElement.style.display = 'none';
+                    this.classList.remove('error');
+                }
+            }
+        });
+    });
+
+    // ================== AUTO-REFRESH ==================
+    function startAutoRefresh() {
+        setInterval(() => {
+            if (document.visibilityState === 'visible') {
+                loadStrategies();
+                loadSignals();
+                loadSoftware();
+            }
+        }, 120000); // 2 minutes
+    }
+
+    // ================== INITIALIZATION ==================
+    $(document).ready(function() {
+        console.log('🔄 TradeWise Market Hub AJAX System Initialized');
+        
+        // Start auto-refresh
+        startAutoRefresh();
+        
+        // Load initial data after page load
+        setTimeout(() => {
+            loadStrategies();
+            loadSignals();
+            loadSoftware();
+        }, 2000);
+    });
+</script>

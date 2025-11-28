@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <style>
+        body { font-family: Arial, sans-serif; line-height: 1.6; }
+        .alert { background: #e74c3c; color: white; padding: 10px; }
+        .order-details { background: #f8f9fa; padding: 15px; border-radius: 5px; }
+    </style>
+</head>
+<body>
+    <div class="alert">
+        <h2>🛒 New VIP Purchase - TradeWise</h2>
+    </div>
+    
+    <div class="content">
+        <p>A new VIP package has been purchased:</p>
+        
+        <div class="order-details">
+            <h3>Customer Details</h3>
+            <p><strong>Name:</strong> {{ user.first_name }} {{ user.second_name }}</p>
+            <p><strong>Email:</strong> {{ user.email }}</p>
+            <p><strong>Phone:</strong> {{ user.phone }}</p>
+            
+            <h3>Order Details</h3>
+            <p><strong>Service:</strong> {{ service }}</p>
+            <p><strong>Amount:</strong> KES {{ amount }}</p>
+            <p><strong>Reference:</strong> {{ reference }}</p>
+        </div>
+        
+        <p>Please ensure VIP access is properly activated in the system.</p>
+    </div>
+</body>
+</html>

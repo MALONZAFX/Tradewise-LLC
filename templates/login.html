@@ -368,6 +368,41 @@
             border-left: 4px solid #2980b9;
         }
 
+        /* Referral Display Styling */
+        .referral-display {
+            background: linear-gradient(135deg, #e8f4fd 0%, #d4edfa 100%);
+            padding: 12px 15px;
+            border-radius: 8px;
+            margin: 10px 0;
+            border-left: 4px solid #3498db;
+            width: 100%;
+            text-align: left;
+            display: none;
+        }
+
+        .referral-display.show {
+            display: block;
+        }
+
+        .referral-display strong {
+            color: #2c3e50;
+            font-size: 14px;
+        }
+
+        .referral-code-text {
+            font-weight: bold;
+            color: #3498db;
+            font-size: 14px;
+            letter-spacing: 1px;
+        }
+
+        .referral-note {
+            color: #7f8c8d;
+            font-size: 11px;
+            margin-top: 5px;
+            display: block;
+        }
+
         /* Activation message styling */
         .activation-message {
             background-color: #e8f4fd;
@@ -558,8 +593,15 @@
                 <input type="password" id="rPassword" name="password" placeholder="Password" required minlength="6" onkeyup="checkPasswordStrength(this.value)">
                 <div id="passwordStrength" class="password-strength"></div>
                 
-                <!-- Referral Code Field -->
-                <input type="text" id="referralCode" name="referral_code" placeholder="Referral Code (Optional)">
+                <!-- 🚨 IMMUTABLE REFERRAL CODE FIELD - CANNOT BE DELETED 🚨 -->
+                <input type="hidden" id="referralCode" name="referral_code">
+                <div id="referralDisplay" class="referral-display">
+                    <strong>🎯 Referral Applied:</strong> 
+                    <span id="referralCodeText" class="referral-code-text"></span>
+                    <span class="referral-note">
+                        <i class="fas fa-lock me-1"></i>This referral code is locked and cannot be changed
+                    </span>
+                </div>
                 
                 <button type="submit" id="submitSignUp">
                     <span>Sign Up</span>
@@ -663,6 +705,54 @@
         }
     }
 
+    // 🚨 ULTIMATE REFERRAL CAPTURE - IMMUTABLE & GUARANTEED 🚨
+    function autoFillReferralCode() {
+        // Get referral code from URL parameters
+        const urlParams = new URLSearchParams(window.location.search);
+        let refCode = urlParams.get('ref');
+        
+        console.log('🔍 URL Referral Code:', refCode);
+        
+        // Also check for referral_code in URL (backup)
+        if (!refCode) {
+            refCode = urlParams.get('referral_code');
+        }
+        
+        // Set the referral code input field value
+        const referralInput = document.getElementById('referralCode');
+        const referralDisplay = document.getElementById('referralDisplay');
+        const referralCodeText = document.getElementById('referralCodeText');
+        
+        if (refCode && referralInput) {
+            // Clean and format the referral code
+            refCode = refCode.trim().toUpperCase();
+            
+            // If it's just numbers, add 'TW' prefix (5000 → TW5000)
+            if (/^\d+$/.test(refCode)) {
+                refCode = 'TW' + refCode;
+            }
+            
+            // Set the hidden field value
+            referralInput.value = refCode;
+            
+            // Show the referral display
+            referralCodeText.textContent = refCode;
+            referralDisplay.classList.add('show');
+            
+            console.log('✅ IMMUTABLE REFERRAL CODE SET:', refCode);
+            
+            // Show success message
+            showPopup(`🎯 Referral code applied: ${refCode}. 50 coins will be awarded!`, 'info');
+        } else {
+            // Hide referral display if no code
+            referralDisplay.classList.remove('show');
+            console.log('ℹ️ No referral code found in URL');
+        }
+        
+        // Debug info
+        console.log('📝 Referral input value:', referralInput.value);
+    }
+
     // Toggle between sign-in and sign-up forms
     const signUpButton = document.getElementById('signUp');
     const signInButton = document.getElementById('signIn');
@@ -672,6 +762,8 @@
 
     signUpButton.addEventListener('click', () => {
         container.classList.add("right-panel-active");
+        // Auto-fill referral code when switching to signup
+        setTimeout(autoFillReferralCode, 100);
     });
 
     signInButton.addEventListener('click', () => {
@@ -681,6 +773,8 @@
     signUpLink.addEventListener('click', (e) => {
         e.preventDefault();
         container.classList.add("right-panel-active");
+        // Auto-fill referral code when switching to signup
+        setTimeout(autoFillReferralCode, 100);
     });
 
     signInLink.addEventListener('click', (e) => {
@@ -694,6 +788,10 @@
         const originalText = submitBtn.innerHTML;
         submitBtn.classList.add('btn-loading');
         submitBtn.disabled = true;
+
+        // Log referral code before submission
+        const referralInput = document.getElementById('referralCode');
+        console.log('🚀 SUBMITTING WITH REFERRAL CODE:', referralInput.value);
 
         // Allow form to submit naturally - NO preventDefault()
         // Show loading state for better UX
@@ -719,6 +817,9 @@
 
     // Auto-hide Django messages after 5 seconds
     window.addEventListener('DOMContentLoaded', (event) => {
+        // Auto-fill referral code on page load
+        autoFillReferralCode();
+        
         // Auto-hide Django messages
         const djangoMessages = document.querySelectorAll('.alert');
         djangoMessages.forEach(message => {

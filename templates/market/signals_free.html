@@ -1,0 +1,255 @@
+<!-- IN market/signals_free.html - REPLACE ENTIRE FILE -->
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Free Trading Signals - TradeWise</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-blue: #3498db;
+            --dark-blue: #2c3e50;
+            --gradient-main: linear-gradient(135deg, #2c3e50 0%, #3498db 100%);
+            --light-bg: #f8fafc;
+            --dark-text: #1e293b;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        body { background-color: var(--light-bg); color: var(--dark-text); line-height: 1.6; }
+
+        .nav { background: var(--dark-blue); padding: 15px 20px; display:flex; justify-content:space-between; align-items:center; }
+        .nav-logo { color:white; font-size:1.3rem; font-weight:700; text-decoration:none }
+        .nav-logo span { color: var(--primary-blue); }
+
+        .container { max-width: 1200px; margin: 40px auto; padding: 0 20px; }
+        
+        .back-home { 
+            display: inline-flex; 
+            align-items: center; 
+            gap: 8px; 
+            background: var(--gradient-main); 
+            color: white; 
+            padding: 12px 20px; 
+            border-radius: 6px; 
+            text-decoration: none; 
+            font-weight: 600; 
+            margin-bottom: 30px; 
+        }
+
+        .signals-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 30px;
+            margin-top: 30px;
+        }
+
+        .signal-card {
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            border-left: 4px solid var(--primary-blue);
+        }
+
+        .signal-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+        }
+
+        .signal-card.forex { border-left-color: #3498db; }
+        .signal-card.crypto { border-left-color: #f39c12; }
+        .signal-card.stocks { border-left-color: #2ecc71; }
+
+        .signal-image {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+        }
+
+        .signal-content {
+            padding: 25px;
+        }
+
+        .signal-card h3 {
+            color: var(--dark-blue);
+            margin-bottom: 10px;
+            font-size: 1.3rem;
+        }
+
+        .signal-meta {
+            display: flex;
+            justify-content: space-between;
+            margin: 15px 0;
+            font-size: 0.9rem;
+        }
+
+        .signal-meta span {
+            background: #f1f5f9;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-weight: 500;
+        }
+
+        .signal-meta .type {
+            background: #e3f2fd;
+            color: #1976d2;
+        }
+
+        .accuracy-bars {
+            margin: 20px 0;
+        }
+
+        .accuracy-bar {
+            margin-bottom: 10px;
+        }
+
+        .accuracy-label {
+            display: flex;
+            justify-content: between;
+            margin-bottom: 5px;
+            font-size: 0.9rem;
+        }
+
+        .accuracy-value {
+            font-weight: 600;
+        }
+
+        .progress {
+            height: 8px;
+            background: #e9ecef;
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .progress-bar {
+            height: 100%;
+            border-radius: 4px;
+        }
+
+        .progress-bar.forex { background: #3498db; }
+        .progress-bar.crypto { background: #f39c12; }
+
+        .upgrade-banner {
+            background: var(--gradient-main);
+            color: white;
+            padding: 40px;
+            border-radius: 12px;
+            text-align: center;
+            margin: 50px 0;
+        }
+
+        .btn-upgrade {
+            display: inline-block;
+            background: white;
+            color: var(--dark-blue);
+            padding: 12px 30px;
+            border-radius: 6px;
+            text-decoration: none;
+            font-weight: 700;
+            margin-top: 20px;
+            transition: transform 0.2s ease;
+        }
+
+        .btn-upgrade:hover {
+            transform: scale(1.05);
+        }
+    </style>
+</head>
+<body>
+    <nav class="nav">
+        <a class="nav-logo" href="{% url 'index' %}">Trade<span>Wise</span></a>
+    </nav>
+
+    <div class="container">
+        <a href="{% url 'market_hub' %}" class="back-home">
+            <i class="fas fa-arrow-left"></i> Back to Market Hub
+        </a>
+
+        <h1>Free Signal Samples</h1>
+        <p>Sample trading signals. Upgrade to VIP for real-time signals with 80%+ accuracy.</p>
+
+        <div class="signals-grid">
+            <!-- DYNAMIC SIGNALS FROM DATABASE -->
+            {% for signal in signals %}
+            <div class="signal-card {{ signal.signal_type|default:'forex' }}">
+                {% if signal.image %}
+                    <img src="{{ signal.image.url }}" alt="{{ signal.title }}" class="signal-image">
+                {% else %}
+                    <img src="{% static 'images/signal-placeholder.jpg' %}" alt="{{ signal.title }}" class="signal-image">
+                {% endif %}
+                <div class="signal-content">
+                    <h3>{{ signal.title }}</h3>
+                    <div class="signal-meta">
+                        <span class="type">{{ signal.signal_type|default:"All Markets"|title }} Signals</span>
+                    </div>
+                    
+                    <div class="accuracy-bars">
+                        <div class="accuracy-bar">
+                            <div class="accuracy-label">
+                                <span>Forex Accuracy</span>
+                                <span class="accuracy-value">{{ signal.accuracy_forex|default:80 }}%</span>
+                            </div>
+                            <div class="progress">
+                                <div class="progress-bar forex" style="width: {{ signal.accuracy_forex|default:80 }}%"></div>
+                            </div>
+                        </div>
+                        <div class="accuracy-bar">
+                            <div class="accuracy-label">
+                                <span>Crypto Accuracy</span>
+                                <span class="accuracy-value">{{ signal.accuracy_crypto|default:75 }}%</span>
+                            </div>
+                            <div class="progress">
+                                <div class="progress-bar crypto" style="width: {{ signal.accuracy_crypto|default:75 }}%"></div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <p>{{ signal.description }}</p>
+                </div>
+            </div>
+            {% empty %}
+            <!-- FALLBACK IF NO SIGNALS -->
+            <div class="signal-card forex">
+                <img src="{% static 'images/forex-signals.jpg' %}" alt="Forex Signals" class="signal-image">
+                <div class="signal-content">
+                    <h3>Forex EUR/USD Signals</h3>
+                    <div class="signal-meta">
+                        <span class="type">Forex Signals</span>
+                    </div>
+                    <div class="accuracy-bars">
+                        <div class="accuracy-bar">
+                            <div class="accuracy-label">
+                                <span>Forex Accuracy</span>
+                                <span class="accuracy-value">80%</span>
+                            </div>
+                            <div class="progress">
+                                <div class="progress-bar forex" style="width: 80%"></div>
+                            </div>
+                        </div>
+                        <div class="accuracy-bar">
+                            <div class="accuracy-label">
+                                <span>Crypto Accuracy</span>
+                                <span class="accuracy-value">70%</span>
+                            </div>
+                            <div class="progress">
+                                <div class="progress-bar crypto" style="width: 70%"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <p>Professional forex trading signals with 80% accuracy rate.</p>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+
+        <div class="upgrade-banner">
+            <h2>Ready for Live Signals?</h2>
+            <p>Upgrade to VIP and get real-time trading signals with 80%+ accuracy, instant notifications, and professional analysis.</p>
+            <a href="/market" class="btn-upgrade">Upgrade to VIP Now</a>
+        </div>
+    </div>
+</body>
+</html>

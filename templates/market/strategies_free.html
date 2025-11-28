@@ -1,0 +1,183 @@
+<!-- IN market/strategies_free.html - REPLACE ENTIRE FILE -->
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Free Trading Strategies - TradeWise</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-blue: #3498db;
+            --dark-blue: #2c3e50;
+            --gradient-main: linear-gradient(135deg, #2c3e50 0%, #3498db 100%);
+            --light-bg: #f8fafc;
+            --dark-text: #1e293b;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        body { background-color: var(--light-bg); color: var(--dark-text); line-height: 1.6; }
+
+        .nav { background: var(--dark-blue); padding: 15px 20px; display:flex; justify-content:space-between; align-items:center; }
+        .nav-logo { color:white; font-size:1.3rem; font-weight:700; text-decoration:none }
+        .nav-logo span { color: var(--primary-blue); }
+
+        .container { max-width: 1200px; margin: 40px auto; padding: 0 20px; }
+        
+        .back-home { 
+            display: inline-flex; 
+            align-items: center; 
+            gap: 8px; 
+            background: var(--gradient-main); 
+            color: white; 
+            padding: 12px 20px; 
+            border-radius: 6px; 
+            text-decoration: none; 
+            font-weight: 600; 
+            margin-bottom: 30px; 
+        }
+
+        .strategies-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 30px;
+            margin-top: 30px;
+        }
+
+        .strategy-card {
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .strategy-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+        }
+
+        .strategy-image {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        .strategy-content {
+            padding: 25px;
+        }
+
+        .strategy-card h3 {
+            color: var(--dark-blue);
+            margin-bottom: 10px;
+            font-size: 1.3rem;
+        }
+
+        .strategy-meta {
+            display: flex;
+            justify-content: space-between;
+            margin: 15px 0;
+            font-size: 0.9rem;
+        }
+
+        .strategy-meta span {
+            background: #f1f5f9;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-weight: 500;
+        }
+
+        .strategy-meta .market {
+            background: #e3f2fd;
+            color: #1976d2;
+        }
+
+        .strategy-meta .difficulty {
+            background: #e8f5e8;
+            color: #2e7d32;
+        }
+
+        .upgrade-banner {
+            background: var(--gradient-main);
+            color: white;
+            padding: 40px;
+            border-radius: 12px;
+            text-align: center;
+            margin: 50px 0;
+        }
+
+        .btn-upgrade {
+            display: inline-block;
+            background: white;
+            color: var(--dark-blue);
+            padding: 12px 30px;
+            border-radius: 6px;
+            text-decoration: none;
+            font-weight: 700;
+            margin-top: 20px;
+            transition: transform 0.2s ease;
+        }
+
+        .btn-upgrade:hover {
+            transform: scale(1.05);
+        }
+    </style>
+</head>
+<body>
+    <nav class="nav">
+        <a class="nav-logo" href="{% url 'index' %}">Trade<span>Wise</span></a>
+    </nav>
+
+    <div class="container">
+        <a href="{% url 'market_hub' %}" class="back-home">
+            <i class="fas fa-arrow-left"></i> Back to Market Hub
+        </a>
+
+        <h1>Free Trading Strategies</h1>
+        <p>Explore our free strategy samples. Upgrade to VIP for full access to 4,155+ strategies.</p>
+
+        <div class="strategies-grid">
+            <!-- DYNAMIC STRATEGIES FROM DATABASE -->
+            {% for strategy in strategies %}
+            <div class="strategy-card">
+                {% if strategy.image %}
+                    <img src="{{ strategy.image.url }}" alt="{{ strategy.title }}" class="strategy-image">
+                {% else %}
+                    <img src="{% static 'images/strategy-placeholder.jpg' %}" alt="{{ strategy.title }}" class="strategy-image">
+                {% endif %}
+                <div class="strategy-content">
+                    <h3>{{ strategy.title }}</h3>
+                    <div class="strategy-meta">
+                        <span class="market">{{ strategy.market_type|default:"All Markets"|title }}</span>
+                        <span class="difficulty">{{ strategy.difficulty_level|default:"All Levels"|title }}</span>
+                    </div>
+                    <p>{{ strategy.description }}</p>
+                </div>
+            </div>
+            {% empty %}
+            <!-- FALLBACK IF NO STRATEGIES -->
+            <div class="strategy-card">
+                <img src="{% static 'images/moving_average_crossover.jpg' %}" alt="Moving Average Crossover" class="strategy-image">
+                <div class="strategy-content">
+                    <h3>Moving Average Crossover</h3>
+                    <div class="strategy-meta">
+                        <span class="market">Forex</span>
+                        <span class="difficulty">Beginner</span>
+                    </div>
+                    <p>Simple yet effective strategy using EMA crossovers for trend identification.</p>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+
+        <div class="upgrade-banner">
+            <h2>Ready for Premium Strategies?</h2>
+            <p>Upgrade to VIP and get complete access to all 4,155+ trading strategies with detailed images, step-by-step guides, and real-time updates.</p>
+            <a href="/market" class="btn-upgrade">Upgrade to VIP Now</a>
+        </div>
+    </div>
+
+</body>
+</html>

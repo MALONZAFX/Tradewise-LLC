@@ -1,95 +1,379 @@
-{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Trading Plans - TradeWise</title>
+    <title>TradeWise Services & Payment Plans</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        /* Add these styles to your existing CSS */
-        .payment-loading {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 86, 179, 0.95);
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            z-index: 9999;
-            color: white;
-        }
+        /* ... keep all your existing CSS ... */
+
         
-        .loader {
-            width: 80px;
-            height: 80px;
-            border: 5px solid rgba(255,255,255,0.3);
-            border-radius: 50%;
-            border-top-color: white;
-            animation: spin 1s ease-in-out infinite;
-            margin-bottom: 20px;
-        }
-        
-        @keyframes spin {
-            to { transform: rotate(360deg); }
-        }
-        
-        .pulse {
-            animation: pulse 2s infinite;
-        }
-        
-        @keyframes pulse {
-            0% { transform: scale(1); }
-            50% { transform: scale(1.05); }
-            100% { transform: scale(1); }
-        }
     </style>
 </head>
 <body>
-    <!-- Your existing pricing section -->
-    <div class="our-pricing bg-section">
+    <!-- Header and Hero sections remain the same -->
+    <header class="header">
         <div class="container">
-            <div class="row">
-                <div class="col-lg-5">
-                    <div class="pricing-content">
-                        <div class="section-title">
-                            <h3 class="wow fadeInUp">trading plans</h3>
-                            <h2 class="wow fadeInUp" data-wow-delay="0.25s">Flexible <span>membership options</span></h2>
-                            <p class="wow fadeInUp" data-wow-delay="0.5s">Choose the trading package that fits your goals and budget. All plans include risk management guidance and market analysis tools to help you trade smarter.</p>
+            <div class="header-content">
+                <div class="logo">Trade<span>Wise</span> </div>
+                <a href="{% url 'account' %}" class="back-link">
+                    <i class="fas fa-arrow-left"></i> Back to Dashboard
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <section class="hero">
+        <div class="container">
+            <h1>Professional Trading Services</h1>
+            <p>Choose from our premium trading services and start your journey to financial success</p>
+        </div>
+    </section>
+
+    <!-- Services Section -->
+    <section class="services-section">
+        <div class="container">
+            <div class="section-title">
+                <h2>Our Premium Services</h2>
+                <p>Select a service that matches your trading goals</p>
+            </div>
+
+            <!-- Display Django Messages -->
+            {% if messages %}
+            <div class="messages-container">
+                {% for message in messages %}
+                <div class="success-message" style="display: block;">
+                    <i class="fas fa-check-circle"></i> {{ message }}
+                </div>
+                {% endfor %}
+            </div>
+            {% endif %}
+
+            <div class="services-grid">
+                <!-- Copy Trading -->
+                <div class="service-card">
+                    <div class="service-header">
+                        <h3>Copy Trading</h3>
+                        <p class="service-desc">Automate your trading success</p>
+                    </div>
+                    <div class="service-body">
+                        <ul class="service-features">
+                            <li><i class="fas fa-check"></i> Mirror expert traders automatically</li>
+                            <li><i class="fas fa-check"></i> Perfect for beginners</li>
+                            <li><i class="fas fa-check"></i> Real-time trade copying</li>
+                            <li><i class="fas fa-check"></i> Full control over your account</li>
+                            <li><i class="fas fa-check"></i> 24/7 monitoring</li>
+                        </ul>
+                        
+                        <!-- PROGRESS BAR SECTION -->
+                        <div class="progress-section">
+                            <div class="progress-header">
+                                <span class="progress-label">Payment Progress</span>
+                                <span class="progress-percentage" id="copyTradingPercentage">0%</span>
+                            </div>
+                            <div class="progress-bar-container">
+                                <div class="progress-bar" id="copyTradingProgress" style="width: 0%"></div>
+                            </div>
+                            <div class="progress-details">
+                                <span class="progress-amount" id="copyTradingPaid">KES 0 paid</span>
+                                <span>KES 10,000 total</span>
+                            </div>
                         </div>
+
+                        <button class="pay-btn" onclick="openPaymentModal('Copy Trading', 10000)">
+                            <i class="fas fa-credit-card"></i> Make Payment
+                        </button>
                     </div>
                 </div>
 
-                <div class="col-lg-7">
-                    <div class="pricing-box-list">
-                        {% for plan in plans %}
-                        <div class="pricing-box {% if plan.is_highlighted %}highlighted-box{% endif %} wow fadeInUp" data-wow-delay="{{ forloop.counter0|add:0.2 }}s">
-                            <div class="pricing-box-content">
-                                <div class="pricing-title">
-                                    <p>{{ plan.name|lower }}</p>
-                                    <h2><sup>KES</sup>{{ plan.price }}<sub></sub></h2>
-                                </div>
-                                <div class="pricing-btn">
-                                    <a href="{% url 'initialize_payment' plan.id %}" class="btn-default {% if plan.is_highlighted %}btn-highlighted{% endif %} pulse">
-                                        join now
-                                    </a>
-                                </div>
+                <!-- Live Trading -->
+                <div class="service-card">
+                    <div class="service-header">
+                        <h3>Live Trading Sessions</h3>
+                        <p class="service-desc">Learn from real market action</p>
+                    </div>
+                    <div class="service-body">
+                        <ul class="service-features">
+                            <li><i class="fas fa-check"></i> Real-time market analysis</li>
+                            <li><i class="fas fa-check"></i> Interactive Q&A sessions</li>
+                            <li><i class="fas fa-check"></i> Live trade execution</li>
+                            <li><i class="fas fa-check"></i> Strategy breakdowns</li>
+                            <li><i class="fas fa-check"></i> Recorded sessions access</li>
+                        </ul>
+                        
+                        <!-- PROGRESS BAR SECTION -->
+                        <div class="progress-section">
+                            <div class="progress-header">
+                                <span class="progress-label">Payment Progress</span>
+                                <span class="progress-percentage" id="liveTradingPercentage">0%</span>
                             </div>
-                            <div class="pricing-list">
-                                <ul>
-                                    {% for feature in plan.features %}
-                                    <li><i class="fas fa-check"></i> {{ feature }}</li>
-                                    {% endfor %}
-                                </ul>
+                            <div class="progress-bar-container">
+                                <div class="progress-bar" id="liveTradingProgress" style="width: 0%"></div>
+                            </div>
+                            <div class="progress-details">
+                                <span class="progress-amount" id="liveTradingPaid">KES 0 paid</span>
+                                <span>KES 10,000 total</span>
                             </div>
                         </div>
-                        {% endfor %}
+
+                        <button class="pay-btn" onclick="openPaymentModal('Live Trading Sessions', 10000)">
+                            <i class="fas fa-credit-card"></i> Make Payment
+                        </button>
                     </div>
                 </div>
+
+                <!-- Trading Signals -->
+                <div class="service-card">
+                    <div class="service-header">
+                        <h3>Trading Signals</h3>
+                        <p class="service-desc">Professional trade alerts</p>
+                    </div>
+                    <div class="service-body">
+                        <ul class="service-features">
+                            <li><i class="fas fa-check"></i> Real-time trade signals</li>
+                            <li><i class="fas fa-check"></i> Multiple timeframes</li>
+                            <li><i class="fas fa-check"></i> Entry/Exit/Stop-loss levels</li>
+                            <li><i class="fas fa-check"></i> Risk management guidance</li>
+                            <li><i class="fas fa-check"></i> Telegram & Email alerts</li>
+                        </ul>
+                        
+                        <!-- PROGRESS BAR SECTION -->
+                        <div class="progress-section">
+                            <div class="progress-header">
+                                <span class="progress-label">Payment Progress</span>
+                                <span class="progress-percentage" id="signalsPercentage">0%</span>
+                            </div>
+                            <div class="progress-bar-container">
+                                <div class="progress-bar" id="signalsProgress" style="width: 0%"></div>
+                            </div>
+                            <div class="progress-details">
+                                <span class="progress-amount" id="signalsPaid">KES 0 paid</span>
+                                <span>KES 13,000 total</span>
+                            </div>
+                        </div>
+
+                        <button class="pay-btn" onclick="openPaymentModal('Trading Signals', 13000)">
+                            <i class="fas fa-credit-card"></i> Make Payment
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Add similar progress bars for other services -->
+                <!-- 1-on-1 Consultation, Capital Funding, Advanced Course -->
+
+            </div>
+        </div>
+    </section>
+
+    <!-- PAYMENT MODAL (REPLACES REQUEST MODAL) -->
+    <div class="modal-overlay" id="paymentModal">
+        <div class="modal-container">
+            <div class="modal-header">
+                <h3>Make Payment</h3>
+                <button class="close-modal" onclick="closePaymentModal()">&times;</button>
+            </div>
+            <div class="modal-content">
+                <div class="selected-service" id="selectedPaymentDisplay">
+                    <!-- Dynamic content -->
+                </div>
+                
+                <form id="paymentForm" method="POST" action="{% url 'initialize_service_payment' %}">
+                    {% csrf_token %}
+                    <input type="hidden" name="service_type" id="paymentServiceType">
+                    <input type="hidden" name="service_price" id="paymentServicePrice">
+                    <input type="hidden" name="payment_amount" id="paymentAmount">
+                    
+                    <div class="form-group">
+                        <label for="clientName" class="form-label">Full Name *</label>
+                        <input type="text" id="clientName" name="name" class="form-control" placeholder="Enter your full name" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="clientPhone" class="form-label">Phone Number *</label>
+                        <input type="tel" id="clientPhone" name="phone" class="form-control" placeholder="Enter your phone number" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="clientEmail" class="form-label">Email Address *</label>
+                        <input type="email" id="clientEmail" name="email" class="form-control" placeholder="Enter your email address" required>
+                    </div>
+
+                    <!-- PAYMENT OPTIONS -->
+                    <div class="payment-options">
+                        <h5>Select Payment Amount</h5>
+                        
+                        <button type="button" class="payment-option-btn" onclick="selectPaymentAmount(5000, 50)">
+                            <div class="payment-amount">KES 5,000</div>
+                            <div class="payment-description">50% of total - Good start</div>
+                        </button>
+                        
+                        <button type="button" class="payment-option-btn" onclick="selectPaymentAmount(7500, 75)">
+                            <div class="payment-amount">KES 7,500</div>
+                            <div class="payment-description">75% of total - Almost there</div>
+                        </button>
+                        
+                        <button type="button" class="payment-option-btn" onclick="selectPaymentAmount(10000, 100)">
+                            <div class="payment-amount">KES 10,000</div>
+                            <div class="payment-description">Full payment - Get immediate access</div>
+                        </button>
+                        
+                        <div class="form-group" style="margin-top: 15px;">
+                            <label for="customAmount" class="form-label">Or enter custom amount:</label>
+                            <input type="number" id="customAmount" name="custom_amount" class="form-control" 
+                                   placeholder="Enter amount in KES" min="1000" 
+                                   onchange="updateCustomAmount(this.value)">
+                        </div>
+                    </div>
+
+                    <button type="submit" class="submit-btn" id="submitPaymentButton">
+                        <i class="fas fa-credit-card"></i> Proceed to Payment
+                    </button>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <p class="modal-note">Secure payment processed by Paystack. You can pay in multiple installments.</p>
             </div>
         </div>
     </div>
+
+    <script>
+        let currentService = '';
+        let currentTotalPrice = 0;
+        let selectedPaymentAmount = 0;
+
+        // Load user's payment progress
+        document.addEventListener('DOMContentLoaded', function() {
+            loadPaymentProgress();
+        });
+
+        function loadPaymentProgress() {
+            // This would typically make an API call to get user's payment progress
+            // For demo, we'll use localStorage
+            const progressData = JSON.parse(localStorage.getItem('serviceProgress') || '{}');
+            
+            // Update each service's progress
+            updateServiceProgress('Copy Trading', 10000, progressData['Copy Trading'] || 0);
+            updateServiceProgress('Live Trading Sessions', 10000, progressData['Live Trading Sessions'] || 0);
+            updateServiceProgress('Trading Signals', 13000, progressData['Trading Signals'] || 0);
+            // Add other services...
+        }
+
+        function updateServiceProgress(serviceName, totalAmount, paidAmount) {
+            const percentage = (paidAmount / totalAmount) * 100;
+            const serviceId = serviceName.replace(/\s+/g, '');
+            
+            // Update progress bar
+            const progressBar = document.getElementById(serviceId + 'Progress');
+            const percentageText = document.getElementById(serviceId + 'Percentage');
+            const paidText = document.getElementById(serviceId + 'Paid');
+            
+            if (progressBar && percentageText && paidText) {
+                progressBar.style.width = percentage + '%';
+                percentageText.textContent = Math.round(percentage) + '%';
+                paidText.textContent = 'KES ' + paidAmount + ' paid';
+                
+                // Change color when completed
+                if (percentage >= 100) {
+                    progressBar.classList.add('completed');
+                }
+            }
+        }
+
+        function openPaymentModal(serviceName, totalPrice) {
+            currentService = serviceName;
+            currentTotalPrice = totalPrice;
+            selectedPaymentAmount = 0; // Reset selection
+            
+            // Update modal content
+            document.getElementById('selectedPaymentDisplay').innerHTML = `
+                <h4>${serviceName}</h4>
+                <div class="price">KES ${totalPrice}</div>
+                <p>Pay in installments - track your progress</p>
+            `;
+            
+            // Set hidden form values
+            document.getElementById('paymentServiceType').value = serviceName;
+            document.getElementById('paymentServicePrice').value = totalPrice;
+            
+            // Reset custom amount
+            document.getElementById('customAmount').value = '';
+            
+            // Show modal
+            document.getElementById('paymentModal').style.display = 'flex';
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closePaymentModal() {
+            document.getElementById('paymentModal').style.display = 'none';
+            document.body.style.overflow = 'auto';
+            document.getElementById('paymentForm').reset();
+            selectedPaymentAmount = 0;
+        }
+
+        function selectPaymentAmount(amount, percentage) {
+            selectedPaymentAmount = amount;
+            document.getElementById('paymentAmount').value = amount;
+            
+            // Update UI to show selection
+            const buttons = document.querySelectorAll('.payment-option-btn');
+            buttons.forEach(btn => btn.style.background = 'white');
+            buttons.forEach(btn => btn.style.color = 'var(--primary)');
+            
+            event.target.style.background = 'var(--primary)';
+            event.target.style.color = 'white';
+            
+            // Clear custom amount
+            document.getElementById('customAmount').value = '';
+        }
+
+        function updateCustomAmount(amount) {
+            if (amount && amount >= 1000) {
+                selectedPaymentAmount = parseInt(amount);
+                document.getElementById('paymentAmount').value = amount;
+                
+                // Clear button selections
+                const buttons = document.querySelectorAll('.payment-option-btn');
+                buttons.forEach(btn => btn.style.background = 'white');
+                buttons.forEach(btn => btn.style.color = 'var(--primary)');
+            }
+        }
+
+        // Form submission
+        document.getElementById('paymentForm').addEventListener('submit', function(e) {
+            if (selectedPaymentAmount === 0) {
+                e.preventDefault();
+                alert('Please select a payment amount');
+                return;
+            }
+            
+            const submitBtn = document.getElementById('submitPaymentButton');
+            submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Processing...';
+            submitBtn.disabled = true;
+        });
+
+        // Close modal when clicking outside
+        document.getElementById('paymentModal').addEventListener('click', function(event) {
+            if (event.target === this) {
+                closePaymentModal();
+            }
+        });
+
+        // Close modal with Escape key
+        document.addEventListener('keydown', function(event) {
+            if (event.key === 'Escape') {
+                closePaymentModal();
+            }
+        });
+
+        // Simulate payment completion (for demo)
+        function simulatePaymentCompletion(serviceName, amount) {
+            const progressData = JSON.parse(localStorage.getItem('serviceProgress') || '{}');
+            const currentPaid = progressData[serviceName] || 0;
+            progressData[serviceName] = currentPaid + amount;
+            localStorage.setItem('serviceProgress', JSON.stringify(progressData));
+            
+            // Update UI
+            loadPaymentProgress();
+        }
+    </script>
 </body>
 </html>

@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <style>
+        body { font-family: Arial, sans-serif; line-height: 1.6; }
+        .container { max-width: 600px; margin: 0 auto; padding: 20px; }
+        .header { background: #3498db; color: white; padding: 20px; text-align: center; }
+        .content { padding: 20px; background: #f8f9fa; }
+        .footer { padding: 20px; text-align: center; color: #666; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h2>✅ Service Request Received</h2>
+        </div>
+        <div class="content">
+            <h3>Hello {{ request.name }},</h3>
+            <p>Thank you for your interest in our <strong>{{ request.get_request_type_display }}</strong> service!</p>
+            
+            <div style="background: white; padding: 15px; border-radius: 5px; margin: 15px 0;">
+                <p><strong>Request Reference:</strong> SR{{ request.id|stringformat:"06d" }}</p>
+                <p><strong>Service Type:</strong> {{ request.get_request_type_display }}</p>
+                <p><strong>Submitted:</strong> {{ request.created_at|date:"F j, Y H:i" }}</p>
+            </div>
+            
+            <h4>What happens next?</h4>
+            <ol>
+                <li>Our expert will contact you within 24 hours</li>
+                <li>We'll discuss your specific requirements</li>
+                <li>You'll receive customized solutions</li>
+                <li>Get access to your chosen service</li>
+            </ol>
+            
+            <p>For urgent inquiries, contact us at <strong>+254742962615</strong></p>
+        </div>
+        <div class="footer">
+            <p>Best regards,<br>The TradeWise Team</p>
+        </div>
+    </div>
+</body>
+</html>

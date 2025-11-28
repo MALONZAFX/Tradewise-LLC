@@ -1,45 +1,79 @@
 {% extends 'base.html' %}
 {% load static %}
 
+{% block title %}{{ post.title }} - TradeWise Blog{% endblock %}
+
 {% block content %}
-<div class="container py-5">
-    <div class="row justify-content-center">
-        <div class="col-lg-8">
-            <article class="blog-post">
-                <nav aria-label="breadcrumb" class="mb-4">
-                    <ol class="breadcrumb">
-                        <li class="breadcrumb-item"><a href="{% url 'index' %}">Home</a></li>
-                        <li class="breadcrumb-item"><a href="{% url 'blog_list' %}">Blog</a></li>
-                        <li class="breadcrumb-item active">{{ post.title }}</li>
+<!-- Blog Detail Header -->
+<section class="blog-detail-header py-5" style="background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);">
+    <div class="container">
+        <div class="row">
+            <div class="col-12 text-center">
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb justify-content-center">
+                        <li class="breadcrumb-item"><a href="{% url 'index' %}" style="color: #3498db;">Home</a></li>
+                        <li class="breadcrumb-item"><a href="{% url 'blog_list' %}" style="color: #3498db;">Blog</a></li>
+                        <li class="breadcrumb-item active" aria-current="page">{{ post.title|truncatewords:5 }}</li>
                     </ol>
                 </nav>
+                <h1 class="display-5 fw-bold mb-4" style="color: #2c3e50;">{{ post.title }}</h1>
+                <div class="blog-meta text-muted">
+                    <span class="me-3"><i class="fas fa-user me-1"></i> {{ post.author }}</span>
+                    <span><i class="fas fa-calendar me-1"></i> {{ post.created_at|date:"F j, Y" }}</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
 
-                {% if post.image %}
-                <div class="blog-featured-image mb-4">
-                    <img src="{{ post.image.url }}" alt="{{ post.title }}" class="w-100 rounded-3" style="max-height: 400px; object-fit: cover;">
+<!-- Blog Content -->
+<section class="blog-content py-5">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-8">
+                {% if post.featured_image %}
+                <div class="blog-featured-image mb-5">
+                    <img src="{{ post.featured_image.url }}" alt="{{ post.title }}" 
+                         class="img-fluid rounded-3" style="width: 100%; height: 400px; object-fit: cover;">
                 </div>
                 {% endif %}
-
-                <header class="mb-4">
-                    <div class="d-flex align-items-center mb-3">
-                        <span class="badge bg-primary bg-opacity-10 text-primary me-3">Analysis</span>
-                        <small class="text-muted">{{ post.created_at|date:"F d, Y" }}</small>
-                    </div>
-                    <h1 class="display-5 fw-bold mb-3">{{ post.title }}</h1>
-                    <p class="text-muted">By {{ post.author }}</p>
-                </header>
-
-                <div class="blog-content">
+                
+                <div class="blog-body" style="line-height: 1.8; font-size: 1.1rem;">
                     {{ post.content|linebreaks }}
                 </div>
-
-                <div class="mt-5 pt-4 border-top">
-                    <a href="{% url 'blog_list' %}" class="btn btn-outline-primary">
+                
+                <div class="blog-footer mt-5 pt-4 border-top">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <h6>About the Author</h6>
+                            <p class="text-muted mb-0">{{ post.author }} - TradeWise Trading Expert</p>
+                        </div>
+                        <div class="col-md-6 text-md-end">
+                            <div class="share-buttons">
+                                <h6>Share this post</h6>
+                                <div class="btn-group" role="group">
+                                    <button type="button" class="btn btn-outline-primary btn-sm">
+                                        <i class="fab fa-twitter"></i> Twitter
+                                    </button>
+                                    <button type="button" class="btn btn-outline-primary btn-sm">
+                                        <i class="fab fa-linkedin"></i> LinkedIn
+                                    </button>
+                                    <button type="button" class="btn btn-outline-primary btn-sm">
+                                        <i class="fab fa-facebook"></i> Facebook
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="back-to-blog mt-4 text-center">
+                    <a href="{% url 'blog_list' %}" class="btn btn-primary">
                         <i class="fas fa-arrow-left me-2"></i> Back to Blog
                     </a>
                 </div>
-            </article>
+            </div>
         </div>
     </div>
-</div>
+</section>
 {% endblock %}

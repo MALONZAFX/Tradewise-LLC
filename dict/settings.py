@@ -1,8 +1,7 @@
-# settings.py
+# dict/settings.py
 from pathlib import Path
 import os
 from dotenv import load_dotenv
-import dj_database_url
 
 # ==============================
 # Load .env
@@ -17,18 +16,19 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # ==============================
 # SECRET KEY & DEBUG
 # ==============================
-SECRET_KEY = os.getenv("SECRET_KEY", "django-insecure-default-key")
-DEBUG = os.getenv("DEBUG", "False") == "True"
+SECRET_KEY = os.getenv("SECRET_KEY", "django-insecure-default-key-for-dev")
+DEBUG = os.getenv("DEBUG", "True") == "True"
 
 # ==============================
 # ALLOWED HOSTS
 # ==============================
 ALLOWED_HOSTS = [
     "tradewise.up.railway.app",
-    "127.0.0.1",
+    "127.0.0.1", 
     "localhost",
     "tradewise-hub.com",
     "www.tradewise-hub.com",
+    "*",
 ]
 
 CSRF_TRUSTED_ORIGINS = [
@@ -94,20 +94,14 @@ TEMPLATES = [
 ]
 
 # ==============================
-# DATABASE
+# DATABASE - FORCE SQLITE
 # ==============================
-DATABASE_URL = os.getenv("DATABASE_URL")
-if DATABASE_URL:
-    DATABASES = {
-        "default": dj_database_url.parse(DATABASE_URL, conn_max_age=600, ssl_require=True)
+DATABASES = {
+    "default": {
+        "ENGINE": "django.db.backends.sqlite3",
+        "NAME": BASE_DIR / "db.sqlite3",
     }
-else:
-    DATABASES = {
-        "default": {
-            "ENGINE": "django.db.backends.sqlite3",
-            "NAME": BASE_DIR / "db.sqlite3",
-        }
-    }
+}
 
 # ==============================
 # PASSWORD VALIDATION
@@ -139,19 +133,19 @@ MEDIA_URL = "/media/"
 MEDIA_ROOT = os.path.join(BASE_DIR, "media")
 
 # ==============================
-# EMAIL SETTINGS
+# EMAIL SETTINGS - FROM ENV
 # ==============================
 EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
 EMAIL_HOST = "smtp.gmail.com"
 EMAIL_USE_TLS = True
 EMAIL_PORT = 587
-EMAIL_HOST_USER = os.getenv("EMAIL_HOST_USER")
-EMAIL_HOST_PASSWORD = os.getenv("EMAIL_HOST_PASSWORD")
-DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
+EMAIL_HOST_USER = os.getenv("EMAIL_HOST_USER", "")
+EMAIL_HOST_PASSWORD = os.getenv("EMAIL_HOST_PASSWORD", "")
+DEFAULT_FROM_EMAIL = f"TradeWise <{EMAIL_HOST_USER}>"
 SERVER_EMAIL = EMAIL_HOST_USER
-EMAIL_TIMEOUT = 10
+ADMIN_EMAIL = EMAIL_HOST_USER
+EMAIL_TIMEOUT = 30
 EMAIL_USE_SSL = False
-
 
 # ==============================
 # AUTH REDIRECTS
@@ -160,28 +154,18 @@ LOGIN_URL = "/login/"
 LOGIN_REDIRECT_URL = "/dashboard/"
 LOGOUT_REDIRECT_URL = "/"
 
-
-
 # ==============================
-# SECURITY SETTINGS FOR PRODUCTION
+# SECURITY SETTINGS - DISABLED FOR DEVELOPMENT
 # ==============================
-if not DEBUG:
-    # Security headers
-    SECURE_SSL_REDIRECT = True
-    SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
-    SESSION_COOKIE_SECURE = True
-    CSRF_COOKIE_SECURE = True
-    SECURE_BROWSER_XSS_FILTER = True
-    SECURE_CONTENT_TYPE_NOSNIFF = True
-    
-    # Gunicorn timeout settings
-    GUNICORN_TIMEOUT = 120
+SECURE_SSL_REDIRECT = False
+SESSION_COOKIE_SECURE = False
+CSRF_COOKIE_SECURE = False
 
 # ==============================
-# PAYMENT SETTINGS
+# PAYMENT SETTINGS - FROM ENV
 # ==============================
-PAYSTACK_SECRET_KEY = os.getenv("PAYSTACK_SECRET_KEY")
-PAYSTACK_PUBLIC_KEY = os.getenv("PAYSTACK_PUBLIC_KEY")
+PAYSTACK_SECRET_KEY = os.getenv("PAYSTACK_SECRET_KEY", "")
+PAYSTACK_PUBLIC_KEY = os.getenv("PAYSTACK_PUBLIC_KEY", "")
 
 # ==============================
 # SESSION SETTINGS
@@ -192,8 +176,8 @@ SESSION_COOKIE_AGE = 1209600  # 2 weeks
 # ==============================
 # SECURITY HEADERS
 # ==============================
-SECURE_BROWSER_XSS_FILTER = True
-SECURE_CONTENT_TYPE_NOSNIFF = True
+SECURE_BROWSER_XSS_FILTER = False
+SECURE_CONTENT_TYPE_NOSNIFF = False
 
 # ==============================
 # DEFAULT AUTO FIELD
@@ -201,11 +185,62 @@ SECURE_CONTENT_TYPE_NOSNIFF = True
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 # ==============================
-# LOGGING
+# LOGGING - VERBOSE FOR DEBUGGING
 # ==============================
 LOGGING = {
     "version": 1,
     "disable_existing_loggers": False,
-    "handlers": {"console": {"class": "logging.StreamHandler"}},
-    "root": {"handlers": ["console"], "level": "INFO"},
+    "formatters": {
+        "verbose": {
+            "format": "{levelname} {asctime} {module} {message}",
+            "style": "{",
+        },
+    },
+    "handlers": {
+        "console": {
+            "class": "logging.StreamHandler",
+            "formatter": "verbose",
+        },
+    },
+    "root": {
+        "handlers": ["console"],
+        "level": "DEBUG",
+    },
+    "loggers": {
+        "django.db.backends": {
+            "level": "DEBUG",
+            "handlers": ["console"],
+            "propagate": False,
+        },
+    },
 }
+
+# ==============================
+# DEVELOPMENT SETTINGS
+# ==============================
+SILENCED_SYSTEM_CHECKS = [
+    "security.W001",
+    "security.W002", 
+    "security.W003",
+    "security.W004",
+    "security.W008",
+    "security.W009",
+    "security.W012",
+    "security.W016",
+]
+
+# ==============================
+# SITE URL FROM ENV
+# ==============================
+SITE_URL = os.getenv("SITE_URL", "http://127.0.0.1:8000,https://www.tradewise-hub.com")
+
+print("=" * 50)
+print("🚀 TRADEWISE SETTINGS LOADED")
+print(f"📁 Database: SQLite at {DATABASES['default']['NAME']}")
+print(f"🐛 Debug: {DEBUG}")
+print(f"📧 Email Backend: {EMAIL_BACKEND}")
+print(f"📧 Email Host: {EMAIL_HOST}:{EMAIL_PORT}")
+print(f"🔑 Email User: {EMAIL_HOST_USER}")
+print(f"💰 Paystack Public Key Loaded: {'Yes' if PAYSTACK_PUBLIC_KEY else 'No'}")
+print(f"💰 Paystack Secret Key Loaded: {'Yes' if PAYSTACK_SECRET_KEY else 'No'}")
+print("=" * 50)
