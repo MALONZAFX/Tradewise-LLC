@@ -1,7 +1,6 @@
 # dict/settings.py
 from pathlib import Path
 import os
-import dj_database_url
 
 # ==============================
 # BASE DIRECTORY
@@ -19,9 +18,6 @@ DEBUG = os.environ.get("DEBUG", "True") == "True"
 # SITE URLs
 SITE_URL = os.environ.get("SITE_URL", "http://127.0.0.1:8000")
 PRODUCTION_SITE_URL = os.environ.get("PRODUCTION_SITE_URL", SITE_URL)
-
-# DATABASE - Use SQLite locally, Railway DB in production
-DATABASE_URL = os.environ.get("DATABASE_URL", f"sqlite:///{BASE_DIR / 'db.sqlite3'}")
 
 # EMAIL CONFIGURATION - Use defaults for local
 EMAIL_HOST_USER = os.environ.get("EMAIL_HOST_USER", "dev@example.com")
@@ -41,7 +37,6 @@ ALLOWED_HOSTS = [
     "tradewise-hub.com",
     "www.tradewise-hub.com",
     ".railway.app",
-    "*",
 ]
 
 CSRF_TRUSTED_ORIGINS = [
@@ -107,14 +102,13 @@ TEMPLATES = [
 ]
 
 # ==============================
-# DATABASE - FIXED
+# DATABASE - SQLITE ONLY (FIXED)
 # ==============================
 DATABASES = {
-    "default": dj_database_url.config(
-        default=DATABASE_URL,
-        conn_max_age=600,
-        conn_health_checks=True,
-    )
+    "default": {
+        "ENGINE": "django.db.backends.sqlite3",
+        "NAME": BASE_DIR / "db.sqlite3",
+    }
 }
 
 # ==============================
@@ -168,16 +162,16 @@ LOGIN_REDIRECT_URL = "/dashboard/"
 LOGOUT_REDIRECT_URL = "/"
 
 # ==============================
-# SECURITY SETTINGS
+# SECURITY SETTINGS - FIXED REDIRECTS
 # ==============================
-if not DEBUG:
-    SECURE_SSL_REDIRECT = True
-    SESSION_COOKIE_SECURE = True
-    CSRF_COOKIE_SECURE = True
-else:
-    SECURE_SSL_REDIRECT = False
-    SESSION_COOKIE_SECURE = False
-    CSRF_COOKIE_SECURE = False
+# TEMPORARILY DISABLE SSL REDIRECTS TO FIX THE LOOP
+SECURE_SSL_REDIRECT = False
+SESSION_COOKIE_SECURE = False
+CSRF_COOKIE_SECURE = False
+
+# Railway proxy settings
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+USE_X_FORWARDED_HOST = True
 
 # ==============================
 # SESSION SETTINGS
@@ -243,7 +237,7 @@ print("🚀 SETTINGS LOADED SUCCESSFULLY")
 print(f"🔑 SECRET_KEY: {'Loaded' if os.environ.get('SECRET_KEY') else 'Using default (local)'}")
 print(f"📧 EMAIL_USER: {EMAIL_HOST_USER}")
 print(f"🔐 EMAIL_PASS: {'Loaded' if os.environ.get('EMAIL_HOST_PASSWORD') else 'Using default (local)'}")
-print(f"🗄️ DATABASE: {'Railway PostgreSQL' if os.environ.get('DATABASE_URL') else 'SQLite (local)'}")
+print(f"🗄️ DATABASE: SQLite (Production & Local)")
 print(f"💰 PAYSTACK: {'Loaded' if os.environ.get('PAYSTACK_SECRET_KEY') else 'Using defaults (local)'}")
 print(f"🌐 SITE_URL: {SITE_URL}")
 print(f"🌐 PRODUCTION_URL: {PRODUCTION_SITE_URL}")
