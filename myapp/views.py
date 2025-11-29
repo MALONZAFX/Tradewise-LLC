@@ -1195,7 +1195,6 @@ def login_view(request):
     return render(request, 'login.html')
 
 
-
 def signup(request):
     """PERMANENT FIX SIGNUP - GUARANTEED AUTO-COIN AWARDS"""
     if request.method == 'POST':
@@ -1321,25 +1320,46 @@ def signup(request):
             else:
                 print("ℹ️ No referral code provided - Standard signup")
 
-            # STEP 4: Send emails
+            # STEP 4: Send emails WITH ERROR HANDLING
             print(f"📧 Sending verification emails...")
+            email_success = True
+            email_errors = []
+            
             try:
                 # Send verification email
+                print(f"🟢 MODEL: Starting verification email for {user.email}")
                 email_sent = user.send_verification_email()
                 if email_sent:
+                    print(f"✅ MODEL: Verification email sent - Result: {email_sent}")
                     print(f"✅ Verification email sent to {user.email}")
                 else:
-                    print(f"❌ Failed to send verification email")
-                
-                # Send welcome email
-                welcome_sent = user.send_welcome_email(password)
-                if welcome_sent:
-                    print(f"✅ Welcome email sent to {user.email}")
-                else:
-                    print(f"❌ Failed to send welcome email")
+                    print(f"❌ MODEL: Verification email failed - Result: {email_sent}")
+                    email_success = False
+                    email_errors.append("Verification email failed to send")
                     
             except Exception as email_error:
-                print(f"⚠️ Email error: {email_error}")
+                print(f"❌ MODEL: Verification email failed: {email_error}")
+                email_success = False
+                email_errors.append(f"Verification: {str(email_error)}")
+                # Continue anyway - don't break signup
+
+            try:
+                # Send welcome email
+                print(f"🟢 WELCOME EMAIL: Starting for {user.email}")
+                welcome_sent = user.send_welcome_email(password)
+                if welcome_sent:
+                    print(f"✅ WELCOME EMAIL: Welcome email sent successfully")
+                    print(f"✅ Welcome email sent to {user.email}")
+                else:
+                    print(f"❌ WELCOME EMAIL: Failed to send welcome email")
+                    email_success = False
+                    email_errors.append("Welcome email failed to send")
+                    
+            except Exception as welcome_error:
+                print(f"❌ WELCOME EMAIL: Failed to send welcome email: {welcome_error}")
+                email_success = False
+                email_errors.append(f"Welcome: {str(welcome_error)}")
+                # Continue anyway - don't break signup
 
             # STEP 5: Final debug info
             print(f"🎊 SIGNUP COMPLETED SUCCESSFULLY!")
@@ -1348,11 +1368,23 @@ def signup(request):
             print(f"   TWN: {user.account_number}")
             print(f"   Affiliate Code: {new_affiliate.referral_code}")
             print(f"   Referral Used: {'Yes' if referrer_id else 'No'}")
+            print(f"   Emails Status: {'✅ All sent' if email_success else '❌ Some failed'}")
 
-            messages.success(request, 
-                f'🎉 Account created successfully, {user.first_name}! '
-                f'Check your email to verify your account.'
-            )
+            # Show appropriate messages to user
+            if email_success:
+                messages.success(request, 
+                    f'🎉 Account created successfully, {user.first_name}! '
+                    f'Check your email to verify your account.'
+                )
+            else:
+                messages.success(request, 
+                    f'🎉 Account created successfully, {user.first_name}! '
+                    f'Your account number is: {user.account_number}'
+                )
+                messages.warning(request, 
+                    f'Note: Email delivery is temporarily unavailable. '
+                    f'You can still login and use your account.'
+                )
             
             if referrer_id:
                 messages.info(request, 

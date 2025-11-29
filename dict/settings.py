@@ -137,21 +137,40 @@ MEDIA_URL = "/media/"
 MEDIA_ROOT = os.path.join(BASE_DIR, "media")
 
 # ==============================
-# EMAIL SETTINGS - SENDGRID
+# EMAIL SETTINGS - SENDGRID WITH FALLBACK
 # ==============================
+# Check if SendGrid API key is available
+SENDGRID_API_KEY = os.environ.get("SENDGRID_API_KEY")
+
 if DEBUG:
     # Local development - use console
     EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
     print("🔧 EMAIL: Using console backend (development)")
+elif SENDGRID_API_KEY:
+    # Production - use SendGrid if API key exists
+    try:
+        EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
+        EMAIL_HOST = "smtp.sendgrid.net"
+        EMAIL_PORT = 587
+        EMAIL_USE_TLS = True
+        EMAIL_HOST_USER = "apikey"
+        EMAIL_HOST_PASSWORD = SENDGRID_API_KEY
+        
+        # Test connection (non-blocking quick test)
+        from django.core import mail
+        connection = mail.get_connection()
+        connection.open()
+        connection.close()
+        print("✅ EMAIL: SendGrid SMTP configured successfully")
+        
+    except Exception as e:
+        print(f"❌ EMAIL: SendGrid failed - {e}")
+        print("🔄 EMAIL: Falling back to console backend")
+        EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 else:
-    # Production - use SendGrid
-    EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
-    EMAIL_HOST = "smtp.sendgrid.net"
-    EMAIL_PORT = 587
-    EMAIL_USE_TLS = True
-    EMAIL_HOST_USER = "apikey"  # ← LITERALLY "apikey"
-    EMAIL_HOST_PASSWORD = os.environ.get("SENDGRID_API_KEY")  # Your SendGrid API Key
-    print("🚀 EMAIL: Using SendGrid SMTP (production)")
+    # No SendGrid API key - use console
+    EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+    print("⚠️ EMAIL: No SENDGRID_API_KEY found, using console backend")
 
 # Sender information
 DEFAULT_FROM_EMAIL = "TradeWise <noreply@tradewise-hub.com>"
@@ -243,7 +262,7 @@ if DEBUG:
 print("=" * 50)
 print("🚀 SETTINGS LOADED SUCCESSFULLY")
 print(f"🔑 SECRET_KEY: {'Loaded' if os.environ.get('SECRET_KEY') else 'Using default (local)'}")
-print(f"📧 EMAIL_BACKEND: {'SendGrid SMTP' if not DEBUG else 'Console (local)'}")
+print(f"📧 EMAIL_BACKEND: {'SendGrid SMTP' if not DEBUG and SENDGRID_API_KEY else 'Console (fallback)'}")
 print(f"🗄️ DATABASE: SQLite (Production & Local)")
 print(f"💰 PAYSTACK: {'Loaded' if os.environ.get('PAYSTACK_SECRET_KEY') else 'Using defaults (local)'}")
 print(f"🌐 SITE_URL: {SITE_URL}")
