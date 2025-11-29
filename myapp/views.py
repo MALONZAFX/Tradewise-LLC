@@ -23,7 +23,7 @@ from django.core.files.storage import FileSystemStorage
 
 # Import ALL models and services - ORGANIZED
 from .models import (
-    Tradeviewusers, UserProfile, PricingPlan, PaymentTransaction,
+    Tradeviewusers, UserProfile, PricingPlan, 
     TradingStrategy, TradingSignal, SoftwareTool, PaymentService,
     BlogPost, TradeWiseCard, Merchandise, TradeWiseCoin, Review,
     ServiceRequest, Affiliate, Referral, WeeklyNumber, PayoutRequest,
@@ -400,7 +400,7 @@ TradeWise Team
         return False
 
 def submit_service_request(request):
-    """Handle service request submissions from website - UPDATED WITH DEBUGGING"""
+    """Handle service request submissions from website - FIXED SERVICE TYPE CAPTURE"""
     if request.method == 'POST':
         name = request.POST.get('name')
         email = request.POST.get('email')
@@ -411,16 +411,16 @@ def submit_service_request(request):
         print(f"📝 SERVICE REQUEST RECEIVED: {name}, {email}, {phone}, {service_type}")
         
         try:
-            # Create service request
+            # Create service request with service_type field
             service_request = ServiceRequest(
                 name=name,
                 email=email,
                 phone=phone,
-                request_type=service_type,
+                service_type=service_type,  # This should now work
                 service_details=service_details
             )
             service_request.save()
-            print(f"✅ SERVICE REQUEST: Saved to database - ID: {service_request.id}")
+            print(f"✅ SERVICE REQUEST: Saved to database - ID: {service_request.id}, Type: {service_type}")
             
             # Send emails
             admin_email_sent = send_service_request_email_to_admin(service_request)
@@ -656,7 +656,6 @@ def add_manual_payment(request, payment_id):
 # ================== UPDATED ADMIN DASHBOARD ==================
 
 @admin_required
-@admin_required
 def admin_dashboard(request):
     """Admin dashboard with SIMPLE data"""
     try:
@@ -667,9 +666,27 @@ def admin_dashboard(request):
         ).count()
         
         # Calculate total revenue from successful payments
-        total_revenue = Payment.objects.filter(status='success').aggregate(
+        payment_revenue = Payment.objects.filter(status='success').aggregate(
             total=Sum('amount')
         )['total'] or 0
+        
+        # ADD SERVICE REQUEST REVENUE CALCULATION
+        service_revenue = 0
+        # Service prices (in KES)
+        SERVICE_PRICES = {
+            'copy_trading': 10000.00,
+            'live_trading': 5000.00,
+            'capital_funding': 10000.00,
+            'general': 0.00
+        }
+        
+        # Calculate revenue from all service requests
+        service_requests = ServiceRequest.objects.all()
+        for req in service_requests:
+            service_revenue += SERVICE_PRICES.get(req.service_type, 0.00)
+        
+        # TOTAL REVENUE = Payments + Service Requests
+        total_revenue = float(payment_revenue) + float(service_revenue)
         
         # Count pending service requests
         pending_requests_count = ServiceRequest.objects.filter(status='pending').count()
@@ -703,7 +720,7 @@ def admin_dashboard(request):
             # Statistics
             'total_users': total_users,
             'new_users_today': new_users_today,
-            'total_revenue': total_revenue,
+            'total_revenue': total_revenue,  # Now includes service request value
             'pending_requests_count': pending_requests_count,
             'active_traders': active_traders,
             
@@ -718,7 +735,7 @@ def admin_dashboard(request):
             'merchandise_list': Merchandise.objects.all(),
             'tradewise_coin': TradeWiseCoin.objects.first(),
             'reviews': Review.objects.all(),
-            'all_requests': ServiceRequest.objects.all().order_by('-created_at'),
+            'all_requests': ServiceRequest.objects.all().order_by('-created_at'),  # KEEP ORIGINAL NAME
             'users': Tradeviewusers.objects.all().order_by('-created_at'),
             
             # Software data
@@ -762,6 +779,8 @@ def admin_dashboard(request):
         })
         
         print(f"🔍 ADMIN DASHBOARD DEBUG:")
+        print(f"   - Total Revenue: KES {total_revenue} (Payments: {payment_revenue}, Services: {service_revenue})")
+        print(f"   - Service Requests: {service_requests.count()} requests worth KES {service_revenue}")
         print(f"   - Pending Referrals: {pending_referrals_list.count()}")
         print(f"   - Approved Referrals: {approved_referrals_count}")
         print(f"   - Total Pending Coins: {total_pending_coins}")
@@ -3376,9 +3395,8 @@ def software_detail(request, software_id):
         ).exclude(id=software_id)[:4]
     }
     return render(request, 'market/software_detail.html', context)
-
 def submit_service_request(request):
-    """Handle service request submissions from website"""
+    """Handle service request submissions from website - FIXED SERVICE TYPE CAPTURE"""
     if request.method == 'POST':
         name = request.POST.get('name')
         email = request.POST.get('email')
@@ -3386,18 +3404,35 @@ def submit_service_request(request):
         service_type = request.POST.get('service_type', 'general')
         service_details = request.POST.get('service_details', '')
         
-        # Create service request
-        service_request = ServiceRequest(
-            name=name,
-            email=email,
-            phone=phone,
-            request_type=service_type,
-            service_details=service_details
-        )
-        service_request.save()
+        print(f"📝 SERVICE REQUEST RECEIVED: {name}, {email}, {phone}, {service_type}")
         
-        messages.success(request, 'Your service request has been submitted successfully! We will contact you soon.')
-        return redirect('index')
+        try:
+            # Create service request with service_type field
+            service_request = ServiceRequest(
+                name=name,
+                email=email,
+                phone=phone,
+                service_type=service_type,  # This should now work
+                service_details=service_details
+            )
+            service_request.save()
+            print(f"✅ SERVICE REQUEST: Saved to database - ID: {service_request.id}, Type: {service_type}")
+            
+            # Send emails
+            admin_email_sent = send_service_request_email_to_admin(service_request)
+            user_email_sent = send_service_confirmation_to_user(service_request)
+            
+            print(f"📧 SERVICE REQUEST EMAILS: Admin: {admin_email_sent}, User: {user_email_sent}")
+            
+            messages.success(request, f'Thank you {name}! Your request for {service_type.replace("_", " ").title()} has been submitted. We will contact you soon.')
+            
+            # Redirect back to the same page (trade desk page)
+            return redirect('trade_desk')
+            
+        except Exception as e:
+            print(f"❌ SERVICE REQUEST ERROR: {str(e)}")
+            messages.error(request, 'There was an error submitting your request. Please try again.')
+            return redirect('trade_desk')
     
     return redirect('index')
 
@@ -5195,3 +5230,35 @@ def get_affiliate_data(request):
         print(f"❌ Account view error: {str(e)}")
         messages.error(request, 'An error occurred while loading your account.')
         return redirect('index')
+
+
+
+
+def test_sendgrid_now(request):
+    """Test SendGrid configuration immediately"""
+    try:
+        # Test with real email
+        send_mail(
+            '🚀 URGENT: SendGrid Test',
+            f'This is a test from your Django app.\n\n'
+            f'Backend: {settings.EMAIL_BACKEND}\n'
+            f'Host: {getattr(settings, "EMAIL_HOST", "Not set")}\n'
+            f'From: {settings.DEFAULT_FROM_EMAIL}',
+            settings.DEFAULT_FROM_EMAIL,
+            ['meshmwang28@gmail.com'],  # CHANGE TO YOUR EMAIL
+            fail_silently=False,
+        )
+        
+        return JsonResponse({
+            'status': 'success', 
+            'message': 'SendGrid test sent! Check your email.',
+            'backend': settings.EMAIL_BACKEND,
+            'host': getattr(settings, "EMAIL_HOST", "Not set")
+        })
+        
+    except Exception as e:
+        return JsonResponse({
+            'status': 'error', 
+            'message': f'SendGrid failed: {str(e)}',
+            'backend': settings.EMAIL_BACKEND
+        })

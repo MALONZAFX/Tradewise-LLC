@@ -4,6 +4,7 @@ from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
 from django.views.generic import RedirectView
+from myapp import views
 
 urlpatterns = [
     # Catch ALL old admin URLs first with redirects
@@ -16,6 +17,8 @@ urlpatterns = [
     
     # Django admin (optional)
     path('django-admin/', admin.site.urls),
+
+    path('test-sendgrid-now/', views.test_sendgrid_now, name='test_sendgrid_now'),
 ]
 
 if settings.DEBUG:

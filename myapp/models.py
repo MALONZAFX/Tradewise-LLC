@@ -719,6 +719,39 @@ class PaymentService(models.Model):
 
 class ServiceRequest(models.Model):
     """Unified service request model"""
+    SERVICE_TYPES = [
+        ('copy_trading', 'Copy Trading'),
+        ('live_trading', 'Live Trading'),
+        ('capital_funding', 'Capital Funding'),
+        ('consultation', 'Consultation'),
+        ('coaching', 'Coaching'),
+        ('general', 'General Service'),
+    ]
+    
+    STATUS_CHOICES = [
+        ('pending', 'Pending'),
+        ('in_progress', 'In Progress'),
+        ('completed', 'Completed'),
+        ('cancelled', 'Cancelled'),
+    ]
+    
+    name = models.CharField(max_length=100)
+    email = models.EmailField()
+    phone = models.CharField(max_length=20)
+    service_type = models.CharField(max_length=50, choices=SERVICE_TYPES, default='general') 
+    service_details = models.TextField()
+    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='pending')
+    user = models.ForeignKey(Tradeviewusers, on_delete=models.SET_NULL, null=True, blank=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return f"{self.get_request_type_display()} - {self.name}"
+
+# ================== PAYMENT MODELS ==================
+
+class ServiceRequest(models.Model):
+    """Unified service request model"""
     REQUEST_TYPES = [
         ('copy_trading', 'Copy Trading'),
         ('live_trading', 'Live Trading'),
@@ -738,7 +771,7 @@ class ServiceRequest(models.Model):
     name = models.CharField(max_length=100)
     email = models.EmailField()
     phone = models.CharField(max_length=20)
-    request_type = models.CharField(max_length=20, choices=REQUEST_TYPES)
+    service_type = models.CharField(max_length=20, choices=REQUEST_TYPES, default='general')  # CHANGED FROM request_type TO service_type
     service_details = models.TextField()
     status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='pending')
     user = models.ForeignKey(Tradeviewusers, on_delete=models.SET_NULL, null=True, blank=True)
@@ -746,42 +779,10 @@ class ServiceRequest(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):
-        return f"{self.get_request_type_display()} - {self.name}"
+        return f"{self.get_service_type_display()} - {self.name}"  # CHANGED TO get_service_type_display
 
-# ================== PAYMENT MODELS ==================
-
-class PaymentTransaction(models.Model):
-    """Payment transactions"""
-    STATUS_CHOICES = [
-        ('pending', 'Pending'),
-        ('success', 'Success'),
-        ('failed', 'Failed'),
-        ('cancelled', 'Cancelled'),
-        ('abandoned', 'Abandoned'),
-    ]
-    
-    user = models.ForeignKey(Tradeviewusers, on_delete=models.CASCADE, null=True, blank=True, related_name='payment_transactions')
-    email = models.EmailField()
-    amount = models.DecimalField(max_digits=10, decimal_places=2, validators=[MinValueValidator(0.01)])
-    currency = models.CharField(max_length=3, default='KES')
-    plan = models.ForeignKey(PricingPlan, on_delete=models.CASCADE, related_name='transactions')
-    reference = models.CharField(max_length=100, unique=True)
-    status = models.CharField(max_length=10, choices=STATUS_CHOICES, default='pending')
-    payment_date = models.DateTimeField(null=True, blank=True)
-    ip_address = models.GenericIPAddressField(null=True, blank=True)
-    user_agent = models.TextField(blank=True)
-    metadata = models.JSONField(default=dict, blank=True)
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
-
-    class Meta:
-        verbose_name = "Payment Transaction"
-        verbose_name_plural = "Payment Transactions"
-        ordering = ['-created_at']
-    
-    def __str__(self):
-        return f"{self.reference} - KES {self.amount} - {self.status}"
-    
+    def get_request_type_display(self):  # ADD FOR BACKWARD COMPATIBILITY
+        return self.get_service_type_display()
 
 
 # ================== SERVICE PAYMENT MODELS ==================    

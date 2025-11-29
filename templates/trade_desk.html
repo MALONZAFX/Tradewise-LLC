@@ -572,20 +572,15 @@
     <script>
       let currentService = '';
 
-function openRequestModal(serviceName) {
+      function openRequestModal(serviceName) {
     currentService = serviceName;
     document.getElementById('selectedService').textContent = serviceName;
     
-    // Map service names to request types
-    const serviceMap = {
-        'Copy Trading': 'copy_trading',
-        'Live Trading': 'live_trading', 
-        'Capital Funding': 'capital_funding'
-    };
-    
-    document.getElementById('serviceTypeInput').value = serviceMap[serviceName] || 'general';
+    // Set the service_type directly - use the same values as in your model
+    document.getElementById('serviceTypeInput').value = serviceName.toLowerCase().replace(' ', '_');
     document.getElementById('requestModal').style.display = 'flex';
     document.body.style.overflow = 'hidden';
+
 }
 
 function closeRequestModal() {

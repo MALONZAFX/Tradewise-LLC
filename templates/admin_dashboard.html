@@ -539,13 +539,16 @@
                             </div>
                             <div class="col-lg-3 col-6">
                                 <div class="small-box bg-success stat-card">
-                                    <div class="inner">
-                                        <h3 id="totalRevenueStat">KES {{ total_revenue|floatformat:0 }}</h3>
-                                        <p>Total Revenue <span class="live-indicator" title="Live Updates"></span></p>
-                                        <div class="progress progress-thin mt-2">
-                                            <div class="progress-bar bg-white" style="width: {{ revenue_growth_percentage }}%"></div>
+                                    <!-- Revenue Card -->
+                                    <div class="stat-card">
+                                        <div class="stat-icon revenue">
+                                            <i class="fas fa-money-bill-wave"></i>
                                         </div>
-                                        <small id="revenueGrowth">+{{ revenue_growth }}% this month</small>
+                                        <div class="stat-info">
+                                            <h3>KES {{ total_revenue|floatformat:2 }}</h3>
+                                            <p>Total Service Revenue</p>
+                                            <small>From {{ all_requests.count }} service requests</small>
+                                        </div>
                                     </div>
                                     <div class="icon">
                                         <i class="fas fa-chart-line"></i>
@@ -1595,95 +1598,92 @@
                         </div>
                     </div>
 
-                    <!-- ALL REQUESTS TAB -->
-                    <div id="all-requests" class="content-tab">
-                        <div class="card">
-                            <div class="card-header">
-                                <h3 class="card-title">All Service Requests</h3>
-                                <span class="badge badge-warning">{{ pending_requests_count }} Pending</span>
-                            </div>
-                            <div class="card-body">
-                                <div class="table-responsive">
-                                    <table class="table table-bordered table-hover">
-                                        <thead>
-                                            <tr>
-                                                <th>ID</th>
-                                                <th>Type</th>
-                                                <th>Name</th>
-                                                <th>Email</th>
-                                                <th>Phone</th>
-                                                <th>Service Type</th>
-                                                <th>Status</th>
-                                                <th>Created</th>
-                                                <th>Actions</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody id="requestsTableBody">
-                                            {% for request in all_requests %}
-                                            <tr>
-                                                <td>
-                                                    {% if request.service_type %}
-                                                        REQ{{ request.id|stringformat:"03d" }}
-                                                    {% elif request.class_interest %}
-                                                        CON{{ request.id|stringformat:"03d" }}
-                                                    {% elif request.class_type %}
-                                                        CLS{{ request.id|stringformat:"03d" }}
-                                                    {% else %}
-                                                        REV{{ request.id|stringformat:"03d" }}
-                                                    {% endif %}
-                                                </td>
-                                                <td>
-                                                    {% if request.service_type %}
-                                                        Service
-                                                    {% elif request.class_interest %}
-                                                        Consultation
-                                                    {% elif request.class_type %}
-                                                        Class
-                                                    {% else %}
-                                                        Revenue
-                                                    {% endif %}
-                                                </td>
-                                                <td>{{ request.name }}</td>
-                                                <td>{{ request.email }}</td>
-                                                <td>{{ request.phone }}</td>
-                                                <td>
-                                                    {% if request.service_type %}
-                                                        {{ request.service_type }}
-                                                    {% elif request.class_interest %}
-                                                        {{ request.class_interest }}
-                                                    {% elif request.class_type %}
-                                                        {{ request.get_class_type_display }}
-                                                    {% else %}
-                                                        {{ request.service_type }}
-                                                    {% endif %}
-                                                </td>
-                                                <td>
-                                                    <span class="badge badge-{{ request.status|lower }} status-badge">{{ request.status }}</span>
-                                                </td>
-                                                <td>{{ request.created_at|date:"M d, Y" }}</td>
-                                                <td>
-                                                    <button class="btn btn-sm btn-info" onclick="viewRequest({{ request.id }}, '{% if request.service_type %}GeneralServiceRequest{% elif request.class_interest %}ConsultationRequest{% elif request.class_type %}CoachingRequest{% else %}ServiceRevenue{% endif %}')">
+                   <!-- ALL REQUESTS TAB -->
+                <div id="all-requests" class="content-tab">
+                    <div class="card">
+                        <div class="card-header">
+                            <h3 class="card-title">All Service Requests</h3>
+                            <span class="badge badge-warning">{{ pending_requests_count }} Pending</span>
+                        </div>
+                        <div class="card-body">
+                            <div class="table-responsive">
+                                <table class="table table-bordered table-hover">
+                                    <thead>
+                                        <tr>
+                                            <th>ID</th>
+                                            <th>Type</th>
+                                            <th>Name</th>
+                                            <th>Email</th>
+                                            <th>Phone</th>
+                                            <th>Service Type</th>
+                                            <th>Amount</th>
+                                            <th>Status</th>
+                                            <th>Created</th>
+                                            <th>Actions</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="requestsTableBody">
+                                        {% for request in all_requests %}
+                                        <tr>
+                                            <td>REQ{{ request.id|stringformat:"03d" }}</td>
+                                            <td>Service</td>
+                                            <td>{{ request.name }}</td>
+                                            <td>{{ request.email }}</td>
+                                            <td>{{ request.phone }}</td>
+                                            <td>
+                                                <strong>{{ request.get_service_type_display }}</strong>
+                                            </td>
+                                            <td>
+                                                <strong>
+                                                    {% if request.service_type == 'copy_trading' %}KES 10,000
+                                                    {% elif request.service_type == 'live_trading' %}KES 5,000
+                                                    {% elif request.service_type == 'capital_funding' %}KES 10,000
+                                                    {% else %}KES 0{% endif %}
+                                                </strong>
+                                            </td>
+                                            <td>
+                                                <span class="badge badge-{{ request.status|lower }} status-badge">{{ request.status }}</span>
+                                            </td>
+                                            <td>{{ request.created_at|date:"M d, Y" }}</td>
+                                            <td>
+                                                <div class="btn-group">
+                                                    <!-- View Button -->
+                                                    <button class="btn btn-sm btn-info" onclick="viewRequest({{ request.id }}, 'ServiceRequest')" title="View Details">
                                                         <i class="fas fa-eye"></i>
                                                     </button>
-                                                    {% if request.status != 'Completed' and request.status != 'completed' and request.status != 'confirmed' %}
-                                                    <button class="btn btn-sm btn-success" onclick="updateRequestStatus({{ request.id }}, '{% if request.service_type %}Completed{% elif request.class_interest %}completed{% elif request.class_type %}completed{% else %}confirmed{% endif %}', '{% if request.service_type %}GeneralServiceRequest{% elif request.class_interest %}ConsultationRequest{% elif request.class_type %}CoachingRequest{% else %}ServiceRevenue{% endif %}')">
+                                                    
+                                                    <!-- Accept Button - Show only for pending requests -->
+                                                    {% if request.status == 'pending' or request.status == 'Pending' %}
+                                                    <button class="btn btn-sm btn-success" onclick="updateRequestStatus({{ request.id }}, 'accepted', 'ServiceRequest')" title="Accept Request">
                                                         <i class="fas fa-check"></i>
                                                     </button>
                                                     {% endif %}
-                                                </td>
-                                            </tr>
-                                            {% empty %}
-                                            <tr>
-                                                <td colspan="9" class="text-center text-muted">No service requests found</td>
-                                            </tr>
-                                            {% endfor %}
-                                        </tbody>
-                                    </table>
-                                </div>
+                                                    
+                                                    <!-- Reject Button - Show only for pending requests -->
+                                                    {% if request.status == 'pending' or request.status == 'Pending' %}
+                                                    <button class="btn btn-sm btn-warning" onclick="updateRequestStatus({{ request.id }}, 'rejected', 'ServiceRequest')" title="Reject Request">
+                                                        <i class="fas fa-times"></i>
+                                                    </button>
+                                                    {% endif %}
+                                                    
+                                                    <!-- Delete Button - Show for all statuses -->
+                                                    <button class="btn btn-sm btn-danger" onclick="deleteRequest({{ request.id }}, 'ServiceRequest')" title="Delete Request">
+                                                        <i class="fas fa-trash"></i>
+                                                    </button>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        {% empty %}
+                                        <tr>
+                                            <td colspan="10" class="text-center text-muted">No service requests found</td>
+                                        </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
                             </div>
                         </div>
                     </div>
-
+                </div>
                     <!-- USERS MANAGEMENT TAB -->
                     <div id="users" class="content-tab">
                         <div class="card">
