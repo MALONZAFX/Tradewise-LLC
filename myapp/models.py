@@ -746,43 +746,11 @@ class ServiceRequest(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):
-        return f"{self.get_request_type_display()} - {self.name}"
+        return f"{self.get_service_type_display()} - {self.name}"
 
 # ================== PAYMENT MODELS ==================
 
-class ServiceRequest(models.Model):
-    """Unified service request model"""
-    REQUEST_TYPES = [
-        ('copy_trading', 'Copy Trading'),
-        ('live_trading', 'Live Trading'),
-        ('capital_funding', 'Capital Funding'),
-        ('consultation', 'Consultation'),
-        ('coaching', 'Coaching'),
-        ('general', 'General Service'),
-    ]
-    
-    STATUS_CHOICES = [
-        ('pending', 'Pending'),
-        ('in_progress', 'In Progress'),
-        ('completed', 'Completed'),
-        ('cancelled', 'Cancelled'),
-    ]
-    
-    name = models.CharField(max_length=100)
-    email = models.EmailField()
-    phone = models.CharField(max_length=20)
-    service_type = models.CharField(max_length=20, choices=REQUEST_TYPES, default='general')  # CHANGED FROM request_type TO service_type
-    service_details = models.TextField()
-    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='pending')
-    user = models.ForeignKey(Tradeviewusers, on_delete=models.SET_NULL, null=True, blank=True)
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
 
-    def __str__(self):
-        return f"{self.get_service_type_display()} - {self.name}"  # CHANGED TO get_service_type_display
-
-    def get_request_type_display(self):  # ADD FOR BACKWARD COMPATIBILITY
-        return self.get_service_type_display()
 
 
 # ================== SERVICE PAYMENT MODELS ==================    
