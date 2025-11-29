@@ -19,10 +19,6 @@ DEBUG = os.environ.get("DEBUG", "True") == "True"
 SITE_URL = os.environ.get("SITE_URL", "http://127.0.0.1:8000")
 PRODUCTION_SITE_URL = os.environ.get("PRODUCTION_SITE_URL", SITE_URL)
 
-# EMAIL CONFIGURATION - Use defaults for local
-EMAIL_HOST_USER = os.environ.get("EMAIL_HOST_USER", "dev@example.com")
-EMAIL_HOST_PASSWORD = os.environ.get("EMAIL_HOST_PASSWORD", "dev-password")
-
 # PAYMENTS
 PAYSTACK_SECRET_KEY = os.environ.get("PAYSTACK_SECRET_KEY", "dev-paystack-secret")
 PAYSTACK_PUBLIC_KEY = os.environ.get("PAYSTACK_PUBLIC_KEY", "dev-paystack-public")
@@ -141,17 +137,29 @@ MEDIA_URL = "/media/"
 MEDIA_ROOT = os.path.join(BASE_DIR, "media")
 
 # ==============================
-# EMAIL SETTINGS - FIXED
+# EMAIL SETTINGS - SENDGRID
 # ==============================
-EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
-EMAIL_HOST = "smtp.gmail.com"
-EMAIL_USE_TLS = True
-EMAIL_PORT = 587
-# These are already set above from environment variables
-DEFAULT_FROM_EMAIL = f"TradeWise <{EMAIL_HOST_USER}>"
-SERVER_EMAIL = EMAIL_HOST_USER
-ADMIN_EMAIL = EMAIL_HOST_USER
-EMAIL_TIMEOUT = 15
+if DEBUG:
+    # Local development - use console
+    EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+    print("🔧 EMAIL: Using console backend (development)")
+else:
+    # Production - use SendGrid
+    EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
+    EMAIL_HOST = "smtp.sendgrid.net"
+    EMAIL_PORT = 587
+    EMAIL_USE_TLS = True
+    EMAIL_HOST_USER = "apikey"  # ← LITERALLY "apikey"
+    EMAIL_HOST_PASSWORD = os.environ.get("SENDGRID_API_KEY")  # Your SendGrid API Key
+    print("🚀 EMAIL: Using SendGrid SMTP (production)")
+
+# Sender information
+DEFAULT_FROM_EMAIL = "TradeWise <noreply@tradewise-hub.com>"
+SERVER_EMAIL = "noreply@tradewise-hub.com"
+ADMIN_EMAIL = "theofficialtradewise@gmail.com"
+
+# Better timeout for production
+EMAIL_TIMEOUT = 10
 EMAIL_USE_SSL = False
 
 # ==============================
@@ -189,7 +197,6 @@ SECURE_CONTENT_TYPE_NOSNIFF = True
 # DEFAULT AUTO FIELD
 # ==============================
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
-EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
 # ==============================
 # LOGGING
@@ -236,8 +243,7 @@ if DEBUG:
 print("=" * 50)
 print("🚀 SETTINGS LOADED SUCCESSFULLY")
 print(f"🔑 SECRET_KEY: {'Loaded' if os.environ.get('SECRET_KEY') else 'Using default (local)'}")
-print(f"📧 EMAIL_USER: {EMAIL_HOST_USER}")
-print(f"🔐 EMAIL_PASS: {'Loaded' if os.environ.get('EMAIL_HOST_PASSWORD') else 'Using default (local)'}")
+print(f"📧 EMAIL_BACKEND: {'SendGrid SMTP' if not DEBUG else 'Console (local)'}")
 print(f"🗄️ DATABASE: SQLite (Production & Local)")
 print(f"💰 PAYSTACK: {'Loaded' if os.environ.get('PAYSTACK_SECRET_KEY') else 'Using defaults (local)'}")
 print(f"🌐 SITE_URL: {SITE_URL}")
