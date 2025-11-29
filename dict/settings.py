@@ -15,34 +15,37 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # CORE SETTINGS
 # ==============================
 SECRET_KEY = os.environ.get("SECRET_KEY", "django-insecure-dev-key-for-local-only")
-DEBUG = os.environ.get("DEBUG", "True") == "True"
+DEBUG = os.environ.get("DEBUG", "False") == "True"
 
 ALLOWED_HOSTS = [
-    "tradewise.up.railway.app",
-    "127.0.0.1", 
-    "localhost",
     "tradewise-hub.com",
     "www.tradewise-hub.com",
+    ".onrender.com",
+    "127.0.0.1", 
+    "localhost",
     ".railway.app",
-    ".onrender.com",  # Add this for Render
+    ".up.railway.app",
 ]
 
 CSRF_TRUSTED_ORIGINS = [
-    "https://tradewise.up.railway.app",
-    "https://*.railway.app",
     "https://tradewise-hub.com",
     "https://www.tradewise-hub.com",
-    "https://*.onrender.com",  # Add this for Render
+    "https://*.onrender.com",
+    "https://*.railway.app",
+    "https://*.up.railway.app",
 ]
 
 # ==============================
-# DATABASE
+# DATABASE - USING POSTGRES FROM ENV
 # ==============================
+import dj_database_url
+
 DATABASES = {
-    "default": {
-        "ENGINE": "django.db.backends.sqlite3",
-        "NAME": BASE_DIR / "db.sqlite3",
-    }
+    'default': dj_database_url.config(
+        default=os.environ.get('DATABASE_URL', 'sqlite:///db.sqlite3'),
+        conn_max_age=600,
+        conn_health_checks=True,
+    )
 }
 
 # ==============================
@@ -93,23 +96,34 @@ TEMPLATES = [
 ]
 
 # ==============================
-# EMAIL CONFIGURATION - FIXED & USING .ENV
+# EMAIL CONFIGURATION - GMAIL SMTP FROM ENV
 # ==============================
 EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
-EMAIL_HOST = "smtp.gmail.com"  # Using Gmail SMTP as per your .env
+EMAIL_HOST = "smtp.gmail.com"
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
-EMAIL_HOST_USER = os.environ.get("EMAIL_HOST_USER", "theofficialtradewise@gmail.com")
+EMAIL_HOST_USER = os.environ.get("EMAIL_HOST_USER", "")
 EMAIL_HOST_PASSWORD = os.environ.get("EMAIL_HOST_PASSWORD", "")
-DEFAULT_FROM_EMAIL = "TradeWise <noreply@tradewise-hub.com>"
-SERVER_EMAIL = "TradeWise <noreply@tradewise-hub.com>"
+DEFAULT_FROM_EMAIL = f"TradeWise <{EMAIL_HOST_USER}>"
+SERVER_EMAIL = f"TradeWise <{EMAIL_HOST_USER}>"
 
-# Optional: Fallback to console email in development if no password is set
+# Fallback to console email in development if no password is set
 if DEBUG and not EMAIL_HOST_PASSWORD:
     EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
     print("🔧 DEVELOPMENT: Console email backend (no email password set)")
 else:
     print(f"✅ SMTP configured for: {EMAIL_HOST_USER}")
+
+# ==============================
+# PAYMENT CONFIGURATION - FROM ENV
+# ==============================
+PAYSTACK_SECRET_KEY = os.environ.get("PAYSTACK_SECRET_KEY", "")
+PAYSTACK_PUBLIC_KEY = os.environ.get("PAYSTACK_PUBLIC_KEY", "")
+
+# ==============================
+# SITE URL CONFIGURATION - FROM ENV
+# ==============================
+SITE_URL = os.environ.get("SITE_URL", "https://www.tradewise-hub.com")
 
 # ==============================
 # STATIC FILES
@@ -125,9 +139,9 @@ MEDIA_ROOT = os.path.join(BASE_DIR, "media")
 # ==============================
 # SECURITY
 # ==============================
-SECURE_SSL_REDIRECT = False  # Keep disabled for now
-SESSION_COOKIE_SECURE = False
-CSRF_COOKIE_SECURE = False
+SECURE_SSL_REDIRECT = not DEBUG
+SESSION_COOKIE_SECURE = not DEBUG
+CSRF_COOKIE_SECURE = not DEBUG
 SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 
 # ==============================
@@ -152,6 +166,8 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 print("=" * 50)
 print("🚀 SETTINGS LOADED SUCCESSFULLY")
-print(f"📧 EMAIL: {'Gmail SMTP' if EMAIL_BACKEND == 'django.core.mail.backends.smtp.EmailBackend' else 'Console Backend'}")
+print(f"📧 EMAIL: Gmail SMTP - {EMAIL_HOST_USER}")
+print(f"💰 PAYMENTS: {'Configured' if PAYSTACK_SECRET_KEY else 'Not Configured'}")
 print(f"🐛 DEBUG: {DEBUG}")
+print(f"🌐 SITE URL: {SITE_URL}")
 print("=" * 50)
