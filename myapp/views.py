@@ -14,6 +14,9 @@ from django.db.models import Sum
 from django.contrib import messages
 from django.shortcuts import redirect, render
 from django.http import FileResponse
+from django.shortcuts import render
+from django.template.exceptions import TemplateDoesNotExist
+from django.http import HttpResponse
 import json
 import uuid
 import random
@@ -45,7 +48,7 @@ def admin_login(request):
         valid_admins = {
             'Mesh': {'number': '500100', 'password': 'Tradewise-@2025'},
             'Spallis Official': {'number': '100100', 'password': 'Tradewise-@2025'},
-             'Administrator': {'number': '500500', 'password': 'Tradewise-@2025'},
+            'Administrator': {'number': '500500', 'password': 'Tradewise-@2025'},
             'Staff': {'number': '500200', 'password': 'Tradewise-@2025'},
             'Admin': {'number': '500100', 'password': 'admin'},  # Simple fallback
         }
@@ -5407,4 +5410,54 @@ def get_service_price_display(service_type):
         'capital_funding': 'KES 10,000',
         'general': 'KES 0'
     }
-    return prices.get(service_type, 'KES 0')        
+    return prices.get(service_type, 'KES 0')      
+
+  
+
+def handler404(request, exception):
+    """
+    404 Error Handler
+    """
+    try:
+        return render(request, '404.html', status=404)
+    except TemplateDoesNotExist:
+        return HttpResponse(
+            "<h1>404 - Page Not Found</h1><p>The page you're looking for doesn't exist.</p>",
+            status=404
+        )
+
+def handler500(request):
+    """
+    500 Error Handler
+    """
+    try:
+        return render(request, '500.html', status=500)
+    except TemplateDoesNotExist:
+        return HttpResponse(
+            "<h1>500 - Server Error</h1><p>Sorry, something went wrong on our end.</p>",
+            status=500
+        )
+
+def handler403(request, exception):
+    """
+    403 Error Handler
+    """
+    try:
+        return render(request, '403.html', status=403)
+    except TemplateDoesNotExist:
+        return HttpResponse(
+            "<h1>403 - Permission Denied</h1><p>You don't have permission to access this resource.</p>",
+            status=403
+        )
+
+def handler400(request, exception):
+    """
+    400 Error Handler
+    """
+    try:
+        return render(request, '400.html', status=400)
+    except TemplateDoesNotExist:
+        return HttpResponse(
+            "<h1>400 - Bad Request</h1><p>Your request could not be processed.</p>",
+            status=400
+        )

@@ -118,4 +118,6 @@ path('admin/view-request/<int:request_id>/', views.view_request_details, name='v
 # ================== AJAX ENDPOINTS FOR BUTTONS ==================
 path('ajax/update-request-status/', views.ajax_update_request_status, name='ajax_update_request_status'),
 path('ajax/delete-request/', views.ajax_delete_request, name='ajax_delete_request'),
+
+ 
 ]

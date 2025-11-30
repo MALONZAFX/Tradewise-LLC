@@ -16,7 +16,12 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # CORE SETTINGS
 # ==============================
 SECRET_KEY = os.environ.get("SECRET_KEY", "django-insecure-dev-key-for-local-only")
+
+# FORCE DEBUG=False IN PRODUCTION
 DEBUG = os.environ.get("DEBUG", "False") == "True"
+# Safety override for production
+if any(host in ['.railway.app', '.onrender.com', 'tradewise-hub.com'] for host in ['tradewise.up.railway.app', 'tradewise-hub.com', 'www.tradewise-hub.com']):
+    DEBUG = False
 
 ALLOWED_HOSTS = [
     "tradewise.up.railway.app",
@@ -37,12 +42,15 @@ CSRF_TRUSTED_ORIGINS = [
 ]
 
 # ==============================
-# DATABASE - SQLite Local, PostgreSQL Production
+# DATABASE - FIXED: Use SQLite locally, PostgreSQL on Railway
 # ==============================
 DATABASE_URL = os.environ.get('DATABASE_URL')
 
-if DATABASE_URL and not DEBUG:
-    # Use PostgreSQL on Railway/Production
+# Check if we're running in Railway production environment
+IS_RAILWAY = os.environ.get('RAILWAY_ENVIRONMENT') == 'production' or 'RAILWAY_STATIC_URL' in os.environ
+
+if DATABASE_URL and IS_RAILWAY:
+    # Use PostgreSQL ONLY when running on Railway
     DATABASES = {
         'default': dj_database_url.config(
             default=DATABASE_URL,
@@ -50,7 +58,7 @@ if DATABASE_URL and not DEBUG:
             conn_health_checks=True,
         )
     }
-    print("✅ Using PostgreSQL Database (Production)")
+    print("✅ Using PostgreSQL Database (Railway Production)")
 else:
     # Use SQLite for local development
     DATABASES = {
@@ -106,6 +114,14 @@ ROOT_URLCONF = "dict.urls"
 WSGI_APPLICATION = "dict.wsgi.application"
 
 # ==============================
+# ERROR HANDLERS
+# ==============================
+handler404 = 'myapp.views.handler404'
+handler500 = 'myapp.views.handler500'
+handler403 = 'myapp.views.handler403'
+handler400 = 'myapp.views.handler400'
+
+# ==============================
 # TEMPLATES
 # ==============================
 TEMPLATES = [
@@ -135,27 +151,29 @@ EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 EMAIL_HOST_USER = os.environ.get("EMAIL_HOST_USER", "theofficialtradewise@gmail.com")
 EMAIL_HOST_PASSWORD = os.environ.get("EMAIL_HOST_PASSWORD", "")
-DEFAULT_FROM_EMAIL = "TradeWise <noreply@tradewise-hub.com>"
-SERVER_EMAIL = "TradeWise <noreply@tradewise-hub.com>"
+DEFAULT_FROM_EMAIL = "TradeWise <theofficialtradewise@gmail.com>"
+SERVER_EMAIL = "TradeWise <theofficialtradewise@gmail.com>"
 
-# Fallback to console email in development if no password is set
-if DEBUG and not EMAIL_HOST_PASSWORD:
-    EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
-    print("🔧 DEVELOPMENT: Console email backend (no email password set)")
+# Better email fallback
+if DEBUG:
+    if not EMAIL_HOST_PASSWORD:
+        EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
+        print("🔧 DEVELOPMENT: Console email backend (no email password set)")
+else:
+    # In production, always use SMTP and log if it fails
+    if not EMAIL_HOST_PASSWORD:
+        print("❌ PRODUCTION WARNING: No email password set - emails will fail!")
 
 # ==============================
-# STATIC FILES - FIXED CONFIGURATION
+# STATIC FILES
 # ==============================
 STATIC_URL = "/static/"
 STATICFILES_DIRS = [os.path.join(BASE_DIR, "static")]
 STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
 
-# Use Whitenoise for static files - FIXED FOR PRODUCTION
+# Use Whitenoise for static files
 if not DEBUG:
-    # Use simpler storage to avoid manifest issues
     STATICFILES_STORAGE = "whitenoise.storage.CompressedStaticFilesStorage"
-    # Alternative if you still have issues:
-    # STATICFILES_STORAGE = "django.contrib.staticfiles.storage.StaticFilesStorage"
 else:
     STATICFILES_STORAGE = "django.contrib.staticfiles.storage.StaticFilesStorage"
 
@@ -177,6 +195,9 @@ if not DEBUG:
     CSRF_COOKIE_SECURE = True
     SECURE_BROWSER_XSS_FILTER = True
     SECURE_CONTENT_TYPE_NOSNIFF = True
+    SECURE_HSTS_SECONDS = 31536000
+    SECURE_HSTS_INCLUDE_SUBDOMAINS = True
+    SECURE_HSTS_PRELOAD = True
 else:
     SECURE_SSL_REDIRECT = False
     SESSION_COOKIE_SECURE = False
@@ -209,6 +230,7 @@ print("🚀 SETTINGS LOADED SUCCESSFULLY")
 print(f"🐛 DEBUG: {DEBUG}")
 print(f"📧 EMAIL: {'Gmail SMTP' if 'smtp' in EMAIL_BACKEND else 'Console Backend'}")
 print(f"💰 PAYSTACK: {'✅ Configured' if PAYSTACK_SECRET_KEY else '❌ Missing Keys'}")
-print(f"🗄️ DATABASE: {'PostgreSQL' if DATABASE_URL and not DEBUG else 'SQLite'}")
+print(f"🗄️ DATABASE: {'PostgreSQL' if DATABASE_URL and IS_RAILWAY else 'SQLite'}")
 print(f"📦 STATIC FILES: {STATICFILES_STORAGE}")
+print(f"🚨 ERROR HANDLERS: ✅ Configured")
 print("=" * 50)
