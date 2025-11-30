@@ -37,28 +37,43 @@ from .models import (
 # ================== SIMPLE AUTHENTICATION SYSTEM ==================
 
 def admin_login(request):
-    """Super simple admin login - INSTANT ACCESS"""
+    """Super simple admin login - EXPANDED NUMBER OPTIONS"""
     if request.method == 'POST':
         # Get form data
         username = request.POST.get('username')
         password = request.POST.get('password')
         tradewise_number = request.POST.get('tradewise_number')
         
-        # HARDCODED CREDENTIALS FOR INSTANT ACCESS
+        # EXPANDED CREDENTIALS WITH MULTIPLE NUMBER OPTIONS
         valid_admins = {
-            'Mesh': {'number': '500100', 'password': 'Tradewise-@2025'},
-            'Spallis Official': {'number': '100100', 'password': 'Tradewise-@2025'},
-            'Administrator': {'number': '500500', 'password': 'Tradewise-@2025'},
-            'Staff': {'number': '500200', 'password': 'Tradewise-@2025'},
-            'Admin': {'number': '500100', 'password': 'admin'},  # Simple fallback
+            'Mesh': {
+                'numbers': ['500100', '500500', '100100', '500200'],  # Multiple options
+                'password': 'Tradewise-@2025'
+            },
+            'Spallis Official': {
+                'numbers': ['100100', '500100', '500500', '500200'],  # Primary: 100100
+                'password': 'Tradewise-@2025'
+            },
+            'Administrator': {
+                'numbers': ['500500', '500100', '100100', '500200'],  # Primary: 500500
+                'password': 'Tradewise-@2025'
+            },
+            'Admin': {
+                'numbers': ['500100', '500500', '100100', '500200'],  # Multiple options
+                'password': 'Tradewise-@2025'  # Standardized password
+            },
+            'Staff': {
+                'numbers': ['500200', '500100', '500500', '100100'],  # Primary: 500200
+                'password': 'Tradewise-@2025'
+            },
         }
         
         # Check if it's a valid admin
         if username in valid_admins:
             admin_data = valid_admins[username]
             
-            # Check TradeWise number and password
-            if (tradewise_number == admin_data['number'] and 
+            # Check if TradeWise number is valid AND password matches
+            if (tradewise_number in admin_data['numbers'] and 
                 password == admin_data['password']):
                 
                 # INSTANT SUCCESS - Set session
@@ -5412,7 +5427,7 @@ def get_service_price_display(service_type):
     }
     return prices.get(service_type, 'KES 0')      
 
-  
+
 
 def handler404(request, exception):
     """

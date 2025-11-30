@@ -53,36 +53,30 @@ CSRF_TRUSTED_ORIGINS = [
 # ==============================
 # DATABASE - SQLite Local, PostgreSQL Production
 # ==============================
-if IS_PRODUCTION:
+DATABASE_URL = os.environ.get('DATABASE_URL')
+
+if IS_PRODUCTION and DATABASE_URL:
     # Use PostgreSQL on Railway/Production
-    DATABASE_URL = os.environ.get('DATABASE_URL')
-    if DATABASE_URL:
-        DATABASES = {
-            'default': dj_database_url.config(
-                default=DATABASE_URL,
-                conn_max_age=600,
-                conn_health_checks=True,
-            )
-        }
-        print("✅ PRODUCTION: Using PostgreSQL Database")
-    else:
-        # Fallback to SQLite if no DATABASE_URL
-        DATABASES = {
-            "default": {
-                "ENGINE": "django.db.backends.sqlite3",
-                "NAME": BASE_DIR / "db.sqlite3",
-            }
-        }
-        print("⚠️  PRODUCTION: No DATABASE_URL found, using SQLite")
+    DATABASES = {
+        'default': dj_database_url.config(
+            default=DATABASE_URL,
+            conn_max_age=600,
+            conn_health_checks=True,
+        )
+    }
+    print("✅ PRODUCTION: Using PostgreSQL Database")
 else:
-    # Use SQLite for local development
+    # Use SQLite for local development or fallback
     DATABASES = {
         "default": {
             "ENGINE": "django.db.backends.sqlite3",
             "NAME": BASE_DIR / "db.sqlite3",
         }
     }
-    print("✅ LOCAL: Using SQLite Database")
+    if IS_PRODUCTION:
+        print("⚠️  PRODUCTION: No DATABASE_URL found, using SQLite")
+    else:
+        print("✅ LOCAL: Using SQLite Database")
 
 # ==============================
 # PAYSTACK CONFIGURATION
@@ -160,9 +154,6 @@ TEMPLATES = [
 # ==============================
 # EMAIL CONFIGURATION - PRODUCTION FIX
 # ==============================
-# Check if we're in production
-IS_PRODUCTION = any(host in ['tradewise.up.railway.app', 'tradewise-hub.com', 'www.tradewise-hub.com'] for host in ALLOWED_HOSTS)
-
 if IS_PRODUCTION:
     # PRODUCTION: Force Gmail SMTP
     EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
