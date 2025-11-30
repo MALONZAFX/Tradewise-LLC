@@ -13,9 +13,14 @@ load_dotenv()
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 # ==============================
-# ENVIRONMENT DETECTION
+# ENVIRONMENT DETECTION - FIXED!
 # ==============================
-IS_PRODUCTION = any(host in os.environ.get('ALLOWED_HOSTS', '') for host in ['.railway.app', '.onrender.com', 'tradewise-hub.com'])
+# Check if we're running on Railway or other production platforms
+IS_PRODUCTION = os.environ.get('RAILWAY_ENVIRONMENT') == 'production' or \
+                os.environ.get('ON_RENDER') == 'true' or \
+                'railway.app' in os.environ.get('ALLOWED_HOSTS', '') or \
+                'tradewise-hub.com' in os.environ.get('ALLOWED_HOSTS', '')
+
 IS_LOCAL = not IS_PRODUCTION
 
 # ==============================
@@ -152,31 +157,28 @@ TEMPLATES = [
 ]
 
 # ==============================
-# EMAIL CONFIGURATION - PRODUCTION FIX
+# EMAIL CONFIGURATION - FORCE SMTP IN PRODUCTION!
 # ==============================
-if IS_PRODUCTION:
-    # PRODUCTION: Force Gmail SMTP
+# ALWAYS USE SMTP IF WE HAVE EMAIL CREDENTIALS
+EMAIL_HOST_USER = os.environ.get("EMAIL_HOST_USER", "theofficialtradewise@gmail.com")
+EMAIL_HOST_PASSWORD = os.environ.get("EMAIL_HOST_PASSWORD", "")
+
+if EMAIL_HOST_PASSWORD:
+    # FORCE SMTP - WE HAVE CREDENTIALS!
     EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
     EMAIL_HOST = "smtp.gmail.com"
     EMAIL_PORT = 587
     EMAIL_USE_TLS = True
-    EMAIL_HOST_USER = os.environ.get("EMAIL_HOST_USER", "theofficialtradewise@gmail.com")
-    EMAIL_HOST_PASSWORD = os.environ.get("EMAIL_HOST_PASSWORD", "")
     DEFAULT_FROM_EMAIL = "TradeWise <theofficialtradewise@gmail.com>"
     SERVER_EMAIL = "TradeWise <theofficialtradewise@gmail.com>"
     
     print("✅ PRODUCTION: Gmail SMTP configured")
-    
-    # Validate email configuration
-    if not EMAIL_HOST_PASSWORD:
-        print("❌ CRITICAL ERROR: No email password set in production!")
-    else:
-        print(f"✅ Email password: {EMAIL_HOST_PASSWORD[:4]}... configured")
-        
+    print(f"✅ Email password: {EMAIL_HOST_PASSWORD[:4]}... configured")
+    print(f"✅ Email user: {EMAIL_HOST_USER}")
 else:
-    # LOCAL: Use console
+    # Fallback to console only if no email password
     EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
-    print("🔧 LOCAL: Console email backend")
+    print("❌ WARNING: No email password set, using console backend")
 
 # ==============================
 # STATIC FILES
@@ -247,7 +249,7 @@ print("=" * 50)
 print("🚀 SETTINGS LOADED SUCCESSFULLY")
 print(f"🌍 ENVIRONMENT: {'PRODUCTION' if IS_PRODUCTION else 'LOCAL DEVELOPMENT'}")
 print(f"🐛 DEBUG: {DEBUG}")
-print(f"📧 EMAIL: {'Gmail SMTP' if IS_PRODUCTION else 'Console Backend'}")
+print(f"📧 EMAIL: {'Gmail SMTP' if EMAIL_HOST_PASSWORD else 'Console Backend'}")
 print(f"💰 PAYSTACK: {'✅ Configured' if PAYSTACK_SECRET_KEY else '❌ Missing Keys'}")
 print(f"🗄️ DATABASE: {'PostgreSQL' if IS_PRODUCTION and DATABASE_URL else 'SQLite'}")
 print(f"📦 STATIC FILES: {STATICFILES_STORAGE}")

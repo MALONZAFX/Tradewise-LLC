@@ -50,7 +50,7 @@ def admin_login(request):
                 'numbers': ['500100', '500500', '100100', '500200'],  # Multiple options
                 'password': 'Tradewise-@2025'
             },
-            'Spallis Official': {
+            'Spallis-Official': {
                 'numbers': ['100100', '500100', '500500', '500200'],  # Primary: 100100
                 'password': 'Tradewise-@2025'
             },
