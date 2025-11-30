@@ -4386,7 +4386,7 @@ ACTION REQUIRED:
 ---------------
 Please log in to the admin dashboard to review and process this payout request.
 
-Admin Dashboard: http://127.0.0.1:8000/admin-dashboard/
+Admin Dashboard: https://www.tradewise-hub.com/admin-dashboard/
 
 This is an automated notification from the TradeWise Affiliate System.
 """
