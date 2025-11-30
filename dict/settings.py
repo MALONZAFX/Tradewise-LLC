@@ -158,10 +158,13 @@ TEMPLATES = [
 ]
 
 # ==============================
-# EMAIL CONFIGURATION - SEPARATE LOCAL VS PRODUCTION
+# EMAIL CONFIGURATION - PRODUCTION FIX
 # ==============================
+# Check if we're in production
+IS_PRODUCTION = any(host in ['tradewise.up.railway.app', 'tradewise-hub.com', 'www.tradewise-hub.com'] for host in ALLOWED_HOSTS)
+
 if IS_PRODUCTION:
-    # PRODUCTION: Use SMTP (Gmail/SendGrid)
+    # PRODUCTION: Force Gmail SMTP
     EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
     EMAIL_HOST = "smtp.gmail.com"
     EMAIL_PORT = 587
@@ -171,14 +174,18 @@ if IS_PRODUCTION:
     DEFAULT_FROM_EMAIL = "TradeWise <theofficialtradewise@gmail.com>"
     SERVER_EMAIL = "TradeWise <theofficialtradewise@gmail.com>"
     
+    print("✅ PRODUCTION: Gmail SMTP configured")
+    
+    # Validate email configuration
     if not EMAIL_HOST_PASSWORD:
-        print("❌ PRODUCTION: No email password set - emails will fail!")
+        print("❌ CRITICAL ERROR: No email password set in production!")
     else:
-        print("✅ PRODUCTION: Gmail SMTP configured")
+        print(f"✅ Email password: {EMAIL_HOST_PASSWORD[:4]}... configured")
+        
 else:
-    # LOCAL: Use console email backend
+    # LOCAL: Use console
     EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
-    print("🔧 LOCAL: Using console email backend - emails will print to terminal")
+    print("🔧 LOCAL: Console email backend")
 
 # ==============================
 # STATIC FILES
