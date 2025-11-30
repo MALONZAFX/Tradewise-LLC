@@ -13,15 +13,24 @@ load_dotenv()
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 # ==============================
+# ENVIRONMENT DETECTION
+# ==============================
+IS_PRODUCTION = any(host in os.environ.get('ALLOWED_HOSTS', '') for host in ['.railway.app', '.onrender.com', 'tradewise-hub.com'])
+IS_LOCAL = not IS_PRODUCTION
+
+# ==============================
 # CORE SETTINGS
 # ==============================
 SECRET_KEY = os.environ.get("SECRET_KEY", "django-insecure-dev-key-for-local-only")
 
-# FORCE DEBUG=False IN PRODUCTION
-DEBUG = os.environ.get("DEBUG", "False") == "True"
-# Safety override for production
-if any(host in ['.railway.app', '.onrender.com', 'tradewise-hub.com'] for host in ['tradewise.up.railway.app', 'tradewise-hub.com', 'www.tradewise-hub.com']):
-    DEBUG = False
+# DEBUG SETTINGS - SEPARATE LOCAL VS PRODUCTION
+if IS_LOCAL:
+    DEBUG = True
+    print("🔧 LOCAL DEVELOPMENT: Debug mode enabled")
+else:
+    DEBUG = os.environ.get("DEBUG", "False") == "True"
+    if DEBUG:
+        print("⚠️  PRODUCTION WARNING: Debug mode is enabled in production!")
 
 ALLOWED_HOSTS = [
     "tradewise.up.railway.app",
@@ -42,23 +51,29 @@ CSRF_TRUSTED_ORIGINS = [
 ]
 
 # ==============================
-# DATABASE - FIXED: Use SQLite locally, PostgreSQL on Railway
+# DATABASE - SQLite Local, PostgreSQL Production
 # ==============================
-DATABASE_URL = os.environ.get('DATABASE_URL')
-
-# Check if we're running in Railway production environment
-IS_RAILWAY = os.environ.get('RAILWAY_ENVIRONMENT') == 'production' or 'RAILWAY_STATIC_URL' in os.environ
-
-if DATABASE_URL and IS_RAILWAY:
-    # Use PostgreSQL ONLY when running on Railway
-    DATABASES = {
-        'default': dj_database_url.config(
-            default=DATABASE_URL,
-            conn_max_age=600,
-            conn_health_checks=True,
-        )
-    }
-    print("✅ Using PostgreSQL Database (Railway Production)")
+if IS_PRODUCTION:
+    # Use PostgreSQL on Railway/Production
+    DATABASE_URL = os.environ.get('DATABASE_URL')
+    if DATABASE_URL:
+        DATABASES = {
+            'default': dj_database_url.config(
+                default=DATABASE_URL,
+                conn_max_age=600,
+                conn_health_checks=True,
+            )
+        }
+        print("✅ PRODUCTION: Using PostgreSQL Database")
+    else:
+        # Fallback to SQLite if no DATABASE_URL
+        DATABASES = {
+            "default": {
+                "ENGINE": "django.db.backends.sqlite3",
+                "NAME": BASE_DIR / "db.sqlite3",
+            }
+        }
+        print("⚠️  PRODUCTION: No DATABASE_URL found, using SQLite")
 else:
     # Use SQLite for local development
     DATABASES = {
@@ -67,7 +82,7 @@ else:
             "NAME": BASE_DIR / "db.sqlite3",
         }
     }
-    print("✅ Using SQLite Database (Local Development)")
+    print("✅ LOCAL: Using SQLite Database")
 
 # ==============================
 # PAYSTACK CONFIGURATION
@@ -143,26 +158,27 @@ TEMPLATES = [
 ]
 
 # ==============================
-# EMAIL CONFIGURATION
+# EMAIL CONFIGURATION - SEPARATE LOCAL VS PRODUCTION
 # ==============================
-EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
-EMAIL_HOST = "smtp.gmail.com"
-EMAIL_PORT = 587
-EMAIL_USE_TLS = True
-EMAIL_HOST_USER = os.environ.get("EMAIL_HOST_USER", "theofficialtradewise@gmail.com")
-EMAIL_HOST_PASSWORD = os.environ.get("EMAIL_HOST_PASSWORD", "")
-DEFAULT_FROM_EMAIL = "TradeWise <theofficialtradewise@gmail.com>"
-SERVER_EMAIL = "TradeWise <theofficialtradewise@gmail.com>"
-
-# Better email fallback
-if DEBUG:
+if IS_PRODUCTION:
+    # PRODUCTION: Use SMTP (Gmail/SendGrid)
+    EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
+    EMAIL_HOST = "smtp.gmail.com"
+    EMAIL_PORT = 587
+    EMAIL_USE_TLS = True
+    EMAIL_HOST_USER = os.environ.get("EMAIL_HOST_USER", "theofficialtradewise@gmail.com")
+    EMAIL_HOST_PASSWORD = os.environ.get("EMAIL_HOST_PASSWORD", "")
+    DEFAULT_FROM_EMAIL = "TradeWise <theofficialtradewise@gmail.com>"
+    SERVER_EMAIL = "TradeWise <theofficialtradewise@gmail.com>"
+    
     if not EMAIL_HOST_PASSWORD:
-        EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
-        print("🔧 DEVELOPMENT: Console email backend (no email password set)")
+        print("❌ PRODUCTION: No email password set - emails will fail!")
+    else:
+        print("✅ PRODUCTION: Gmail SMTP configured")
 else:
-    # In production, always use SMTP and log if it fails
-    if not EMAIL_HOST_PASSWORD:
-        print("❌ PRODUCTION WARNING: No email password set - emails will fail!")
+    # LOCAL: Use console email backend
+    EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
+    print("🔧 LOCAL: Using console email backend - emails will print to terminal")
 
 # ==============================
 # STATIC FILES
@@ -171,8 +187,8 @@ STATIC_URL = "/static/"
 STATICFILES_DIRS = [os.path.join(BASE_DIR, "static")]
 STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
 
-# Use Whitenoise for static files
-if not DEBUG:
+# Use Whitenoise for static files in production
+if IS_PRODUCTION:
     STATICFILES_STORAGE = "whitenoise.storage.CompressedStaticFilesStorage"
 else:
     STATICFILES_STORAGE = "django.contrib.staticfiles.storage.StaticFilesStorage"
@@ -187,9 +203,10 @@ MEDIA_URL = "/media/"
 MEDIA_ROOT = os.path.join(BASE_DIR, "media")
 
 # ==============================
-# SECURITY
+# SECURITY - SEPARATE LOCAL VS PRODUCTION
 # ==============================
-if not DEBUG:
+if IS_PRODUCTION:
+    # PRODUCTION SECURITY
     SECURE_SSL_REDIRECT = True
     SESSION_COOKIE_SECURE = True
     CSRF_COOKIE_SECURE = True
@@ -198,10 +215,13 @@ if not DEBUG:
     SECURE_HSTS_SECONDS = 31536000
     SECURE_HSTS_INCLUDE_SUBDOMAINS = True
     SECURE_HSTS_PRELOAD = True
+    print("🔒 PRODUCTION: Security headers enabled")
 else:
+    # LOCAL DEVELOPMENT - NO SSL
     SECURE_SSL_REDIRECT = False
     SESSION_COOKIE_SECURE = False
     CSRF_COOKIE_SECURE = False
+    print("🔓 LOCAL: Security headers disabled for development")
 
 SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 
@@ -227,10 +247,11 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 print("=" * 50)
 print("🚀 SETTINGS LOADED SUCCESSFULLY")
+print(f"🌍 ENVIRONMENT: {'PRODUCTION' if IS_PRODUCTION else 'LOCAL DEVELOPMENT'}")
 print(f"🐛 DEBUG: {DEBUG}")
-print(f"📧 EMAIL: {'Gmail SMTP' if 'smtp' in EMAIL_BACKEND else 'Console Backend'}")
+print(f"📧 EMAIL: {'Gmail SMTP' if IS_PRODUCTION else 'Console Backend'}")
 print(f"💰 PAYSTACK: {'✅ Configured' if PAYSTACK_SECRET_KEY else '❌ Missing Keys'}")
-print(f"🗄️ DATABASE: {'PostgreSQL' if DATABASE_URL and IS_RAILWAY else 'SQLite'}")
+print(f"🗄️ DATABASE: {'PostgreSQL' if IS_PRODUCTION and DATABASE_URL else 'SQLite'}")
 print(f"📦 STATIC FILES: {STATICFILES_STORAGE}")
 print(f"🚨 ERROR HANDLERS: ✅ Configured")
 print("=" * 50)
