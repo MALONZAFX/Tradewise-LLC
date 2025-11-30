@@ -144,15 +144,26 @@ if DEBUG and not EMAIL_HOST_PASSWORD:
     print("🔧 DEVELOPMENT: Console email backend (no email password set)")
 
 # ==============================
-# STATIC FILES
+# STATIC FILES - FIXED CONFIGURATION
 # ==============================
 STATIC_URL = "/static/"
 STATICFILES_DIRS = [os.path.join(BASE_DIR, "static")]
 STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
 
-# Use Whitenoise for static files
+# Use Whitenoise for static files - FIXED FOR PRODUCTION
 if not DEBUG:
-    STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
+    # Use simpler storage to avoid manifest issues
+    STATICFILES_STORAGE = "whitenoise.storage.CompressedStaticFilesStorage"
+    # Alternative if you still have issues:
+    # STATICFILES_STORAGE = "django.contrib.staticfiles.storage.StaticFilesStorage"
+else:
+    STATICFILES_STORAGE = "django.contrib.staticfiles.storage.StaticFilesStorage"
+
+# Whitenoise configuration
+WHITENOISE_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+WHITENOISE_USE_FINDERS = True
+WHITENOISE_MANIFEST_STRICT = False
+WHITENOISE_ALLOW_ALL_ORIGINS = True
 
 MEDIA_URL = "/media/"
 MEDIA_ROOT = os.path.join(BASE_DIR, "media")
@@ -199,4 +210,5 @@ print(f"🐛 DEBUG: {DEBUG}")
 print(f"📧 EMAIL: {'Gmail SMTP' if 'smtp' in EMAIL_BACKEND else 'Console Backend'}")
 print(f"💰 PAYSTACK: {'✅ Configured' if PAYSTACK_SECRET_KEY else '❌ Missing Keys'}")
 print(f"🗄️ DATABASE: {'PostgreSQL' if DATABASE_URL and not DEBUG else 'SQLite'}")
+print(f"📦 STATIC FILES: {STATICFILES_STORAGE}")
 print("=" * 50)
