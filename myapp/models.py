@@ -145,7 +145,7 @@ class Tradeviewusers(models.Model):
             subject = '✅ Verify Your TradeWise Account'
             
             # ✅ FIXED: Use proper localhost URL
-            verification_url = f"https://www.tradewise-hub.com/verify-email/{self.email_verification_token}/"
+            verification_url = f"http://127.0.0.1:8000/verify-email/{self.email_verification_token}/"
             
             print(f"🔗 LOCALHOST VERIFICATION URL: {verification_url}")
             
@@ -313,7 +313,7 @@ Registered: {self.created_at.strftime('%Y-%m-%d %H:%M')}
             subject = '🔐 Reset Your TradeWise Password'
             
             # ✅ FIXED: Use localhost for password reset too
-            reset_url = f"https://www.tradewise-hub.com/reset-password/{self.password_reset_token}/"
+            reset_url = f"http://127.0.0.1:8000/reset-password/{self.password_reset_token}/"
             
             html_message = render_to_string('emails/password_reset.html', {
                 'user': self,
@@ -907,7 +907,7 @@ class Affiliate(models.Model):
 
     def get_referral_link(self, request=None):
         """Get full referral link for sharing"""
-        base_url = "https://www.tradewise-hub.com"
+        base_url = "http://127.0.0.1:8000/"
         if request:
             base_url = f"http://{request.get_host()}"
         return f"{base_url}/signup?ref={self.referral_code}"

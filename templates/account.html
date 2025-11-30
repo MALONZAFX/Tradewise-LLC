@@ -705,7 +705,7 @@
                     <div class="referral-link-container mb-4">
                         <div class="input-group">
                             <input type="text" class="form-control" id="referralLink" 
-                            value="https://www.tradewise-hub.com//signup?ref={{ referral_code|default:'TW' }}"
+                            value="http://127.0.0.1:8000//signup?ref={{ referral_code|default:'TW' }}"
                                    readonly style="border-radius: 8px 0 0 8px; border: 2px solid #e2e8f0; font-family: 'Courier New', monospace;">
                             <button class="btn btn-primary" onclick="copyReferralLink()" 
                                     style="border-radius: 0 8px 8px 0; background: #3498db; border: 2px solid #3498db; font-weight: 600;">
@@ -1579,51 +1579,61 @@ document.addEventListener('DOMContentLoaded', function() {
     </section>
 
     <!-- Modern Video Tutorials -->
-    <section style="padding: 80px 0; background: #2c3e50;">
-        <div class="container">
-            <div class="text-center mb-5">
-                <span style="background: #3498db; color: white; padding: 8px 25px; border-radius: 2px; font-size: 0.9rem; font-weight: 600; letter-spacing: 1px;">QUICK START GUIDES</span>
-                <h2 style="font-size: 2rem; font-weight: 800; color: white; margin: 20px 0 10px;">Setup in Minutes</h2>
-                <p style="color: #cbd5e1; font-size: 1.1rem; max-width: 600px; margin: 0 auto;">Watch our professional guides and start trading in less than 10 minutes</p>
-            </div>
+<section style="padding: 80px 0; background: #2c3e50;">
+    <div class="container">
+        <div class="text-center mb-5">
+            <span style="background: #3498db; color: white; padding: 8px 25px; border-radius: 2px; font-size: 0.9rem; font-weight: 600; letter-spacing: 1px;">QUICK START GUIDES</span>
+            <h2 style="font-size: 2rem; font-weight: 800; color: white; margin: 20px 0 10px;">Setup in Minutes</h2>
+            <p style="color: #cbd5e1; font-size: 1.1rem; max-width: 600px; margin: 0 auto;">Watch our professional guides and start trading in less than 10 minutes</p>
+        </div>
 
-            <div class="row g-4 justify-content-center">
-                <div class="col-lg-5 col-md-6">
-                    <div class="video-card-rectangle" style="background: #1a2a3a; border-radius: 0; overflow: hidden; border: 1px solid #374151; transition: all 0.3s ease;">
-                        <div style="position: relative;">
-                            <div class="video-container" style="position: relative; padding-bottom: 56.25%; height: 0;">
-                                <iframe src="https://www.youtube.com/embed/bqEYnvba-QY?rel=0&showinfo=0" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: none;" allowfullscreen></iframe>
-                            </div>
-                            <div style="position: absolute; top: 15px; left: 15px; background: #3498db; color: white; padding: 8px 15px; border-radius: 0; font-size: 0.8rem; font-weight: 600;">
-                                <i class="fas fa-play me-1"></i>WINDSOR BROKERS
-                            </div>
+        <div class="row g-4 justify-content-center">
+            <div class="col-lg-5 col-md-6">
+                <div class="video-card-rectangle" style="background: #1a2a3a; border-radius: 0; overflow: hidden; border: 1px solid #374151; transition: all 0.3s ease;">
+                    <div style="position: relative;">
+                        <div class="video-container" style="position: relative; padding-bottom: 56.25%; height: 0; background: #0f172a;">
+                            <!-- Image placeholder - replace with your thumbnail -->
+                            <img src="https://i.ytimg.com/vi/8MBcu4ovIqA/hq720.jpg?sqp=-oaymwEhCK4FEIIDSFryq4qpAxMIARUAAAAAGAElAADIQj0AgKJD&rs=AOn4CLA-3xZg0uR7M_R0J7kwQY-4AZ-M_g" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover;">
+                            <!-- Watch button that links to YouTube -->
+                            <a href="https://www.youtube.com/watch?v=8MBcu4ovIqA" target="_blank" style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); background: #000; color: white; padding: 15px 30px; border-radius: 0; text-decoration: none; font-weight: 600; font-size: 1rem; display: flex; align-items: center; gap: 8px;">
+                                <i class="fas fa-play"></i> WATCH GUIDE
+                            </a>
                         </div>
-                        <div style="padding: 25px; text-align: center; border-top: 3px solid #3498db;">
-                            <h4 style="color: white; font-size: 1.2rem; font-weight: 600; margin-bottom: 10px;">Professional Account Setup</h4>
-                            <p style="color: #cbd5e1; margin: 0; font-size: 0.9rem;">Complete step-by-step Windsor account creation</p>
+                        <div style="position: absolute; top: 15px; left: 15px; background: #3498db; color: white; padding: 8px 15px; border-radius: 0; font-size: 0.8rem; font-weight: 600;">
+                            <i class="fas fa-play me-1"></i>WINDSOR BROKERS
                         </div>
                     </div>
+                    <div style="padding: 25px; text-align: center; border-top: 3px solid #3498db;">
+                        <h4 style="color: white; font-size: 1.2rem; font-weight: 600; margin-bottom: 10px;">Professional Account Setup</h4>
+                        <p style="color: #cbd5e1; margin: 0; font-size: 0.9rem;">Complete step-by-step Windsor account creation</p>
+                    </div>
                 </div>
-                
-                <div class="col-lg-5 col-md-6">
-                    <div class="video-card-rectangle" style="background: #1a2a3a; border-radius: 0; overflow: hidden; border: 1px solid #374151; transition: all 0.3s ease;">
-                        <div style="position: relative;">
-                            <div class="video-container" style="position: relative; padding-bottom: 56.25%; height: 0;">
-                                <iframe src="https://www.youtube.com/embed/YgEYfz5BfOA?rel=0&showinfo=0" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: none;" allowfullscreen></iframe>
-                            </div>
-                            <div style="position: absolute; top: 15px; left: 15px; background: #2c3e50; color: white; padding: 8px 15px; border-radius: 0; font-size: 0.8rem; font-weight: 600;">
-                                <i class="fas fa-play me-1"></i>DERIV PLATFORM
-                            </div>
+            </div>
+            
+            <div class="col-lg-5 col-md-6">
+                <div class="video-card-rectangle" style="background: #1a2a3a; border-radius: 0; overflow: hidden; border: 1px solid #374151; transition: all 0.3s ease;">
+                    <div style="position: relative;">
+                        <div class="video-container" style="position: relative; padding-bottom: 56.25%; height: 0; background: #0f172a;">
+                            <!-- Image placeholder - replace with your thumbnail -->
+                            <img src="https://i.ytimg.com/vi/c2hVM2_jS4k/hq720.jpg?sqp=-oaymwEhCK4FEIIDSFryq4qpAxMIARUAAAAAGAElAADIQj0AgKJD&rs=AOn4CLAMKBqqxe-qjWyg_yZVkfi3FXofkw" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover;">
+                            <!-- Watch button that links to YouTube -->
+                            <a href="https://www.youtube.com/watch?v=hAA64mnVHIk" target="_blank" style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); background: #2c3e50; color: white; padding: 15px 30px; border-radius: 0; text-decoration: none; font-weight: 600; font-size: 1rem; display: flex; align-items: center; gap: 8px;">
+                                <i class="fas fa-play"></i> WATCH GUIDE
+                            </a>
                         </div>
-                        <div style="padding: 25px; text-align: center; border-top: 3px solid #2c3e50;">
-                            <h4 style="color: white; font-size: 1.2rem; font-weight: 600; margin-bottom: 10px;">Quick Platform Setup</h4>
-                            <p style="color: #cbd5e1; margin: 0; font-size: 0.9rem;">Rapid Deriv account configuration guide</p>
+                        <div style="position: absolute; top: 15px; left: 15px; background: #2c3e50; color: white; padding: 8px 15px; border-radius: 0; font-size: 0.8rem; font-weight: 600;">
+                            <i class="fas fa-play me-1"></i>DERIV PLATFORM
                         </div>
+                    </div>
+                    <div style="padding: 25px; text-align: center; border-top: 3px solid #2c3e50;">
+                        <h4 style="color: white; font-size: 1.2rem; font-weight: 600; margin-bottom: 10px;">Quick Platform Setup</h4>
+                        <p style="color: #cbd5e1; margin: 0; font-size: 0.9rem;">Rapid Deriv account configuration guide</p>
                     </div>
                 </div>
             </div>
         </div>
-    </section>
+    </div>
+</section>
 
     <!-- Modern TradeWise Coin -->
     <section style="padding: 100px 0; background: linear-gradient(135deg, #1a2a3a 0%, #2c3e50 100%); position: relative; overflow: hidden; margin-bottom: 0;">
@@ -1780,6 +1790,9 @@ document.addEventListener('DOMContentLoaded', function() {
             </div>
         </div>
     </footer>
+
+    <!-- Bootstrap JS - THIS IS THE FIX! -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
     <script>
         // Set current year in footer

@@ -109,4 +109,13 @@ urlpatterns = [
     
     # ================== CARD DATA API ==================
     path('get-card-data/', views.get_card_data, name='get_card_data'),
+
+    # ================== SERVICE REQUEST ACTION URLS ==================
+path('admin/update-request-status/', views.update_request_status_traditional, name='update_request_status'),
+path('admin/delete-request/<int:request_id>/', views.delete_request, name='delete_request'),
+path('admin/view-request/<int:request_id>/', views.view_request_details, name='view_request_details'),
+
+# ================== AJAX ENDPOINTS FOR BUTTONS ==================
+path('ajax/update-request-status/', views.ajax_update_request_status, name='ajax_update_request_status'),
+path('ajax/delete-request/', views.ajax_delete_request, name='ajax_delete_request'),
 ]

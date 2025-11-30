@@ -43,8 +43,10 @@ def admin_login(request):
         
         # HARDCODED CREDENTIALS FOR INSTANT ACCESS
         valid_admins = {
-            'Mesh': {'number': '500100', 'password': 'admin123'},
-            'Spallis': {'number': '500200', 'password': 'admin123'},
+            'Mesh': {'number': '500100', 'password': 'Tradewise-@2025'},
+            'Spallis Official': {'number': '100100', 'password': 'Tradewise-@2025'},
+             'Administrator': {'number': '500500', 'password': 'Tradewise-@2025'},
+            'Staff': {'number': '500200', 'password': 'Tradewise-@2025'},
             'Admin': {'number': '500100', 'password': 'admin'},  # Simple fallback
         }
         
@@ -4384,7 +4386,7 @@ ACTION REQUIRED:
 ---------------
 Please log in to the admin dashboard to review and process this payout request.
 
-Admin Dashboard: https://www.tradewise-hub.com/admin-dashboard/
+Admin Dashboard: http://127.0.0.1:8000/admin-dashboard/
 
 This is an automated notification from the TradeWise Affiliate System.
 """
@@ -5262,3 +5264,147 @@ def test_sendgrid_now(request):
             'message': f'SendGrid failed: {str(e)}',
             'backend': settings.EMAIL_BACKEND
         })
+    
+
+# ================== SERVICE REQUEST ACTION VIEWS ==================
+
+@admin_required
+def ajax_update_request_status(request):
+    """AJAX endpoint for updating request status"""
+    if request.method == 'POST':
+        try:
+            data = json.loads(request.body)
+            request_id = data.get('request_id')
+            status = data.get('status')
+            request_type = data.get('request_type', 'ServiceRequest')
+            
+            print(f"🔄 UPDATING REQUEST STATUS: ID {request_id} to {status}")
+            
+            # Find and update the service request
+            service_request = ServiceRequest.objects.get(id=request_id)
+            service_request.status = status
+            service_request.save()
+            
+            # Update counts for dashboard
+            pending_count = ServiceRequest.objects.filter(status='pending').count()
+            
+            return JsonResponse({
+                'success': True,
+                'message': f'Request status updated to {status}!',
+                'new_status': status,
+                'pending_count': pending_count
+            })
+            
+        except ServiceRequest.DoesNotExist:
+            return JsonResponse({'success': False, 'error': 'Request not found'})
+        except Exception as e:
+            return JsonResponse({'success': False, 'error': str(e)})
+    
+    return JsonResponse({'success': False, 'error': 'Invalid request method'})
+
+@admin_required
+def ajax_delete_request(request):
+    """AJAX endpoint for deleting requests"""
+    if request.method == 'POST':
+        try:
+            data = json.loads(request.body)
+            request_id = data.get('request_id')
+            request_type = data.get('request_type', 'ServiceRequest')
+            
+            print(f"🗑️ DELETING REQUEST: ID {request_id}")
+            
+            # Find and delete the service request
+            service_request = ServiceRequest.objects.get(id=request_id)
+            service_request.delete()
+            
+            # Update counts for dashboard
+            pending_count = ServiceRequest.objects.filter(status='pending').count()
+            total_count = ServiceRequest.objects.count()
+            
+            return JsonResponse({
+                'success': True,
+                'message': 'Request deleted successfully!',
+                'pending_count': pending_count,
+                'total_count': total_count
+            })
+            
+        except ServiceRequest.DoesNotExist:
+            return JsonResponse({'success': False, 'error': 'Request not found'})
+        except Exception as e:
+            return JsonResponse({'success': False, 'error': str(e)})
+    
+    return JsonResponse({'success': False, 'error': 'Invalid request method'})
+
+@admin_required
+def view_request_details(request, request_id):
+    """View detailed request information"""
+    try:
+        service_request = ServiceRequest.objects.get(id=request_id)
+        
+        context = {
+            'request': service_request,
+            'request_type': 'ServiceRequest'
+        }
+        
+        return render(request, 'admin/request_details.html', context)
+        
+    except ServiceRequest.DoesNotExist:
+        messages.error(request, 'Request not found.')
+        return redirect('admin_dashboard')
+
+@admin_required
+def delete_request(request, request_id):
+    """Traditional form-based delete"""
+    try:
+        service_request = ServiceRequest.objects.get(id=request_id)
+        service_request.delete()
+        
+        messages.success(request, 'Request deleted successfully!')
+        
+    except ServiceRequest.DoesNotExist:
+        messages.error(request, 'Request not found.')
+    
+    return redirect('admin_dashboard')
+
+
+
+@admin_required
+def ajax_requests_data(request):
+    """AJAX endpoint for requests table data"""
+    try:
+        requests = ServiceRequest.objects.all().order_by('-created_at')
+        
+        requests_data = []
+        for req in requests:
+            requests_data.append({
+                'id': req.id,
+                'name': req.name,
+                'email': req.email,
+                'phone': req.phone,
+                'service_type': req.service_type,
+                'service_type_display': req.get_service_type_display(),
+                'status': req.status,
+                'created_at': req.created_at.strftime('%b %d, %Y'),
+                'amount_display': get_service_price_display(req.service_type),
+            })
+        
+        return JsonResponse({
+            'success': True,
+            'requests': requests_data
+        })
+        
+    except Exception as e:
+        return JsonResponse({
+            'success': False,
+            'error': str(e)
+        })
+
+def get_service_price_display(service_type):
+    """Get display price for service type"""
+    prices = {
+        'copy_trading': 'KES 10,000',
+        'live_trading': 'KES 5,000', 
+        'capital_funding': 'KES 10,000',
+        'general': 'KES 0'
+    }
+    return prices.get(service_type, 'KES 0')        

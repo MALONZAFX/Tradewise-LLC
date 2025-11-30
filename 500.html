@@ -1,15 +1,56 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Server Error - TradeWise</title>
+    <title>Server Error - TradeWise Hub</title>
     <style>
-        body { font-family: Arial, sans-serif; text-align: center; padding: 50px; }
-        h1 { color: #d32f2f; }
+        body { 
+            font-family: Arial, sans-serif; 
+            text-align: center; 
+            padding: 50px;
+            background: linear-gradient(135deg, #ff6b6b 0%, #ee5a24 100%);
+            color: white;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+        .error-container {
+            background: rgba(255,255,255,0.1);
+            padding: 40px;
+            border-radius: 15px;
+            backdrop-filter: blur(10px);
+        }
+        h1 { 
+            font-size: 4rem; 
+            margin: 0;
+            color: #ffeaa7;
+        }
+        .home-btn {
+            display: inline-block;
+            margin-top: 20px;
+            padding: 12px 30px;
+            background: #00b894;
+            color: white;
+            text-decoration: none;
+            border-radius: 25px;
+            transition: all 0.3s ease;
+        }
+        .home-btn:hover {
+            background: #00a085;
+            transform: translateY(-2px);
+        }
     </style>
 </head>
 <body>
-    <h1>500 - Server Error</h1>
-    <p>Something went wrong on our end. Please try again later.</p>
-    <a href="/">Return to Homepage</a>
+    <div class="error-container">
+        <h1>500</h1>
+        <h2>Server Error</h2>
+        <p>Something went wrong on our end. Our team has been notified.</p>
+        <a href="/" class="home-btn">Return to Home</a>
+        <p style="margin-top: 20px; font-size: 0.9em; opacity: 0.8;">
+            Try refreshing the page or come back later.
+        </p>
+    </div>
 </body>
 </html>

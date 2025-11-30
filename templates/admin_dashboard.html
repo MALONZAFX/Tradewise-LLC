@@ -3311,57 +3311,295 @@ function getCookie(name) {
 
 // ================== REQUEST MANAGEMENT ==================
 
-function viewRequest(id, type) {
-    alert(`View Request: ${getRequestCode(type, id)}\nType: ${type}\n\nThis will show request details.`);
-}
+// ================== SERVICE REQUEST ACTION FUNCTIONS ==================
 
-function updateRequestStatus(id, status, type) {
-    if (confirm(`Mark ${getRequestCode(type, id)} as ${status.toUpperCase()}?`)) {
-        const form = document.createElement('form');
-        form.method = 'POST';
-        form.action = "{% url 'admin_dashboard' %}";
+function updateRequestStatus(requestId, status, requestType) {
+    console.log(`🔄 Updating request ${requestId} to status: ${status}`);
+    
+    if (confirm(`Are you sure you want to mark this request as ${status.toUpperCase()}?`)) {
+        // Show loading state
+        const button = event.target;
+        const originalText = button.innerHTML;
+        button.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
+        button.disabled = true;
         
-        const csrfToken = document.createElement('input');
-        csrfToken.type = 'hidden';
-        csrfToken.name = 'csrfmiddlewaretoken';
-        csrfToken.value = getCookie('csrftoken');
-        form.appendChild(crfToken);
-        
-        const actionInput = document.createElement('input');
-        actionInput.type = 'hidden';
-        actionInput.name = 'action';
-        actionInput.value = 'update_request_status';
-        form.appendChild(actionInput);
-        
-        const idInput = document.createElement('input');
-        idInput.type = 'hidden';
-        idInput.name = 'request_id';
-        idInput.value = id;
-        form.appendChild(idInput);
-        
-        const statusInput = document.createElement('input');
-        statusInput.type = 'hidden';
-        statusInput.name = 'status';
-        statusInput.value = status;
-        form.appendChild(statusInput);
-        
-        const typeInput = document.createElement('input');
-        typeInput.type = 'hidden';
-        typeInput.name = 'request_type';
-        typeInput.value = type;
-        form.appendChild(typeInput);
-        
-        document.body.appendChild(form);
-        form.submit();
+        // Send AJAX request
+        fetch('/ajax/update-request-status/', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': getCookie('csrftoken')
+            },
+            body: JSON.stringify({
+                request_id: requestId,
+                status: status,
+                request_type: requestType
+            })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                // Show success message
+                showAlert('success', data.message);
+                
+                // Update the row appearance
+                updateRequestRow(requestId, status);
+                
+                // Update dashboard counts
+                if (data.pending_count !== undefined) {
+                    updateDashboardCounts(data.pending_count);
+                }
+                
+                // Reload the table after a short delay
+                setTimeout(() => {
+                    loadRequestsData();
+                }, 1000);
+                
+            } else {
+                showAlert('error', data.error || 'Failed to update request status.');
+                button.innerHTML = originalText;
+                button.disabled = false;
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            showAlert('error', 'Network error. Please try again.');
+            button.innerHTML = originalText;
+            button.disabled = false;
+        });
     }
 }
 
-function getRequestCode(type, id) {
-    if (type.includes('Service')) return 'REQ' + id.toString().padStart(3, '0');
-    if (type.includes('Consultation')) return 'CON' + id.toString().padStart(3, '0');
-    if (type.includes('Coaching')) return 'CLS' + id.toString().padStart(3, '0');
-    return 'REV' + id.toString().padStart(3, '0');
+function deleteRequest(requestId, requestType) {
+    console.log(`🗑️ Deleting request ${requestId}`);
+    
+    if (confirm('Are you sure you want to delete this request? This action cannot be undone.')) {
+        // Show loading state
+        const button = event.target;
+        const originalText = button.innerHTML;
+        button.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
+        button.disabled = true;
+        
+        // Send AJAX request
+        fetch('/ajax/delete-request/', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': getCookie('csrftoken')
+            },
+            body: JSON.stringify({
+                request_id: requestId,
+                request_type: requestType
+            })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                // Show success message
+                showAlert('success', data.message);
+                
+                // Remove the row from the table
+                removeRequestRow(requestId);
+                
+                // Update dashboard counts
+                if (data.pending_count !== undefined) {
+                    updateDashboardCounts(data.pending_count);
+                }
+                
+            } else {
+                showAlert('error', data.error || 'Failed to delete request.');
+                button.innerHTML = originalText;
+                button.disabled = false;
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            showAlert('error', 'Network error. Please try again.');
+            button.innerHTML = originalText;
+            button.disabled = false;
+        });
+    }
 }
+
+function viewRequest(requestId, requestType) {
+    console.log(`👁️ Viewing request details: ${requestId}`);
+    
+    // Open a modal or redirect to details page
+    window.open(`/admin/view-request/${requestId}/`, '_blank');
+}
+
+// ================== HELPER FUNCTIONS ==================
+
+function updateRequestRow(requestId, newStatus) {
+    const row = document.querySelector(`[data-request-id="${requestId}"]`);
+    if (row) {
+        // Update status badge
+        const statusBadge = row.querySelector('.status-badge');
+        if (statusBadge) {
+            statusBadge.textContent = newStatus;
+            statusBadge.className = `badge badge-${newStatus.toLowerCase()} status-badge`;
+        }
+        
+        // Update action buttons (hide accept/reject if not pending)
+        if (newStatus !== 'pending') {
+            const acceptBtn = row.querySelector('.btn-success');
+            const rejectBtn = row.querySelector('.btn-warning');
+            if (acceptBtn) acceptBtn.style.display = 'none';
+            if (rejectBtn) rejectBtn.style.display = 'none';
+        }
+        
+        // Add visual feedback
+        row.style.backgroundColor = '#d4edda';
+        setTimeout(() => {
+            row.style.backgroundColor = '';
+        }, 2000);
+    }
+}
+
+function removeRequestRow(requestId) {
+    const row = document.querySelector(`[data-request-id="${requestId}"]`);
+    if (row) {
+        row.style.backgroundColor = '#f8d7da';
+        setTimeout(() => {
+            row.remove();
+        }, 1000);
+    }
+}
+
+function updateDashboardCounts(pendingCount) {
+    // Update the pending requests count in various places
+    const elements = [
+        document.getElementById('pendingRequestsStat'),
+        document.getElementById('pendingRequestsBadge'),
+        document.getElementById('notificationBadge'),
+        document.getElementById('pendingRequestsCount')
+    ];
+    
+    elements.forEach(element => {
+        if (element) {
+            element.textContent = pendingCount;
+        }
+    });
+}
+
+function loadRequestsData() {
+    // Reload the requests table via AJAX
+    fetch('/admin/ajax/requests-data/')
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                updateRequestsTable(data.requests);
+            }
+        })
+        .catch(error => console.error('Error loading requests:', error));
+}
+
+function updateRequestsTable(requests) {
+    const tbody = document.getElementById('requestsTableBody');
+    if (!tbody) return;
+    
+    let html = '';
+    
+    requests.forEach(request => {
+        html += `
+            <tr data-request-id="${request.id}">
+                <td>REQ${String(request.id).padStart(3, '0')}</td>
+                <td>Service</td>
+                <td>${request.name}</td>
+                <td>${request.email}</td>
+                <td>${request.phone}</td>
+                <td><strong>${request.service_type_display}</strong></td>
+                <td><strong>${request.amount_display}</strong></td>
+                <td>
+                    <span class="badge badge-${request.status.toLowerCase()} status-badge">${request.status}</span>
+                </td>
+                <td>${request.created_at}</td>
+                <td>
+                    <div class="btn-group">
+                        <button class="btn btn-sm btn-info" onclick="viewRequest(${request.id}, 'ServiceRequest')" title="View Details">
+                            <i class="fas fa-eye"></i>
+                        </button>
+                        ${request.status === 'pending' ? `
+                        <button class="btn btn-sm btn-success" onclick="updateRequestStatus(${request.id}, 'accepted', 'ServiceRequest')" title="Accept Request">
+                            <i class="fas fa-check"></i>
+                        </button>
+                        <button class="btn btn-sm btn-warning" onclick="updateRequestStatus(${request.id}, 'rejected', 'ServiceRequest')" title="Reject Request">
+                            <i class="fas fa-times"></i>
+                        </button>
+                        ` : ''}
+                        <button class="btn btn-sm btn-danger" onclick="deleteRequest(${request.id}, 'ServiceRequest')" title="Delete Request">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </div>
+                </td>
+            </tr>
+        `;
+    });
+    
+    tbody.innerHTML = html || `
+        <tr>
+            <td colspan="10" class="text-center text-muted">No service requests found</td>
+        </tr>
+    `;
+}
+
+// ================== UTILITY FUNCTIONS ==================
+
+function showAlert(type, message) {
+    const alertClass = type === 'success' ? 'alert-success' : 'alert-danger';
+    const icon = type === 'success' ? 'fa-check-circle' : 'fa-exclamation-circle';
+    
+    const alertHtml = `
+        <div class="alert ${alertClass} alert-dismissible fade show ajax-alert" role="alert">
+            <strong><i class="fas ${icon}"></i> ${type === 'success' ? 'Success!' : 'Error!'}</strong> 
+            ${message}
+            <button type="button" class="close" data-dismiss="alert">
+                <span>&times;</span>
+            </button>
+        </div>
+    `;
+    
+    const container = document.getElementById('ajaxMessagesContainer');
+    if (container) {
+        container.innerHTML = alertHtml;
+    }
+    
+    // Auto-dismiss after 5 seconds
+    setTimeout(() => {
+        const alert = document.querySelector('.ajax-alert');
+        if (alert) {
+            alert.remove();
+        }
+    }, 5000);
+}
+
+function getCookie(name) {
+    let cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+        const cookies = document.cookie.split(';');
+        for (let i = 0; i < cookies.length; i++) {
+            const cookie = cookies[i].trim();
+            if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
+            }
+        }
+    }
+    return cookieValue;
+}
+
+// ================== INITIALIZATION ==================
+
+document.addEventListener('DOMContentLoaded', function() {
+    console.log('✅ Service request action buttons initialized');
+    
+    // Add data-request-id attributes to existing rows for easier targeting
+    const requestRows = document.querySelectorAll('#requestsTableBody tr');
+    requestRows.forEach((row, index) => {
+        const requestId = row.cells[0].textContent.replace('REQ', '');
+        row.setAttribute('data-request-id', requestId);
+    });
+});
 
 // ================== SOFTWARE MANAGEMENT ==================
 
