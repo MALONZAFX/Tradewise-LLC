@@ -11,26 +11,18 @@ WORKDIR /app
 # Install dependencies
 COPY ./requirements.txt .
 RUN pip install --upgrade pip
-
 RUN pip install --upgrade setuptools
-
 RUN pip install gunicorn
 RUN pip install Pillow
-
 
 # Copy project
 COPY . .
 RUN pip install -r requirements.txt
 
-# Make migrations
-
-
+# ✅ ADD THIS LINE - Run collectstatic during build
+RUN python manage.py collectstatic --noinput
 
 EXPOSE 8080
-# Create an entrypoint script to run both processes
 
-#CMD python manage.py migrate notifications 
-
-CMD  python manage.py makemigrations &&  python manage.py migrate && gunicorn dict.wsgi:application --bind 0.0.0.0:$PORT 
-
-RUN python manage.py collectstatic --noinput
+# Run migrations and start server
+CMD python manage.py makemigrations && python manage.py migrate && gunicorn dict.wsgi:application --bind 0.0.0.0:$PORT
