@@ -499,6 +499,12 @@ class Review(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
+    def get_image_url(self):
+        """Safely get image URL with fallback"""
+        if self.image and hasattr(self.image, 'url') and self.image.url:
+            return self.image.url
+        return '/static/images/default-avatar.jpg'
+
     def save(self, *args, **kwargs):
         # Handle backward compatibility
         if self.client_name and not self.author_name:

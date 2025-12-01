@@ -2610,9 +2610,10 @@ document.addEventListener('DOMContentLoaded', function() {
                         <div class="review-card position-relative" style="background: white; border-radius: 15px; padding: 40px 20px 20px 20px; box-shadow: 0 4px 12px rgba(0,0,0,0.08); height: 200px; margin-top: 40px;">
                             <!-- Floating Image -->
                             <div class="reviewer-image-container position-absolute top-0 start-50 translate-middle">
-                                <img src="{{ review.image.url|default:'/static/images/default-avatar.jpg' }}" alt="{{ review.author_name|default:review.client_name }}" 
-                                     class="rounded-circle border border-4 border-white shadow-sm" 
-                                     style="width: 80px; height: 80px; object-fit: cover;">
+                                <img src="{{ review.get_image_url }}" 
+                                        alt="{{ review.author_name|default:review.client_name }}" 
+                                        class="rounded-circle border border-4 border-white shadow-sm" 
+                                        style="width: 80px; height: 80px; object-fit: cover;">
                             </div>
                             
                             <!-- Review Content -->
