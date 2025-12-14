@@ -1530,73 +1530,259 @@
                         </div>
                     </div>
 
-                    <!-- TRADEWISE COIN TAB -->
-                    <div id="tradewise-coin" class="content-tab">
-                        <div class="card">
-                            <div class="card-header">
-                                <h3 class="card-title">TradeWise Coin Management</h3>
+                   <!-- TRADEWISE COIN TAB - WITH WORKING ACTION BUTTONS -->
+<div id="tradewise-coin" class="content-tab">
+    <div class="card">
+        <div class="card-header">
+            <h3 class="card-title">TradeWise Coin Management</h3>
+            
+        </div>
+        <div class="card-body">
+            
+            <!-- COIN ACTION JAVASCRIPT -->
+            <script>
+            // Coin action submission function
+            function submitCoinAction(actionType, transactionId = null, coinAmount = null) {
+                console.log(`🪙 Coin action: ${actionType}, Transaction: ${transactionId}, Amount: ${coinAmount}`);
+                
+                // Create a form
+                const form = document.createElement('form');
+                form.method = 'POST';
+                form.action = '{% url "admin_dashboard" %}';
+                
+                // Add CSRF token
+                const csrfInput = document.createElement('input');
+                csrfInput.type = 'hidden';
+                csrfInput.name = 'csrfmiddlewaretoken';
+                csrfInput.value = '{{ csrf_token }}';
+                form.appendChild(csrfInput);
+                
+                // Add action
+                const actionInput = document.createElement('input');
+                actionInput.type = 'hidden';
+                actionInput.name = 'action';
+                actionInput.value = actionType;
+                form.appendChild(actionInput);
+                
+                // Add transaction ID if provided
+                if (transactionId) {
+                    const idInput = document.createElement('input');
+                    idInput.type = 'hidden';
+                    idInput.name = 'transaction_id';
+                    idInput.value = transactionId;
+                    form.appendChild(idInput);
+                }
+                
+                // Submit the form
+                document.body.appendChild(form);
+                console.log(`📤 Submitting form with action: ${actionType}`);
+                form.submit();
+            }
+            
+            // Quick test function
+            function testCoinAction() {
+                console.log('🧪 Testing coin action submission...');
+                if (confirm('Test coin action submission? This should show success message.')) {
+                    submitCoinAction('test_action');
+                }
+            }
+            
+            // Show transaction details
+            function showTransactionDetails(id, type, customer, amount, usdAmount, rate,) {
+                const details = `
+Transaction Details:
+-------------------
+ID: ${type.toUpperCase()}-${String(id).padStart(4, '0')}
+Type: ${type.toUpperCase()}
+Customer: ${customer}
+Amount: ${amount} TWC
+USD Amount: $${usdAmount}
+Rate: $${rate} per TWC
+
+
+Action: ${type === 'buy' ? 'Approve to complete purchase' : 'Process to initiate payout'}
+                `;
+                alert(details);
+            }
+            </script>
+            
+            <!-- EXISTING COIN SETTINGS FORM -->
+            <div class="card mb-4">
+                <div class="card-header bg-gradient-primary text-white">
+                    <h4 class="card-title mb-0">
+                        <i class="fas fa-cog"></i> Coin Settings & Pricing
+                    </h4>
+                </div>
+                <div class="card-body">
+                    <!-- FORM 1: UPDATE COIN SETTINGS -->
+                    <form method="POST" action="{% url 'admin_dashboard' %}" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        <input type="hidden" name="action" value="update_coin">
+                        
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="coinTitle">Coin Title</label>
+                                    <input type="text" class="form-control" id="coinTitle" name="title" 
+                                        value="{{ tradewise_coin.title|default:'TradeWise Coin' }}" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="coinSubtitle">Subtitle</label>
+                                    <input type="text" class="form-control" id="coinSubtitle" name="subtitle" 
+                                        value="{{ tradewise_coin.subtitle|default:'' }}">
+                                </div>
+                                <div class="form-group">
+                                    <label for="coinDescription">Description</label>
+                                    <textarea class="form-control" id="coinDescription" name="description" rows="6" required>{{ tradewise_coin.description|default:'The future of decentralized trading is here. TradeWise Coin (TWC) is a revolutionary utility token designed for seamless transactions, staking rewards, and exclusive access to TradeWise premium ecosystem.' }}</textarea>
+                                </div>
                             </div>
-                            <div class="card-body">
-                                <form method="POST" action="{% url 'admin_dashboard' %}" enctype="multipart/form-data" data-ajax="true">
-                                    {% csrf_token %}
-                                    <input type="hidden" name="action" value="update_coin">
-                                    
-                                    <div class="row">
-                                        <div class="col-md-6">
-                                            <div class="form-group">
-                                                <label for="coinTitle">Coin Title</label>
-                                                <input type="text" class="form-control" id="coinTitle" name="title" 
-                                                       value="{{ tradewise_coin.title|default:'TradeWise Coin' }}" required>
-                                            </div>
-                                            <div class="form-group">
-                                                <label for="coinSubtitle">Subtitle</label>
-                                                <input type="text" class="form-control" id="coinSubtitle" name="subtitle" 
-                                                       value="{{ tradewise_coin.subtitle|default:'' }}">
-                                            </div>
-                                            <div class="form-group">
-                                                <label for="coinDescription">Description</label>
-                                                <textarea class="form-control" id="coinDescription" name="description" rows="6" required>{{ tradewise_coin.description|default:'The future of decentralized trading is here. TradeWise Coin (TWC) is a revolutionary utility token designed for seamless transactions, staking rewards, and exclusive access to TradeWise premium ecosystem.' }}</textarea>
-                                            </div>
-                                        </div>
-                                        <div class="col-md-6">
-                                            <div class="form-group">
-                                                <label for="coinPrice">Price Information</label>
-                                                <input type="text" class="form-control" id="coinPrice" name="price" 
-                                                       value="{{ tradewise_coin.price|default:'$0.10 per TWC (Limited Supply)' }}" required>
-                                            </div>
-                                            <div class="form-group">
-                                                <label for="coinBonus">Bonus Text</label>
-                                                <input type="text" class="form-control" id="coinBonus" name="bonus_text" 
-                                                       value="{{ tradewise_coin.bonus_text|default:'Early investors get +15% bonus tokens in the first round.' }}" required>
-                                            </div>
-                                            <div class="form-group">
-                                                <label for="coinImage">Coin Image</label>
-                                                <input type="file" class="form-control" id="coinImage" name="image" accept="image/*">
-                                                {% if tradewise_coin.image %}
-                                                <div class="mt-2">
-                                                    <img src="{{ tradewise_coin.image.url }}" alt="Current image" style="max-width: 200px;">
-                                                </div>
-                                                {% endif %}
-                                            </div>
-                                            <div class="form-group">
-                                                <div class="custom-control custom-switch">
-                                                    <input type="checkbox" class="custom-control-input" id="coinActive" name="is_active" 
-                                                           {% if tradewise_coin.is_active %}checked{% endif %}>
-                                                    <label class="custom-control-label" for="coinActive">Active</label>
-                                                </div>
-                                            </div>
+                            <div class="col-md-6">
+                                <!-- PRICE MANAGEMENT -->
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label for="coinBuyPrice">
+                                                <i class="fas fa-arrow-up text-success"></i> Buy Price (USD)
+                                            </label>
+                                            <input type="number" class="form-control" id="coinBuyPrice" name="buy_price_usd" 
+                                                value="{{ tradewise_coin.buy_price_usd|default:'0.10' }}" 
+                                                step="0.000001" min="0.000001" required>
+                                            <small class="form-text text-muted">Price users pay to BUY 1 TWC</small>
                                         </div>
                                     </div>
-                                    
-                                    <div class="form-group">
-                                        <button type="submit" class="btn btn-gradient-primary">
-                                            <i class="fas fa-save"></i> Update Coin Details
-                                        </button>
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label for="coinSellPrice">
+                                                <i class="fas fa-arrow-down text-danger"></i> Sell Price (USD)
+                                            </label>
+                                            <input type="number" class="form-control" id="coinSellPrice" name="sell_price_usd" 
+                                                value="{{ tradewise_coin.sell_price_usd|default:'0.09' }}" 
+                                                step="0.000001" min="0.000001" required>
+                                            <small class="form-text text-muted">Price users get when SELLING 1 TWC</small>
+                                        </div>
                                     </div>
-                                </form>
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label for="coinBonus">Bonus Text</label>
+                                    <input type="text" class="form-control" id="coinBonus" name="bonus_text" 
+                                        value="{{ tradewise_coin.bonus_text|default:'Early investors get +15% bonus tokens in the first round.' }}" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="coinImage">Coin Image</label>
+                                    <input type="file" class="form-control" id="coinImage" name="image" accept="image/*">
+                                    {% if tradewise_coin.image %}
+                                    <div class="mt-2">
+                                        <img src="{{ tradewise_coin.image.url }}" alt="Current image" style="max-width: 200px;" class="img-thumbnail">
+                                    </div>
+                                    {% endif %}
+                                </div>
+                                <div class="form-group">
+                                    <div class="custom-control custom-switch">
+                                        <input type="checkbox" class="custom-control-input" id="coinActive" name="is_active" 
+                                            {% if tradewise_coin.is_active %}checked{% endif %}>
+                                        <label class="custom-control-label" for="coinActive">Active (Show on website)</label>
+                                    </div>
+                                </div>
                             </div>
                         </div>
+                        
+                        <div class="form-group">
+                            <button type="submit" class="btn btn-gradient-primary">
+                                <i class="fas fa-save"></i> Update Coin Details & Prices
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            
+            <!-- Pending Transactions -->
+            <div class="card mb-4">
+                <div class="card-header bg-gradient-warning text-white">
+                    <h4 class="card-title mb-0">
+                        <i class="fas fa-clock"></i> Tradewise Coin Transactions Records
+                        <span class="badge badge-light float-right">{{ pending_coin_transactions.count }}</span>
+                    </h4>
+                </div>
+                <div class="card-body">
+                    {% if pending_coin_transactions %}
+                    <div class="table-responsive">
+                        <table class="table table-bordered table-hover">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Type</th>
+                                    <th>Customer</th>
+                                    <th>Amount</th>
+                                    <th>Rate</th>
+                                    <th>Platform/Wallet</th>
+                                    
+                                    <th>Date</th>
+                                   
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for trans in pending_coin_transactions %}
+                                <tr>
+                                    <td>
+                                        <span class="badge badge-{% if trans.transaction_type == 'buy' %}success{% else %}danger{% endif %}">
+                                            {{ trans.transaction_type|upper }}-{{ trans.id|stringformat:"04d" }}
+                                        </span>
+                                    </td>
+                                    <td>
+                                        {% if trans.transaction_type == 'buy' %}
+                                        <span class="badge badge-success">BUY</span>
+                                        {% else %}
+                                        <span class="badge badge-danger">SELL</span>
+                                        {% endif %}
+                                    </td>
+                                    <td>
+                                        <strong>{{ trans.customer_name }}</strong><br>
+                                        <small class="text-muted">{{ trans.customer_email }}</small><br>
+                                        <small>{{ trans.customer_phone }}</small>
+                                    </td>
+                                    <td>
+                                        <strong>{{ trans.coin_amount }} TWC</strong><br>
+                                        <small>${{ trans.usd_amount }}</small>
+                                    </td>
+                                    <td>${{ trans.rate }}</td>
+                                    <td>
+                                        {% if trans.transaction_type == 'buy' %}
+                                        <small>Platform: {{ trans.exchange_platform|default:"Not specified" }}</small>
+                                        {% else %}
+                                        <small class="text-truncate d-block" style="max-width: 150px;" 
+                                            title="{{ trans.wallet_address }}">
+                                            Wallet: {{ trans.wallet_address|truncatechars:20|default:"Not specified" }}
+                                        </small>
+                                        {% endif %}
+                                    </td>
+                                    
+                                    <td>{{ trans.created_at|date:"M d, H:i" }}</td>
+                                   
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
                     </div>
+                    {% else %}
+                    <div class="text-center py-4">
+                        <i class="fas fa-check-circle fa-3x text-success mb-3"></i>
+                        <h5>No Coin Transactions Records</h5>
+                        <p class="text-muted">All transactions have been processed.</p>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+            
+            
+
+           
+            
+        </div>
+    </div>
+</div>
+
+
 
                    <!-- ALL REQUESTS TAB -->
                 <div id="all-requests" class="content-tab">
@@ -2033,7 +2219,7 @@
                     </div>
 
 
-
+             
 
                     
                     <!-- AFFILIATE MANAGEMENT TAB -->
@@ -2250,7 +2436,30 @@
                                         </div>
                                     </div>
                                 </div>
-
+                                
+                                <form method="POST" action="{% url 'admin_dashboard' %}">
+                                    {% csrf_token %}
+                                    <input type="hidden" name="action" value="update_referral_coins">
+                                    
+                                    <div class="form-group">
+                                        <label for="coins_per_referral" class="font-weight-bold">
+                                            Coins Awarded Per Referral
+                                        </label>
+                                        <div class="input-group">
+                                            <input type="number" class="form-control" id="coins_per_referral" 
+                                                   name="coins_per_referral" value="{{ coins_per_referral }}" 
+                                                   min="1" max="10000" required>
+                                            <div class="input-group-append">
+                                                <span class="input-group-text">coins</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                    <button type="submit" class="btn btn-success">
+                                        <i class="fas fa-save"></i> Update Referral Coins
+                                    </button>
+                                </form>
+                                
                                 <!-- All Affiliates -->
                                 <div class="row mt-4">
                                     <div class="col-12">
@@ -2325,6 +2534,7 @@
                                             </div>
                                         </div>
                                     </div>
+                                    
                                 </div>
                                 
                                 
@@ -2438,6 +2648,7 @@
                     </div>
 
                 </div>
+                
             </section>
         </div>
 

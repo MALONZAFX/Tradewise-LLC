@@ -9,7 +9,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
     <meta name="description" content="Forex">
     <meta name="keywords" content="Tradewise">
-    <meta name="author" content="Awaiken">
+    <meta name="author" content="Awaken">
     <!-- Page Title -->
     <title>TradeWise</title>
     <!-- Favicon Icon -->
@@ -75,7 +75,7 @@
 <!-- Hero Section with Navbar & Slider Start -->
 <section class="hero-section position-relative">
     <!-- Full-width Black Navbar -->
-    <header class="main-header position-absolute w-100" style="z-index: 10; top: 0;">
+    <header class="main-header position-absolute w-300" style="z-index: 10; top: 0;">
       <nav class="navbar navbar-expand-lg navbar-dark bg-black sticky-top">
           <div class="container-fluid px-4">
               <a class="navbar-brand" href=" ">
@@ -263,7 +263,7 @@
   
   /* Navbar Styles */
   .navbar {
-    padding: 10px 0;
+    padding: 10px 0px;
     background: #000 !important;
   }
   
@@ -2936,99 +2936,1051 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 </script>
 
-
-{% load static %} 
-
-<!-- TradeWise Future: The Next Evolution -->
+<!-- TradeWise Future: The Next Evolution - FIXED VERSION -->
 <section class="future-section" style="background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%); padding: 80px 0;">
-  <div class="container" style="max-width: 1200px; margin: 0 auto; padding: 0 20px; display: flex; align-items: center; gap: 50px; flex-wrap: wrap;">
-      
-      <!-- Left Side: Text & CTA -->
-      <div class="future-content" style="flex: 1; min-width: 300px;">
-        <h3 style="font-size: 1.25rem; font-weight: 600; color: #2c3e50; display: flex; align-items: center; gap: 8px;">
-            <span style="color: #3498db;">{{ tradewise_coin.title|default:"TradeWise Coin" }}</span>
-            <span style="background: linear-gradient(135deg, #3498db, #2c3e50); color: white; font-size: 0.55rem; padding: 1px 6px; border-radius: 6px; font-weight: 500; letter-spacing: 0.2px;">COMING SOON</span>
-        </h3>
-          
-          {% if tradewise_coin.subtitle %}
-          <p style="color: #555; line-height: 1.6; margin-bottom: 10px; font-size: 1.2rem; font-weight: 600;">
-              {{ tradewise_coin.subtitle }}
-          </p>
-          {% endif %}
-          
-          <p style="color: #555; line-height: 1.6; margin-bottom: 25px; font-size: 1.1rem;">
-              {{ tradewise_coin.description|default:"The future of decentralized trading is here. TradeWise Coin (TWC) is a revolutionary utility token designed for seamless transactions, staking rewards, and exclusive access to TradeWise's premium ecosystem." }}
-          </p>
-          
-          <ul style="margin-bottom: 30px; padding-left: 20px; color: #555;">
-              {% if tradewise_coin.features.all %}
-                {% for feature in tradewise_coin.features.all %}
+    <div class="container" style="max-width: 1200px; margin: 0 auto; padding: 0 20px; display: flex; align-items: center; gap: 50px; flex-wrap: wrap;">
+        
+        <!-- Left Side: Text & CTA -->
+        <div class="future-content" style="flex: 1; min-width: 300px;">
+          <h3 style="font-size: 1.25rem; font-weight: 600; color: #2c3e50; display: flex; align-items: center; gap: 8px;">
+              <span style="color: #3498db;">{{ tradewise_coin.title|default:"TradeWise Coin" }}</span>
+          </h3>
+            
+            {% if tradewise_coin.subtitle %}
+            <p style="color: #555; line-height: 1.6; margin-bottom: 10px; font-size: 1.2rem; font-weight: 600;">
+                {{ tradewise_coin.subtitle }}
+            </p>
+            {% endif %}
+            
+            <p style="color: #555; line-height: 1.6; margin-bottom: 25px; font-size: 1.1rem;">
+                {{ tradewise_coin.description|default:"The future of decentralized trading is here. TradeWise Coin (TWC) is a revolutionary utility token designed for seamless transactions, staking rewards, and exclusive access to TradeWise's premium ecosystem." }}
+            </p>
+            
+            <ul style="margin-bottom: 30px; padding-left: 20px; color: #555;">
+                {% if tradewise_coin.features.all %}
+                  {% for feature in tradewise_coin.features.all %}
+                  <li style="margin-bottom: 10px; position: relative; padding-left: 25px;">
+                      <i class="fas fa-check" style="position: absolute; left: 0; color: #3498db;"></i>
+                      {{ feature.text }}
+                  </li>
+                  {% endfor %}
+                {% else %}
+                <!-- Default features if no dynamic features exist -->
                 <li style="margin-bottom: 10px; position: relative; padding-left: 25px;">
                     <i class="fas fa-check" style="position: absolute; left: 0; color: #3498db;"></i>
-                    {{ feature.text }}
+                    <strong>Stake & Earn:</strong> Passive income through staking rewards
                 </li>
-                {% endfor %}
-              {% else %}
-              <!-- Default features if no dynamic features exist -->
-              <li style="margin-bottom: 10px; position: relative; padding-left: 25px;">
-                  <i class="fas fa-check" style="position: absolute; left: 0; color: #3498db;"></i>
-                  <strong>Stake & Earn:</strong> Passive income through staking rewards
-              </li>
-              <li style="margin-bottom: 10px; position: relative; padding-left: 25px;">
-                  <i class="fas fa-check" style="position: absolute; left: 0; color: #3498db;"></i>
-                  <strong>VIP Access:</strong> Unlock premium signals & strategies
-              </li>
-              <li style="margin-bottom: 10px; position: relative; padding-left: 25px;">
-                  <i class="fas fa-check" style="position: absolute; left: 0; color: #3498db;"></i>
-                  <strong>Zero Fees:</strong> Trade with minimal transaction costs
-              </li>
-              {% endif %}
-          </ul>
-          
-          <div class="price-tag" style="background: #f1f8fe; border-left: 4px solid #3498db; padding: 15px; margin-bottom: 25px; display: inline-block;">
-              <p style="margin: 0; font-weight: 600; color: #2c3e50; font-size: 1.2rem;">
-                  <span style="color: #3498db;">Pre-Sale Price:</span> {{ tradewise_coin.price|default:"$0.10 per TWC (Limited Supply)" }}
-              </p>
-          </div>
-          
-          <button onclick="showPreOrderModal()" style="background: linear-gradient(135deg, #2c3e50, #3498db); color: white; border: none; border-radius: 30px; padding: 15px 30px; font-weight: 600; cursor: pointer; font-size: 1.1rem; transition: transform 0.3s ease; box-shadow: 0 10px 20px rgba(52, 152, 219, 0.3);">
-              <i class="fas fa-coins" style="margin-right: 10px;"></i> Pre-Order Now
-          </button>
-          
-          <p style="color: #7f8c8d; font-size: 0.9rem; margin-top: 15px;">
-              {{ tradewise_coin.bonus_text|default:"Early investors get +15% bonus tokens in the first round." }}
-          </p>
-      </div>
-      
-      <!-- Right Side: Rotating Coin -->
-      <div class="coin-container" style="flex: 1; min-width: 300px; text-align: center; position: relative;">
-          <div class="coin-3d" style="width: 250px; height: 250px; margin: 0 auto; perspective: 1000px;">
-              {% if tradewise_coin and tradewise_coin.image %}  <!-- ✅ FIXED CONDITION -->
-              <img src="{{ tradewise_coin.image.url }}" alt="{{ tradewise_coin.title|default:'TradeWise Coin' }}" class="rotating-coin" style="width: 100%; height: 100%; object-fit: contain; animation: rotate-coin 8s infinite linear; filter: drop-shadow(0 10px 20px rgba(0,0,0,0.2));">
-              {% else %}
-              <img src="{% static 'images/tradewisecoin.png' %}" alt="TradeWise Coin" class="rotating-coin" style="width: 100%; height: 100%; object-fit: contain; animation: rotate-coin 8s infinite linear; filter: drop-shadow(0 10px 20px rgba(0,0,0,0.2));">
-              {% endif %}
-          </div>
-          <div class="glow-effect" style="position: absolute; width: 200px; height: 200px; background: radial-gradient(circle, rgba(52, 152, 219, 0.3) 0%, rgba(52, 152, 219, 0) 70%); top: 50%; left: 50%; transform: translate(-50%, -50%); border-radius: 50%; z-index: -1;"></div>
-      </div>
-  </div>
-</section>
+                <li style="margin-bottom: 10px; position: relative; padding-left: 25px;">
+                    <i class="fas fa-check" style="position: absolute; left: 0; color: #3498db;"></i>
+                    <strong>VIP Access:</strong> Unlock premium signals & strategies
+                </li>
+                <li style="margin-bottom: 10px; position: relative; padding-left: 25px;">
+                    <i class="fas fa-check" style="position: absolute; left: 0; color: #3498db;"></i>
+                    <strong>Zero Fees:</strong> Trade with minimal transaction costs
+                </li>
+                {% endif %}
+            </ul>
+            
+            <div class="price-tag" style="background: #f1f8fe; border-left: 4px solid #3498db; padding: 15px; margin-bottom: 25px; display: inline-block;">
+                <p style="margin: 0; font-weight: 600; color: #2c3e50; font-size: 1.2rem;">
+                    <span style="color: #3498db;">Pre-Sale Price:</span> 
+                    <span id="currentBuyPrice">${{ tradewise_coin.buy_price_usd|floatformat:2|default:"0.10" }}</span> per TWC
+                </p>
+                <p style="margin: 5px 0 0 0; font-size: 0.9rem; color: #7f8c8d;">
+                    Sell Price: <span id="currentSellPrice">${{ tradewise_coin.sell_price_usd|floatformat:2|default:"0.09" }}</span> per TWC
+                </p>
+            </div>
+            
+            <!-- Buy/Sell Buttons - WORKING VERSION -->
+            <div class="trade-buttons" style="display: flex; gap: 15px; margin-bottom: 20px; flex-wrap: wrap;">
+                <button class="candle-btn buy" onclick="showTransactionModal('BUY')" style="background: linear-gradient(135deg, #27ae60, #2ecc71); color: white; border: none; border-radius: 30px; padding: 15px 30px; font-weight: 600; cursor: pointer; font-size: 1.1rem; transition: all 0.3s ease; box-shadow: 0 10px 20px rgba(39, 174, 96, 0.3); display: flex; align-items: center; gap: 10px; min-width: 150px;">
+                    <i class="fas fa-arrow-up" style="font-size: 1.2rem;"></i> BUY COINS
+                </button>
+                
+                <button class="candle-btn sell" onclick="showTransactionModal('SELL')" style="background: linear-gradient(135deg, #c0392b, #e74c3c); color: white; border: none; border-radius: 30px; padding: 15px 30px; font-weight: 600; cursor: pointer; font-size: 1.1rem; transition: all 0.3s ease; box-shadow: 0 10px 20px rgba(231, 76, 60, 0.3); display: flex; align-items: center; gap: 10px; min-width: 150px;">
+                    <i class="fas fa-arrow-down" style="font-size: 1.2rem;"></i> SELL COINS
+                </button>
+            </div>
+            
+            <p style="color: #7f8c8d; font-size: 0.9rem; margin-top: 15px;">
+                {{ tradewise_coin.bonus_text|default:"Early investors get +15% bonus tokens in the first round." }}
+            </p>
+        </div>
+        
+        <!-- Right Side: Rotating Coin with Trading Chart Background -->
+<div class="coin-container" style="flex: 1; min-width: 300px; text-align: center; position: relative;">
+    <!-- Dark Trading Chart Background with Animated Green Line -->
+    <div class="chart-container" style="position: absolute; width: 100%; height: 100%; top: 0; left: 0; z-index: 0; background: linear-gradient(135deg, #0a1929 0%, #1a2530 100%); border-radius: 20px; overflow: hidden;">
+        <!-- Chart Grid Lines -->
+        <div style="position: absolute; width: 100%; height: 100%; opacity: 0.1;">
+            <!-- Horizontal Grid Lines -->
+            <div style="position: absolute; top: 20%; width: 100%; height: 1px; background: #2ecc71;"></div>
+            <div style="position: absolute; top: 40%; width: 100%; height: 1px; background: #2ecc71;"></div>
+            <div style="position: absolute; top: 60%; width: 100%; height: 1px; background: #2ecc71;"></div>
+            <div style="position: absolute; top: 80%; width: 100%; height: 1px; background: #2ecc71;"></div>
+            <!-- Vertical Grid Lines -->
+            <div style="position: absolute; left: 20%; height: 100%; width: 1px; background: #2ecc71;"></div>
+            <div style="position: absolute; left: 40%; height: 100%; width: 1px; background: #2ecc71;"></div>
+            <div style="position: absolute; left: 60%; height: 100%; width: 1px; background: #2ecc71;"></div>
+            <div style="position: absolute; left: 80%; height: 100%; width: 1px; background: #2ecc71;"></div>
+        </div>
+        
+        <!-- Animated Green Line Chart -->
+        <svg class="chart-line" width="100%" height="100%" style="position: absolute; top: 0; left: 0;">
+            <defs>
+                <linearGradient id="chartGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+                    <stop offset="0%" style="stop-color:#27ae60;stop-opacity:0.3" />
+                    <stop offset="100%" style="stop-color:#2ecc71;stop-opacity:0.1" />
+                </linearGradient>
+                <filter id="glow" x="-50%" y="-50%" width="200%" height="200%">
+                    <feGaussianBlur stdDeviation="4" result="blur" />
+                    <feMerge>
+                        <feMergeNode in="blur" />
+                        <feMergeNode in="SourceGraphic" />
+                    </feMerge>
+                </filter>
+            </defs>
+            <!-- Chart Area -->
+            <path id="chartPath" d="M 0,100 L 50,80 L 100,60 L 150,70 L 200,40 L 250,50 L 300,30 L 350,20" 
+                  style="fill: none; stroke: url(#chartGradient); stroke-width: 3; stroke-linecap: round; stroke-linejoin: round; filter: url(#glow); opacity: 0.7;">
+                <animate attributeName="d" dur="10s" repeatCount="indefinite"
+                         values="M 0,100 L 50,80 L 100,60 L 150,70 L 200,40 L 250,50 L 300,30 L 350,20;
+                                 M 0,90 L 50,70 L 100,50 L 150,60 L 200,30 L 250,40 L 300,20 L 350,10;
+                                 M 0,100 L 50,80 L 100,60 L 150,70 L 200,40 L 250,50 L 300,30 L 350,20;
+                                 M 0,95 L 50,75 L 100,55 L 150,65 L 200,35 L 250,45 L 300,25 L 350,15;
+                                 M 0,100 L 50,80 L 100,60 L 150,70 L 200,40 L 250,50 L 300,30 L 350,20" 
+                         keyTimes="0;0.25;0.5;0.75;1" />
+            </path>
+            
+            <!-- Animated Dots along the chart -->
+            <circle class="chart-dot" cx="50" cy="80" r="2" fill="#2ecc71" style="opacity: 0.8;">
+                <animate attributeName="r" values="2;4;2" dur="1.5s" repeatCount="indefinite" />
+                <animate attributeName="opacity" values="0.8;1;0.8" dur="1.5s" repeatCount="indefinite" />
+            </circle>
+            <circle class="chart-dot" cx="150" cy="70" r="2" fill="#2ecc71" style="opacity: 0.8;">
+                <animate attributeName="r" values="2;4;2" dur="1.5s" repeatCount="indefinite" begin="0.3s" />
+                <animate attributeName="opacity" values="0.8;1;0.8" dur="1.5s" repeatCount="indefinite" begin="0.3s" />
+            </circle>
+            <circle class="chart-dot" cx="250" cy="50" r="2" fill="#2ecc71" style="opacity: 0.8;">
+                <animate attributeName="r" values="2;4;2" dur="1.5s" repeatCount="indefinite" begin="0.6s" />
+                <animate attributeName="opacity" values="0.8;1;0.8" dur="1.5s" repeatCount="indefinite" begin="0.6s" />
+            </circle>
+            <circle class="chart-dot" cx="350" cy="20" r="2" fill="#2ecc71" style="opacity: 0.8;">
+                <animate attributeName="r" values="2;4;2" dur="1.5s" repeatCount="indefinite" begin="0.9s" />
+                <animate attributeName="opacity" values="0.8;1;0.8" dur="1.5s" repeatCount="indefinite" begin="0.9s" />
+            </circle>
+        </svg>
+        
+        <!-- Chart Candles Simulation (Static) -->
+        <div style="position: absolute; bottom: 20%; left: 10%; width: 80%; height: 30%; opacity: 0.2;">
+            <div style="position: absolute; left: 10%; width: 8px; height: 40%; background: #2ecc71; border-radius: 2px;"></div>
+            <div style="position: absolute; left: 20%; width: 8px; height: 60%; background: #2ecc71; border-radius: 2px;"></div>
+            <div style="position: absolute; left: 30%; width: 8px; height: 30%; background: #e74c3c; border-radius: 2px;"></div>
+            <div style="position: absolute; left: 40%; width: 8px; height: 70%; background: #2ecc71; border-radius: 2px;"></div>
+            <div style="position: absolute; left: 50%; width: 8px; height: 50%; background: #2ecc71; border-radius: 2px;"></div>
+            <div style="position: absolute; left: 60%; width: 8px; height: 80%; background: #2ecc71; border-radius: 2px;"></div>
+            <div style="position: absolute; left: 70%; width: 8px; height: 40%; background: #e74c3c; border-radius: 2px;"></div>
+            <div style="position: absolute; left: 80%; width: 8px; height: 90%; background: #2ecc71; border-radius: 2px;"></div>
+        </div>
+        
+        <!-- Price Annotations -->
+        <div class="price-annotation" style="position: absolute; top: 15%; right: 10%; color: #2ecc71; font-size: 0.7rem; font-weight: 600;">
+            <span>▲ $0.15</span>
+        </div>
+        <div class="price-annotation" style="position: absolute; bottom: 15%; left: 10%; color: rgba(255,255,255,0.5); font-size: 0.7rem;">
+            <span>${{ tradewise_coin.buy_price_usd|default:"0.10" }}</span>
+        </div>
+    </div>
+    
+    <!-- 3D Coin Container -->
+    <div class="coin-3d" style="width: 250px; height: 250px; margin: 0 auto; perspective: 1000px; position: relative; z-index: 1;">
+        {% if tradewise_coin and tradewise_coin.image %}
+        <img src="{{ tradewise_coin.image.url }}" alt="{{ tradewise_coin.title|default:'TradeWise Coin' }}" class="rotating-coin" style="width: 100%; height: 100%; object-fit: contain; animation: rotate-coin 8s infinite linear; filter: drop-shadow(0 10px 30px rgba(46, 204, 113, 0.3));">
+        {% else %}
+        <img src="{% static 'images/tradewisecoin.png' %}" alt="TradeWise Coin" class="rotating-coin" style="width: 100%; height: 100%; object-fit: contain; animation: rotate-coin 8s infinite linear; filter: drop-shadow(0 10px 30px rgba(46, 204, 113, 0.3));">
+        {% endif %}
+    </div>
+    
+    <!-- Live Price Ticker with Auto-updating Price -->
+    <div class="price-ticker" style="background: linear-gradient(135deg, rgba(26, 37, 48, 0.9), rgba(10, 25, 41, 0.9)); color: white; padding: 10px 20px; border-radius: 25px; display: inline-block; margin-top: 20px; backdrop-filter: blur(10px); border: 2px solid rgba(46, 204, 113, 0.3); position: relative; z-index: 2;">
+        <div style="display: flex; align-items: center; gap: 10px;">
+            <span class="live-dot" style="width: 8px; height: 8px; background: #2ecc71; border-radius: 50%; animation: pulse 2s infinite;"></span>
+            <span style="font-weight: 600;">LIVE TWC:</span>
+            <span id="livePrice" style="color: #2ecc71; font-weight: 700;">${{ tradewise_coin.buy_price_usd|floatformat:4|default:"0.1000" }}</span>
+            <span id="priceChange" style="font-size: 0.8rem; padding: 2px 8px; border-radius: 10px; background: rgba(46, 204, 113, 0.2); color: #2ecc71;">+5.2%</span>
+        </div>
+        <div style="font-size: 0.7rem; color: rgba(255,255,255,0.7); margin-top: 5px;">
+            <span id="priceUpdate">Updating in 3s...</span>
+        </div>
+    </div>
+    
+    <!-- Volume Indicator -->
+    <div style="position: absolute; bottom: 10px; right: 10px; background: rgba(10, 25, 41, 0.7); padding: 5px 10px; border-radius: 10px; border: 1px solid rgba(46, 204, 113, 0.2); z-index: 2;">
+        <div style="display: flex; align-items: center; gap: 5px;">
+            <i class="fas fa-chart-bar" style="color: #2ecc71; font-size: 0.8rem;"></i>
+            <span style="color: white; font-size: 0.8rem;">VOL: <span style="color: #2ecc71; font-weight: 600;">$85.2K</span></span>
+        </div>
+    </div>
+    
+    <!-- Chart Overlay Glow -->
+    <div class="glow-effect" style="position: absolute; width: 200px; height: 200px; background: radial-gradient(circle, rgba(46, 204, 113, 0.15) 0%, rgba(46, 204, 113, 0) 70%); top: 50%; left: 50%; transform: translate(-50%, -50%); border-radius: 50%; z-index: 0;"></div>
+</div>
+
 <style>
-  /* Coin Rotation Animation */
-@keyframes rotate-coin {
-    0% {
-        transform: rotateY(0deg);
+    @keyframes rotate-coin {
+        0% { transform: rotateY(0deg); }
+        100% { transform: rotateY(360deg); }
     }
-    100% {
-        transform: rotateY(360deg);
+    
+    @keyframes pulse {
+        0% { opacity: 1; }
+        50% { opacity: 0.5; }
+        100% { opacity: 1; }
+    }
+    
+    @keyframes chartPulse {
+        0% { transform: scale(1); }
+        50% { transform: scale(1.05); }
+        100% { transform: scale(1); }
+    }
+    
+    @keyframes priceFlash {
+        0% { color: #2ecc71; }
+        50% { color: white; }
+        100% { color: #2ecc71; }
+    }
+    
+    .chart-container {
+        box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+        border: 1px solid rgba(46, 204, 113, 0.1);
+    }
+    
+    .chart-container:hover {
+        animation: chartPulse 3s ease-in-out infinite;
+    }
+    
+    #livePrice {
+        animation: priceFlash 2s infinite;
+    }
+</style>
+
+<script>
+// ================== COIN PRICE INITIALIZATION (SAFE) ==================
+// Safe initialization to prevent template syntax errors
+let currentBuyRate, currentSellRate;
+
+// Try multiple methods to get prices safely
+try {
+    // Method 1: Direct from template with safe parsing
+    const buyPriceStr = '{{ tradewise_coin.buy_price_usd|floatformat:2|default:"0.10" }}';
+    const sellPriceStr = '{{ tradewise_coin.sell_price_usd|floatformat:2|default:"0.09" }}';
+    
+    // Clean and parse
+    const cleanBuyPrice = buyPriceStr.replace(/[^\d.-]/g, '');
+    const cleanSellPrice = sellPriceStr.replace(/[^\d.-]/g, '');
+    
+    currentBuyRate = parseFloat(cleanBuyPrice) || 0.10;
+    currentSellRate = parseFloat(cleanSellPrice) || 0.09;
+    
+    console.log("✅ Coin prices initialized:", {
+        buy: currentBuyRate,
+        sell: currentSellRate,
+        source: "Template variables"
+    });
+} catch (error) {
+    // Fallback to defaults
+    currentBuyRate = 0.10;
+    currentSellRate = 0.09;
+    console.log("⚠️ Using default coin prices:", { buy: currentBuyRate, sell: currentSellRate });
+}
+
+// Live price simulation
+let currentPrice = currentBuyRate || 0.10;
+let updateInterval;
+
+function updateLivePrice() {
+    // Simulate price movement
+    const change = (Math.random() - 0.45) * 0.02;
+    currentPrice += change;
+    currentPrice = Math.max(0.08, Math.min(0.15, currentPrice));
+    
+    const priceElement = document.getElementById('livePrice');
+    const changeElement = document.getElementById('priceChange');
+    const updateText = document.getElementById('priceUpdate');
+    
+    if (priceElement) {
+        priceElement.textContent = '$' + currentPrice.toFixed(4);
+    }
+    
+    if (changeElement) {
+        const percentChange = ((currentPrice - 0.10) / 0.10 * 100).toFixed(2);
+        const isPositive = percentChange >= 0;
+        
+        changeElement.textContent = (isPositive ? '+' : '') + percentChange + '%';
+        changeElement.style.background = isPositive ? 'rgba(46, 204, 113, 0.2)' : 'rgba(231, 76, 60, 0.2)';
+        changeElement.style.color = isPositive ? '#2ecc71' : '#e74c3c';
+    }
+    
+    if (updateText) {
+        const nextUpdate = Math.floor(Math.random() * 5) + 2;
+        updateText.textContent = `Next update in ${nextUpdate}s...`;
     }
 }
 
-.rotating-coin {
-    animation: rotate-coin 8s infinite linear;
-    transform-style: preserve-3d;
+// Start price updates
+document.addEventListener('DOMContentLoaded', function() {
+    console.log('DOM loaded, initializing coin system...');
+    
+    // Set initial display prices safely
+    try {
+        const buyPrice = currentBuyRate || 0.10;
+        const sellPrice = currentSellRate || 0.09;
+        
+        const buyPriceElement = document.getElementById('currentBuyPrice');
+        const sellPriceElement = document.getElementById('currentSellPrice');
+        
+        if (buyPriceElement) {
+            buyPriceElement.textContent = '$' + buyPrice.toFixed(2);
+        }
+        
+        if (sellPriceElement) {
+            sellPriceElement.textContent = '$' + sellPrice.toFixed(2);
+        }
+    } catch (e) {
+        console.log('Error setting display prices:', e);
+    }
+    
+    // Start live price updates
+    updateLivePrice();
+    updateInterval = setInterval(updateLivePrice, 3000);
+    
+    // Stop updates when page is hidden
+    document.addEventListener('visibilitychange', function() {
+        if (document.hidden) {
+            clearInterval(updateInterval);
+        } else {
+            updateInterval = setInterval(updateLivePrice, 3000);
+        }
+    });
+});
+</script>
+    </div>
+  </section>
+  
+  <!-- WORKING MODAL WITH ACTUAL FORM SUBMISSION - FIXED VERSION -->
+  <div id="tradewiseModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.5); z-index: 9999; overflow-y: auto; padding: 20px; box-sizing: border-box;">
+      <div style="background-color: white; margin: 50px auto; padding: 30px; border-radius: 15px; width: 90%; max-width: 500px; position: relative; box-shadow: 0 20px 40px rgba(0,0,0,0.2);">
+          <span onclick="closeTradewiseModal()" style="position: absolute; right: 20px; top: 15px; font-size: 28px; cursor: pointer; color: #666; z-index: 1; width: 30px; height: 30px; display: flex; align-items: center; justify-content: center; border-radius: 50%; transition: background 0.3s;">&times;</span>
+          
+          <div id="modalFormContent">
+              <!-- Form will be loaded here -->
+          </div>
+          
+          <!-- Wallet Download Section -->
+          <div id="walletDownloadSection" style="display: none; background: linear-gradient(135deg, #f8f9fa, #e9ecef); border-radius: 15px; padding: 25px; margin-top: 25px; border-left: 4px solid #3498db; box-shadow: 0 5px 15px rgba(0,0,0,0.05);">
+              <h4 style="color: #2c3e50; margin-bottom: 20px; display: flex; align-items: center; gap: 10px;">
+                  <i class="fas fa-wallet" style="color: #3498db;"></i> Need a Wallet? Download Now:
+              </h4>
+              <div class="wallet-buttons" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px;">
+                  <a href="https://www.binance.com/en/download" target="_blank" class="wallet-btn" style="background: linear-gradient(135deg, #f0b90b, #f5c542); color: #000; padding: 12px 20px; border-radius: 10px; text-decoration: none; font-weight: 600; display: flex; align-items: center; gap: 10px; transition: transform 0.3s, box-shadow 0.3s; box-shadow: 0 5px 15px rgba(240, 185, 11, 0.2);">
+                      <i class="fab fa-google-play"></i>
+                      <div>
+                          <div>Download</div>
+                          <div>Binance</div>
+                      </div>
+                  </a>
+                  
+                  <a href="https://phantom.app/download" target="_blank" class="wallet-btn" style="background: linear-gradient(135deg, #ab9afb, #c5b9fc); color: #000; padding: 12px 20px; border-radius: 10px; text-decoration: none; font-weight: 600; display: flex; align-items: center; gap: 10px; transition: transform 0.3s, box-shadow 0.3s; box-shadow: 0 5px 15px rgba(171, 154, 251, 0.2);">
+                      <i class="fab fa-chrome"></i>
+                      <div>
+                          <div>Download</div>
+                          <div>Phantom</div>
+                      </div>
+                  </a>
+                  
+                  <a href="https://trustwallet.com/download" target="_blank" class="wallet-btn" style="background: linear-gradient(135deg, #3375bb, #4a8fd4); color: white; padding: 12px 20px; border-radius: 10px; text-decoration: none; font-weight: 600; display: flex; align-items: center; gap: 10px; transition: transform 0.3s, box-shadow 0.3s; box-shadow: 0 5px 15px rgba(51, 117, 187, 0.2);">
+                      <i class="fab fa-app-store-ios"></i>
+                      <div>
+                          <div>Download</div>
+                          <div>Trust Wallet</div>
+                      </div>
+                  </a>
+                  
+                  <a href="https://metamask.io/download" target="_blank" class="wallet-btn" style="background: linear-gradient(135deg, #f6851b, #f8a654); color: #000; padding: 12px 20px; border-radius: 10px; text-decoration: none; font-weight: 600; display: flex; align-items: center; gap: 10px; transition: transform 0.3s, box-shadow 0.3s; box-shadow: 0 5px 15px rgba(246, 133, 27, 0.2);">
+                      <i class="fab fa-firefox-browser"></i>
+                      <div>
+                          <div>Download</div>
+                          <div>MetaMask</div>
+                      </div>
+                  </a>
+              </div>
+              
+              <p style="margin-top: 15px; color: #7f8c8d; font-size: 0.85rem; text-align: center;">
+                  <i class="fas fa-external-link-alt" style="margin-right: 5px;"></i>
+                  Official download links - Secure & Verified
+              </p>
+          </div>
+      </div>
+  </div>
+  
+  <!-- Success Popup Template -->
+  <div id="successPopupTemplate" style="display: none;">
+      <div class="success-popup">
+          <div style="display: flex; align-items: center; gap: 15px;">
+              <div class="success-icon">
+                  <i class="fas fa-check-circle"></i>
+              </div>
+              <div>
+                  <h4>Transaction Successful!</h4>
+                  <p id="successMessage"></p>
+              </div>
+          </div>
+          <div class="progress-bar">
+              <div class="progress"></div>
+          </div>
+      </div>
+  </div>
+  
+  <style>
+      @keyframes rotate-coin {
+          0% { transform: rotateY(0deg); }
+          100% { transform: rotateY(360deg); }
+      }
+      
+      @keyframes pulse {
+          0% { opacity: 1; }
+          50% { opacity: 0.5; }
+          100% { opacity: 1; }
+      }
+      
+      @keyframes modalSlideIn {
+          from { opacity: 0; transform: translateY(-50px); }
+          to { opacity: 1; transform: translateY(0); }
+      }
+      
+      @keyframes slideInRight {
+          from { transform: translateX(100%); opacity: 0; }
+          to { transform: translateX(0); opacity: 1; }
+      }
+      
+      @keyframes progressBar {
+          from { width: 100%; }
+          to { width: 0%; }
+      }
+      
+      .candle-btn {
+          position: relative;
+          overflow: hidden;
+          transition: all 0.3s ease !important;
+          cursor: pointer !important;
+      }
+      
+      .candle-btn:hover {
+          transform: translateY(-3px) !important;
+          box-shadow: 0 15px 30px rgba(0,0,0,0.2) !important;
+      }
+      
+      .wallet-btn:hover {
+          transform: translateY(-3px);
+          box-shadow: 0 10px 25px rgba(0,0,0,0.15) !important;
+      }
+      
+      /* Success Popup */
+      .success-popup {
+          position: fixed;
+          top: 20px;
+          right: 20px;
+          background: linear-gradient(135deg, #27ae60, #2ecc71);
+          color: white;
+          padding: 20px;
+          border-radius: 15px;
+          z-index: 10001;
+          max-width: 400px;
+          box-shadow: 0 15px 35px rgba(39, 174, 96, 0.3);
+          animation: slideInRight 0.3s ease-out;
+          backdrop-filter: blur(10px);
+          border: 1px solid rgba(255,255,255,0.1);
+      }
+      
+      .progress-bar {
+          width: 100%;
+          height: 4px;
+          background: rgba(255,255,255,0.3);
+          border-radius: 2px;
+          margin-top: 10px;
+          overflow: hidden;
+      }
+      
+      .progress {
+          width: 100%;
+          height: 100%;
+          background: white;
+          animation: progressBar 3s linear forwards;
+      }
+      
+      @media (max-width: 768px) {
+          .future-section .container {
+              flex-direction: column;
+              gap: 30px;
+          }
+          
+          .trade-buttons {
+              flex-direction: column;
+          }
+          
+          .candle-btn {
+              width: 100%;
+          }
+          
+          .wallet-buttons {
+              grid-template-columns: 1fr;
+          }
+      }
+  </style>
+  
+  <script>
+// ================== WORKING MODAL FUNCTIONS - FIXED VERSION ==================
+
+// CSRF Token Helper Function
+function getCSRFToken() {
+    let csrfToken = null;
+    const csrfInput = document.querySelector('input[name="csrfmiddlewaretoken"]');
+    if (csrfInput) {
+        csrfToken = csrfInput.value;
+    } else {
+        // Fallback: try to get from cookie
+        const cookieValue = document.cookie
+            .split('; ')
+            .find(row => row.startsWith('csrftoken='))
+            ?.split('=')[1];
+        csrfToken = cookieValue;
+    }
+    return csrfToken;
 }
-</style>
+
+// Function to show modal
+function showTransactionModal(type) {
+    console.log('Opening modal for:', type);
+    
+    const modal = document.getElementById('tradewiseModal');
+    const formContent = document.getElementById('modalFormContent');
+    const walletSection = document.getElementById('walletDownloadSection');
+    
+    // Show wallet section for BUY only
+    if (type === 'BUY') {
+        walletSection.style.display = 'block';
+    } else {
+        walletSection.style.display = 'none';
+    }
+    
+    let formHtml = '';
+    
+    // Use the globally defined currentBuyRate and currentSellRate
+    const buyRate = currentBuyRate || 0.10;
+    const sellRate = currentSellRate || 0.09;
+    
+    if (type === 'BUY') {
+        formHtml = `
+            <div style="text-align: center; margin-bottom: 25px;">
+                <div style="width: 60px; height: 60px; background: linear-gradient(135deg, #2ecc71, #27ae60); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 15px; box-shadow: 0 10px 20px rgba(46, 204, 113, 0.3);">
+                    <i class="fas fa-shopping-cart" style="font-size: 1.5rem; color: white;"></i>
+                </div>
+                <h3 style="color: #27ae60; margin-bottom: 10px;">Buy TradeWise Coins</h3>
+                <p style="color: #7f8c8d; font-size: 0.9rem;">Complete your purchase with Paystack</p>
+            </div>
+            
+            <form id="buyForm" onsubmit="event.preventDefault(); submitBuyForm();">
+                <div class="form-group" style="margin-bottom: 15px;">
+                    <label style="display: block; margin-bottom: 5px; color: #000; font-weight: 600;">Exchange Platform *</label>
+                    <select id="exchangePlatform" style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 5px; background-color: #fff; color: #000;" required>
+                        <option value="">Select your wallet platform</option>
+                        <option value="BINANCE">Binance</option>
+                        <option value="PHANTOM">Phantom</option>
+                        <option value="TRUSTWALLET">Trust Wallet</option>
+                        <option value="METAMASK">MetaMask</option>
+                        <option value="OTHER">Other Wallet</option>
+                    </select>
+                </div>
+                
+                <div class="form-group" style="margin-bottom: 15px;">
+                    <label style="display: block; margin-bottom: 5px; color: #000; font-weight: 600;">Full Name *</label>
+                    <input type="text" id="buyFullName" style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 5px; background-color: #fff; color: #000;" placeholder="Enter your full name" required>
+                </div>
+                
+                <div class="form-group" style="margin-bottom: 15px;">
+                    <label style="display: block; margin-bottom: 5px; color: #000; font-weight: 600;">Email Address *</label>
+                    <input type="email" id="buyEmail" style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 5px; background-color: #fff; color: #000;" placeholder="Enter your email" required>
+                </div>
+                
+                <div class="form-group" style="margin-bottom: 15px;">
+                    <label style="display: block; margin-bottom: 5px; color: #000; font-weight: 600;">Phone Number *</label>
+                    <input type="tel" id="buyPhone" style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 5px; background-color: #fff; color: #000;" placeholder="Enter your phone number" required>
+                </div>
+                
+                <div class="form-group" style="margin-bottom: 15px;">
+                    <label style="display: block; margin-bottom: 5px; color: #000; font-weight: 600;">Coin Amount (TWC) *</label>
+                    <input type="number" id="buyCoinAmount" style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 5px; background-color: #fff; color: #000;" 
+                           placeholder="Enter coin amount" min="0.00000001" step="0.00000001" required
+                           oninput="calculateBuyPrice(this.value)">
+                    <small style="color: #95a5a6; display: block; margin-top: 5px;">Minimum: 0.00000001 TWC</small>
+                </div>
+                
+                <div id="buyPriceDisplay" style="display: none; background: linear-gradient(135deg, #f0f9f0, #e8f5e8); padding: 15px; border-radius: 10px; margin: 15px 0; border-left: 4px solid #27ae60;">
+                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                        <div style="text-align: left;">
+                            <div style="font-size: 0.9rem; color: #7f8c8d;">Total Amount:</div>
+                            <div style="font-size: 1.5rem; font-weight: 700; color: #27ae60;">$<span id="buyUsdAmount">0.00</span></div>
+                        </div>
+                        <div style="text-align: right;">
+                            <div style="font-size: 0.9rem; color: #7f8c8d;">Rate</div>
+                            <div style="font-size: 1rem; font-weight: 600; color: #2c3e50;">$${buyRate.toFixed(2)}/coin</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <input type="hidden" name="csrfmiddlewaretoken" value="{{ csrf_token }}">
+                
+                <button type="submit" style="width: 100%; padding: 12px; background: linear-gradient(135deg, #27ae60, #2ecc71); color: white; border: none; border-radius: 5px; font-weight: 600; cursor: pointer; margin-top: 10px;">
+                    <i class="fas fa-credit-card" style="margin-right: 10px;"></i> Proceed to Paystack Payment
+                </button>
+                
+                <p style="color: #7f8c8d; font-size: 0.85rem; margin-top: 10px; text-align: center;">
+                    <i class="fas fa-lock" style="margin-right: 5px;"></i> Secure payment powered by Paystack
+                </p>
+            </form>
+        `;
+    } else {
+        formHtml = `
+            <div style="text-align: center; margin-bottom: 25px;">
+                <div style="width: 60px; height: 60px; background: linear-gradient(135deg, #e74c3c, #c0392b); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 15px; box-shadow: 0 10px 20px rgba(231, 76, 60, 0.3);">
+                    <i class="fas fa-coins" style="font-size: 1.5rem; color: white;"></i>
+                </div>
+                <h3 style="color: #e74c3c; margin-bottom: 10px;">Sell TradeWise Coins</h3>
+                <p style="color: #7f8c8d; font-size: 0.9rem;">Convert your coins to cash instantly</p>
+            </div>
+            
+            <form id="sellForm" onsubmit="event.preventDefault(); submitSellForm();">
+                <div class="form-group" style="margin-bottom: 15px;">
+                    <label style="display: block; margin-bottom: 5px; color: #000; font-weight: 600;">Full Name *</label>
+                    <input type="text" id="sellFullName" style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 5px; background-color: #fff; color: #000;" placeholder="Enter your full name" required>
+                </div>
+                
+                <div class="form-group" style="margin-bottom: 15px;">
+                    <label style="display: block; margin-bottom: 5px; color: #000; font-weight: 600;">Email Address *</label>
+                    <input type="email" id="sellEmail" style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 5px; background-color: #fff; color: #000;" placeholder="Enter your email" required>
+                </div>
+                
+                <div class="form-group" style="margin-bottom: 15px;">
+                    <label style="display: block; margin-bottom: 5px; color: #000; font-weight: 600;">Phone Number *</label>
+                    <input type="tel" id="sellPhone" style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 5px; background-color: #fff; color: #000;" placeholder="Enter your phone number" required>
+                </div>
+                
+                <div class="form-group" style="margin-bottom: 15px;">
+                    <label style="display: block; margin-bottom: 5px; color: #000; font-weight: 600;">Coin Amount (TWC) *</label>
+                    <input type="number" id="sellCoinAmount" style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 5px; background-color: #fff; color: #000;" 
+                           placeholder="Enter coin amount" min="0.00000001" step="0.00000001" required
+                           oninput="calculateSellPrice(this.value)">
+                    <small style="color: #95a5a6; display: block; margin-top: 5px;">Minimum: 0.00000001 TWC</small>
+                </div>
+                
+                <div id="sellPriceDisplay" style="display: none; background: linear-gradient(135deg, #fdf2f2, #fde8e8); padding: 15px; border-radius: 10px; margin: 15px 0; border-left: 4px solid #e74c3c;">
+                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                        <div style="text-align: left;">
+                            <div style="font-size: 0.9rem; color: #7f8c8d;">You will receive:</div>
+                            <div style="font-size: 1.5rem; font-weight: 700; color: #e74c3c;">$<span id="sellUsdAmount">0.00</span></div>
+                        </div>
+                        <div style="text-align: right;">
+                            <div style="font-size: 0.9rem; color: #7f8c8d;">Rate</div>
+                            <div style="font-size: 1rem; font-weight: 600; color: #2c3e50;">$${sellRate.toFixed(2)}/coin</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="form-group" style="margin-bottom: 15px;">
+                    <label style="display: block; margin-bottom: 5px; color: #000; font-weight: 600;">Wallet Address *</label>
+                    <input type="text" id="sellWalletAddress" style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 5px; background-color: #fff; color: #000;" placeholder="Enter your wallet address" required>
+                    <small style="color: #95a5a6; display: block; margin-top: 5px;">Where you want to receive payment</small>
+                </div>
+                
+                <input type="hidden" name="csrfmiddlewaretoken" value="{{ csrf_token }}">
+                
+                <button type="submit" style="width: 100%; padding: 12px; background: linear-gradient(135deg, #e74c3c, #c0392b); color: white; border: none; border-radius: 5px; font-weight: 600; cursor: pointer;">
+                    <i class="fas fa-paper-plane" style="margin-right: 10px;"></i> Submit Sell Request
+                </button>
+                
+                <p style="color: #7f8c8d; font-size: 0.85rem; margin-top: 10px; text-align: center;">
+                    <i class="fas fa-info-circle" style="margin-right: 5px;"></i> No payment needed. We will contact you within 24 hours.
+                </p>
+            </form>
+        `;
+    }
+    
+    formContent.innerHTML = formHtml;
+    modal.style.display = 'block';
+    document.body.style.overflow = 'hidden';
+    
+    // Add animation
+    modal.style.animation = 'modalSlideIn 0.3s ease-out';
+}
+
+// Price calculation functions
+function calculateBuyPrice(amount) {
+    const buyRate = currentBuyRate || 0.10;
+    const usdAmount = amount * buyRate;
+    const priceDisplay = document.getElementById('buyPriceDisplay');
+    const usdAmountSpan = document.getElementById('buyUsdAmount');
+    
+    if (amount && parseFloat(amount) > 0) {
+        priceDisplay.style.display = 'block';
+        usdAmountSpan.textContent = usdAmount.toFixed(2);
+    } else {
+        priceDisplay.style.display = 'none';
+        usdAmountSpan.textContent = '0.00';
+    }
+}
+
+function calculateSellPrice(amount) {
+    const sellRate = currentSellRate || 0.09;
+    const usdAmount = amount * sellRate;
+    const priceDisplay = document.getElementById('sellPriceDisplay');
+    const usdAmountSpan = document.getElementById('sellUsdAmount');
+    
+    if (amount && parseFloat(amount) > 0) {
+        priceDisplay.style.display = 'block';
+        usdAmountSpan.textContent = usdAmount.toFixed(2);
+    } else {
+        priceDisplay.style.display = 'none';
+        usdAmountSpan.textContent = '0.00';
+    }
+}
+
+// Function to close modal
+function closeTradewiseModal() {
+    const modal = document.getElementById('tradewiseModal');
+    modal.style.display = 'none';
+    document.body.style.overflow = 'auto';
+}
+
+// BUY FORM SUBMISSION WITH PAYSTACK - FIXED
+// BUY FORM SUBMISSION WITH PAYSTACK - SIMPLIFIED VERSION
+function submitBuyForm() {
+    const exchangePlatform = document.getElementById('exchangePlatform');
+    const fullName = document.getElementById('buyFullName').value.trim();
+    const email = document.getElementById('buyEmail').value.trim();
+    const phone = document.getElementById('buyPhone').value.trim();
+    const coinAmountInput = document.getElementById('buyCoinAmount');
+    let coinAmount = coinAmountInput.value.trim();
+    
+    console.log("🟢 Submitting buy form:", { 
+        fullName, 
+        email, 
+        phone, 
+        coinAmount: coinAmount,
+        exchangePlatform: exchangePlatform?.value 
+    });
+    
+    // Validate form
+    if (!fullName || !email || !phone || !coinAmount || !exchangePlatform?.value) {
+        showErrorNotification('Please fill in all required fields.');
+        return;
+    }
+    
+    // Validate email
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+        showErrorNotification('Please enter a valid email address.');
+        return;
+    }
+    
+    // SIMPLIFIED: Clean the coin amount
+    // Replace comma with dot if present
+    coinAmount = coinAmount.replace(',', '.');
+    
+    // Remove any extra characters
+    coinAmount = coinAmount.replace(/[^\d.]/g, '');
+    
+    // Remove multiple dots
+    const dotCount = (coinAmount.match(/\./g) || []).length;
+    if (dotCount > 1) {
+        showErrorNotification('Please enter a valid number with only one decimal point.');
+        coinAmountInput.focus();
+        return;
+    }
+    
+    // Parse to float for validation
+    const coinAmountNum = parseFloat(coinAmount);
+    if (isNaN(coinAmountNum) || coinAmountNum <= 0) {
+        showErrorNotification('Please enter a valid coin amount greater than 0.');
+        coinAmountInput.focus();
+        return;
+    }
+    
+    // Format to reasonable decimal places (max 8)
+    let formattedCoinAmount;
+    if (coinAmount.includes('.')) {
+        const parts = coinAmount.split('.');
+        const integerPart = parts[0];
+        let decimalPart = parts[1];
+        
+        // Limit to 8 decimal places
+        if (decimalPart.length > 8) {
+            decimalPart = decimalPart.substring(0, 8);
+        }
+        
+        formattedCoinAmount = `${integerPart}.${decimalPart}`;
+    } else {
+        formattedCoinAmount = coinAmountNum.toString();
+    }
+    
+    console.log("✅ Formatted coin amount:", formattedCoinAmount);
+    
+    // Show loading
+    const submitBtn = document.querySelector('#buyForm button[type="submit"]');
+    const originalText = submitBtn.innerHTML;
+    submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Processing...';
+    submitBtn.disabled = true;
+    
+    // Create form data with correct field names
+    const formData = new FormData();
+    formData.append('customer_name', fullName);
+    formData.append('customer_email', email);
+    formData.append('customer_phone', phone);
+    formData.append('exchange_platform', exchangePlatform.value);
+    formData.append('coin_amount', formattedCoinAmount);
+    
+    // Get CSRF token
+    const csrfToken = getCSRFToken();
+    if (csrfToken) {
+        formData.append('csrfmiddlewaretoken', csrfToken);
+    }
+    
+    console.log("📤 Sending form data:", Object.fromEntries(formData));
+    
+    // Send to server
+    fetch('/initialize-coin-buy/', {
+        method: 'POST',
+        body: formData,
+        headers: {
+            'X-Requested-With': 'XMLHttpRequest'
+        }
+    })
+    .then(response => {
+        console.log("📥 Response status:", response.status);
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        return response.json();
+    })
+    .then(data => {
+        console.log("✅ Buy response:", data);
+        
+        if (data.success && data.redirect_url) {
+            // Show success message
+            showSuccessNotification('Redirecting to Paystack for payment...');
+            
+            // Redirect to Paystack after 1 second
+            setTimeout(() => {
+                window.location.href = data.redirect_url;
+            }, 1000);
+        } else {
+            submitBtn.innerHTML = originalText;
+            submitBtn.disabled = false;
+            showErrorNotification(data.error || 'Transaction failed. Please try again.');
+        }
+    })
+    .catch(error => {
+        console.error('❌ Error:', error);
+        submitBtn.innerHTML = originalText;
+        submitBtn.disabled = false;
+        showErrorNotification('Network error. Please try again.');
+    });
+}
+
+// SELL FORM SUBMISSION (NO PAYMENT NEEDED) - FIXED
+function submitSellForm() {
+    const fullName = document.getElementById('sellFullName').value;
+    const email = document.getElementById('sellEmail').value;
+    const phone = document.getElementById('sellPhone').value;
+    const coinAmount = document.getElementById('sellCoinAmount').value;
+    const walletAddress = document.getElementById('sellWalletAddress').value;
+    
+    console.log("Submitting sell form:", { fullName, email, phone, coinAmount, walletAddress });
+    
+    // Validate form
+    if (!fullName || !email || !phone || !coinAmount || !walletAddress) {
+        showErrorNotification('Please fill in all required fields.');
+        return;
+    }
+    
+    // Validate coin amount
+    const coinAmountNum = parseFloat(coinAmount);
+    if (isNaN(coinAmountNum) || coinAmountNum <= 0) {
+        showErrorNotification('Please enter a valid coin amount greater than 0.');
+        return;
+    }
+    
+    // Show loading
+    const submitBtn = document.querySelector('#sellForm button[type="submit"]');
+    const originalText = submitBtn.innerHTML;
+    submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Processing...';
+    submitBtn.disabled = true;
+    
+    // Create form data with correct field names
+    const formData = new FormData();
+    formData.append('customer_name', fullName);
+    formData.append('customer_email', email);
+    formData.append('customer_phone', phone);
+    formData.append('wallet_address', walletAddress);
+    formData.append('coin_amount', coinAmountNum.toFixed(8));
+    
+    // Get CSRF token
+    const csrfToken = getCSRFToken();
+    if (csrfToken) {
+        formData.append('csrfmiddlewaretoken', csrfToken);
+    }
+    
+    // Send to server
+    fetch('/submit-coin-sell-request/', {
+        method: 'POST',
+        body: formData,
+        headers: {
+            'X-Requested-With': 'XMLHttpRequest'
+        }
+    })
+    .then(response => {
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        return response.json();
+    })
+    .then(data => {
+        console.log("Sell response:", data);
+        submitBtn.innerHTML = originalText;
+        submitBtn.disabled = false;
+        
+        if (data.success) {
+            showSuccessNotification(data.message || 'Sell request submitted successfully! We will contact you within 24 hours.');
+            
+            // Clear form and close modal after 2 seconds
+            setTimeout(() => {
+                closeTradewiseModal();
+                document.getElementById('sellForm').reset();
+                document.getElementById('sellPriceDisplay').style.display = 'none';
+            }, 2000);
+        } else {
+            showErrorNotification(data.error || 'Transaction failed. Please try again.');
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        submitBtn.innerHTML = originalText;
+        submitBtn.disabled = false;
+        showErrorNotification('Network error. Please try again.');
+    });
+}
+
+// Success notification function
+function showSuccessNotification(message) {
+    const successTemplate = document.getElementById('successPopupTemplate');
+    if (!successTemplate) return;
+    
+    const successPopup = successTemplate.cloneNode(true);
+    successPopup.id = 'liveSuccessPopup';
+    successPopup.style.display = 'block';
+    
+    // Set message
+    const messageElement = successPopup.querySelector('#successMessage');
+    if (messageElement) {
+        messageElement.textContent = message;
+    }
+    
+    // Add to page
+    document.body.appendChild(successPopup);
+    
+    // Remove after animation
+    setTimeout(() => {
+        if (successPopup.parentNode) {
+            successPopup.parentNode.removeChild(successPopup);
+        }
+    }, 3000);
+}
+
+// Error notification function
+function showErrorNotification(message) {
+    const errorPopup = document.createElement('div');
+    errorPopup.className = 'error-popup';
+    errorPopup.innerHTML = `
+        <div style="display: flex; align-items: center; gap: 15px;">
+            <div style="background: #e74c3c; width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center;">
+                <i class="fas fa-exclamation-circle" style="color: white; font-size: 1.2rem;"></i>
+            </div>
+            <div>
+                <h4 style="color: #e74c3c; margin: 0;">Error!</h4>
+                <p style="margin: 5px 0 0 0;">${message}</p>
+            </div>
+        </div>
+        <div style="width: 100%; height: 4px; background: rgba(231, 76, 60, 0.3); border-radius: 2px; margin-top: 10px; overflow: hidden;">
+            <div style="width: 100%; height: 100%; background: #e74c3c; animation: progressBar 3s linear forwards;"></div>
+        </div>
+    `;
+    
+    errorPopup.style.cssText = `
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        background: white;
+        color: #333;
+        padding: 20px;
+        border-radius: 15px;
+        z-index: 10001;
+        max-width: 400px;
+        box-shadow: 0 15px 35px rgba(231, 76, 60, 0.3);
+        animation: slideInRight 0.3s ease-out;
+        border-left: 4px solid #e74c3c;
+    `;
+    
+    document.body.appendChild(errorPopup);
+    
+    setTimeout(() => {
+        if (errorPopup.parentNode) {
+            errorPopup.parentNode.removeChild(errorPopup);
+        }
+    }, 5000);
+}
+
+// Close modal when clicking outside
+document.addEventListener('DOMContentLoaded', function() {
+    const modal = document.getElementById('tradewiseModal');
+    
+    if (modal) {
+        modal.addEventListener('click', function(event) {
+            if (event.target === modal) {
+                closeTradewiseModal();
+            }
+        });
+    }
+    
+    // Close with Escape key
+    document.addEventListener('keydown', function(event) {
+        if (event.key === 'Escape') {
+            closeTradewiseModal();
+        }
+    });
+    
+    console.log('TradeWise coin functions loaded successfully');
+    console.log('Buy rate:', currentBuyRate || 0.10, 'Sell rate:', currentSellRate || 0.09);
+});
+
+// Debug helper
+window.debugCoinSystem = function() {
+    console.log('=== COIN SYSTEM DEBUG ===');
+    console.log('Buy Rate:', currentBuyRate || 0.10);
+    console.log('Sell Rate:', currentSellRate || 0.09);
+    console.log('CSRF Token:', '{{ csrf_token }}' ? 'Present' : 'Missing');
+    console.log('Modal Element:', document.getElementById('tradewiseModal') ? 'Found' : 'Missing');
+    console.log('========================');
+};
+  </script>
 
 <!-- Policies & Information Section -->
 <section class="policies-section py-5" style="background-color: #f8fafc;">

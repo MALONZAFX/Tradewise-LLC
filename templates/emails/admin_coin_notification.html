@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <style>
+        /* TradeWise Admin Theme */
+        :root {
+            --primary: #3498db;
+            --secondary: #2c3e50;
+            --accent: #e74c3c;
+            --warning: #f39c12;
+            --success: #27ae60;
+            --light-bg: #f8f9fa;
+            --dark-bg: #1a2530;
+            --text-dark: #2c3e50;
+            --text-light: #ffffff;
+        }
+        
+        body { 
+            font-family: 'Arial', sans-serif; 
+            line-height: 1.6;
+            margin: 0;
+            padding: 0;
+            background-color: #f8fafc;
+            color: #2c3e50;
+        }
+        
+        .container { 
+            max-width: 600px; 
+            margin: 30px auto; 
+            background: white;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            border: 2px solid #e9ecef;
+        }
+        
+        .header { 
+            background: linear-gradient(135deg, #e74c3c, #c0392b);
+            color: white; 
+            padding: 25px 20px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .header:before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.2) 0%, rgba(255,255,255,0) 70%);
+        }
+        
+        .header h2 {
+            margin: 0;
+            font-size: 24px;
+            font-weight: 700;
+            position: relative;
+            z-index: 2;
+            letter-spacing: 0.5px;
+        }
+        
+        .header h2:before {
+            content: '🚨';
+            margin-right: 10px;
+            font-size: 20px;
+            vertical-align: middle;
+        }
+        
+        .content { 
+            padding: 30px; 
+            background: white;
+        }
+        
+        .action-alert {
+            background: linear-gradient(135deg, #fef9e7, #fcf3cf);
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 25px;
+            border-left: 4px solid #f39c12;
+            box-shadow: 0 5px 15px rgba(243, 156, 18, 0.1);
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .alert-icon {
+            background: #f39c12;
+            color: white;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            flex-shrink: 0;
+        }
+        
+        .alert-content {
+            flex: 1;
+        }
+        
+        .alert-content strong {
+            color: #d35400;
+            font-size: 16px;
+        }
+        
+        .alert-content p {
+            margin: 5px 0 0 0;
+            color: #7d6608;
+            font-size: 14px;
+        }
+        
+        .section {
+            background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 20px;
+            border-left: 4px solid #3498db;
+        }
+        
+        .section h3 {
+            color: #2c3e50;
+            margin-top: 0;
+            margin-bottom: 15px;
+            font-size: 18px;
+            position: relative;
+            padding-bottom: 10px;
+        }
+        
+        .section h3:after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 30px;
+            height: 3px;
+            background: #3498db;
+            border-radius: 2px;
+        }
+        
+        .details-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 15px;
+        }
+        
+        .detail-item {
+            background: white;
+            padding: 12px 15px;
+            border-radius: 8px;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.05);
+            border: 1px solid #e9ecef;
+        }
+        
+        .detail-label {
+            font-weight: 600;
+            color: #2c3e50;
+            font-size: 13px;
+            display: block;
+            margin-bottom: 5px;
+        }
+        
+        .detail-value {
+            font-weight: 700;
+            font-size: 14px;
+        }
+        
+        .value-buy {
+            color: #27ae60;
+        }
+        
+        .value-sell {
+            color: #e74c3c;
+        }
+        
+        .status-badge {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+        
+        .status-pending {
+            background: rgba(243, 156, 18, 0.1);
+            color: #d35400;
+            border: 1px solid rgba(243, 156, 18, 0.3);
+        }
+        
+        .status-completed {
+            background: rgba(46, 204, 113, 0.1);
+            color: #27ae60;
+            border: 1px solid rgba(46, 204, 113, 0.3);
+        }
+        
+        .admin-action {
+            text-align: center;
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 2px solid #e9ecef;
+        }
+        
+        .admin-btn {
+            display: inline-block;
+            background: linear-gradient(135deg, #3498db, #2980b9);
+            color: white;
+            padding: 12px 30px;
+            text-decoration: none;
+            border-radius: 25px;
+            font-weight: 600;
+            font-size: 15px;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(52, 152, 219, 0.3);
+        }
+        
+        .admin-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(52, 152, 219, 0.4);
+        }
+        
+        .admin-btn:before {
+            content: '👨‍💼';
+            margin-right: 8px;
+            font-size: 16px;
+        }
+        
+        .transaction-meta {
+            background: rgba(52, 152, 219, 0.05);
+            border-radius: 10px;
+            padding: 15px;
+            margin-top: 20px;
+            font-size: 13px;
+            color: #7f8c8d;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        
+        .meta-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .meta-item i {
+            color: #3498db;
+        }
+        
+        /* Responsive Design */
+        @media (max-width: 600px) {
+            .content { padding: 20px; }
+            .header { padding: 20px 15px; }
+            .header h2 { font-size: 20px; }
+            .details-grid { grid-template-columns: 1fr; }
+            .admin-btn { width: 100%; text-align: center; }
+            .transaction-meta { flex-direction: column; align-items: flex-start; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h2>New Coin Transaction Request</h2>
+        </div>
+        
+        <div class="content">
+            <div class="action-alert">
+                <div class="alert-icon">!</div>
+                <div class="alert-content">
+                    <strong>Admin Action Required</strong>
+                    <p>New coin transaction needs immediate processing</p>
+                </div>
+            </div>
+            
+            <div class="section">
+                <h3>Customer Details</h3>
+                <div class="details-grid">
+                    <div class="detail-item">
+                        <span class="detail-label">Full Name</span>
+                        <span class="detail-value">{{ transaction.customer_name }}</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">Email Address</span>
+                        <span class="detail-value">{{ transaction.customer_email }}</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">Phone Number</span>
+                        <span class="detail-value">{{ transaction.customer_phone }}</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="section">
+                <h3>Transaction Details</h3>
+                <div class="details-grid">
+                    <div class="detail-item">
+                        <span class="detail-label">Transaction Type</span>
+                        <span class="detail-value {% if transaction.transaction_type == 'buy' %}value-buy{% else %}value-sell{% endif %}">
+                            {{ transaction.transaction_type|upper }}
+                        </span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">Coin Amount</span>
+                        <span class="detail-value">{{ transaction.coin_amount }} TWC</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">Exchange Rate</span>
+                        <span class="detail-value">${{ transaction.rate }}/TWC</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">Total Amount</span>
+                        <span class="detail-value">${{ transaction.usd_amount }}</span>
+                    </div>
+                    {% if transaction.transaction_type == 'buy' %}
+                    <div class="detail-item">
+                        <span class="detail-label">Platform</span>
+                        <span class="detail-value">{{ transaction.exchange_platform }}</span>
+                    </div>
+                    {% else %}
+                    <div class="detail-item">
+                        <span class="detail-label">Wallet Address</span>
+                        <span class="detail-value" style="word-break: break-all;">{{ transaction.wallet_address }}</span>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+            
+            <div class="transaction-meta">
+                <div class="meta-item">
+                    <i class="fas fa-info-circle"></i>
+                    <span>Status: <span class="status-badge status-pending">{{ transaction.status|title }}</span></span>
+                </div>
+                <div class="meta-item">
+                    <i class="fas fa-calendar-alt"></i>
+                    <span>Date: {{ transaction.created_at|date:"F d, Y H:i" }}</span>
+                </div>
+            </div>
+            
+            <div class="admin-action">
+                <a href="https://www.tradewise-hub.com/admin-dashboard/" class="admin-btn">
+                    Go to Admin Dashboard
+                </a>
+                <p style="margin-top: 10px; font-size: 13px; color: #7f8c8d;">
+                    Click above to process this transaction
+                </p>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

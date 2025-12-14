@@ -24,14 +24,17 @@ import secrets  # ADD THIS IMPORT
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.core.files.storage import FileSystemStorage
 
+from decimal import Decimal
+
 # Import ALL models and services - ORGANIZED
 from .models import (
     Tradeviewusers, UserProfile, PricingPlan, 
     TradingStrategy, TradingSignal, SoftwareTool, PaymentService,
-    BlogPost, TradeWiseCard, Merchandise, TradeWiseCoin, Review,
+    BlogPost, TradeWiseCard, Merchandise, TradeWiseCoin, CoinTransaction, CoinTransactionLog, Affiliate, 
+    PayoutRequest, Notification, TradeWiseCoin, Review,
     ServiceRequest, Affiliate, Referral, WeeklyNumber, PayoutRequest,
     Notification, AdminLog, Service, AffiliateProgram,ServicePayment, ServiceTransaction, Payment, Transaction,
-    PaystackService  
+    PaystackService, ReferralCoinSetting  
 )
 
 # ================== SIMPLE AUTHENTICATION SYSTEM ==================
@@ -674,10 +677,17 @@ def add_manual_payment(request, payment_id):
     except Exception as e:
         return JsonResponse({'success': False, 'error': str(e)})
 # ================== UPDATED ADMIN DASHBOARD ==================
-
 @admin_required
 def admin_dashboard(request):
     """Admin dashboard with SIMPLE data"""
+    
+    # 🎯 CRITICAL FIX: CHECK FOR POST FIRST BEFORE ANYTHING ELSE
+    if request.method == 'POST':
+        print("🎯 POST REQUEST DETECTED - Calling handle_admin_form_submission()")
+        print(f"📋 POST DATA: {dict(request.POST)}")
+        return handle_admin_form_submission(request)
+    
+    # ================== ORIGINAL GET LOGIC BELOW ==================
     try:
         # Get basic counts for dashboard
         total_users = Tradeviewusers.objects.count()
@@ -725,7 +735,11 @@ def admin_dashboard(request):
         # ================== NEW REFERRAL MANAGEMENT DATA ==================
         pending_referrals_list = Referral.objects.filter(status='pending').select_related('affiliate__user', 'referred_user').order_by('-created_at')
         approved_referrals_count = Referral.objects.filter(status='approved').count()
-        total_pending_coins = pending_referrals_list.count() * 50
+        
+        # SIMPLE COIN AMOUNT - Get from session or default to 50
+        coins_per_referral = request.session.get('coins_per_referral', 50)
+        
+        total_pending_coins = pending_referrals_list.count() * coins_per_referral
         
         # Affiliate debug data
         affiliate_debug = {
@@ -734,6 +748,30 @@ def admin_dashboard(request):
             'total_coins_awarded': Referral.objects.filter(status='approved').aggregate(Sum('coins_awarded'))['coins_awarded__sum'] or 0,
             'total_coin_balance': Affiliate.objects.aggregate(Sum('coin_balance'))['coin_balance__sum'] or 0,
         }
+
+        # ================== NEW COIN TRANSACTION DATA ==================
+        # Get pending coin transactions (buy/sell requests)
+        pending_coin_transactions = CoinTransaction.objects.filter(
+            status__in=['pending', 'processing']
+        ).order_by('-created_at')[:10]  # Last 10 pending transactions
+        
+        # Get recent completed coin transactions
+        recent_coin_transactions = CoinTransaction.objects.filter(
+            status='completed'
+        ).order_by('-created_at')[:10]  # Last 10 completed transactions
+        
+        # Get TradeWise Coin settings
+        tradewise_coin = TradeWiseCoin.objects.first()
+        if not tradewise_coin:
+            # Create default if doesn't exist
+            tradewise_coin = TradeWiseCoin.objects.create(
+                title="TradeWise Coin",
+                buy_price_usd=0.10,
+                sell_price_usd=0.09,
+                description="The future of decentralized trading is here.",
+                price="$0.10 per TWC (Limited Supply)",
+                bonus_text="Early investors get +15% bonus tokens in the first round."
+            )
 
         # Get all data for the dashboard
         context = {
@@ -753,7 +791,7 @@ def admin_dashboard(request):
             'tradewise_card': TradeWiseCard.objects.first(),
             'featured_merchandise': Merchandise.objects.all(),
             'merchandise_list': Merchandise.objects.all(),
-            'tradewise_coin': TradeWiseCoin.objects.first(),
+            'tradewise_coin': tradewise_coin,  # Using the fetched/created instance
             'reviews': Review.objects.all(),
             'all_requests': ServiceRequest.objects.all().order_by('-created_at'),  # KEEP ORIGINAL NAME
             'users': Tradeviewusers.objects.all().order_by('-created_at'),
@@ -777,6 +815,11 @@ def admin_dashboard(request):
             'approved_referrals_count': approved_referrals_count,
             'total_pending_coins': total_pending_coins,
             'affiliate_debug': affiliate_debug,
+            'coins_per_referral': coins_per_referral,  # ADD THIS ONE LINE!
+            
+            # ================== NEW COIN TRANSACTION DATA ==================
+            'pending_coin_transactions': pending_coin_transactions,
+            'recent_coin_transactions': recent_coin_transactions,
             
             # Current admin info
             'current_admin': {
@@ -803,12 +846,18 @@ def admin_dashboard(request):
         print(f"   - Service Requests: {service_requests.count()} requests worth KES {service_revenue}")
         print(f"   - Pending Referrals: {pending_referrals_list.count()}")
         print(f"   - Approved Referrals: {approved_referrals_count}")
+        print(f"   - Coins per Referral: {coins_per_referral}")
         print(f"   - Total Pending Coins: {total_pending_coins}")
         print(f"   - Affiliate Debug: {affiliate_debug}")
+        print(f"   - Pending Coin Transactions: {pending_coin_transactions.count()}")
+        print(f"   - Recent Coin Transactions: {recent_coin_transactions.count()}")
+        print(f"   - Coin Prices: Buy=${tradewise_coin.buy_price_usd}, Sell=${tradewise_coin.sell_price_usd}")
         
     except Exception as e:
         # If there are any database issues, provide empty context
         print(f"❌ Dashboard error: {e}")
+        import traceback
+        traceback.print_exc()
         context = {
             'total_users': 0,
             'new_users_today': 0,
@@ -826,52 +875,1139 @@ def admin_dashboard(request):
                 'total_coins_awarded': 0,
                 'total_coin_balance': 0,
             },
+            'coins_per_referral': 50,  # ADD THIS ONE LINE!
+            # Empty coin transaction data
+            'pending_coin_transactions': [],
+            'recent_coin_transactions': [],
+            'tradewise_coin': None,
         }
     
-    # Handle form submissions
+    return render(request, 'admin_dashboard.html', context)
+
+
+@admin_required
+def process_admin_form(request):
+    """Dedicated endpoint for ALL admin form submissions"""
+    print("🎯 PROCESS_ADMIN_FORM CALLED!")
+    print(f"📋 METHOD: {request.method}")
+    print(f"📋 POST DATA: {dict(request.POST)}")
+    
     if request.method == 'POST':
+        action = request.POST.get('action')
+        print(f"🎯 ACTION: '{action}'")
+        
+        # Now call your handler
         return handle_admin_form_submission(request)
     
-    return render(request, 'admin_dashboard.html', context)
+    # If GET request, redirect to dashboard
+    return redirect('admin_dashboard')
+
+
 
 def handle_admin_form_submission(request):
     """Handle all admin form submissions with traditional forms"""
     action = request.POST.get('action')
     
-    try:
-        if action == 'delete_strategy':
-            return delete_strategy(request)
-        elif action == 'delete_signal':
-            return delete_signal(request)
-        elif action == 'delete_software':
-            return delete_software(request)
-        elif action == 'delete_blog':
-            return delete_blog_post(request)
-        elif action == 'delete_merchandise':
-            return delete_merchandise(request)
-        elif action == 'delete_review':
-            return delete_review(request)
-        elif action == 'update_request_status':
-            return update_request_status_traditional(request)
-        elif action == 'review_action':
-            return review_action_traditional(request)
-        elif action == 'process_payout':
-            return process_payout_traditional(request)
-        elif action == 'send_onboarding_email':
-            return send_onboarding_email_traditional(request)
-        elif action == 'add_manual_payment':
-            return add_manual_payment_traditional(request)
-        elif action == 'approve_referral':
-            return approve_referral_traditional(request)
-        elif action == 'approve_all_referrals':
-            return approve_all_referrals_traditional(request)
-        elif action == 'track_download':
-            return track_download_traditional(request)
-        else:
-            messages.error(request, 'Invalid action.')
+    print(f"🔍 ADMIN ACTION RECEIVED: '{action}'")
+    print(f"📋 FULL POST DATA: {dict(request.POST)}")
+    
+    # TEST ACTION - ALWAYS WORKING
+    if action == 'test_action':
+        messages.success(request, '✅ TEST SUCCESSFUL! Handler is working!')
+        return redirect('admin_dashboard')
+    
+    # ================== SIMPLE REFERRAL COINS UPDATE ==================
+    if action == 'update_referral_coins':
+        print("🔄 Processing: update_referral_coins")
+        try:
+            # Get the new coin amount
+            new_coin_amount = int(request.POST.get('coins_per_referral', 50))
             
+            # Validate
+            if new_coin_amount < 1:
+                messages.error(request, 'Coin amount must be at least 1.')
+                return redirect('admin_dashboard')
+            
+            if new_coin_amount > 10000:  # Reasonable limit
+                messages.error(request, 'Coin amount is too high. Maximum is 10,000.')
+                return redirect('admin_dashboard')
+            
+            # Store in session
+            request.session['coins_per_referral'] = new_coin_amount
+            
+            messages.success(request, f'✅ Referral coins updated to {new_coin_amount}!')
+            print(f"✅ Referral coins updated to: {new_coin_amount}")
+            
+        except ValueError:
+            messages.error(request, 'Invalid coin amount. Please enter a number.')
+        except Exception as e:
+            messages.error(request, f'Error updating referral coins: {str(e)}')
+            print(f"❌ Referral coins update error: {str(e)}")
+        
+        return redirect('admin_dashboard')
+    
+    elif action == 'approve_coin_buy':
+        print("🔄 Processing: approve_coin_buy")
+        transaction_id = request.POST.get('transaction_id')
+        
+        if not transaction_id:
+            messages.error(request, 'Transaction ID is required.')
+            return redirect('admin_dashboard')
+        
+        try:
+            transaction = CoinTransaction.objects.get(id=transaction_id)
+            
+            if transaction.transaction_type != 'buy':
+                messages.error(request, 'Only buy transactions can be approved.')
+                return redirect('admin_dashboard')
+            
+            if transaction.status != 'pending':
+                messages.error(request, f'Transaction is already {transaction.status}.')
+                return redirect('admin_dashboard')
+            
+            # Update transaction status
+            transaction.status = 'completed'
+            transaction.save()
+            
+            print(f"✅ BUY TRANSACTION APPROVED: {transaction.id}")
+            
+            messages.success(request, f'✅ Successfully approved buy request for {transaction.coin_amount} TWC coins!')
+            
+        except CoinTransaction.DoesNotExist:
+            messages.error(request, 'Transaction not found.')
+        except Exception as e:
+            messages.error(request, f'Error approving buy: {str(e)}')
+        
+        return redirect('admin_dashboard')
+    
+    elif action == 'process_coin_sell':
+        print("🔄 Processing: process_coin_sell")
+        transaction_id = request.POST.get('transaction_id')
+        
+        if not transaction_id:
+            messages.error(request, 'Transaction ID is required.')
+            return redirect('admin_dashboard')
+        
+        try:
+            transaction = CoinTransaction.objects.get(id=transaction_id)
+            
+            if transaction.transaction_type != 'sell':
+                messages.error(request, 'Only sell transactions can be processed.')
+                return redirect('admin_dashboard')
+            
+            if transaction.status != 'pending':
+                messages.error(request, f'Transaction is already {transaction.status}.')
+                return redirect('admin_dashboard')
+            
+            # Update transaction status to processing
+            transaction.status = 'processing'
+            transaction.save()
+            
+            print(f"🔄 SELL TRANSACTION PROCESSING: {transaction.id}")
+            messages.success(request, f'✅ Sell request for {transaction.coin_amount} TWC is now being processed!')
+            
+        except CoinTransaction.DoesNotExist:
+            messages.error(request, 'Transaction not found.')
+        except Exception as e:
+            messages.error(request, f'Error processing sell: {str(e)}')
+        
+        return redirect('admin_dashboard')
+    
+    elif action == 'cancel_coin_transaction':
+        print("🔄 Processing: cancel_coin_transaction")
+        transaction_id = request.POST.get('transaction_id')
+        
+        if not transaction_id:
+            messages.error(request, 'Transaction ID is required.')
+            return redirect('admin_dashboard')
+        
+        try:
+            transaction = CoinTransaction.objects.get(id=transaction_id)
+            
+            if transaction.status not in ['pending', 'processing']:
+                messages.error(request, f'Cannot cancel a {transaction.status} transaction.')
+                return redirect('admin_dashboard')
+            
+            # Update transaction status
+            transaction.status = 'cancelled'
+            transaction.save()
+            
+            print(f"❌ TRANSACTION CANCELLED: {transaction.id}")
+            messages.success(request, f'✅ Transaction #{transaction.id} has been cancelled.')
+            
+        except CoinTransaction.DoesNotExist:
+            messages.error(request, 'Transaction not found.')
+        except Exception as e:
+            messages.error(request, f'Error cancelling transaction: {str(e)}')
+        
+        return redirect('admin_dashboard')
+    
+    # ================== EXISTING ADMIN ACTIONS ==================
+    elif action == 'delete_strategy':
+        print("🔄 Processing: delete_strategy")
+        return delete_strategy(request)
+    elif action == 'delete_signal':
+        print("🔄 Processing: delete_signal")
+        return delete_signal(request)
+    elif action == 'delete_software':
+        print("🔄 Processing: delete_software")
+        return delete_software(request)
+    elif action == 'delete_blog':
+        print("🔄 Processing: delete_blog")
+        return delete_blog_post(request)
+    elif action == 'delete_merchandise':
+        print("🔄 Processing: delete_merchandise")
+        return delete_merchandise(request)
+    elif action == 'delete_review':
+        print("🔄 Processing: delete_review")
+        return delete_review(request)
+    elif action == 'update_request_status':
+        print("🔄 Processing: update_request_status")
+        return update_request_status_traditional(request)
+    elif action == 'review_action':
+        print("🔄 Processing: review_action")
+        return review_action_traditional(request)
+    elif action == 'process_payout':
+        print("🔄 Processing: process_payout")
+        return process_payout_traditional(request)
+    elif action == 'send_onboarding_email':
+        print("🔄 Processing: send_onboarding_email")
+        return send_onboarding_email_traditional(request)
+    elif action == 'add_manual_payment':
+        print("🔄 Processing: add_manual_payment")
+        return add_manual_payment_traditional(request)
+    elif action == 'approve_referral':
+        print("🔄 Processing: approve_referral")
+        return approve_referral_traditional(request)
+    elif action == 'approve_all_referrals':
+        print("🔄 Processing: approve_all_referrals")
+        return approve_all_referrals_traditional(request)
+    elif action == 'track_download':
+        print("🔄 Processing: track_download")
+        return track_download_traditional(request)
+    
+    else:
+        messages.error(request, f'Invalid action: {action}')
+        print(f"❌ UNKNOWN ACTION: {action}")
+    
+    return redirect('admin_dashboard')
+
+def approve_coin_buy_traditional(request):
+    """Approve a coin buy request - TRADITIONAL FORM HANDLER"""
+    try:
+        transaction_id = request.POST.get('transaction_id')
+        print(f"🟢 APPROVE COIN BUY TRADITIONAL: Transaction ID {transaction_id}")
+        
+        if not transaction_id:
+            messages.error(request, 'Transaction ID is required.')
+            return redirect('admin_dashboard')
+        
+        transaction = CoinTransaction.objects.get(id=transaction_id)
+        
+        if transaction.transaction_type != 'buy':
+            messages.error(request, 'Only buy transactions can be approved.')
+            return redirect('admin_dashboard')
+        
+        if transaction.status != 'pending':
+            messages.error(request, f'Transaction is already {transaction.status}.')
+            return redirect('admin_dashboard')
+        
+        # Update transaction status
+        transaction.status = 'completed'
+        transaction.save()
+        
+        print(f"✅ BUY TRANSACTION APPROVED: {transaction.id} - {transaction.coin_amount} TWC")
+        
+        # Create transaction log
+        CoinTransactionLog.objects.create(
+            transaction=transaction,
+            customer_name=transaction.customer_name,
+            customer_email=transaction.customer_email,
+            transaction_type='buy',
+            coin_amount=transaction.coin_amount,
+            usd_amount=transaction.usd_amount,
+            rate=transaction.rate,
+            status='completed',
+            action='Buy Approved',
+            performed_by=request.session.get('admin_username', 'Admin'),
+            notes=f'Admin approved buy request #{transaction.id}'
+        )
+        
+        # Send completion email
+        send_coin_transaction_email(
+            transaction=transaction,
+            email_type='buy_completed'
+        )
+        
+        messages.success(request, f'✅ Successfully approved buy request for {transaction.coin_amount} TWC coins!')
+        
+    except CoinTransaction.DoesNotExist:
+        print(f"❌ COIN TRANSACTION NOT FOUND: {transaction_id}")
+        messages.error(request, 'Transaction not found.')
     except Exception as e:
-        messages.error(request, f'Error: {str(e)}')
+        print(f"❌ APPROVE COIN BUY ERROR: {str(e)}")
+        import traceback
+        traceback.print_exc()
+        messages.error(request, f'Error approving buy request: {str(e)}')
+    
+    return redirect('admin_dashboard')
+
+def process_coin_sell_traditional(request):
+    """Process a coin sell request - TRADITIONAL FORM HANDLER"""
+    try:
+        transaction_id = request.POST.get('transaction_id')
+        print(f"🟢 PROCESS COIN SELL TRADITIONAL: Transaction ID {transaction_id}")
+        
+        if not transaction_id:
+            messages.error(request, 'Transaction ID is required.')
+            return redirect('admin_dashboard')
+        
+        transaction = CoinTransaction.objects.get(id=transaction_id)
+        
+        if transaction.transaction_type != 'sell':
+            messages.error(request, 'Only sell transactions can be processed.')
+            return redirect('admin_dashboard')
+        
+        if transaction.status != 'pending':
+            messages.error(request, f'Transaction is already {transaction.status}.')
+            return redirect('admin_dashboard')
+        
+        # Update transaction status to processing
+        transaction.status = 'processing'
+        transaction.save()
+        
+        print(f"🔄 SELL TRANSACTION PROCESSING: {transaction.id} - {transaction.coin_amount} TWC")
+        
+        # Create transaction log
+        CoinTransactionLog.objects.create(
+            transaction=transaction,
+            customer_name=transaction.customer_name,
+            customer_email=transaction.customer_email,
+            transaction_type='sell',
+            coin_amount=transaction.coin_amount,
+            usd_amount=transaction.usd_amount,
+            rate=transaction.rate,
+            status='processing',
+            action='Sell Processing',
+            performed_by=request.session.get('admin_username', 'Admin'),
+            notes=f'Admin started processing sell request #{transaction.id}'
+        )
+        
+        # Send processing email
+        send_coin_transaction_email(
+            transaction=transaction,
+            email_type='sell_processing'
+        )
+        
+        messages.success(request, f'✅ Sell request for {transaction.coin_amount} TWC is now being processed!')
+        
+    except CoinTransaction.DoesNotExist:
+        print(f"❌ COIN TRANSACTION NOT FOUND: {transaction_id}")
+        messages.error(request, 'Transaction not found.')
+    except Exception as e:
+        print(f"❌ PROCESS COIN SELL ERROR: {str(e)}")
+        messages.error(request, f'Error processing sell request: {str(e)}')
+    
+    return redirect('admin_dashboard')
+
+def cancel_coin_transaction_traditional(request):
+    """Cancel a coin transaction - TRADITIONAL FORM HANDLER"""
+    try:
+        transaction_id = request.POST.get('transaction_id')
+        print(f"🟢 CANCEL COIN TRANSACTION TRADITIONAL: Transaction ID {transaction_id}")
+        
+        if not transaction_id:
+            messages.error(request, 'Transaction ID is required.')
+            return redirect('admin_dashboard')
+        
+        transaction = CoinTransaction.objects.get(id=transaction_id)
+        
+        if transaction.status not in ['pending', 'processing']:
+            messages.error(request, f'Cannot cancel a {transaction.status} transaction.')
+            return redirect('admin_dashboard')
+        
+        # Update transaction status
+        transaction.status = 'cancelled'
+        transaction.save()
+        
+        print(f"❌ TRANSACTION CANCELLED: {transaction.id}")
+        
+        # Create transaction log
+        CoinTransactionLog.objects.create(
+            transaction=transaction,
+            customer_name=transaction.customer_name,
+            customer_email=transaction.customer_email,
+            transaction_type=transaction.transaction_type,
+            coin_amount=transaction.coin_amount,
+            usd_amount=transaction.usd_amount,
+            rate=transaction.rate,
+            status='cancelled',
+            action='Transaction Cancelled',
+            performed_by=request.session.get('admin_username', 'Admin'),
+            notes=f'Admin cancelled transaction #{transaction.id}'
+        )
+        
+        # Send cancellation email
+        send_coin_transaction_email(
+            transaction=transaction,
+            email_type='transaction_cancelled'
+        )
+        
+        messages.success(request, f'✅ Transaction #{transaction.id} has been cancelled.')
+        
+    except CoinTransaction.DoesNotExist:
+        print(f"❌ COIN TRANSACTION NOT FOUND: {transaction_id}")
+        messages.error(request, 'Transaction not found.')
+    except Exception as e:
+        print(f"❌ CANCEL COIN TRANSACTION ERROR: {str(e)}")
+        messages.error(request, f'Error cancelling transaction: {str(e)}')
+    
+    return redirect('admin_dashboard')
+def test_admin_coin_actions(request):
+    """Test page to verify coin actions are working"""
+    if request.method == 'POST':
+        action = request.POST.get('action')
+        print(f"🧪 TEST ACTION: {action}")
+        print(f"📋 TEST POST DATA: {dict(request.POST)}")
+        
+        if action == 'approve_coin_buy':
+            return HttpResponse(f"✅ approve_coin_buy action is working! Transaction ID: {request.POST.get('transaction_id')}")
+        elif action == 'process_coin_sell':
+            return HttpResponse(f"✅ process_coin_sell action is working! Transaction ID: {request.POST.get('transaction_id')}")
+        elif action == 'cancel_coin_transaction':
+            return HttpResponse(f"✅ cancel_coin_transaction action is working! Transaction ID: {request.POST.get('transaction_id')}")
+    
+    return HttpResponse(f"""
+    <h1>Test Admin Coin Actions</h1>
+    <p>This form simulates what your admin template sends:</p>
+    
+    <form method="POST">
+        <input type="hidden" name="action" value="approve_coin_buy">
+        <input type="hidden" name="transaction_id" value="1">
+        <button type="submit">Test Approve Coin Buy</button>
+    </form>
+    
+    <form method="POST">
+        <input type="hidden" name="action" value="process_coin_sell">
+        <input type="hidden" name="transaction_id" value="2">
+        <button type="submit">Test Process Coin Sell</button>
+    </form>
+    
+    <form method="POST">
+        <input type="hidden" name="action" value="cancel_coin_transaction">
+        <input type="hidden" name="transaction_id" value="3">
+        <button type="submit">Test Cancel Transaction</button>
+    </form>
+    
+    <hr>
+    <p>Check your console for debug output.</p>
+    """)
+
+
+
+@admin_required
+def debug_admin_actions(request):
+    """Debug endpoint to test admin actions"""
+    if request.method == 'POST':
+        action = request.POST.get('action')
+        print(f"🔍 DEBUG ADMIN ACTION: {action}")
+        print(f"📋 ALL POST DATA: {dict(request.POST)}")
+        
+        # Test specific coin actions
+        test_actions = [
+            'update_coin',
+            'approve_coin_buy', 
+            'process_coin_sell',
+            'cancel_coin_transaction'
+        ]
+        
+        if action in test_actions:
+            print(f"✅ Action '{action}' is recognized")
+            return JsonResponse({
+                'status': 'success',
+                'message': f'Action {action} is recognized'
+            })
+        else:
+            print(f"❌ Action '{action}' NOT recognized")
+            return JsonResponse({
+                'status': 'error',
+                'message': f'Action {action} not recognized'
+            })
+    
+    # Show test forms
+    return HttpResponse(f"""
+    <h1>Admin Actions Debug</h1>
+    <form method="POST">
+        <input type="hidden" name="action" value="update_coin">
+        <button type="submit">Test Update Coin</button>
+    </form>
+    <form method="POST">
+        <input type="hidden" name="action" value="approve_coin_buy">
+        <input type="hidden" name="transaction_id" value="1">
+        <button type="submit">Test Approve Buy</button>
+    </form>
+    """)
+
+def update_tradewise_coin(request):
+    """Update TradeWise coin settings"""
+    try:
+        coin, created = TradeWiseCoin.objects.get_or_create(pk=1)
+        
+        # Update basic fields
+        coin.title = request.POST.get('title', 'TradeWise Coin')
+        coin.subtitle = request.POST.get('subtitle', '')
+        coin.description = request.POST.get('description', '')
+        coin.bonus_text = request.POST.get('bonus_text', 'Early investors get +15% bonus tokens in the first round.')
+        
+        # Update prices
+        buy_price = request.POST.get('buy_price_usd', '0.10')
+        sell_price = request.POST.get('sell_price_usd', '0.09')
+        
+        coin.buy_price_usd = Decimal(buy_price)
+        coin.sell_price_usd = Decimal(sell_price)
+        
+        coin.is_active = request.POST.get('is_active') == 'on'
+        
+        # Handle image upload
+        if 'image' in request.FILES:
+            coin.image = request.FILES['image']
+        
+        coin.save()
+        
+        # Log action
+        create_admin_log(
+            request,
+            f'Updated TradeWise Coin settings',
+            f"Buy: ${coin.buy_price_usd}, Sell: ${coin.sell_price_usd}"
+        )
+        
+        messages.success(request, '✅ TradeWise Coin settings updated successfully!')
+        
+    except Exception as e:
+        messages.error(request, f'Error updating coin settings: {str(e)}')
+    
+    return redirect('admin_dashboard')
+
+
+
+def debug_coin_actions(request):
+    """Debug coin action submissions"""
+    if request.method == 'POST':
+        print("🔍 COIN ACTION DEBUG:")
+        print(f"Action: {request.POST.get('action')}")
+        print(f"Transaction ID: {request.POST.get('transaction_id')}")
+        print(f"All POST data: {dict(request.POST)}")
+        
+        # Test if action exists in handler
+        actions = [
+            'update_coin',
+            'approve_coin_buy', 
+            'process_coin_sell',
+            'cancel_coin_transaction'
+        ]
+        
+        action = request.POST.get('action')
+        if action in actions:
+            print(f"✅ Action '{action}' is in handler")
+        else:
+            print(f"❌ Action '{action}' NOT in handler")
+        
+        return HttpResponse(f"""
+        <h1>Coin Action Debug</h1>
+        <p>Action: {action}</p>
+        <p>Transaction ID: {request.POST.get('transaction_id')}</p>
+        <p>Status: {'✅ Found in handler' if action in actions else '❌ NOT in handler'}</p>
+        <a href="/admin-dashboard/">Back</a>
+        """)
+    
+    # GET request - show test forms
+    return HttpResponse(f"""
+    <h1>Test Coin Actions</h1>
+    <form method="POST">
+        <input type="hidden" name="action" value="update_coin">
+        <input type="hidden" name="title" value="Test Coin">
+        <input type="hidden" name="buy_price_usd" value="0.15">
+        <input type="hidden" name="sell_price_usd" value="0.12">
+        <button type="submit">Test Update Coin</button>
+    </form>
+    
+    <form method="POST">
+        <input type="hidden" name="action" value="approve_coin_buy">
+        <input type="hidden" name="transaction_id" value="1">
+        <button type="submit">Test Approve Buy</button>
+    </form>
+    """)
+
+# ================== COIN TRANSACTION VIEWS ==================
+
+def submit_coin_buy_request(request):
+    """Handle coin buy request from frontend - FIXED FOR YOUR TEMPLATE"""
+    if request.method == 'POST':
+        try:
+            # Get data from your template form
+            exchange_platform = request.POST.get('exchangePlatform')
+            full_name = request.POST.get('full_name')
+            email = request.POST.get('email')
+            phone = request.POST.get('phone')
+            coin_amount = request.POST.get('coin_amount')
+            
+            print(f"🟢 COIN BUY REQUEST RECEIVED: {email}, {coin_amount} TWC")
+            
+            # Get current coin price
+            coin = TradeWiseCoin.objects.first()
+            if not coin:
+                coin = TradeWiseCoin.objects.create(
+                    title="TradeWise Coin",
+                    buy_price_usd=0.10,
+                    sell_price_usd=0.09
+                )
+            
+            # Calculate USD amount
+            try:
+                coin_amount_decimal = Decimal(coin_amount)
+                usd_amount = coin_amount_decimal * coin.buy_price_usd
+                usd_amount = usd_amount.quantize(Decimal('0.01'))
+            except:
+                return JsonResponse({'success': False, 'error': 'Invalid coin amount'})
+            
+            # Create transaction record
+            transaction = CoinTransaction.objects.create(
+                transaction_type='buy',
+                customer_name=full_name,
+                customer_email=email,
+                customer_phone=phone,
+                exchange_platform=exchange_platform,
+                coin_amount=coin_amount_decimal,
+                usd_amount=usd_amount,
+                rate=coin.buy_price_usd,
+                status='pending'
+            )
+            
+            print(f"✅ COIN BUY TRANSACTION CREATED: ID {transaction.id}")
+            
+            # Send confirmation emails
+            # 1. To customer
+            send_coin_buy_confirmation_email(transaction)
+            
+            # 2. To admin
+            send_coin_admin_notification(transaction)
+            
+            return JsonResponse({
+                'success': True,
+                'message': 'Buy request submitted successfully! We will contact you for payment.',
+                'transaction_id': transaction.id
+            })
+            
+        except Exception as e:
+            print(f"❌ COIN BUY ERROR: {str(e)}")
+            return JsonResponse({
+                'success': False,
+                'error': f'Request failed: {str(e)}'
+            })
+    
+    return JsonResponse({'success': False, 'error': 'Invalid request method'})
+def submit_coin_sell_request(request):
+    """Handle coin sell request submission - NO PAYMENT INVOLVED"""
+    if request.method == 'POST':
+        try:
+            # Get form data
+            customer_name = request.POST.get('customer_name')
+            customer_email = request.POST.get('customer_email')
+            customer_phone = request.POST.get('customer_phone')
+            wallet_address = request.POST.get('wallet_address')
+            coin_amount_str = request.POST.get('coin_amount')
+            
+            print(f"🟢 COIN SELL REQUEST: {customer_email}, {coin_amount_str} TWC")
+            
+            # SIMPLE DECIMAL CONVERSION
+            try:
+                # Clean the string - replace commas with dots
+                cleaned_amount = coin_amount_str.replace(',', '.')
+                coin_amount_decimal = Decimal(cleaned_amount)
+                
+                if coin_amount_decimal <= Decimal('0'):
+                    return JsonResponse({'success': False, 'error': 'Coin amount must be greater than 0.'})
+                    
+            except Exception as e:
+                print(f"❌ DECIMAL CONVERSION ERROR: {e}")
+                return JsonResponse({'success': False, 'error': 'Invalid coin amount format.'})
+            
+            # Get current coin prices
+            coin = TradeWiseCoin.objects.first()
+            if not coin:
+                coin = TradeWiseCoin.objects.create(
+                    title="TradeWise Coin",
+                    buy_price_usd=Decimal('0.10'),
+                    sell_price_usd=Decimal('0.09')
+                )
+            
+            # Calculate USD amount
+            try:
+                usd_amount = coin_amount_decimal * coin.sell_price_usd
+                usd_amount = usd_amount.quantize(Decimal('0.01'))
+            except:
+                return JsonResponse({'success': False, 'error': 'Invalid coin amount'})
+            
+            # Create transaction record
+            transaction = CoinTransaction.objects.create(
+                transaction_type='sell',
+                customer_name=customer_name,
+                customer_email=customer_email,
+                customer_phone=customer_phone,
+                wallet_address=wallet_address,
+                coin_amount=coin_amount_decimal,
+                usd_amount=usd_amount,
+                rate=coin.sell_price_usd,
+                status='pending'
+            )
+            
+            print(f"📝 COIN SELL TRANSACTION CREATED: SELL-{transaction.id:04d}")
+            
+            # Send emails
+            send_coin_transaction_email(
+                transaction=transaction,
+                email_type='sell_request_received'
+            )
+            
+            send_coin_transaction_email(
+                transaction=transaction,
+                email_type='admin_sell_notification'
+            )
+            
+            return JsonResponse({
+                'success': True,
+                'message': 'Sell request submitted successfully! We will contact you within 24 hours.',
+                'transaction_id': transaction.id
+            })
+            
+        except Exception as e:
+            print(f"💥 COIN SELL ERROR: {str(e)}")
+            return JsonResponse({
+                'success': False,
+                'error': f'Request failed: {str(e)}'
+            })
+    
+    return JsonResponse({'success': False, 'error': 'Invalid request method'})
+
+
+# ================== EMAIL FUNCTIONS ==================
+
+def send_coin_buy_confirmation_email(transaction):
+    """Send confirmation email to customer for buy request"""
+    try:
+        print(f"🟢 DEBUG: Starting buy confirmation email for {transaction.customer_email}")
+        
+        subject = '🔄 TradeWise Coin Purchase Request Received'
+        
+        # DEBUG: Check template
+        print(f"🔍 DEBUG: Looking for template: emails/coin_buy_confirmation.html")
+        
+        # Try to render HTML template WITH DEBUGGING
+        try:
+            html_message = render_to_string('emails/coin_buy_confirmation.html', {
+                'transaction': transaction,
+            })
+            print(f"✅ DEBUG: HTML template rendered SUCCESSFULLY")
+            print(f"📄 DEBUG: HTML message length: {len(html_message)} characters")
+        except TemplateDoesNotExist:
+            print(f"❌ DEBUG: Template NOT FOUND: emails/coin_buy_confirmation.html")
+            html_message = None
+        except Exception as template_error:
+            print(f"❌ DEBUG: Template ERROR: {template_error}")
+            html_message = None
+        
+        plain_message = f"""
+TradeWise Coin Purchase Request Received
+
+Dear {transaction.customer_name},
+
+Thank you for your interest in purchasing TradeWise Coins!
+
+Request Details:
+- Type: Buy Request
+- Amount: {transaction.coin_amount} TWC
+- Rate: ${transaction.rate} per TWC
+- Total: ${transaction.usd_amount}
+- Status: Pending
+
+Our team will contact you within 24 hours to process your payment and complete the transaction.
+
+You can also login to your account to track your request.
+
+Best regards,
+TradeWise Team
+        """
+        
+        print(f"📧 DEBUG: Sending email to {transaction.customer_email}")
+        print(f"📧 DEBUG: HTML message present: {html_message is not None}")
+        
+        send_mail(
+            subject=subject,
+            message=plain_message,
+            from_email=getattr(settings, 'DEFAULT_FROM_EMAIL', 'noreply@trade-wise.co.ke'),
+            recipient_list=[transaction.customer_email],
+            html_message=html_message,  # This might be None!
+            fail_silently=False,
+        )
+        print(f"✅ Buy confirmation sent to {transaction.customer_email}")
+        return True
+        
+    except Exception as e:
+        print(f"❌ Buy confirmation email error: {str(e)}")
+        import traceback
+        traceback.print_exc()
+        return False
+
+
+def debug_email_templates(request):
+    """Debug email template issues"""
+    from django.template.loader import render_to_string
+    
+    print("🟢 DEBUG EMAIL TEMPLATES - Checking all coin email templates...")
+    
+    # Create a test transaction
+    class TestTransaction:
+        def __init__(self):
+            self.id = 123
+            self.transaction_type = 'buy'
+            self.customer_name = 'John Doe'
+            self.customer_email = 'test@example.com'
+            self.customer_phone = '+1234567890'
+            self.exchange_platform = 'Binance'
+            self.coin_amount = 100.50
+            self.usd_amount = 10.05
+            self.rate = 0.10
+            self.status = 'pending'
+            self.wallet_address = '0x123abc'
+            self.created_at = timezone.now()
+    
+    test_trans = TestTransaction()
+    
+    # List all templates that should exist
+    templates = [
+        ('coin_buy_confirmation.html', 'emails/coin_buy_confirmation.html'),
+        ('coin_sell_confirmation.html', 'emails/coin_sell_confirmation.html'),
+        ('admin_coin_notification.html', 'emails/admin_coin_notification.html'),
+        ('coin_buy_request_received.html', 'emails/coin_buy_request_received.html'),
+        ('coin_sell_request_received.html', 'emails/coin_sell_request_received.html'),
+        ('coin_buy_completed.html', 'emails/coin_buy_completed.html'),
+        ('coin_sell_processing.html', 'emails/coin_sell_processing.html'),
+        ('coin_sell_completed.html', 'emails/coin_sell_completed.html'),
+        ('admin_coin_buy_notification.html', 'emails/admin_coin_buy_notification.html'),
+        ('admin_coin_sell_notification.html', 'emails/admin_coin_sell_notification.html'),
+        ('admin_coin_buy_completed.html', 'emails/admin_coin_buy_completed.html'),
+        ('coin_transaction_cancelled.html', 'emails/coin_transaction_cancelled.html'),
+    ]
+    
+    results = []
+    for name, path in templates:
+        try:
+            html = render_to_string(path, {'transaction': test_trans})
+            results.append(f"✅ {name} - OK ({len(html)} chars)")
+            print(f"✅ {name}: Template found and rendered")
+        except TemplateDoesNotExist:
+            results.append(f"❌ {name} - MISSING")
+            print(f"❌ {name}: Template NOT FOUND at {path}")
+        except Exception as e:
+            results.append(f"⚠️ {name} - ERROR: {str(e)}")
+            print(f"⚠️ {name}: Error - {str(e)}")
+    
+    # Check if basic emails are working
+    print("\n🔍 Checking basic email system...")
+    try:
+        send_mail(
+            'TEST: Basic Email System',
+            'If you get this, email system works',
+            'theofficialtradewise@gmail.com',
+            ['manchamdevelopers@gmail.com'],
+            fail_silently=False,
+        )
+        results.append("\n✅ Basic email system: WORKING")
+    except Exception as e:
+        results.append(f"\n❌ Basic email system: FAILED - {str(e)}")
+    
+    return HttpResponse("<br>".join(results))
+
+def send_coin_buy_confirmation_email(transaction):
+    """Send confirmation email to customer for buy request"""
+    try:
+        subject = '🔄 TradeWise Coin Purchase Request Received'
+        
+        html_message = render_to_string('emails/coin_buy_confirmation.html', {
+            'transaction': transaction,
+        })
+        
+        plain_message = f"""
+TradeWise Coin Purchase Request Received
+
+Dear {transaction.customer_name},
+
+Thank you for your interest in purchasing TradeWise Coins!
+
+Request Details:
+- Type: Buy Request
+- Amount: {transaction.coin_amount} TWC
+- Rate: ${transaction.rate} per TWC
+- Total: ${transaction.usd_amount}
+- Status: Pending
+
+Our team will contact you within 24 hours to process your payment and complete the transaction.
+
+You can also login to your account to track your request.
+
+Best regards,
+TradeWise Team
+        """
+        
+        send_mail(
+            subject=subject,
+            message=plain_message,
+            from_email=getattr(settings, 'DEFAULT_FROM_EMAIL', 'noreply@trade-wise.co.ke'),
+            recipient_list=[transaction.customer_email],
+            html_message=html_message,
+            fail_silently=False,
+        )
+        print(f"📧 Buy confirmation sent to {transaction.customer_email}")
+        return True
+        
+    except Exception as e:
+        print(f"❌ Buy confirmation email error: {str(e)}")
+        return False
+
+def send_coin_sell_confirmation_email(transaction):
+    """Send confirmation email to customer for sell request"""
+    try:
+        subject = '🔄 TradeWise Coin Sell Request Received'
+        
+        html_message = render_to_string('emails/coin_sell_confirmation.html', {
+            'transaction': transaction,
+        })
+        
+        plain_message = f"""
+TradeWise Coin Sell Request Received
+
+Dear {transaction.customer_name},
+
+Thank you for your TradeWise Coin sell request!
+
+Request Details:
+- Type: Sell Request
+- Amount: {transaction.coin_amount} TWC
+- Rate: ${transaction.rate} per TWC
+- Total: ${transaction.usd_amount}
+- Wallet: {transaction.wallet_address}
+- Status: Pending
+
+Our team will contact you within 24 hours to process your payout.
+
+Best regards,
+TradeWise Team
+        """
+        
+        send_mail(
+            subject=subject,
+            message=plain_message,
+            from_email=getattr(settings, 'DEFAULT_FROM_EMAIL', 'noreply@trade-wise.co.ke'),
+            recipient_list=[transaction.customer_email],
+            html_message=html_message,
+            fail_silently=False,
+        )
+        print(f"📧 Sell confirmation sent to {transaction.customer_email}")
+        return True
+        
+    except Exception as e:
+        print(f"❌ Sell confirmation email error: {str(e)}")
+        return False
+
+def send_coin_admin_notification(transaction):
+    """Send notification email to admin"""
+    try:
+        transaction_type = "BUY" if transaction.transaction_type == 'buy' else "SELL"
+        
+        subject = f'🆕 New Coin {transaction_type} Request - {transaction.customer_email}'
+        
+        html_message = render_to_string('emails/admin_coin_notification.html', {
+            'transaction': transaction,
+        })
+        
+        plain_message = f"""
+NEW COIN TRANSACTION REQUEST
+
+Transaction Type: {transaction_type}
+Customer: {transaction.customer_name}
+Email: {transaction.customer_email}
+Phone: {transaction.customer_phone}
+
+Transaction Details:
+Amount: {transaction.coin_amount} TWC
+Rate: ${transaction.rate} per TWC
+Total: ${transaction.usd_amount}
+
+Additional Info:
+{ 'Platform: ' + transaction.exchange_platform if transaction.transaction_type == 'buy' else 'Wallet: ' + transaction.wallet_address }
+
+Status: Pending
+Date: {transaction.created_at.strftime('%Y-%m-%d %H:%M')}
+
+Please check the admin dashboard to process this request.
+        """
+        
+        admin_email = getattr(settings, 'ADMIN_EMAIL', 'theofficialtradewise@gmail.com')
+        send_mail(
+            subject=subject,
+            message=plain_message,
+            from_email=getattr(settings, 'DEFAULT_FROM_EMAIL', 'noreply@trade-wise.co.ke'),
+            recipient_list=[admin_email],
+            html_message=html_message,
+            fail_silently=False,
+        )
+        print(f"📧 Admin notification sent for transaction {transaction.id}")
+        return True
+        
+    except Exception as e:
+        print(f"❌ Admin notification email error: {str(e)}")
+        return False
+
+def approve_coin_buy_traditional(request):
+    """Approve a coin buy request - UPDATED FOR YOUR MODEL STRUCTURE"""
+    try:
+        transaction_id = request.POST.get('transaction_id')
+        if not transaction_id:
+            messages.error(request, 'Transaction ID is required.')
+            return redirect('admin_dashboard')
+        
+        transaction = CoinTransaction.objects.get(id=transaction_id)
+        
+        if transaction.transaction_type != 'buy':
+            messages.error(request, 'Only buy transactions can be approved.')
+            return redirect('admin_dashboard')
+        
+        if transaction.status != 'pending':
+            messages.error(request, f'Transaction is already {transaction.status}.')
+            return redirect('admin_dashboard')
+        
+        # Update transaction status
+        transaction.status = 'completed'
+        transaction.save()
+        
+        # Create transaction log
+        CoinTransactionLog.objects.create(
+            transaction=transaction,
+            customer_name=transaction.customer_name,
+            customer_email=transaction.customer_email,
+            transaction_type='buy',
+            coin_amount=transaction.coin_amount,
+            usd_amount=transaction.usd_amount,
+            rate=transaction.rate,
+            status='completed',
+            action='Buy Approved',
+            performed_by=request.session.get('admin_username', 'Admin'),
+            notes=f'Admin approved buy request #{transaction.id}'
+        )
+        
+        messages.success(request, f'Successfully approved buy request for {transaction.coin_amount} TWC coins.')
+        
+        # Note: Since your CoinTransaction model doesn't link to Tradeviewusers,
+        # we can't award coins directly. You might need to:
+        # 1. Find the user by email and award coins to their affiliate account
+        # 2. Or add a user field to CoinTransaction model
+        
+    except CoinTransaction.DoesNotExist:
+        messages.error(request, 'Transaction not found.')
+    except Exception as e:
+        messages.error(request, f'Error approving buy request: {str(e)}')
+    
+    return redirect('admin_dashboard')
+
+def process_coin_sell_traditional(request):
+    """Process a coin sell request - UPDATED FOR YOUR MODEL STRUCTURE"""
+    try:
+        transaction_id = request.POST.get('transaction_id')
+        if not transaction_id:
+            messages.error(request, 'Transaction ID is required.')
+            return redirect('admin_dashboard')
+        
+        transaction = CoinTransaction.objects.get(id=transaction_id)
+        
+        if transaction.transaction_type != 'sell':
+            messages.error(request, 'Only sell transactions can be processed.')
+            return redirect('admin_dashboard')
+        
+        if transaction.status != 'pending':
+            messages.error(request, f'Transaction is already {transaction.status}.')
+            return redirect('admin_dashboard')
+        
+        # Update transaction status
+        transaction.status = 'completed'
+        transaction.save()
+        
+        # Create transaction log
+        CoinTransactionLog.objects.create(
+            transaction=transaction,
+            customer_name=transaction.customer_name,
+            customer_email=transaction.customer_email,
+            transaction_type='sell',
+            coin_amount=transaction.coin_amount,
+            usd_amount=transaction.usd_amount,
+            rate=transaction.rate,
+            status='completed',
+            action='Sell Processed',
+            performed_by=request.session.get('admin_username', 'Admin'),
+            notes=f'Admin processed sell request #{transaction.id}'
+        )
+        
+        messages.success(request, f'Successfully processed sell request for {transaction.coin_amount} TWC coins.')
+        
+        # Note: Since your model doesn't link to users, you'll need to:
+        # 1. Find the user and create a payout request for them
+        # 2. Or add payout functionality to this handler
+        
+    except CoinTransaction.DoesNotExist:
+        messages.error(request, 'Transaction not found.')
+    except Exception as e:
+        messages.error(request, f'Error processing sell request: {str(e)}')
+    
+    return redirect('admin_dashboard')
+
+def cancel_coin_transaction_traditional(request):
+    """Cancel a coin transaction - UPDATED FOR YOUR MODEL STRUCTURE"""
+    try:
+        transaction_id = request.POST.get('transaction_id')
+        if not transaction_id:
+            messages.error(request, 'Transaction ID is required.')
+            return redirect('admin_dashboard')
+        
+        transaction = CoinTransaction.objects.get(id=transaction_id)
+        
+        if transaction.status not in ['pending', 'processing']:
+            messages.error(request, f'Cannot cancel a {transaction.status} transaction.')
+            return redirect('admin_dashboard')
+        
+        # Update transaction status
+        transaction.status = 'cancelled'
+        transaction.save()
+        
+        # Create transaction log
+        CoinTransactionLog.objects.create(
+            transaction=transaction,
+            customer_name=transaction.customer_name,
+            customer_email=transaction.customer_email,
+            transaction_type=transaction.transaction_type,
+            coin_amount=transaction.coin_amount,
+            usd_amount=transaction.usd_amount,
+            rate=transaction.rate,
+            status='cancelled',
+            action='Transaction Cancelled',
+            performed_by=request.session.get('admin_username', 'Admin'),
+            notes=f'Admin cancelled transaction #{transaction.id}'
+        )
+        
+        messages.success(request, f'Successfully cancelled transaction #{transaction.id}.')
+        
+    except CoinTransaction.DoesNotExist:
+        messages.error(request, 'Transaction not found.')
+    except Exception as e:
+        messages.error(request, f'Error cancelling transaction: {str(e)}')
     
     return redirect('admin_dashboard')
 
@@ -933,17 +2069,36 @@ def add_manual_payment_traditional(request):
         messages.error(request, f'Error adding manual payment: {str(e)}')
     
     return redirect('admin_dashboard')
-
 def approve_referral_traditional(request):
     """Approve referral - traditional form"""
     try:
         referral_id = request.POST.get('referral_id')
-        # Implement your referral approval logic here
-        messages.success(request, 'Referral approved and coins awarded!')
+        referral = Referral.objects.get(id=referral_id)
+        
+        # Get coins from session or default to 50
+        coins_per_referral = request.session.get('coins_per_referral', 50)
+        
+        # Award coins to affiliate
+        affiliate = referral.affiliate
+        affiliate.coin_balance += coins_per_referral
+        affiliate.total_coins_earned += coins_per_referral
+        affiliate.save()
+        
+        # Update referral status
+        referral.status = 'approved'
+        referral.coins_awarded = coins_per_referral
+        referral.approved_at = timezone.now()
+        referral.save()
+        
+        messages.success(request, f'Referral approved and {coins_per_referral} coins awarded!')
+        print(f"✅ Referral {referral_id} approved, {coins_per_referral} coins awarded")
+    except Referral.DoesNotExist:
+        messages.error(request, 'Referral not found.')
     except Exception as e:
         messages.error(request, f'Error approving referral: {str(e)}')
     
     return redirect('admin_dashboard')
+
 
 def approve_all_referrals_traditional(request):
     """Approve all referrals - traditional form"""
@@ -2516,6 +3671,9 @@ Please verify VIP access in admin dashboard.
         return False
 
 # ================== ADMIN FORM HANDLING ==================
+
+
+
 
 def handle_admin_form_submission(request):
     """Handle all admin form submissions"""
@@ -5428,6 +6586,442 @@ def get_service_price_display(service_type):
     return prices.get(service_type, 'KES 0')      
 
 
+# ================== COIN TRANSACTION VIEWS ==================
+def initialize_coin_buy(request):
+    """Initialize Paystack payment for coin buy - FIXED WITH DECIMAL IMPORT"""
+    if request.method == 'POST':
+        try:
+            # GET DATA WITH CORRECT FIELD NAMES THAT FRONTEND SENDS
+            customer_name = request.POST.get('customer_name')
+            customer_email = request.POST.get('customer_email')
+            customer_phone = request.POST.get('customer_phone')
+            exchange_platform = request.POST.get('exchange_platform')
+            coin_amount_str = request.POST.get('coin_amount')  # Get as string
+            
+            print(f"🟢 COIN BUY REQUEST DATA RECEIVED:")
+            print(f"   Name: {customer_name}")
+            print(f"   Email: {customer_email}")
+            print(f"   Phone: {customer_phone}")
+            print(f"   Platform: {exchange_platform}")
+            print(f"   Amount String: '{coin_amount_str}' (Type: {type(coin_amount_str)})")
+            
+            # Check for missing data
+            if not customer_name or not customer_email or not customer_phone or not exchange_platform or not coin_amount_str:
+                return JsonResponse({
+                    'success': False, 
+                    'error': 'All fields are required. Please fill in all information.'
+                })
+            
+            # SIMPLE DECIMAL CONVERSION
+            try:
+                # Clean the string - replace commas with dots
+                cleaned_amount = coin_amount_str.replace(',', '.')
+                
+                # Try to convert to Decimal directly
+                coin_amount_decimal = Decimal(cleaned_amount)
+                
+                print(f"💰 DECIMAL CONVERSION SUCCESS: '{coin_amount_str}' -> {coin_amount_decimal}")
+                
+                if coin_amount_decimal <= Decimal('0'):
+                    return JsonResponse({
+                        'success': False, 
+                        'error': 'Coin amount must be greater than 0.'
+                    })
+                    
+            except Exception as e:
+                print(f"❌ DECIMAL CONVERSION ERROR: {e}")
+                return JsonResponse({
+                    'success': False, 
+                    'error': f'Invalid coin amount: {coin_amount_str}. Please enter a valid number.'
+                })
+            
+            # Get coin price
+            coin = TradeWiseCoin.objects.first()
+            if not coin:
+                coin = TradeWiseCoin.objects.create(
+                    title="TradeWise Coin",
+                    buy_price_usd=Decimal('0.10'),
+                    sell_price_usd=Decimal('0.09')
+                )
+            
+            # Calculate USD amount
+            try:
+                usd_amount = coin_amount_decimal * coin.buy_price_usd
+                usd_amount = usd_amount.quantize(Decimal('0.01'))  # Round to 2 decimal places
+                print(f"💰 CALCULATION: {coin_amount_decimal} × {coin.buy_price_usd} = ${usd_amount}")
+            except Exception as calc_error:
+                print(f"❌ USD CALCULATION ERROR: {calc_error}")
+                return JsonResponse({
+                    'success': False, 
+                    'error': f'Calculation error. Please try a different amount.'
+                })
+            
+            # Create transaction
+            transaction = CoinTransaction.objects.create(
+                transaction_type='buy',
+                customer_name=customer_name,
+                customer_email=customer_email,
+                customer_phone=customer_phone,
+                exchange_platform=exchange_platform,
+                coin_amount=coin_amount_decimal,
+                usd_amount=usd_amount,
+                rate=coin.buy_price_usd,
+                status='pending'
+            )
+            
+            # Create payment reference
+            reference = f"COIN-BUY-{transaction.id}-{uuid.uuid4().hex[:6].upper()}"
+            transaction.payment_reference = reference
+            transaction.save()
+            
+            print(f"📝 TRANSACTION CREATED: ID {transaction.id}, Ref: {reference}")
+            print(f"📊 TRANSACTION DETAILS: {coin_amount_decimal} TWC @ ${coin.buy_price_usd}/TWC = ${usd_amount}")
+            
+            # Convert USD to KES (approx 140 KES per USD)
+            amount_in_kes = float(usd_amount) * 140
+            amount_in_kobo = int(amount_in_kes * 100)  # Convert KES to kobo
+            
+            print(f"💳 PAYSTACK PAYMENT: ${usd_amount} → KES {amount_in_kes} → {amount_in_kobo} kobo")
+            
+            # Initialize Paystack
+            paystack_service = PaystackService()
+            response = paystack_service.initialize_transaction(
+                email=customer_email,
+                amount=amount_in_kobo,
+                reference=reference,
+                callback_url=request.build_absolute_uri(f'/verify-coin-payment/{reference}/'),
+                metadata={
+                    'transaction_type': 'coin_buy',
+                    'transaction_id': transaction.id,
+                    'coin_amount': str(coin_amount_decimal),
+                    'usd_amount': str(usd_amount),
+                    'rate': str(coin.buy_price_usd),
+                    'customer_name': customer_name
+                }
+            )
+            
+            print(f"📡 PAYSTACK RESPONSE: {response}")
+            
+            if response.get('status'):
+                # Send confirmation email
+                send_coin_transaction_email(
+                    transaction=transaction,
+                    email_type='buy_request_received'
+                )
+                
+                print(f"✅ SUCCESS: Redirecting to Paystack")
+                return JsonResponse({
+                    'success': True,
+                    'redirect_url': response['data']['authorization_url'],
+                    'message': 'Redirecting to Paystack payment...'
+                })
+            else:
+                transaction.status = 'failed'
+                transaction.save()
+                error_msg = response.get('message', 'Payment initialization failed')
+                print(f"❌ PAYSTACK ERROR: {error_msg}")
+                return JsonResponse({
+                    'success': False, 
+                    'error': f'Payment gateway error: {error_msg}'
+                })
+                
+        except Exception as e:
+            print(f"💥 GENERAL ERROR: {str(e)}")
+            import traceback
+            traceback.print_exc()
+            return JsonResponse({
+                'success': False, 
+                'error': f'Server error: {str(e)}'
+            })
+    
+    return JsonResponse({'success': False, 'error': 'Invalid request method'})
+
+
+def submit_coin_sell_request(request):
+    """Handle coin sell request submission - NO PAYMENT INVOLVED"""
+    if request.method == 'POST':
+        try:
+            # Get form data
+            customer_name = request.POST.get('customer_name')
+            customer_email = request.POST.get('customer_email')
+            customer_phone = request.POST.get('customer_phone')
+            wallet_address = request.POST.get('wallet_address')
+            coin_amount = request.POST.get('coin_amount')
+            
+            print(f"🟢 COIN SELL REQUEST: {customer_email}, {coin_amount} TWC")
+            
+            # Get current coin prices
+            coin = TradeWiseCoin.objects.first()
+            if not coin:
+                coin = TradeWiseCoin.objects.create(
+                    title="TradeWise Coin",
+                    buy_price_usd=0.10,
+                    sell_price_usd=0.09
+                )
+            
+            # Calculate USD amount
+            try:
+                coin_amount_decimal = Decimal(coin_amount)
+                usd_amount = coin_amount_decimal * coin.sell_price_usd
+                usd_amount = usd_amount.quantize(Decimal('0.01'))
+            except:
+                return JsonResponse({'success': False, 'error': 'Invalid coin amount'})
+            
+            # Create transaction record
+            transaction = CoinTransaction.objects.create(
+                transaction_type='sell',
+                customer_name=customer_name,
+                customer_email=customer_email,
+                customer_phone=customer_phone,
+                wallet_address=wallet_address,
+                coin_amount=coin_amount_decimal,
+                usd_amount=usd_amount,
+                rate=coin.sell_price_usd,
+                status='pending'
+            )
+            
+            print(f"📝 COIN SELL TRANSACTION CREATED: SELL-{transaction.id:04d}")
+            
+            # Send emails
+            send_coin_transaction_email(
+                transaction=transaction,
+                email_type='sell_request_received'
+            )
+            
+            send_coin_transaction_email(
+                transaction=transaction,
+                email_type='admin_sell_notification'
+            )
+            
+            return JsonResponse({
+                'success': True,
+                'message': 'Sell request submitted successfully! We will contact you within 24 hours.',
+                'transaction_id': transaction.id
+            })
+            
+        except Exception as e:
+            print(f"💥 COIN SELL ERROR: {str(e)}")
+            return JsonResponse({
+                'success': False,
+                'error': f'Request failed: {str(e)}'
+            })
+    
+    return JsonResponse({'success': False, 'error': 'Invalid request method'})
+
+def verify_coin_payment(request, reference):
+    """Verify Paystack payment and update transaction"""
+    try:
+        print(f"🟢 VERIFYING COIN PAYMENT: {reference}")
+        
+        # Find transaction
+        transaction = CoinTransaction.objects.get(payment_reference=reference)
+        
+        if transaction.status == 'completed':
+            messages.success(request, 'Payment already verified!')
+            return redirect('index')
+        
+        # Verify with Paystack
+        paystack_service = PaystackService()
+        verification = paystack_service.verify_transaction(reference)
+        
+        if verification.get('status') and verification['data']['status'] == 'success':
+            # Payment successful
+            transaction.status = 'completed'
+            transaction.paystack_response = verification
+            transaction.save()
+            
+            # Send success emails
+            send_coin_transaction_email(
+                transaction=transaction,
+                email_type='buy_completed'
+            )
+            
+            send_coin_transaction_email(
+                transaction=transaction,
+                email_type='admin_buy_completed'
+            )
+            
+            messages.success(request, 
+                f'✅ Payment successful! {transaction.coin_amount} TWC purchased. '
+                f'We will contact you for wallet details.'
+            )
+        else:
+            # Payment failed
+            transaction.status = 'failed'
+            transaction.notes = f"Payment verification failed: {verification.get('message', 'Unknown error')}"
+            transaction.save()
+            
+            messages.error(request, '❌ Payment failed. Please try again.')
+        
+        return redirect('index')
+        
+    except CoinTransaction.DoesNotExist:
+        messages.error(request, 'Transaction not found.')
+        return redirect('index')
+    except Exception as e:
+        print(f"❌ COIN PAYMENT VERIFICATION ERROR: {str(e)}")
+        messages.error(request, 'Payment verification failed.')
+        return redirect('index')
+    
+@admin_required
+def update_coin_transaction_status(request):
+    """Admin: Update coin transaction status"""
+    if request.method == 'POST':
+        try:
+            transaction_id = request.POST.get('transaction_id')
+            action = request.POST.get('action')  # 'approve', 'cancel', 'complete'
+            
+            transaction = CoinTransaction.objects.get(id=transaction_id)
+            
+            if action == 'approve' and transaction.transaction_type == 'buy':
+                transaction.status = 'completed'
+                transaction.save()
+                
+                # Send completion email
+                send_coin_transaction_email(
+                    transaction=transaction,
+                    email_type='buy_completed'
+                )
+                
+                messages.success(request, f'Buy transaction approved! {transaction.coin_amount} TWC purchased.')
+                
+            elif action == 'process' and transaction.transaction_type == 'sell':
+                # For sell transactions, mark as processing
+                transaction.status = 'processing'
+                transaction.save()
+                
+                # Send processing email
+                send_coin_transaction_email(
+                    transaction=transaction,
+                    email_type='sell_processing'
+                )
+                
+                messages.success(request, f'Sell transaction marked as processing. Contact customer for payout.')
+                
+            elif action == 'complete' and transaction.transaction_type == 'sell':
+                transaction.status = 'completed'
+                transaction.save()
+                
+                # Send completion email
+                send_coin_transaction_email(
+                    transaction=transaction,
+                    email_type='sell_completed'
+                )
+                
+                messages.success(request, f'Sell transaction completed! ${transaction.usd_amount} paid.')
+                
+            elif action == 'cancel':
+                transaction.status = 'cancelled'
+                transaction.save()
+                
+                # Send cancellation email
+                send_coin_transaction_email(
+                    transaction=transaction,
+                    email_type='transaction_cancelled'
+                )
+                
+                messages.warning(request, 'Transaction cancelled.')
+                
+            else:
+                messages.error(request, 'Invalid action for this transaction type.')
+                
+        except CoinTransaction.DoesNotExist:
+            messages.error(request, 'Transaction not found.')
+        except Exception as e:
+            messages.error(request, f'Error: {str(e)}')
+    
+    return redirect('admin_dashboard')
+
+def send_coin_transaction_email(transaction, email_type):
+    """Send email notifications for coin transactions"""
+    try:
+        from django.core.mail import send_mail
+        from django.template.loader import render_to_string
+        
+        subject = ''
+        recipient = ''
+        context = {'transaction': transaction}
+        
+        if email_type == 'buy_request_received':
+            subject = '🔄 TradeWise Coin Purchase Request Received'
+            recipient = transaction.customer_email
+            html_template = 'emails/coin_buy_confirmation.html'
+            
+        elif email_type == 'sell_request_received':
+            subject = '🔄 TradeWise Coin Sell Request Received'
+            recipient = transaction.customer_email
+            html_template = 'emails/coin_sell_confirmation.html'
+            
+        elif email_type == 'buy_completed':
+            subject = '✅ TradeWise Coin Purchase Completed!'
+            recipient = transaction.customer_email
+            html_template = 'emails/coin_buy_completed.html'
+            
+        elif email_type == 'sell_processing':
+            subject = '⏳ Your Coin Sell Request is Being Processed'
+            recipient = transaction.customer_email
+            html_template = 'emails/coin_sell_processing.html'
+            
+        elif email_type == 'sell_completed':
+            subject = '✅ Your Coin Sell Request is Completed!'
+            recipient = transaction.customer_email
+            html_template = 'emails/coin_sell_completed.html'
+            
+        elif email_type == 'admin_buy_notification':
+            subject = f'🛒 New Coin Buy Request: {transaction.customer_email}'
+            recipient = getattr(settings, 'ADMIN_EMAIL', 'theofficialtradewise@gmail.com')
+            html_template = 'emails/admin_coin_buy_confirmation.html'
+            
+        elif email_type == 'admin_sell_notification':
+            subject = f'💰 New Coin Sell Request: {transaction.customer_email}'
+            recipient = getattr(settings, 'ADMIN_EMAIL', 'theofficialtradewise@gmail.com')
+            html_template = 'emails/admin_coin_sell_confirmation.html'
+            
+        elif email_type == 'admin_buy_completed':
+            subject = f'✅ Coin Buy Completed: {transaction.customer_email}'
+            recipient = getattr(settings, 'ADMIN_EMAIL', 'theofficialtradewise@gmail.com')
+            html_template = 'emails/admin_coin_buy_completed.html'
+            
+        elif email_type == 'transaction_cancelled':
+            subject = '❌ Transaction Cancelled'
+            recipient = transaction.customer_email
+            html_template = 'emails/coin_transaction_cancelled.html'
+        
+        # Try to render HTML template, fallback to plain text
+        try:
+            html_message = render_to_string(html_template, context)
+        except:
+            html_message = None
+        
+        plain_message = f"""
+Transaction Details:
+Type: {transaction.transaction_type.upper()}
+Customer: {transaction.customer_name}
+Email: {transaction.customer_email}
+Amount: {transaction.coin_amount} TWC
+USD Amount: ${transaction.usd_amount}
+Rate: ${transaction.rate} per TWC
+Status: {transaction.status.title()}
+Date: {transaction.created_at}
+        """
+        
+        send_mail(
+            subject=subject,
+            message=plain_message,
+            from_email=getattr(settings, 'DEFAULT_FROM_EMAIL', 'noreply@trade-wise.co.ke'),
+            recipient_list=[recipient],
+            html_message=html_message,
+            fail_silently=False,
+        )
+        
+        print(f"📧 {email_type} email sent to {recipient}")
+        return True
+        
+    except Exception as e:
+        print(f"❌ COIN EMAIL ERROR ({email_type}): {str(e)}")
+        return False
+
+
 
 def handler404(request, exception):
     """
@@ -5476,3 +7070,151 @@ def handler400(request, exception):
             "<h1>400 - Bad Request</h1><p>Your request could not be processed.</p>",
             status=400
         )
+
+
+# Add this at the bottom of your views.py to test
+def check_admin_actions():
+    """Quick diagnostic check"""
+    actions = [
+        'update_coin',
+        'approve_coin_buy',
+        'process_coin_sell',
+        'cancel_coin_transaction',
+        'delete_strategy',
+        'delete_signal',
+        'delete_software',
+        'delete_blog',
+        'delete_merchandise',
+        'delete_review',
+        'update_request_status',
+        'review_action',
+        'process_payout',
+        'send_onboarding_email',
+        'add_manual_payment',
+        'approve_referral',
+        'approve_all_referrals',
+        'track_download'
+    ]
+    
+    print("🔍 CHECKING ADMIN ACTIONS...")
+    for action in actions:
+        print(f"  {action}")
+    
+    return len(actions)
+
+# Run the check when views.py loads
+print(f"✅ Admin actions available: {check_admin_actions()}")
+
+def test_coin_actions_manually(request):
+    """Quick test for coin actions"""
+    print("🧪 TESTING COIN ACTIONS...")
+    
+    # Test the coin update function
+    if 'test_update' in request.GET:
+        print("🔄 Testing update_coin action...")
+        # Simulate a POST request
+        request.method = 'POST'
+        request.POST = {'action': 'update_coin', 'title': 'Test Coin', 'buy_price_usd': '0.15', 'sell_price_usd': '0.12'}
+        try:
+            result = update_tradewise_coin(request)
+            print(f"✅ update_coin result: {result}")
+        except Exception as e:
+            print(f"❌ update_coin error: {e}")
+    
+    # Test other actions
+    test_links = """
+    <h1>Test Coin Actions</h1>
+    <ul>
+        <li><a href="?test_update=1">Test update_coin action</a></li>
+        <li><a href="/admin-dashboard/?tab=tradewise-coin">Go to Admin Coin Tab</a></li>
+        <li><a href="/debug-admin-actions/">Debug Admin Actions Page</a></li>
+    </ul>
+    """
+    
+    return HttpResponse(test_links)
+
+
+
+@admin_required
+def debug_admin_actions(request):
+    """Debug endpoint to test admin actions"""
+    if request.method == 'POST':
+        action = request.POST.get('action')
+        print(f"🔍 DEBUG ADMIN ACTION: {action}")
+        print(f"📋 ALL POST DATA: {dict(request.POST)}")
+        
+        # Test specific coin actions
+        test_actions = [
+            'update_coin',
+            'approve_coin_buy', 
+            'process_coin_sell',
+            'cancel_coin_transaction'
+        ]
+        
+        if action in test_actions:
+            print(f"✅ Action '{action}' is recognized")
+            return JsonResponse({
+                'status': 'success',
+                'message': f'Action {action} is recognized'
+            })
+        else:
+            print(f"❌ Action '{action}' NOT recognized")
+            return JsonResponse({
+                'status': 'error',
+                'message': f'Action {action} not recognized'
+            })
+    
+    # Show test forms
+    return HttpResponse(f"""
+    <h1>Admin Actions Debug</h1>
+    <form method="POST">
+        <input type="hidden" name="action" value="update_coin">
+        <button type="submit">Test Update Coin</button>
+    </form>
+    <form method="POST">
+        <input type="hidden" name="action" value="approve_coin_buy">
+        <input type="hidden" name="transaction_id" value="1">
+        <button type="submit">Test Approve Buy</button>
+    </form>
+    <form method="POST">
+        <input type="hidden" name="action" value="process_coin_sell">
+        <input type="hidden" name="transaction_id" value="1">
+        <button type="submit">Test Process Sell</button>
+    </form>
+    <form method="POST">
+        <input type="hidden" name="action" value="cancel_coin_transaction">
+        <input type="hidden" name="transaction_id" value="1">
+        <button type="submit">Test Cancel Transaction</button>
+    </form>
+    """)
+
+def test_coin_actions_manually(request):
+    """Quick test for coin actions"""
+    print("🧪 TESTING COIN ACTIONS...")
+    
+    # Test the coin update function
+    if 'test_update' in request.GET:
+        print("🔄 Testing update_coin action...")
+        # Simulate a POST request
+        request.method = 'POST'
+        request.POST = {'action': 'update_coin', 'title': 'Test Coin', 'buy_price_usd': '0.15', 'sell_price_usd': '0.12'}
+        try:
+            result = update_tradewise_coin(request)
+            print(f"✅ update_coin result: {result}")
+        except Exception as e:
+            print(f"❌ update_coin error: {e}")
+    
+    # Test other actions
+    test_links = """
+    <h1>Test Coin Actions</h1>
+    <ul>
+        <li><a href="?test_update=1">Test update_coin action</a></li>
+        <li><a href="/admin-dashboard/?tab=tradewise-coin">Go to Admin Coin Tab</a></li>
+        <li><a href="/debug-admin-actions/">Debug Admin Actions Page</a></li>
+    </ul>
+    """
+    
+    return HttpResponse(test_links)    
+
+
+

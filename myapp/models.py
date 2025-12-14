@@ -7,7 +7,6 @@ from django.contrib.auth.models import User
 from django.core.exceptions import ValidationError
 from django.contrib.auth.hashers import make_password, check_password
 from django.db import transaction
-from django.db import transaction
 import uuid
 import os
 import requests
@@ -19,6 +18,7 @@ from django.db.models.signals import post_save
 from django.dispatch import receiver
 from django.utils.text import slugify
 import json
+
 # ================== PAYSTACK PAYMENT SERVICE ==================
 
 class PaystackService:
@@ -134,7 +134,7 @@ class Tradeviewusers(models.Model):
         return self.is_admin and self.account_number in [500100, 500200]
 
     def send_verification_email(self):
-        """Send email verification - FIXED LOCALHOST URL"""
+        """Send email verification"""
         try:
             print(f"🟢 MODEL: Starting verification email for {self.email}")
             
@@ -143,13 +143,10 @@ class Tradeviewusers(models.Model):
                 self.save()
             
             subject = '✅ Verify Your TradeWise Account'
-            
-            # ✅ FIXED: Use proper localhost URL
             verification_url = f"https://www.tradewise-hub.com/verify-email/{self.email_verification_token}/"
             
-            print(f"🔗 LOCALHOST VERIFICATION URL: {verification_url}")
+            print(f"🔗 VERIFICATION URL: {verification_url}")
             
-            # Check if template exists
             try:
                 html_message = render_to_string('emails/verification_email.html', {
                     'user': self,
@@ -199,7 +196,7 @@ TradeWise Team
             return False
 
     def send_welcome_email(self, password):
-        """Send welcome email - NEW METHOD"""
+        """Send welcome email"""
         try:
             print(f"🟢 MODEL: Starting welcome email for {self.email}")
             
@@ -254,7 +251,7 @@ TradeWise Team
             return False
 
     def send_new_user_notification(self):
-        """Send admin notification - NEW METHOD"""
+        """Send admin notification"""
         try:
             print(f"🟢 MODEL: Starting admin notification for new user {self.email}")
             
@@ -302,7 +299,7 @@ Registered: {self.created_at.strftime('%Y-%m-%d %H:%M')}
             return False
 
     def send_password_reset_email(self):
-        """Send password reset email - FIXED LOCALHOST URL"""
+        """Send password reset email"""
         try:
             print(f"🟢 MODEL: Starting password reset email for {self.email}")
             
@@ -311,8 +308,6 @@ Registered: {self.created_at.strftime('%Y-%m-%d %H:%M')}
                 self.save()
             
             subject = '🔐 Reset Your TradeWise Password'
-            
-            # ✅ FIXED: Use localhost for password reset too
             reset_url = f"https://www.tradewise-hub.com/reset-password/{self.password_reset_token}/"
             
             html_message = render_to_string('emails/password_reset.html', {
@@ -466,7 +461,7 @@ class Merchandise(models.Model):
     price = models.DecimalField(max_digits=10, decimal_places=2, default=0.00)
     image = models.ImageField(upload_to='merchandise/', blank=True, null=True)
     is_available = models.BooleanField(default=True)
-    is_featured = models.BooleanField(default=True)  # ALL ITEMS ARE FEATURED BY DEFAULT!
+    is_featured = models.BooleanField(default=True)
     stock_quantity = models.PositiveIntegerField(default=100)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
@@ -479,34 +474,28 @@ class Merchandise(models.Model):
 
 class Review(models.Model):
     """Client reviews and testimonials"""
-    # Name fields for compatibility
     client_name = models.CharField(max_length=100, blank=True, null=True)
-    author_name = models.CharField(max_length=100, blank=True, null=True)  # NEW FIELD
-    user_role = models.CharField(max_length=100, default='Forex Trader')  # RENAMED from profession
-    email = models.EmailField(blank=True, null=True)  # NEW FIELD
+    author_name = models.CharField(max_length=100, blank=True, null=True)
+    user_role = models.CharField(max_length=100, default='Forex Trader')
+    email = models.EmailField(blank=True, null=True)
     
-    # Review content
     content = models.TextField()
     rating = models.IntegerField(choices=[(i, i) for i in range(1, 6)], default=5)
     image = models.ImageField(upload_to='reviews/', blank=True, null=True)
     
-    # Status fields
     is_approved = models.BooleanField(default=False)
     is_featured = models.BooleanField(default=False)
-    from_admin = models.BooleanField(default=False)  # NEW FIELD
+    from_admin = models.BooleanField(default=False)
     
-    # Timestamps
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
     def get_image_url(self):
-        """Safely get image URL with fallback"""
         if self.image and hasattr(self.image, 'url') and self.image.url:
             return self.image.url
         return '/static/images/default-avatar.jpg'
 
     def save(self, *args, **kwargs):
-        # Handle backward compatibility
         if self.client_name and not self.author_name:
             self.author_name = self.client_name
         elif self.author_name and not self.client_name:
@@ -543,13 +532,20 @@ class BlogPost(models.Model):
     class Meta:
         ordering = ['-created_at']
 
+# ================== TRADEWISE COIN MODELS ==================
+
 class TradeWiseCoin(models.Model):
     """TradeWise Coin information"""
     title = models.CharField(max_length=200, default='TradeWise Coin')
     subtitle = models.CharField(max_length=200, blank=True, null=True)
     description = models.TextField()
+    
+    buy_price_usd = models.DecimalField(max_digits=10, decimal_places=2, default=0.10)
+    sell_price_usd = models.DecimalField(max_digits=10, decimal_places=2, default=0.09)
+    
     price = models.CharField(max_length=100, default='$0.10 per TWC (Limited Supply)')
     bonus_text = models.CharField(max_length=200, default='Early investors get +15% bonus tokens in the first round.')
+    
     image = models.ImageField(upload_to='coin/', blank=True, null=True)
     is_active = models.BooleanField(default=True)
     created_at = models.DateTimeField(auto_now_add=True)
@@ -557,6 +553,109 @@ class TradeWiseCoin(models.Model):
 
     def __str__(self):
         return self.title
+
+    def save(self, *args, **kwargs):
+        self.price = f"Buy: ${self.buy_price_usd} | Sell: ${self.sell_price_usd}"
+        super().save(*args, **kwargs)
+
+class CoinTransaction(models.Model):
+    """Track all coin buy/sell transactions"""
+    TRANSACTION_TYPES = [
+        ('buy', 'Buy'),
+        ('sell', 'Sell'),
+    ]
+    
+    STATUS_CHOICES = [
+        ('pending', 'Pending'),
+        ('processing', 'Processing'),
+        ('completed', 'Completed'),
+        ('failed', 'Failed'),
+        ('cancelled', 'Cancelled'),
+    ]
+    
+    # Transaction Info
+    transaction_type = models.CharField(max_length=10, choices=TRANSACTION_TYPES)
+    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='pending')
+    
+    # User Information
+    customer_name = models.CharField(max_length=200)
+    customer_email = models.EmailField()
+    customer_phone = models.CharField(max_length=20)
+    
+    # Transaction Details
+    coin_amount = models.DecimalField(max_digits=20, decimal_places=8)
+    usd_amount = models.DecimalField(max_digits=20, decimal_places=2)
+    rate = models.DecimalField(max_digits=10, decimal_places=6)
+    
+    # Platform/Wallet Information
+    exchange_platform = models.CharField(max_length=100, blank=True, null=True)
+    wallet_address = models.CharField(max_length=255, blank=True, null=True)
+    
+    # Payment Information
+    payment_reference = models.CharField(max_length=100, unique=True, blank=True, null=True)
+    payment_method = models.CharField(max_length=50, default='paystack')
+    paystack_response = models.JSONField(default=dict, blank=True)
+    
+    # Admin Tracking
+    notes = models.TextField(blank=True, null=True)
+    admin_notes = models.TextField(blank=True, null=True)
+    
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return f"{self.transaction_type.upper()}-{self.id:04d}: {self.customer_email} - {self.coin_amount} TWC"
+
+    class Meta:
+        ordering = ['-created_at']
+        verbose_name = "Coin Transaction"
+        verbose_name_plural = "Coin Transactions"
+
+class CoinTransactionLog(models.Model):
+    """Log for all coin transactions for audit trail"""
+    STATUS_CHOICES = [
+        ('pending', 'Pending'),
+        ('processing', 'Processing'),
+        ('completed', 'Completed'),
+        ('cancelled', 'Cancelled'),
+        ('failed', 'Failed'),
+    ]
+    
+    TRANSACTION_TYPES = [
+        ('buy', 'Buy'),
+        ('sell', 'Sell'),
+    ]
+    
+    # Reference to transaction
+    transaction = models.ForeignKey(CoinTransaction, on_delete=models.SET_NULL, null=True, blank=True, related_name='logs')
+    
+    # User information
+    customer_name = models.CharField(max_length=200, blank=True, null=True)
+    customer_email = models.EmailField(blank=True, null=True)
+    
+    # Transaction details
+    transaction_type = models.CharField(max_length=10, choices=TRANSACTION_TYPES)
+    coin_amount = models.DecimalField(max_digits=20, decimal_places=8, blank=True, null=True)
+    usd_amount = models.DecimalField(max_digits=20, decimal_places=2, blank=True, null=True)
+    rate = models.DecimalField(max_digits=10, decimal_places=6, blank=True, null=True)
+    
+    # Status and notes
+    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='pending')
+    action = models.CharField(max_length=100, help_text="Action performed, e.g., 'Buy Approved', 'Sell Processed'")
+    performed_by = models.CharField(max_length=100, blank=True, null=True, help_text="Who performed the action (admin username)")
+    notes = models.TextField(blank=True, null=True)
+    
+    # Timestamps
+    created_at = models.DateTimeField(auto_now_add=True)
+    
+    def __str__(self):
+        action_display = f"{self.action}" if self.action else "Log Entry"
+        return f"{action_display} - {self.customer_email or 'Unknown'} - {self.created_at.strftime('%Y-%m-%d %H:%M')}"
+    
+    class Meta:
+        ordering = ['-created_at']
+        verbose_name = "Coin Transaction Log"
+        verbose_name_plural = "Coin Transaction Logs"
 
 class AffiliateProgram(models.Model):
     """Affiliate program information"""
@@ -575,7 +674,6 @@ class AffiliateProgram(models.Model):
 
 class TradingStrategy(models.Model):
     """Trading strategies for sale"""
-    # EXISTING FIELDS (keep these)
     title = models.CharField(max_length=200)
     description = models.TextField()
     image = models.ImageField(upload_to='strategies/', blank=True, null=True)
@@ -586,7 +684,6 @@ class TradingStrategy(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     
-    # NEW FIELDS TO ADD FOR FRONTEND TEMPLATE
     MARKET_TYPES = [
         ('forex', 'Forex'),
         ('crypto', 'Cryptocurrency'),
@@ -609,7 +706,6 @@ class TradingStrategy(models.Model):
         ('vip', 'VIP'),
     ]
     
-    # Add these new fields
     market_type = models.CharField(
         max_length=20, 
         choices=MARKET_TYPES, 
@@ -641,7 +737,6 @@ class TradingStrategy(models.Model):
         help_text="Number of times this strategy was viewed"
     )
     
-    # Meta information
     class Meta:
         verbose_name_plural = "Trading Strategies"
         ordering = ['-is_featured', '-created_at']
@@ -650,7 +745,6 @@ class TradingStrategy(models.Model):
         return self.title
 
 class TradingSignal(models.Model):
-    # EXISTING FIELDS (keep these)
     title = models.CharField(max_length=200)
     description = models.TextField()
     image = models.ImageField(upload_to='signals/', blank=True, null=True)
@@ -661,7 +755,6 @@ class TradingSignal(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     
-    # NEW FIELDS FOR SIGNALS TEMPLATE
     SIGNAL_TYPES = [
         ('forex', 'Forex'),
         ('crypto', 'Cryptocurrency'),
@@ -756,12 +849,8 @@ class ServiceRequest(models.Model):
 
 # ================== PAYMENT MODELS ==================
 
-
-
-
-# ================== SERVICE PAYMENT MODELS ==================    
 class ServicePayment(models.Model):
-    """NEW: For tracking trading service payments (Copy Trading, Live Trading, etc.)"""
+    """For tracking trading service payments"""
     SERVICE_TYPES = [
         ('copy_trading', 'Copy Trading'),
         ('live_trading', 'Live Trading Sessions'), 
@@ -778,27 +867,22 @@ class ServicePayment(models.Model):
         ('cancelled', 'Cancelled'),
     ]
     
-    # Basic info
     user_name = models.CharField(max_length=100)
     user_email = models.EmailField()
     user_phone = models.CharField(max_length=20)
     
-    # Service details
     service_type = models.CharField(max_length=50, choices=SERVICE_TYPES)
     total_amount = models.DecimalField(max_digits=10, decimal_places=2)
     amount_paid = models.DecimalField(max_digits=10, decimal_places=2, default=0.00)
     progress_percentage = models.DecimalField(max_digits=5, decimal_places=2, default=0.00)
     
-    # Status
     status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='pending')
     email_sent = models.BooleanField(default=False)
     
-    # Timestamps
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
     def update_progress(self, payment_amount):
-        """Update payment progress"""
         self.amount_paid += payment_amount
         self.progress_percentage = (self.amount_paid / self.total_amount) * 100
         
@@ -813,7 +897,6 @@ class ServicePayment(models.Model):
         self.save()
 
     def send_onboarding_email(self):
-        """Send email when service is fully paid"""
         subject = f'🎉 Your {self.get_service_type_display()} is Ready!'
         
         message = f"""
@@ -847,7 +930,7 @@ TradeWise Team
         return f"{self.user_email} - {self.get_service_type_display()} - {self.progress_percentage}%"
 
 class ServiceTransaction(models.Model):
-    """NEW: Individual payments for services"""
+    """Individual payments for services"""
     service_payment = models.ForeignKey(ServicePayment, on_delete=models.CASCADE, related_name='transactions')
     amount = models.DecimalField(max_digits=10, decimal_places=2)
     reference = models.CharField(max_length=100, unique=True)
@@ -858,13 +941,10 @@ class ServiceTransaction(models.Model):
     def __str__(self):
         return f"Service TX: {self.reference} - KES {self.amount}"
 
-
-
-
-# ================== AFFILIATE MODELS - FIXED VERSION ==================
+# ================== AFFILIATE MODELS ==================
 
 class Affiliate(models.Model):
-    """Affiliate program - COMPLETELY UPDATED FOR AUTO-COIN AWARDS"""
+    """Affiliate program"""
     user = models.OneToOneField(Tradeviewusers, on_delete=models.CASCADE, related_name='affiliate')
     referral_code = models.CharField(max_length=20, unique=True)
     total_referrals = models.PositiveIntegerField(default=0)
@@ -879,20 +959,16 @@ class Affiliate(models.Model):
         return f"Affiliate: {self.user.first_name} {self.user.second_name} (Balance: {self.coin_balance} coins)"
 
     def save(self, *args, **kwargs):
-        """Auto-create referral code if not exists - ENHANCED"""
         if not self.referral_code:
-            # Use user's account number for referral code
             self.referral_code = f"TW{self.user.account_number}"
             print(f"🔑 Created referral code: {self.referral_code} for {self.user.email}")
         
-        # Ensure we have a user before saving
         if not self.user_id:
             raise ValidationError("Affiliate must be associated with a user")
             
         super().save(*args, **kwargs)
 
     def award_referral_coins(self, coins=50):
-        """Award coins to affiliate - ENHANCED WITH DEBUGGING"""
         try:
             print(f"💰 ATTEMPTING TO AWARD {coins} COINS TO {self.user.email}")
             print(f"📊 BEFORE - Balance: {self.coin_balance}, Total Earned: {self.total_coins_earned}")
@@ -912,14 +988,12 @@ class Affiliate(models.Model):
             return False
 
     def get_referral_link(self, request=None):
-        """Get full referral link for sharing"""
         base_url = "https://www.tradewise-hub.com"
         if request:
             base_url = f"http://{request.get_host()}"
         return f"{base_url}/signup?ref={self.referral_code}"
 
     def get_referral_stats(self):
-        """Get comprehensive referral statistics"""
         total_referrals = self.referrals.count()
         approved_referrals = self.referrals.filter(status='approved').count()
         pending_referrals = self.referrals.filter(status='pending').count()
@@ -931,29 +1005,25 @@ class Affiliate(models.Model):
             'success_rate': (approved_referrals / total_referrals * 100) if total_referrals > 0 else 0,
             'total_coins_earned': self.total_coins_earned,
             'available_balance': self.coin_balance,
-            'cash_value': self.coin_balance * 10,  # 10 Ksh per coin
+            'cash_value': self.coin_balance * 10,
         }
 
     def can_request_payout(self, coin_amount):
-        """Check if affiliate can request payout"""
         return (
             self.coin_balance >= coin_amount and 
-            coin_amount >= 50 and  # Minimum payout
+            coin_amount >= 50 and
             self.is_active
         )
 
     def request_payout(self, coin_amount, payment_method, **payment_details):
-        """Request payout - reserves coins"""
         if not self.can_request_payout(coin_amount):
             return False, "Cannot process payout"
             
         try:
             with transaction.atomic():
-                # Reserve coins by deducting from balance
                 self.coin_balance -= coin_amount
                 self.save()
                 
-                # Create payout request
                 payout = PayoutRequest.objects.create(
                     user=self.user,
                     coin_amount=coin_amount,
@@ -972,7 +1042,7 @@ class Affiliate(models.Model):
         ordering = ['-created_at']
 
 class Referral(models.Model):
-    """Referral tracking - COMPLETELY UPDATED FOR AUTO-APPROVAL"""
+    """Referral tracking"""
     STATUS_CHOICES = [
         ('pending', 'Pending'),
         ('approved', 'Approved'),
@@ -991,30 +1061,24 @@ class Referral(models.Model):
         return f"Referral: {self.referred_user.email} by {self.affiliate.user.email} ({status_display})"
 
     def save(self, *args, **kwargs):
-        """Auto-approve new referrals and award coins"""
-        is_new = self._state.adding  # Check if this is a new object
+        is_new = self._state.adding
         
         if is_new and self.status == 'pending':
-            # Auto-approve new referrals
             self.status = 'approved'
             self.coins_awarded = 50
             
         super().save(*args, **kwargs)
         
-        # Award coins after saving
         if is_new and self.status == 'approved' and self.coins_awarded > 0:
             self.award_coins_to_affiliate()
 
     def award_coins_to_affiliate(self):
-        """Award coins to affiliate - CALLED AUTOMATICALLY ON SAVE"""
         print(f"🔄 AWARDING {self.coins_awarded} COINS FOR REFERRAL {self.id}")
         
         try:
             with transaction.atomic():
-                # Refresh affiliate data to ensure we have latest
                 affiliate = Affiliate.objects.select_for_update().get(id=self.affiliate.id)
                 
-                # Update affiliate stats
                 affiliate.total_referrals += 1
                 affiliate.total_coins_earned += self.coins_awarded
                 affiliate.coin_balance += self.coins_awarded
@@ -1024,7 +1088,6 @@ class Referral(models.Model):
                 print(f"📊 NEW BALANCE: {affiliate.coin_balance} coins")
                 print(f"👥 TOTAL REFERRALS: {affiliate.total_referrals}")
                 
-                # Send notification
                 self.send_approval_notification()
                 
         except Exception as e:
@@ -1033,7 +1096,6 @@ class Referral(models.Model):
             traceback.print_exc()
 
     def approve_referral(self):
-        """Approve referral and award coins - FOR MANUAL APPROVAL"""
         print(f"🔄 MANUAL APPROVAL FOR REFERRAL: {self.id}")
         
         if self.status != 'pending':
@@ -1044,7 +1106,7 @@ class Referral(models.Model):
             with transaction.atomic():
                 self.status = 'approved'
                 self.coins_awarded = 50
-                self.save()  # This will trigger award_coins_to_affiliate()
+                self.save()
                 
             return True
             
@@ -1053,7 +1115,6 @@ class Referral(models.Model):
             return False
 
     def reject_referral(self):
-        """Reject referral without awarding coins"""
         if self.status == 'pending':
             self.status = 'rejected'
             self.coins_awarded = 0
@@ -1062,7 +1123,6 @@ class Referral(models.Model):
         return False
 
     def send_approval_notification(self):
-        """Send email notification to affiliate when referral is approved"""
         try:
             subject = '🎉 New Referral - 50 TWC Coins Awarded!'
             
@@ -1113,11 +1173,9 @@ TradeWise Team
         verbose_name = "Referral"
         verbose_name_plural = "Referrals"
         unique_together = ('affiliate', 'referred_user')
-        
-
 
 class WeeklyNumber(models.Model):
-    """Weekly TradeWise number - FIXED"""
+    """Weekly TradeWise number"""
     number = models.CharField(max_length=20, default="7 8 4 2 1")
     week_start = models.DateField(default=timezone.now)
     is_active = models.BooleanField(default=True)
@@ -1128,19 +1186,41 @@ class WeeklyNumber(models.Model):
         return f"Weekly Number: {self.number} ({self.week_start})"
 
     def save(self, *args, **kwargs):
-        """Ensure only one active weekly number exists"""
         if self.is_active:
-            # Deactivate all other weekly numbers
             WeeklyNumber.objects.filter(is_active=True).exclude(pk=self.pk).update(is_active=False)
         super().save(*args, **kwargs)
 
     @classmethod
     def get_current_number(cls):
-        """Get current active weekly number"""
         return cls.objects.filter(is_active=True).first()
+    
+
+
+# In models.py
+class ReferralCoinSetting(models.Model):
+    """Simple model to store referral coin amount"""
+    coins_per_referral = models.IntegerField(default=50)
+    last_updated = models.DateTimeField(auto_now=True)
+    
+    class Meta:
+        verbose_name = "Referral Coin Setting"
+        verbose_name_plural = "Referral Coin Setting"
+    
+    def __str__(self):
+        return f"{self.coins_per_referral} coins per referral"
+    
+    @classmethod
+    def get_coins_amount(cls):
+        """Get current coins per referral"""
+        setting = cls.objects.first()
+        if not setting:
+            # Create default if doesn't exist
+            setting = cls.objects.create()
+        return setting.coins_per_referral
+        
 
 class PayoutRequest(models.Model):
-    """Payout requests from affiliates - FIXED"""
+    """Payout requests from affiliates"""
     PAYMENT_METHODS = [
         ('mpesa', 'M-Pesa'),
         ('bank', 'Bank Transfer'),
@@ -1170,7 +1250,6 @@ class PayoutRequest(models.Model):
         return f"Payout: {self.user.email} - KES {self.amount_kes}"
 
     def save(self, *args, **kwargs):
-        """Auto-calculate KES amount (10 Ksh per coin)"""
         if self.coin_amount and not self.amount_kes:
             self.amount_kes = self.coin_amount * 10
         super().save(*args, **kwargs)
@@ -1191,7 +1270,7 @@ class Notification(models.Model):
 
 class AdminLog(models.Model):
     """Admin activity logging"""
-    user = models.ForeignKey(Tradeviewusers, on_delete=models.SET_NULL, null=True, blank=True)  # Make it optional
+    user = models.ForeignKey(Tradeviewusers, on_delete=models.SET_NULL, null=True, blank=True)
     action = models.CharField(max_length=200)
     details = models.JSONField(default=dict, blank=True)
     ip_address = models.GenericIPAddressField()
@@ -1240,20 +1319,6 @@ class Transaction(models.Model):
     def __str__(self):
         return f"{self.transaction_type} - {self.amount}"
 
-# ================== SIGNALS ==================
-
-@receiver(post_save, sender=Tradeviewusers)
-def create_user_profile(sender, instance, created, **kwargs):
-    """Create user profile when new user is created"""
-    if created:
-        UserProfile.objects.create(user=instance)
-
-@receiver(post_save, sender=Tradeviewusers)
-def save_user_profile(sender, instance, **kwargs):
-    """Save user profile when user is saved"""
-    if hasattr(instance, 'profile'):
-        instance.profile.save()
-
 # ================== TRADING SOFTWARE MODELS ==================
 
 class SoftwareTool(models.Model):
@@ -1271,25 +1336,20 @@ class SoftwareTool(models.Model):
     file_type = models.CharField(max_length=20, choices=FILE_TYPES, default='software')
     version = models.CharField(max_length=20, default='1.0')
     
-    # File upload fields
     file = models.FileField(upload_to='software/', blank=True, null=True)
     thumbnail = models.ImageField(upload_to='software/thumbnails/', blank=True, null=True)
     
-    # Software details
     compatibility = models.CharField(max_length=100, blank=True, null=True)
     requirements = models.TextField(blank=True, null=True)
     installation_guide = models.TextField(blank=True, null=True)
     
-    # Pricing and access
     is_free = models.BooleanField(default=True)
     price_usd = models.DecimalField(max_digits=10, decimal_places=2, default=0.00)
     price_kes = models.DecimalField(max_digits=10, decimal_places=2, default=0.00)
     
-    # Stats
     download_count = models.PositiveIntegerField(default=0)
     view_count = models.PositiveIntegerField(default=0)
     
-    # Management
     is_active = models.BooleanField(default=True)
     is_featured = models.BooleanField(default=False)
     requires_vip = models.BooleanField(default=False)
@@ -1306,22 +1366,31 @@ class SoftwareTool(models.Model):
         return f"{self.name} ({self.get_file_type_display()})"
 
     def save(self, *args, **kwargs):
-        """Auto-activate all software when created"""
-        if not self.pk:  # Only for new instances
+        if not self.pk:
             self.is_active = True
         super().save(*args, **kwargs)
 
     def increment_download_count(self):
-        """Increment download count"""
         self.download_count += 1
         self.save()
 
     def increment_view_count(self):
-        """Increment view count"""
         self.view_count += 1
         self.save()
 
-# ================== AUTO-CREATE AFFILIATE PROFILES ==================
+# ================== SIGNALS ==================
+
+@receiver(post_save, sender=Tradeviewusers)
+def create_user_profile(sender, instance, created, **kwargs):
+    """Create user profile when new user is created"""
+    if created:
+        UserProfile.objects.create(user=instance)
+
+@receiver(post_save, sender=Tradeviewusers)
+def save_user_profile(sender, instance, **kwargs):
+    """Save user profile when user is saved"""
+    if hasattr(instance, 'profile'):
+        instance.profile.save()
 
 @receiver(post_save, sender=Tradeviewusers)
 def create_affiliate_profile(sender, instance, created, **kwargs):
@@ -1343,4 +1412,4 @@ def save_affiliate_profile(sender, instance, **kwargs):
         if hasattr(instance, 'affiliate'):
             instance.affiliate.save()
     except Exception as e:
-        print(f"❌ AFFILIATE SAVE ERROR: {str(e)}")        
+        print(f"❌ AFFILIATE SAVE ERROR: {str(e)}")

@@ -119,5 +119,15 @@ path('admin/view-request/<int:request_id>/', views.view_request_details, name='v
 path('ajax/update-request-status/', views.ajax_update_request_status, name='ajax_update_request_status'),
 path('ajax/delete-request/', views.ajax_delete_request, name='ajax_delete_request'),
 
- 
+
+# ================== COINS TRANSACTIONS URL==================
+    path('initialize-coin-buy/', views.initialize_coin_buy, name='initialize_coin_buy'),
+    path('submit-coin-sell-request/', views.submit_coin_sell_request, name='submit_coin_sell_request'),
+    path('verify-coin-payment/<str:reference>/', views.verify_coin_payment, name='verify_coin_payment'),
+    path('admin/update-coin-transaction/', views.update_coin_transaction_status, name='update_coin_transaction_status'),
+    path('debug-email-templates/', views.debug_email_templates, name='debug_email_templates'),
+   path('test-admin-coin-actions/', views.test_admin_coin_actions, name='test_admin_coin_actions'),
+   path('admin-process-form/', views.process_admin_form, name='process_admin_form'),
+   
+    
 ]
