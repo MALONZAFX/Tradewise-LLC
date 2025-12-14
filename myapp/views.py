@@ -34,7 +34,7 @@ from .models import (
     PayoutRequest, Notification, TradeWiseCoin, Review,
     ServiceRequest, Affiliate, Referral, WeeklyNumber, PayoutRequest,
     Notification, AdminLog, Service, AffiliateProgram,ServicePayment, ServiceTransaction, Payment, Transaction,
-    PaystackService, ReferralCoinSetting  
+    PaystackService,  
 )
 
 # ================== SIMPLE AUTHENTICATION SYSTEM ==================
@@ -681,10 +681,47 @@ def add_manual_payment(request, payment_id):
 def admin_dashboard(request):
     """Admin dashboard with SIMPLE data"""
     
+def test_coin_action_page(request):
+    """Simple test page for coin actions"""
+    return HttpResponse("""
+    <!DOCTYPE html>
+    <html>
+    <head><title>Coin Action Test</title></head>
+    <body style="padding: 20px; font-family: Arial;">
+        <h1>🪙 Coin Action Test Page</h1>
+        
+        <div style="background: #f0f0f0; padding: 20px; margin: 20px 0; border-radius: 10px;">
+            <h3>Test Form</h3>
+            <form method="POST" action="/admin-dashboard/">
+                {% csrf_token %}
+                <input type="hidden" name="action" value="test_action">
+                <input type="hidden" name="test_from" value="test_page">
+                <button type="submit" style="padding: 10px 20px; background: #007bff; color: white; border: none; border-radius: 5px;">
+                    Test Submit
+                </button>
+            </form>
+        </div>
+        
+        <div style="background: #e0ffe0; padding: 20px; margin: 20px 0; border-radius: 10px;">
+            <h3>Debug Info:</h3>
+            <pre>
+            Path: {{ request.path }}
+            Method: {{ request.method }}
+            CSRF Token: {{ csrf_token }}
+            </pre>
+        </div>
+        
+        <a href="/admin-dashboard/" style="color: #666;">← Back to Admin</a>
+    </body>
+    </html>
+    """)
+    
     # 🎯 CRITICAL FIX: CHECK FOR POST FIRST BEFORE ANYTHING ELSE
     if request.method == 'POST':
-        print("🎯 POST REQUEST DETECTED - Calling handle_admin_form_submission()")
-        print(f"📋 POST DATA: {dict(request.POST)}")
+        print("🎯 POST REQUEST DETECTED!")
+        print(f"🎯 PATH: {request.path}")
+        print(f"🎯 POST DATA: {dict(request.POST)}")
+        print(f"🎯 ACTION: {request.POST.get('action')}")
         return handle_admin_form_submission(request)
     
     # ================== ORIGINAL GET LOGIC BELOW ==================
@@ -709,6 +746,7 @@ def admin_dashboard(request):
             'capital_funding': 10000.00,
             'general': 0.00
         }
+
         
         # Calculate revenue from all service requests
         service_requests = ServiceRequest.objects.all()
@@ -735,11 +773,7 @@ def admin_dashboard(request):
         # ================== NEW REFERRAL MANAGEMENT DATA ==================
         pending_referrals_list = Referral.objects.filter(status='pending').select_related('affiliate__user', 'referred_user').order_by('-created_at')
         approved_referrals_count = Referral.objects.filter(status='approved').count()
-        
-        # SIMPLE COIN AMOUNT - Get from session or default to 50
-        coins_per_referral = request.session.get('coins_per_referral', 50)
-        
-        total_pending_coins = pending_referrals_list.count() * coins_per_referral
+        total_pending_coins = pending_referrals_list.count() * 50
         
         # Affiliate debug data
         affiliate_debug = {
@@ -815,7 +849,6 @@ def admin_dashboard(request):
             'approved_referrals_count': approved_referrals_count,
             'total_pending_coins': total_pending_coins,
             'affiliate_debug': affiliate_debug,
-            'coins_per_referral': coins_per_referral,  # ADD THIS ONE LINE!
             
             # ================== NEW COIN TRANSACTION DATA ==================
             'pending_coin_transactions': pending_coin_transactions,
@@ -846,7 +879,6 @@ def admin_dashboard(request):
         print(f"   - Service Requests: {service_requests.count()} requests worth KES {service_revenue}")
         print(f"   - Pending Referrals: {pending_referrals_list.count()}")
         print(f"   - Approved Referrals: {approved_referrals_count}")
-        print(f"   - Coins per Referral: {coins_per_referral}")
         print(f"   - Total Pending Coins: {total_pending_coins}")
         print(f"   - Affiliate Debug: {affiliate_debug}")
         print(f"   - Pending Coin Transactions: {pending_coin_transactions.count()}")
@@ -875,12 +907,219 @@ def admin_dashboard(request):
                 'total_coins_awarded': 0,
                 'total_coin_balance': 0,
             },
-            'coins_per_referral': 50,  # ADD THIS ONE LINE!
             # Empty coin transaction data
             'pending_coin_transactions': [],
             'recent_coin_transactions': [],
             'tradewise_coin': None,
         }
+    
+    # OLD POST HANDLING REMOVED - Now at the top of function
+    
+    return render(request, 'admin_dashboard.html', context)
+
+# ================== UPDATED ADMIN DASHBOARD ==================
+@admin_required
+def admin_dashboard(request):
+    """Admin dashboard with SIMPLE data"""
+    
+    # 🎯 CRITICAL FIX: CHECK FOR POST FIRST BEFORE ANYTHING ELSE
+    if request.method == 'POST':
+        print("🎯 POST REQUEST DETECTED - Calling handle_admin_form_submission()")
+        print(f"📋 POST DATA: {dict(request.POST)}")
+        return handle_admin_form_submission(request)
+    
+    # ================== ORIGINAL GET LOGIC BELOW ==================
+    try:
+        # Get basic counts for dashboard
+        total_users = Tradeviewusers.objects.count()
+        new_users_today = Tradeviewusers.objects.filter(
+            created_at__date=timezone.now().date()
+        ).count()
+        
+        # Calculate total revenue from successful payments
+        payment_revenue = Payment.objects.filter(status='success').aggregate(
+            total=Sum('amount')
+        )['total'] or 0
+        
+        # ADD SERVICE REQUEST REVENUE CALCULATION
+        service_revenue = 0
+        # Service prices (in KES)
+        SERVICE_PRICES = {
+            'copy_trading': 10000.00,
+            'live_trading': 5000.00,
+            'capital_funding': 10000.00,
+            'general': 0.00
+        }
+
+        
+
+        
+        # Calculate revenue from all service requests
+        service_requests = ServiceRequest.objects.all()
+        for req in service_requests:
+            service_revenue += SERVICE_PRICES.get(req.service_type, 0.00)
+        
+        # TOTAL REVENUE = Payments + Service Requests
+        total_revenue = float(payment_revenue) + float(service_revenue)
+        
+        # Count pending service requests
+        pending_requests_count = ServiceRequest.objects.filter(status='pending').count()
+        
+        # Active traders (users with recent activity)
+        active_traders = Tradeviewusers.objects.filter(
+            last_login__gte=timezone.now() - timedelta(days=30)
+        ).count()
+        
+        # Add software tools to context
+        software_list = SoftwareTool.objects.all().order_by('-created_at')
+        active_software_count = SoftwareTool.objects.filter(is_active=True).count()
+        total_downloads = SoftwareTool.objects.aggregate(total=Sum('download_count'))['total'] or 0
+        software_types_count = SoftwareTool.objects.values('file_type').distinct().count()
+
+        # ================== NEW REFERRAL MANAGEMENT DATA ==================
+        pending_referrals_list = Referral.objects.filter(status='pending').select_related('affiliate__user', 'referred_user').order_by('-created_at')
+        approved_referrals_count = Referral.objects.filter(status='approved').count()
+        total_pending_coins = pending_referrals_list.count() * 50
+        
+        # Affiliate debug data
+        affiliate_debug = {
+            'pending_referrals': pending_referrals_list.count(),
+            'approved_referrals': approved_referrals_count,
+            'total_coins_awarded': Referral.objects.filter(status='approved').aggregate(Sum('coins_awarded'))['coins_awarded__sum'] or 0,
+            'total_coin_balance': Affiliate.objects.aggregate(Sum('coin_balance'))['coin_balance__sum'] or 0,
+        }
+
+        # ================== NEW COIN TRANSACTION DATA ==================
+        # Get pending coin transactions (buy/sell requests)
+        pending_coin_transactions = CoinTransaction.objects.filter(
+            status__in=['pending', 'processing']
+        ).order_by('-created_at')[:10]  # Last 10 pending transactions
+        
+        # Get recent completed coin transactions
+        recent_coin_transactions = CoinTransaction.objects.filter(
+            status='completed'
+        ).order_by('-created_at')[:10]  # Last 10 completed transactions
+        
+        # Get TradeWise Coin settings
+        tradewise_coin = TradeWiseCoin.objects.first()
+        if not tradewise_coin:
+            # Create default if doesn't exist
+            tradewise_coin = TradeWiseCoin.objects.create(
+                title="TradeWise Coin",
+                buy_price_usd=0.10,
+                sell_price_usd=0.09,
+                description="The future of decentralized trading is here.",
+                price="$0.10 per TWC (Limited Supply)",
+                bonus_text="Early investors get +15% bonus tokens in the first round."
+            )
+
+        # Get all data for the dashboard
+        context = {
+            # Statistics
+            'total_users': total_users,
+            'new_users_today': new_users_today,
+            'total_revenue': total_revenue,  # Now includes service request value
+            'pending_requests_count': pending_requests_count,
+            'active_traders': active_traders,
+            
+            # Content data
+            'strategies': TradingStrategy.objects.all(),
+            'signals': TradingSignal.objects.all(),
+            
+            'services': Service.objects.all(),
+            'blog_posts': BlogPost.objects.all(),
+            'tradewise_card': TradeWiseCard.objects.first(),
+            'featured_merchandise': Merchandise.objects.all(),
+            'merchandise_list': Merchandise.objects.all(),
+            'tradewise_coin': tradewise_coin,  # Using the fetched/created instance
+            'reviews': Review.objects.all(),
+            'all_requests': ServiceRequest.objects.all().order_by('-created_at'),  # KEEP ORIGINAL NAME
+            'users': Tradeviewusers.objects.all().order_by('-created_at'),
+            
+            # Software data
+            'software_list': software_list,
+            'active_software_count': active_software_count,
+            'total_downloads': total_downloads,
+            'software_types_count': software_types_count,
+
+            # Affiliate data
+            'total_affiliates': Affiliate.objects.count(),
+            'pending_payouts_count': PayoutRequest.objects.filter(status='pending').count(),
+            'all_affiliates': Affiliate.objects.select_related('user').all(),
+            'pending_payouts': PayoutRequest.objects.filter(status='pending').select_related('user'),
+            'current_weekly_number': WeeklyNumber.objects.filter(is_active=True).first(),
+            'previous_numbers': WeeklyNumber.objects.filter(is_active=False).order_by('-created_at')[:5],
+            
+            # ================== NEW REFERRAL MANAGEMENT DATA ==================
+            'pending_referrals_list': pending_referrals_list,
+            'approved_referrals_count': approved_referrals_count,
+            'total_pending_coins': total_pending_coins,
+            'affiliate_debug': affiliate_debug,
+            
+            # ================== NEW COIN TRANSACTION DATA ==================
+            'pending_coin_transactions': pending_coin_transactions,
+            'recent_coin_transactions': recent_coin_transactions,
+            
+            # Current admin info
+            'current_admin': {
+                'username': request.session.get('admin_username', 'Admin'),
+                'number': request.session.get('admin_number', '500100')
+            },
+            
+            # Chart data (simplified)
+            'revenue_chart_data': get_revenue_chart_data(),
+            'service_distribution_data': get_service_distribution_data(),
+        }
+
+        # SIMPLE SERVICE PAYMENT DATA
+        all_service_payments = ServicePayment.objects.all().order_by('-created_at')
+        completed_payments = all_service_payments.filter(status='completed')
+        
+        context.update({
+            'all_service_payments': all_service_payments,
+            'completed_payments': completed_payments,
+        })
+        
+        print(f"🔍 ADMIN DASHBOARD DEBUG:")
+        print(f"   - Total Revenue: KES {total_revenue} (Payments: {payment_revenue}, Services: {service_revenue})")
+        print(f"   - Service Requests: {service_requests.count()} requests worth KES {service_revenue}")
+        print(f"   - Pending Referrals: {pending_referrals_list.count()}")
+        print(f"   - Approved Referrals: {approved_referrals_count}")
+        print(f"   - Total Pending Coins: {total_pending_coins}")
+        print(f"   - Affiliate Debug: {affiliate_debug}")
+        print(f"   - Pending Coin Transactions: {pending_coin_transactions.count()}")
+        print(f"   - Recent Coin Transactions: {recent_coin_transactions.count()}")
+        print(f"   - Coin Prices: Buy=${tradewise_coin.buy_price_usd}, Sell=${tradewise_coin.sell_price_usd}")
+        
+    except Exception as e:
+        # If there are any database issues, provide empty context
+        print(f"❌ Dashboard error: {e}")
+        import traceback
+        traceback.print_exc()
+        context = {
+            'total_users': 0,
+            'new_users_today': 0,
+            'total_revenue': 0,
+            'pending_requests_count': 0,
+            'active_traders': 0,
+            'current_admin': {'username': 'Admin'},
+            # Empty referral data
+            'pending_referrals_list': [],
+            'approved_referrals_count': 0,
+            'total_pending_coins': 0,
+            'affiliate_debug': {
+                'pending_referrals': 0,
+                'approved_referrals': 0,
+                'total_coins_awarded': 0,
+                'total_coin_balance': 0,
+            },
+            # Empty coin transaction data
+            'pending_coin_transactions': [],
+            'recent_coin_transactions': [],
+            'tradewise_coin': None,
+        }
+    
+    # OLD POST HANDLING REMOVED - Now at the top of function
     
     return render(request, 'admin_dashboard.html', context)
 
@@ -932,17 +1171,59 @@ def handle_admin_form_submission(request):
                 messages.error(request, 'Coin amount is too high. Maximum is 10,000.')
                 return redirect('admin_dashboard')
             
-            # Store in session
-            request.session['coins_per_referral'] = new_coin_amount
+            # Update or create the setting
+            setting, created = ReferralCoinSetting.objects.get_or_create(
+                id=1,  # We'll just use one record
+                defaults={'coins_per_referral': new_coin_amount}
+            )
             
-            messages.success(request, f'✅ Referral coins updated to {new_coin_amount}!')
-            print(f"✅ Referral coins updated to: {new_coin_amount}")
+            if not created:
+                setting.coins_per_referral = new_coin_amount
+                setting.save()
+            
+            print(f"✅ REFERRAL COINS UPDATED: {new_coin_amount} coins per referral")
+            messages.success(request, f'✅ Referral coins updated! Now awarding {new_coin_amount} coins per referral.')
             
         except ValueError:
             messages.error(request, 'Invalid coin amount. Please enter a number.')
         except Exception as e:
             messages.error(request, f'Error updating referral coins: {str(e)}')
             print(f"❌ Referral coins update error: {str(e)}")
+        
+        return redirect('admin_dashboard')
+    
+    # ================== COIN TRANSACTION HANDLERS ==================
+    if action == 'update_coin':
+        print("🔄 Processing: update_coin")
+        try:
+            coin = TradeWiseCoin.objects.first()
+            if not coin:
+                coin = TradeWiseCoin.objects.create(
+                    title="TradeWise Coin",
+                    buy_price_usd=0.10,
+                    sell_price_usd=0.09
+                )
+            
+            # Update fields
+            coin.title = request.POST.get('title', coin.title)
+            coin.subtitle = request.POST.get('subtitle', coin.subtitle)
+            coin.description = request.POST.get('description', coin.description)
+            coin.bonus_text = request.POST.get('bonus_text', coin.bonus_text)
+            coin.buy_price_usd = Decimal(request.POST.get('buy_price_usd', '0.10'))
+            coin.sell_price_usd = Decimal(request.POST.get('sell_price_usd', '0.09'))
+            coin.is_active = request.POST.get('is_active') == 'on'
+            
+            if 'image' in request.FILES:
+                coin.image = request.FILES['image']
+            
+            coin.save()
+            
+            messages.success(request, '✅ TradeWise Coin settings updated successfully!')
+            print(f"✅ Coin updated: Buy=${coin.buy_price_usd}, Sell=${coin.sell_price_usd}")
+            
+        except Exception as e:
+            messages.error(request, f'Error updating coin: {str(e)}')
+            print(f"❌ Coin update error: {str(e)}")
         
         return redirect('admin_dashboard')
     
@@ -2075,8 +2356,8 @@ def approve_referral_traditional(request):
         referral_id = request.POST.get('referral_id')
         referral = Referral.objects.get(id=referral_id)
         
-        # Get coins from session or default to 50
-        coins_per_referral = request.session.get('coins_per_referral', 50)
+        # Get the current coin amount
+        coins_per_referral = ReferralCoinSetting.get_coins_amount()
         
         # Award coins to affiliate
         affiliate = referral.affiliate
@@ -2098,7 +2379,6 @@ def approve_referral_traditional(request):
         messages.error(request, f'Error approving referral: {str(e)}')
     
     return redirect('admin_dashboard')
-
 
 def approve_all_referrals_traditional(request):
     """Approve all referrals - traditional form"""
@@ -7215,6 +7495,3 @@ def test_coin_actions_manually(request):
     """
     
     return HttpResponse(test_links)    
-
-
-
