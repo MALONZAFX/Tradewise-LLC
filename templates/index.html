@@ -71,12 +71,11 @@
   </div>
 </div>
 <!-- Preloader End -->
-
 <!-- Hero Section with Navbar & Slider Start -->
 <section class="hero-section position-relative">
     <!-- Full-width Black Navbar -->
     <header class="main-header position-absolute w-300" style="z-index: 10; top: 0;">
-      <nav class="navbar navbar-expand-lg navbar-dark bg-black sticky-top">
+      <nav class="navbar navbar-expand-lg navbar-dark bg-black">
           <div class="container-fluid px-4">
               <a class="navbar-brand" href=" ">
                   <img src="{% static 'images/TRADE-WISE-FINAL-TRANSPARENT.png' %}" alt="Logo" class="logo-img">
@@ -114,7 +113,7 @@
   
   <style>
     .main-header {
-      position: fixed !important;
+      position: absolute !important;
       top: 0;
       width: 100%;
       z-index: 1030;
@@ -161,6 +160,7 @@
      </div>
   </div>
   </div>
+
             <!-- Slide 2 -->
             <div class="swiper-slide hero-slide" style="background: linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.3)), url('https://www.puprime.com/wp-content/uploads/2022/09/%E5%9B%BE%E7%89%87-1-1-1024x561.jpg') center/cover;">
                 <div class="container h-100 d-flex align-items-center">
@@ -255,7 +255,6 @@
   <style>
   /* Preloader Styles */
   
-  
   @keyframes spin {
     0% { transform: rotate(0deg); }
     100% { transform: rotate(360deg); }
@@ -264,7 +263,10 @@
   /* Navbar Styles */
   .navbar {
     padding: 10px 0px;
-    background: #000 !important;
+    background: rgba(0,0,0,0.35) !important; /* GLASS CHANGE */
+    backdrop-filter: blur(18px) saturate(180%);
+    -webkit-backdrop-filter: blur(18px) saturate(180%);
+    border-bottom: 1px solid rgba(255,255,255,0.15);
   }
   
   .logo-img {
@@ -432,7 +434,7 @@
   
   @media (max-width: 992px) {
     .navbar-collapse {
-      background: #000;
+      background: rgba(0,0,0,0.85); /* mobile glass readable */
       padding: 15px;
       margin-top: 10px;
       border-radius: 10px;
@@ -504,6 +506,8 @@
     }
   }
   </style>
+
+
 
 
 

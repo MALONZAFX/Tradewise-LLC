@@ -2670,7 +2670,7 @@ def login_view(request):
 
 
 def signup(request):
-    """PERMANENT FIX SIGNUP - GUARANTEED AUTO-COIN AWARDS"""
+    """PERMANENT FIX SIGNUP - GUARANTEED AUTO-COIN AWARDS TO REFERRER"""
     if request.method == 'POST':
         first_name = request.POST.get('first_name')
         second_name = request.POST.get('second_name')
@@ -2720,16 +2720,16 @@ def signup(request):
             import time
             time.sleep(0.5)  # Give time for signal to create affiliate
             
-            # Verify affiliate was created
+            # Verify affiliate was created for NEW USER
             try:
-                new_affiliate = Affiliate.objects.get(user=user)
-                print(f"✅ NEW USER AFFILIATE: {new_affiliate.referral_code}")
+                new_user_affiliate = Affiliate.objects.get(user=user)
+                print(f"✅ NEW USER AFFILIATE: {new_user_affiliate.referral_code}")
             except Affiliate.DoesNotExist:
                 print(f"❌ AFFILIATE NOT CREATED - Creating manually...")
-                new_affiliate = Affiliate.objects.create(user=user)
-                print(f"✅ MANUAL AFFILIATE CREATED: {new_affiliate.referral_code}")
+                new_user_affiliate = Affiliate.objects.create(user=user)
+                print(f"✅ MANUAL AFFILIATE CREATED: {new_user_affiliate.referral_code}")
 
-            # STEP 3: 🚀 PROCESS REFERRAL - SIMPLE & AUTOMATIC
+            # STEP 3: 🚀 PROCESS REFERRAL - REFERRER GETS COINS, NEW USER GETS NOTHING
             if referrer_id and referrer_id.strip():
                 print(f"🔍 PROCESSING REFERRAL: Raw code '{referrer_id}'")
                 
@@ -2747,42 +2747,86 @@ def signup(request):
                 # 🚨 END UNIVERSAL MATCHING 🚨
                 
                 # Prevent self-referral
-                if referrer_id == new_affiliate.referral_code:
+                if referrer_id == new_user_affiliate.referral_code:
                     print(f"⚠️ SELF-REFERRAL ATTEMPT - Skipping: {referrer_id}")
+                    messages.info(request, "You cannot refer yourself!")
                 else:
                     try:
-                        # Find the referrer
+                        # Find the REFERRER (person whose link was used - they get coins)
                         referrer_affiliate = Affiliate.objects.get(referral_code=referrer_id)
                         print(f"✅ FOUND REFERRER: {referrer_affiliate.user.email}")
                         print(f"💰 REFERRER CURRENT BALANCE: {referrer_affiliate.coin_balance} coins")
+                        print(f"👥 REFERRER CURRENT TOTAL REFERRALS: {referrer_affiliate.total_referrals}")
                         
                         # Check if referral already exists (prevent duplicates)
                         existing_referral = Referral.objects.filter(
-                            affiliate=referrer_affiliate,
-                            referred_user=user
+                            affiliate=referrer_affiliate,  # REFERRER gets coins
+                            referred_user=user  # NEW USER is the one who signed up
                         ).first()
                         
                         if existing_referral:
                             print(f"⚠️ REFERRAL ALREADY EXISTS - Skipping duplicate")
                             print(f"   Existing referral ID: {existing_referral.id}, Status: {existing_referral.status}")
                         else:
-                            # 🚀 CREATE REFERRAL - THIS TRIGGERS AUTO-COIN AWARD!
-                            print(f"🔴🟢🔴 CRITICAL DEBUG: ABOUT TO CREATE REFERRAL!")
+                            # 🚀 CREATE REFERRAL - REFERRER gets coins, NEW USER is just the referred person
+                            print(f"🔴🟢🔴 CRITICAL: Creating referral for REFERRER: {referrer_affiliate.user.email}")
                             referral = Referral.objects.create(
-                                affiliate=referrer_affiliate,
-                                referred_user=user,
+                                affiliate=referrer_affiliate,  # Person who gets 50 coins
+                                referred_user=user,  # New user who signed up (gets nothing)
                                 is_active=True
                             )
                             
                             print(f"🎉 REFERRAL CREATED SUCCESSFULLY!")
+                            print(f"   Referrer (gets coins): {referrer_affiliate.user.email}")
+                            print(f"   New User (referred): {user.email}")
                             print(f"   Referral ID: {referral.id}")
                             print(f"   Status: {referral.status}")
-                            print(f"   Coins Awarded: {referral.coins_awarded}")
                             
-                            # Refresh referrer data to see updated balance
-                            referrer_affiliate.refresh_from_db()
-                            print(f"💰 REFERRER NEW BALANCE: {referrer_affiliate.coin_balance} coins")
-                            print(f"👥 REFERRER TOTAL REFERRALS: {referrer_affiliate.total_referrals}")
+                            # AUTO-APPROVE AND AWARD 50 COINS TO REFERRER
+                            if referral.status == 'pending':
+                                referral.status = 'approved'
+                                referral.coins_awarded = 50
+                                referral.approved_at = timezone.now()
+                                referral.save()
+                                
+                                # AWARD COINS TO REFERRER
+                                referrer_affiliate.coin_balance += 50
+                                referrer_affiliate.total_coins_earned += 50
+                                referrer_affiliate.total_referrals += 1
+                                referrer_affiliate.save()
+                                
+                                print(f"💰 COINS AWARDED TO REFERRER: 50 coins to {referrer_affiliate.user.email}")
+                                print(f"📊 REFERRER NEW BALANCE: {referrer_affiliate.coin_balance} coins")
+                                print(f"👥 REFERRER NEW TOTAL REFERRALS: {referrer_affiliate.total_referrals}")
+                                
+                                # Send notification to referrer
+                                try:
+                                    send_mail(
+                                        subject='🎉 New Referral - 50 TWC Coins Awarded!',
+                                        message=f"""Congratulations {referrer_affiliate.user.first_name}!
+
+Someone signed up using your referral link:
+
+New User: {user.first_name} {user.second_name}
+Email: {user.email}
+TradeWise Number: {user.account_number}
+
+You have been awarded 50 TWC coins!
+
+Your new balance: {referrer_affiliate.coin_balance} TWC coins
+Total referrals: {referrer_affiliate.total_referrals}
+
+Best regards,
+TradeWise Team""",
+                                        from_email=getattr(settings, 'DEFAULT_FROM_EMAIL', 'noreply@trade-wise.co.ke'),
+                                        recipient_list=[referrer_affiliate.user.email],
+                                        fail_silently=True,
+                                    )
+                                    print(f"📧 Referral notification sent to {referrer_affiliate.user.email}")
+                                except Exception as email_error:
+                                    print(f"⚠️ Failed to send email: {email_error}")
+                            else:
+                                print(f"⚠️ Referral already {referral.status}")
                             
                     except Affiliate.DoesNotExist:
                         print(f"❌ NO AFFILIATE FOUND WITH CODE: '{referrer_id}'")
@@ -2840,7 +2884,7 @@ def signup(request):
             print(f"   User: {user.first_name} {user.second_name}")
             print(f"   Email: {user.email}")
             print(f"   TWN: {user.account_number}")
-            print(f"   Affiliate Code: {new_affiliate.referral_code}")
+            print(f"   New User Affiliate Code: {new_user_affiliate.referral_code}")
             print(f"   Referral Used: {'Yes' if referrer_id else 'No'}")
             print(f"   Emails Status: {'✅ All sent' if email_success else '❌ Some failed'}")
 
@@ -2862,7 +2906,7 @@ def signup(request):
             
             if referrer_id:
                 messages.info(request, 
-                    f'✅ Referral processed! 50 coins awarded to the referrer.'
+                    f'✅ Referral processed! 50 coins awarded to your referrer.'
                 )
 
             return redirect('login_view')
@@ -6002,18 +6046,19 @@ def get_affiliate_data(request):
     
     try:
         user_id = request.session.get('user_id')
-        user = Tradeviewusers.objects.get(id=user_id)  # This is failing!
+        user = Tradeviewusers.objects.get(id=user_id)
         
-        # Get or create affiliate
+        # Get or create affiliate for THIS USER
         affiliate, created = Affiliate.objects.get_or_create(user=user)
         if created:
             print(f"✅ AUTO-CREATED AFFILIATE FOR: {user.email}")
         
         # Get current weekly number
-        weekly_number = WeeklyNumber.get_current_number()
+        weekly_number = WeeklyNumber.objects.filter(is_active=True).first()
         
         # Calculate stats
         pending_referrals_count = Referral.objects.filter(affiliate=affiliate, status='pending').count()
+        approved_referrals_count = Referral.objects.filter(affiliate=affiliate, status='approved').count()
         
         data = {
             'success': True,
@@ -6021,18 +6066,19 @@ def get_affiliate_data(request):
                 'total_referrals': affiliate.total_referrals,
                 'total_coins': affiliate.total_coins_earned,
                 'coin_balance': affiliate.coin_balance,
-                'pending_coins': pending_referrals_count * 50
+                'pending_coins': pending_referrals_count * 50,
+                'approved_referrals': approved_referrals_count
             },
             'cash_value': affiliate.coin_balance * 10,
             'weekly_number': weekly_number.number if weekly_number else "7 8 4 2 1",
             'referral_code': affiliate.referral_code
         }
         
-        print(f"📊 AFFILIATE DATA: {data}")
+        print(f"📊 AFFILIATE DATA for {user.email}: {data}")
         return JsonResponse(data)
         
     except Tradeviewusers.DoesNotExist:
-        # ✅ FIX: Clear invalid session and redirect to login
+        # Clear invalid session and redirect to login
         print(f"❌ USER DELETED: User ID {user_id} no longer exists")
         request.session.flush()  # Clear the invalid session
         return JsonResponse({
@@ -6046,26 +6092,66 @@ def get_affiliate_data(request):
 
 
 @admin_required
-def approve_referral(request):
-    """Approve referral and award 50 coins - AJAX ENDPOINT"""
+def approve_referral_admin(request):
+    """Admin approve referral and award 50 coins - AJAX ENDPOINT (FIXED NAME)"""
     if request.method == 'POST':
         try:
             # Get data from AJAX request
             data = json.loads(request.body)
             referral_id = data.get('referral_id')
             
-            print(f"🟢 APPROVING REFERRAL: ID {referral_id}")
+            print(f"🟢 ADMIN APPROVING REFERRAL: ID {referral_id}")
             
             # Find the pending referral
             referral = Referral.objects.get(id=referral_id, status='pending')
             
+            # Check who the affiliate is (who gets coins)
+            affiliate = referral.affiliate
+            print(f"💰 COINS WILL GO TO: {affiliate.user.email} (Affiliate ID: {affiliate.id})")
+            print(f"📊 CURRENT BALANCE: {affiliate.coin_balance} coins")
+            
             # Use the model's approve method
             if referral.approve_referral():
-                print(f"✅ REFERRAL APPROVED: 50 coins awarded to {referral.affiliate.user.email}")
+                # Refresh data
+                affiliate.refresh_from_db()
+                print(f"✅ REFERRAL APPROVED: 50 coins awarded to {affiliate.user.email}")
+                print(f"📊 NEW BALANCE: {affiliate.coin_balance} coins")
+                print(f"👥 NEW TOTAL REFERRALS: {affiliate.total_referrals}")
+                
+                # Send notification to referrer
+                try:
+                    send_mail(
+                        subject='🎉 Your Referral Was Approved - 50 TWC Coins Awarded!',
+                        message=f"""Hello {affiliate.user.first_name}!
+
+Your referral has been approved by the admin!
+
+Referred User: {referral.referred_user.first_name} {referral.referred_user.second_name}
+Email: {referral.referred_user.email}
+TradeWise Number: {referral.referred_user.account_number}
+
+You have been awarded 50 TWC coins!
+
+Your new balance: {affiliate.coin_balance} TWC coins
+Total referrals: {affiliate.total_referrals}
+
+Thank you for referring users to TradeWise!
+
+Best regards,
+TradeWise Team""",
+                        from_email=getattr(settings, 'DEFAULT_FROM_EMAIL', 'noreply@trade-wise.co.ke'),
+                        recipient_list=[affiliate.user.email],
+                        fail_silently=True,
+                    )
+                    print(f"📧 Approval notification sent to {affiliate.user.email}")
+                except Exception as email_error:
+                    print(f"⚠️ Failed to send approval email: {email_error}")
+                
                 return JsonResponse({
                     'success': True, 
-                    'message': f'✅ 50 coins awarded to {referral.affiliate.user.first_name}!',
-                    'new_balance': referral.affiliate.coin_balance
+                    'message': f'✅ 50 coins awarded to {affiliate.user.first_name}!',
+                    'new_balance': affiliate.coin_balance,
+                    'referrer_email': affiliate.user.email
                 })
             else:
                 return JsonResponse({
@@ -6083,7 +6169,191 @@ def approve_referral(request):
     return JsonResponse({'success': False, 'error': 'Invalid request method'})
 
 
-# Add these functions to views.py
+@admin_required
+def approve_referral_direct(request, referral_id):
+    """Approve referral via direct URL - FIXED NAME"""
+    try:
+        referral = Referral.objects.get(id=referral_id, status='pending')
+        
+        if referral.approve_referral():
+            messages.success(request, f'Referral approved! 50 coins awarded to {referral.affiliate.user.first_name}')
+            
+            # Send notification to referrer
+            try:
+                send_mail(
+                    subject='🎉 Your Referral Was Approved - 50 TWC Coins Awarded!',
+                    message=f"""Hello {referral.affiliate.user.first_name}!
+
+Your referral has been approved by the admin!
+
+Referred User: {referral.referred_user.first_name} {referral.referred_user.second_name}
+Email: {referral.referred_user.email}
+TradeWise Number: {referral.referred_user.account_number}
+
+You have been awarded 50 TWC coins!
+
+Your new balance: {referral.affiliate.coin_balance} TWC coins
+Total referrals: {referral.affiliate.total_referrals}
+
+Thank you for referring users to TradeWise!
+
+Best regards,
+TradeWise Team""",
+                    from_email=getattr(settings, 'DEFAULT_FROM_EMAIL', 'noreply@trade-wise.co.ke'),
+                    recipient_list=[referral.affiliate.user.email],
+                    fail_silently=True,
+                )
+                print(f"📧 Direct approval notification sent to {referral.affiliate.user.email}")
+            except Exception as email_error:
+                print(f"⚠️ Failed to send direct approval email: {email_error}")
+                
+        else:
+            messages.error(request, 'Referral already approved')
+            
+    except Referral.DoesNotExist:
+        messages.error(request, 'Referral not found')
+    except Exception as e:
+        messages.error(request, f'Error: {str(e)}')
+    
+    return redirect('admin_dashboard')
+
+@admin_required
+def reject_referral(request, referral_id):
+    """Reject a referral"""
+    try:
+        referral = Referral.objects.get(id=referral_id, status='pending')
+        referral.status = 'rejected'
+        referral.save()
+        messages.success(request, 'Referral rejected')
+    except Exception as e:
+        messages.error(request, f'Error: {str(e)}')
+    return redirect('admin_dashboard')
+
+@admin_required
+def approve_all_pending_referrals(request):
+    """Approve all pending referrals"""
+    try:
+        pending_referrals = Referral.objects.filter(status='pending')
+        count = pending_referrals.count()
+        
+        for referral in pending_referrals:
+            referral.approve_referral()
+        
+        messages.success(request, f'Approved all {count} pending referrals!')
+    except Exception as e:
+        messages.error(request, f'Error: {str(e)}')
+    return redirect('admin_dashboard')
+
+@admin_required
+def bulk_approve_referrals(request):
+    """Bulk approve selected referrals"""
+    if request.method == 'POST':
+        try:
+            referral_ids = request.POST.getlist('referral_ids')
+            approved_count = 0
+            
+            for referral_id in referral_ids:
+                try:
+                    referral = Referral.objects.get(id=referral_id, status='pending')
+                    if referral.approve_referral():
+                        approved_count += 1
+                except Referral.DoesNotExist:
+                    continue
+            
+            messages.success(request, f'Approved {approved_count} referrals!')
+        except Exception as e:
+            messages.error(request, f'Error: {str(e)}')
+    
+    return redirect('admin_dashboard')
+
+    # ================== NEW AFFILIATE & REFERRAL FUNCTIONS ==================
+
+def get_affiliate_data(request):
+    """Live data for affiliate dashboard"""
+    if not request.session.get('user_id'):
+        return JsonResponse({'success': False, 'error': 'Please login'})
+    
+    try:
+        user = Tradeviewusers.objects.get(id=request.session.get('user_id'))
+        affiliate = Affiliate.objects.get(user=user)
+        weekly_number = WeeklyNumber.objects.filter(is_active=True).first()
+        
+        return JsonResponse({
+            'success': True,
+            'stats': {
+                'total_referrals': affiliate.total_referrals,
+                'total_coins': affiliate.total_coins_earned,
+                'coin_balance': affiliate.coin_balance,
+                'pending_coins': Referral.objects.filter(affiliate=affiliate, status='pending').count() * 50
+            },
+            'cash_value': affiliate.coin_balance * 10,
+            'weekly_number': weekly_number.number if weekly_number else '7 8 4 2 1'
+        })
+    except Exception as e:
+        return JsonResponse({'success': False, 'error': str(e)})
+
+def get_weekly_number(request):
+    """AJAX endpoint for weekly number"""
+    try:
+        current_weekly = WeeklyNumber.objects.filter(is_active=True).first()
+        return JsonResponse({
+            'success': True,
+            'weekly_number': current_weekly.number if current_weekly else '7 8 4 2 1',
+            'week_start': current_weekly.week_start.strftime('%b %d') if current_weekly else ''
+        })
+    except Exception as e:
+        return JsonResponse({'success': False, 'error': str(e)})
+
+def request_payout(request):
+    """Handle payout requests from users - FIXED VERSION"""
+    if not request.session.get('user_id'):
+        return JsonResponse({'success': False, 'error': 'Please log in'})
+    
+    if request.method == 'POST':
+        try:
+            user_id = request.session.get('user_id')
+            user = Tradeviewusers.objects.get(id=user_id)
+            affiliate = Affiliate.objects.get(user=user)
+            
+            coin_amount = int(request.POST.get('coin_amount', 0))
+            
+            # VALIDATION
+            if coin_amount < 50:
+                return JsonResponse({'success': False, 'error': 'Minimum payout is 50 coins'})
+            
+            if coin_amount > affiliate.coin_balance:
+                return JsonResponse({'success': False, 'error': 'Insufficient coin balance'})
+            
+            # Create payout request
+            payout_request = PayoutRequest(
+                user=user,
+                coin_amount=coin_amount,
+                amount_kes=coin_amount * 10,
+                payment_method=request.POST.get('payment_method'),
+                mpesa_number=request.POST.get('mpesa_number'),
+                bank_name=request.POST.get('bank_name'),
+                bank_account=request.POST.get('bank_account'),
+                paypal_email=request.POST.get('paypal_email'),
+                status='pending'
+            )
+            payout_request.save()
+            
+            # Update affiliate balance
+            affiliate.coin_balance -= coin_amount
+            affiliate.save()
+            
+            # Send notification
+            send_payout_notification_email(payout_request)
+            
+            return JsonResponse({
+                'success': True, 
+                'message': f'Payout request submitted for {coin_amount} coins'
+            })
+            
+        except Exception as e:
+            return JsonResponse({'success': False, 'error': str(e)})
+    
+    return JsonResponse({'success': False, 'error': 'Invalid request'})
 
 @admin_required
 def approve_referral(request, referral_id=None):
@@ -6114,6 +6384,7 @@ def approve_referral(request, referral_id=None):
             messages.error(request, f'Error: {str(e)}')
     
     return redirect('admin_dashboard')
+
 
 @admin_required
 def reject_referral(request, referral_id):
