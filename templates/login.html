@@ -489,13 +489,14 @@
             margin-bottom: 15px;
         }
 
-        /* LOGO POSITIONED BETWEEN TITLE AND TAGLINE */
+        /* LOGO POSITIONED BETWEEN TITLE AND TAGLINE - KEEP UPRIGHT */
         .tradewise-image-logo {
             height: 50px;
             width: auto;
             margin: 10px 0 15px 0;
-            transition: all 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+            transition: transform 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
             filter: brightness(0) saturate(100%) invert(24%) sepia(99%) saturate(745%) hue-rotate(173deg) brightness(93%) contrast(96%);
+            transform: scale(1) rotate(0deg); /* FORCE UPRIGHT */
         }
 
         .tradewise-tagline {
@@ -550,15 +551,6 @@
                 transition: all 0.6s ease-in-out;
             }
             
-            /* COLOR SWAP BACKGROUNDS - SAME AS LAPTOP */
-            .container.sign-in-view {
-                background: linear-gradient(to right, #ffffff 0%, #ffffff 50%, #2c3e50 50%, #3498db 100%);
-            }
-            
-            .container.sign-up-view {
-                background: linear-gradient(to right, #3498db 0%, #2c3e50 50%, #ffffff 50%, #ffffff 100%);
-            }
-            
             /* Mobile Form Containers with COLOR TRANSITION */
             .form-container {
                 position: relative;
@@ -611,7 +603,7 @@
                 margin-top: 10px;
             }
             
-            /* Mobile Link Styling - Make "Sign Up" PROMINENT WITH COLOR TRANSITION */
+            /* Mobile Link Styling - Make "Sign Up" PROMINENT (BLUE, NOT GREEN) */
             .mobile-switch-link {
                 display: inline-block;
                 padding: 14px 30px !important;
@@ -629,15 +621,15 @@
             }
             
             .mobile-signup-link {
-                background: linear-gradient(135deg, #2ecc71, #27ae60);
+                background: linear-gradient(135deg, #3498db, #2980b9); /* BLUE, NOT GREEN */
                 color: white !important;
-                box-shadow: 0 5px 15px rgba(46, 204, 113, 0.3);
+                box-shadow: 0 5px 15px rgba(52, 152, 219, 0.3);
             }
             
             .mobile-signup-link:hover {
                 transform: translateY(-3px);
-                box-shadow: 0 8px 20px rgba(46, 204, 113, 0.4);
-                background: linear-gradient(135deg, #27ae60, #219653);
+                box-shadow: 0 8px 20px rgba(52, 152, 219, 0.4);
+                background: linear-gradient(135deg, #2980b9, #1f639e);
             }
             
             .mobile-signin-link {
@@ -652,7 +644,7 @@
                 background: linear-gradient(135deg, #2980b9, #1f639e);
             }
             
-            /* Mobile Form Animation Magic with COLOR SWAP */
+            /* Mobile Form Animation Magic - NO COLOR SWAP, JUST SCALE */
             .form-mobile-active {
                 display: block;
                 opacity: 1;
@@ -688,42 +680,21 @@
                 }
             }
             
-            /* Logo Animation Magic */
-            .logo-transition-signup {
-                animation: logoToGreen 0.6s ease forwards;
-                transform: scale(1.1) rotate(5deg);
+            /* Logo Animation Magic - UPRIGHT ONLY, NO TILT */
+            .logo-transition {
+                animation: logoPulse 0.6s ease forwards;
+                transform: scale(1.1) rotate(0deg); /* NO ROTATION - UPRIGHT */
             }
             
-            .logo-transition-signin {
-                animation: logoToBlue 0.6s ease forwards;
-                transform: scale(1.1) rotate(-5deg);
-            }
-            
-            @keyframes logoToGreen {
+            @keyframes logoPulse {
                 0% {
-                    filter: brightness(0) saturate(100%) invert(24%) sepia(99%) saturate(745%) hue-rotate(173deg) brightness(93%) contrast(96%);
                     transform: scale(1);
                 }
                 50% {
                     transform: scale(1.2);
                 }
                 100% {
-                    filter: brightness(0) saturate(100%) invert(67%) sepia(91%) saturate(348%) hue-rotate(87deg) brightness(95%) contrast(101%);
-                    transform: scale(1.1) rotate(5deg);
-                }
-            }
-            
-            @keyframes logoToBlue {
-                0% {
-                    filter: brightness(0) saturate(100%) invert(67%) sepia(91%) saturate(348%) hue-rotate(87deg) brightness(95%) contrast(101%);
-                    transform: scale(1);
-                }
-                50% {
-                    transform: scale(1.2);
-                }
-                100% {
-                    filter: brightness(0) saturate(100%) invert(24%) sepia(99%) saturate(745%) hue-rotate(173deg) brightness(93%) contrast(96%);
-                    transform: scale(1.1) rotate(-5deg);
+                    transform: scale(1.1);
                 }
             }
             
@@ -1015,13 +986,12 @@
         console.log('📝 Referral input value:', referralInput.value);
     }
 
-    // MOBILE-SPECIFIC FORM SWITCHING WITH COLOR TRANSITION MAGIC
+    // MOBILE-SPECIFIC FORM SWITCHING - UPRIGHT LOGO, NO TILT, NO GREEN
     function initMobileFormSwitching() {
         const mobileSignUpLink = document.getElementById('mobileSignUpLink');
         const mobileSignInLink = document.getElementById('mobileSignInLink');
         const mobileSignUpForm = document.getElementById('mobileSignUpForm');
         const mobileSignInForm = document.getElementById('mobileSignInForm');
-        const container = document.getElementById('container');
         const tradewiseLogo = document.getElementById('tradewiseLogo');
         
         if (mobileSignUpLink && mobileSignInLink) {
@@ -1030,23 +1000,18 @@
                 e.preventDefault();
                 e.stopPropagation();
                 
-                console.log('📱 Switching to Sign Up form on mobile WITH COLOR TRANSITION');
+                console.log('📱 Switching to Sign Up form on mobile');
                 
-                // 1. Change container background color (like laptop)
-                container.classList.remove('sign-in-view');
-                container.classList.add('sign-up-view');
-                
-                // 2. Animate the TradeWise logo - COLOR SWAP to green
+                // 1. Animate the TradeWise logo - UPRIGHT PULSE ONLY, NO TILT
                 if (tradewiseLogo) {
-                    tradewiseLogo.classList.remove('logo-transition-signin');
-                    tradewiseLogo.classList.add('logo-transition-signup');
+                    tradewiseLogo.classList.add('logo-transition');
                 }
                 
-                // 3. Add fade out animation to sign in form
+                // 2. Add fade out animation to sign in form
                 mobileSignInForm.classList.add('form-mobile-hidden');
                 mobileSignInForm.style.animation = 'mobileSlideOut 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55) forwards';
                 
-                // 4. After fade out, show sign up form
+                // 3. After fade out, show sign up form
                 setTimeout(() => {
                     mobileSignInForm.style.display = 'none';
                     mobileSignInForm.style.animation = '';
@@ -1061,11 +1026,11 @@
                     // Scroll to top smoothly
                     window.scrollTo({ top: 0, behavior: 'smooth' });
                     
-                    // 5. Reset logo animation after completion
+                    // 4. Reset logo animation after completion
                     setTimeout(() => {
                         if (tradewiseLogo) {
-                            tradewiseLogo.style.transform = 'scale(1) rotate(0)';
-                            tradewiseLogo.style.filter = 'brightness(0) saturate(100%) invert(67%) sepia(91%) saturate(348%) hue-rotate(87deg) brightness(95%) contrast(101%)';
+                            tradewiseLogo.classList.remove('logo-transition');
+                            tradewiseLogo.style.transform = 'scale(1) rotate(0deg)'; // UPRIGHT
                         }
                     }, 600);
                 }, 300);
@@ -1076,23 +1041,18 @@
                 e.preventDefault();
                 e.stopPropagation();
                 
-                console.log('📱 Switching to Sign In form on mobile WITH COLOR TRANSITION');
+                console.log('📱 Switching to Sign In form on mobile');
                 
-                // 1. Change container background color (like laptop)
-                container.classList.remove('sign-up-view');
-                container.classList.add('sign-in-view');
-                
-                // 2. Animate the TradeWise logo - COLOR SWAP to blue
+                // 1. Animate the TradeWise logo - UPRIGHT PULSE ONLY, NO TILT
                 if (tradewiseLogo) {
-                    tradewiseLogo.classList.remove('logo-transition-signup');
-                    tradewiseLogo.classList.add('logo-transition-signin');
+                    tradewiseLogo.classList.add('logo-transition');
                 }
                 
-                // 3. Add fade out animation to sign up form
+                // 2. Add fade out animation to sign up form
                 mobileSignUpForm.classList.add('form-mobile-hidden');
                 mobileSignUpForm.style.animation = 'mobileSlideOut 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55) forwards';
                 
-                // 4. After fade out, show sign in form
+                // 3. After fade out, show sign in form
                 setTimeout(() => {
                     mobileSignUpForm.style.display = 'none';
                     mobileSignUpForm.style.animation = '';
@@ -1104,11 +1064,11 @@
                     // Scroll to top smoothly
                     window.scrollTo({ top: 0, behavior: 'smooth' });
                     
-                    // 5. Reset logo animation after completion
+                    // 4. Reset logo animation after completion
                     setTimeout(() => {
                         if (tradewiseLogo) {
-                            tradewiseLogo.style.transform = 'scale(1) rotate(0)';
-                            tradewiseLogo.style.filter = 'brightness(0) saturate(100%) invert(24%) sepia(99%) saturate(745%) hue-rotate(173deg) brightness(93%) contrast(96%)';
+                            tradewiseLogo.classList.remove('logo-transition');
+                            tradewiseLogo.style.transform = 'scale(1) rotate(0deg)'; // UPRIGHT
                         }
                     }, 600);
                 }, 300);
@@ -1183,12 +1143,8 @@
         
         // Initialize mobile form switching only on mobile
         if (window.innerWidth <= 768) {
-            console.log('📱 Mobile device detected - initializing mobile form switching with COLOR MAGIC');
+            console.log('📱 Mobile device detected - initializing mobile form switching');
             initMobileFormSwitching();
-            
-            // Set initial container background for mobile
-            const container = document.getElementById('container');
-            container.classList.add('sign-in-view');
             
             // Hide one form initially on mobile
             document.getElementById('mobileSignUpForm').style.display = 'none';
