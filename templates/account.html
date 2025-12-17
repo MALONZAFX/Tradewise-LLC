@@ -4,1189 +4,1937 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TradeWise | Account</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.14.0/css/all.min.css">
+    <title>Welcome To TradeWise</title>
+    <link href="{% static 'css/bootstrap.min.css' %}" rel="stylesheet" media="screen">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    
     <style>
-        @import url('https://fonts.googleapis.com/css?family=Montserrat:400,800');
+        :root {
+            --primary-blue: #3498db;
+            --dark-blue: #2c3e50;
+            --gradient-main: linear-gradient(135deg, #2c3e50 0%, #3498db 100%);
+            --gradient-reverse: linear-gradient(135deg, #3498db 0%, #2c3e50 100%);
+            --light-bg: #f8fafc;
+            --dark-text: #1e293b;
+        }
 
         * {
-            box-sizing: border-box;
             margin: 0;
             padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
 
         body {
-            background: #ffffff;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            flex-direction: column;
-            font-family: 'Montserrat', sans-serif;
-            min-height: 100vh;
-            margin: 0;
-            padding: 20px;
+            background-color: var(--light-bg);
+            color: var(--dark-text);
+            line-height: 1.6;
+            padding-top: 80px;
         }
 
-        h1 {
-            font-weight: bold;
-            margin: 0;
-            color: #2c3e50;
-        }
-
-        h2 {
-            text-align: center;
-            color: #2c3e50;
-            margin-bottom: 20px;
-        }
-
-        p {
-            font-size: 14px;
-            font-weight: 100;
-            line-height: 20px;
-            letter-spacing: 0.5px;
-            margin: 20px 0 30px;
-        }
-
-        span {
-            font-size: 12px;
-        }
-
-        a {
-            color: #333;
-            font-size: 14px;
-            text-decoration: none;
-            margin: 15px 0;
-        }
-
-        button {
-            border-radius: 20px;
-            border: 1px solid #3498db;
-            background-color: #3498db;
-            color: #FFFFFF;
-            font-size: 12px;
-            font-weight: bold;
-            padding: 12px 45px;
-            letter-spacing: 1px;
-            text-transform: uppercase;
-            transition: transform 80ms ease-in;
-            cursor: pointer;
-            width: 100%;
-        }
-
-        button:active {
-            transform: scale(0.95);
-        }
-
-        button:focus {
-            outline: none;
-        }
-
-        button.ghost {
-            background-color: transparent;
-            border-color: #FFFFFF;
-        }
-
-        button:hover {
-            background-color: #2980b9;
-            transform: translateY(-2px);
-        }
-
-        form {
-            background-color: #FFFFFF;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            flex-direction: column;
-            padding: 0 50px;
-            height: 100%;
-            text-align: center;
-            border-radius: 10px;
-        }
-
-        input {
-            background-color: #eee;
-            border: none;
-            padding: 12px 15px;
-            margin: 8px 0;
-            width: 100%;
-            border-radius: 5px;
-            font-size: 14px;
-            transition: all 0.3s ease;
-        }
-
-        input:focus {
-            outline: none;
-            background-color: #e3f2fd;
-            box-shadow: 0 0 5px rgba(52, 152, 219, 0.5);
-        }
-
-        .container {
-            background-color: #fff;
-            border-radius: 15px;
-            box-shadow: 0 14px 28px rgba(0,0,0,0.25), 
-                        0 10px 10px rgba(0,0,0,0.22);
-            position: relative;
-            overflow: hidden;
-            width: 900px;
-            max-width: 100%;
-            min-height: 600px;
-        }
-
-        .form-container {
-            position: absolute;
-            top: 0;
-            height: 100%;
-            transition: all 0.6s ease-in-out;
-        }
-
-        .sign-in-container {
-            left: 0;
-            width: 50%;
-            z-index: 2;
-        }
-
-        .container.right-panel-active .sign-in-container {
-            transform: translateX(100%);
-        }
-
-        .sign-up-container {
-            left: 0;
-            width: 50%;
-            opacity: 0;
-            z-index: 1;
-        }
-
-        .container.right-panel-active .sign-up-container {
-            transform: translateX(100%);
-            opacity: 1;
-            z-index: 5;
-            animation: show 0.6s;
-        }
-
-        @keyframes show {
-            0%, 49.99% {
-                opacity: 0;
-                z-index: 1;
-            }
-            
-            50%, 100% {
-                opacity: 1;
-                z-index: 5;
-            }
-        }
-
-        .overlay-container {
-            position: absolute;
-            top: 0;
-            left: 50%;
-            width: 50%;
-            height: 100%;
-            overflow: hidden;
-            transition: transform 0.6s ease-in-out;
-            z-index: 100;
-        }
-
-        .container.right-panel-active .overlay-container{
-            transform: translateX(-100%);
-        }
-
-        .overlay {
-            background: #2c3e50;
-            background: linear-gradient(to right, #2c3e50, #3498db);
-            background-repeat: no-repeat;
-            background-size: cover;
-            background-position: 0 0;
-            color: #FFFFFF;
-            position: relative;
-            left: -100%;
-            height: 100%;
-            width: 200%;
-            transform: translateX(0);
-            transition: transform 0.6s ease-in-out;
-        }
-
-        .container.right-panel-active .overlay {
-            transform: translateX(50%);
-        }
-
-        .overlay-panel {
-            position: absolute;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            flex-direction: column;
-            padding: 0 40px;
-            text-align: center;
-            top: 0;
-            height: 100%;
-            width: 50%;
-            transform: translateX(0);
-            transition: transform 0.6s ease-in-out;
-        }
-
-        .overlay-left {
-            transform: translateX(-20%);
-        }
-
-        .container.right-panel-active .overlay-left {
-            transform: translateX(0);
-        }
-
-        .overlay-right {
-            right: 0;
-            transform: translateX(0);
-        }
-
-        .container.right-panel-active .overlay-right {
-            transform: translateX(20%);
-        }
-
-        .social-container {
-            margin: 20px 0;
-        }
-
-        .social-container a {
-            border: 1px solid #DDDDDD;
-            border-radius: 50%;
-            display: inline-flex;
-            justify-content: center;
-            align-items: center;
-            margin: 0 5px;
-            height: 40px;
-            width: 40px;
-            transition: all 0.3s ease;
-        }
-
-        .social-container a:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-        }
-
-        .messageDiv {
+        /* Enhanced Navbar Styles */
+        .main-header {
             position: fixed;
-            top: 20px;
-            left: 50%;
-            transform: translateX(-50%);
-            background-color: #4CAF50;
-            color: white;
-            padding: 15px 30px;
-            border-radius: 10px;
+            top: 0;
+            width: 100%;
+            z-index: 1030;
+            background: #111122;
+            backdrop-filter: none;
+            box-shadow: 0 4px 20px rgba(44, 62, 80, 0.15);
+            border-bottom: 3px solid rgba(255, 255, 255, 0.1);
+        }
+    
+        .navbar {
+            padding: 0.6rem 0;
+            background: transparent !important;
+            min-height: 65px;
+        }
+    
+        .navbar-brand {
+            padding: 0;
+            margin-right: 2rem;
+        }
+    
+        .logo-img {
+            height: 85px !important;
+            width: auto;
+            filter: brightness(0) invert(1);
+            transition: all 0.3s ease;
+        }
+    
+        .navbar-brand:hover .logo-img {
+            transform: scale(1.05);
+            filter: brightness(0) invert(1) drop-shadow(0 2px 8px rgba(255, 255, 255, 0.3));
+        }
+    
+        .navbar-nav {
+            gap: 0.2rem;
+            flex-wrap: nowrap;
+        }
+    
+        .nav-link {
+            color: white !important;
+            font-weight: 600 !important;
             font-size: 1rem;
-            opacity: 0;
-            transition: opacity 0.5s ease-in-out;
-            z-index: 1000;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            max-width: 90%;
-            text-align: center;
-        }
-
-        .messageDiv.error {
-            background-color: #e74c3c;
-        }
-
-        .messageDiv.warning {
-            background-color: #f39c12;
-        }
-
-        .messageDiv.info {
-            background-color: #3498db;
-        }
-
-        .messageDiv.show {
-            opacity: 1;
-        }
-
-        .forgot-password {
-            display: block;
-            text-align: center;
-            margin-top: 15px;
-            color: #3498db;
-            text-decoration: none;
-            font-weight: 500;
-            transition: color 0.3s ease;
-        }
-
-        .forgot-password:hover {
-            color: #2980b9;
-            text-decoration: underline;
-        }
-
-        .password-strength {
-            margin-top: 5px;
-            font-size: 12px;
-            text-align: left;
-            width: 100%;
-        }
-
-        .strength-weak { color: #e74c3c; }
-        .strength-medium { color: #f39c12; }
-        .strength-strong { color: #2ecc71; }
-
-        /* Django Messages Styling */
-        .django-messages {
-            position: fixed;
-            top: 20px;
-            left: 50%;
-            transform: translateX(-50%);
-            z-index: 1000;
-            width: 90%;
-            max-width: 500px;
-        }
-
-        .alert {
-            padding: 15px 20px;
-            border-radius: 10px;
-            margin-bottom: 10px;
-            font-weight: 500;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
-            text-align: center;
-        }
-
-        .alert-success {
-            background-color: #2ecc71;
-            color: white;
-            border-left: 4px solid #27ae60;
-        }
-
-        .alert-error {
-            background-color: #e74c3c;
-            color: white;
-            border-left: 4px solid #c0392b;
-        }
-
-        .alert-warning {
-            background-color: #f39c12;
-            color: white;
-            border-left: 4px solid #e67e22;
-        }
-
-        .alert-info {
-            background-color: #3498db;
-            color: white;
-            border-left: 4px solid #2980b9;
-        }
-
-        /* Referral Display Styling */
-        .referral-display {
-            background: linear-gradient(135deg, #e8f4fd 0%, #d4edfa 100%);
-            padding: 12px 15px;
-            border-radius: 8px;
-            margin: 10px 0;
-            border-left: 4px solid #3498db;
-            width: 100%;
-            text-align: left;
-            display: none;
-        }
-
-        .referral-display.show {
-            display: block;
-        }
-
-        .referral-display strong {
-            color: #2c3e50;
-            font-size: 14px;
-        }
-
-        .referral-code-text {
-            font-weight: bold;
-            color: #3498db;
-            font-size: 14px;
-            letter-spacing: 1px;
-        }
-
-        .referral-note {
-            color: #7f8c8d;
-            font-size: 11px;
-            margin-top: 5px;
-            display: block;
-        }
-
-        /* Activation message styling */
-        .activation-message {
-            background-color: #e8f4fd;
-            border-left: 4px solid #3498db;
-            padding: 15px;
-            margin: 15px 0;
-            border-radius: 4px;
-            text-align: left;
-            width: 100%;
-        }
-
-        .activation-message h3 {
-            color: #2c3e50;
-            margin-bottom: 8px;
-            font-size: 16px;
-        }
-
-        .activation-message p {
-            margin: 5px 0;
-            font-size: 14px;
-            color: #34495e;
-        }
-
-        /* Loading spinner */
-        .loading {
-            display: inline-block;
-            width: 20px;
-            height: 20px;
-            border: 3px solid #ffffff;
-            border-radius: 50%;
-            border-top-color: transparent;
-            animation: spin 1s ease-in-out infinite;
-            margin-right: 10px;
-        }
-
-        @keyframes spin {
-            to { transform: rotate(360deg); }
-        }
-
-        .btn-loading {
+            padding: 0.5rem 0.8rem !important;
+            border-radius: 20px;
+            transition: all 0.3s ease;
             position: relative;
-            color: transparent;
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+            white-space: nowrap;
         }
-
-        .btn-loading::after {
+    
+        .nav-link:hover {
+            background: rgba(255, 255, 255, 0.15) !important;
+            transform: translateY(-1px);
+            box-shadow: 0 3px 10px rgba(255, 255, 255, 0.1);
+        }
+    
+        .nav-link::before {
             content: '';
             position: absolute;
-            width: 20px;
-            height: 20px;
-            top: 50%;
+            bottom: 3px;
             left: 50%;
-            margin-left: -10px;
-            margin-top: -10px;
-            border: 2px solid #ffffff;
-            border-radius: 50%;
-            border-top-color: transparent;
-            animation: spin 1s ease-in-out infinite;
+            width: 0;
+            height: 2px;
+            background: white;
+            transition: all 0.3s ease;
+            transform: translateX(-50%);
+            border-radius: 2px;
+        }
+    
+        .nav-link:hover::before {
+            width: 40%;
+        }
+    
+        .header-buttons {
+            gap: 0.8rem;
+            margin-left: 1.5rem;
+        }
+    
+        .btn-outline-light {
+            border: 2px solid rgba(255, 255, 255, 0.7);
+            color: white;
+            font-weight: 600;
+            padding: 0.4rem 1rem;
+            border-radius: 20px;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+            font-size: 1rem;
+            white-space: nowrap;
+        }
+    
+        .btn-outline-light:hover {
+            background: rgba(255, 255, 255, 0.15);
+            border-color: white;
+            transform: translateY(-1px);
+            box-shadow: 0 3px 10px rgba(255, 255, 255, 0.2);
+        }
+    
+        .btn-gradient {
+            background: rgba(255, 255, 255, 0.2);
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            color: white;
+            font-weight: 600;
+            padding: 0.4rem 1rem;
+            border-radius: 20px;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+            font-size: 1rem;
+            white-space: nowrap;
+        }
+    
+        .btn-gradient:hover {
+            background: rgba(255, 255, 255, 0.3);
+            border-color: white;
+            transform: translateY(-1px);
+            box-shadow: 0 3px 12px rgba(255, 255, 255, 0.3);
+            color: white;
         }
 
-        /* TradeWise Branding - UPDATED WITH LOGO BETWEEN TEXT */
-        .tradewise-header {
-            text-align: center;
-            margin-bottom: 40px;
-            width: 100%;
-            padding: 0 20px;
-            position: relative;
-        }
-
-        .tradewise-logo-container {
+        /* Hero Section */
+        .account-hero {
+            background: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)), url('{% static "images/bullish-golden-1.jpg" %}') no-repeat center center/cover;
+            height: 70vh;
             display: flex;
-            flex-direction: column;
             align-items: center;
             justify-content: center;
+            color: white;
+            text-align: center;
+            margin-top: -80px;
         }
 
-        .tradewise-text-logo {
-            font-size: 2.8rem;
+        .hero-content h1 {
+            font-size: 3.5rem;
             font-weight: 800;
-            background: linear-gradient(135deg, #2c3e50, #3498db);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            text-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            margin-bottom: 1rem;
+        }
+
+        .hero-content p {
+            font-size: 1.3rem;
+            margin-bottom: 2rem;
+            opacity: 0.9;
+        }
+
+        .cta-button {
+            display: inline-block;
+            background: var(--gradient-main);
+            color: white;
+            padding: 15px 35px;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 1.2rem;
+            transition: all 0.3s ease;
+            border: none;
+        }
+
+        .cta-button:hover {
+            background: var(--gradient-reverse);
+            transform: translateY(-3px);
+            color: white;
+            box-shadow: 0 10px 25px rgba(52, 152, 219, 0.3);
+        }
+
+        /* Sections */
+        section {
+            padding: 80px 0;
+        }
+
+        /* Affiliates Section Styles */
+        .affiliate-card {
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .affiliate-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(0,0,0,0.12) !important;
+        }
+
+        .stat-box {
+            transition: all 0.3s ease;
+        }
+
+        .stat-box:hover {
+            transform: scale(1.05);
+            background: rgba(52, 152, 219, 0.1) !important;
+        }
+
+        .weekly-number-display {
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+
+        .btn-outline-primary {
+            border-color: #3498db;
+            color: #3498db;
+        }
+
+        .btn-outline-primary:hover {
+            background-color: #3498db;
+            color: white;
+        }
+
+        /* Membership Card */
+        .membership-card {
+            background: linear-gradient(145deg, #1a2a4f 0%, #0d1a33 100%);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 15px 40px rgba(0,0,0,0.2);
+            position: relative;
+            overflow: hidden;
+            color: white;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .membership-card::before {
+            content: 'TRADE';
+            position: absolute;
+            top: -30px;
+            right: -30px;
+            opacity: 0.1;
+            font-size: 12rem;
+            font-weight: 700;
+            color: white;
+            transform: rotate(15deg);
+        }
+
+        /* Brokers Grid */
+        .brokers-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            gap: 30px;
+            margin-top: 50px;
+        }
+
+        .broker-card {
+            background: white;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+        }
+
+        .broker-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 40px rgba(0,0,0,0.15);
+        }
+
+        .broker-header {
+            background: var(--dark-blue);
+            color: white;
+            padding: 25px;
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .logo-container {
+            width: 120px;
+            height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: white;
+            padding: 10px;
+            border-radius: 8px;
+        }
+
+        .broker-logo {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain;
+        }
+
+        .broker-body {
+            padding: 25px;
+        }
+
+        .feature-item {
+            display: flex;
+            align-items: flex-start;
             margin-bottom: 15px;
         }
 
-        /* LOGO POSITIONED BETWEEN TITLE AND TAGLINE - KEEP UPRIGHT */
-        .tradewise-image-logo {
-            height: 50px;
-            width: auto;
-            margin: 10px 0 15px 0;
-            transition: transform 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
-            filter: brightness(0) saturate(100%) invert(24%) sepia(99%) saturate(745%) hue-rotate(173deg) brightness(93%) contrast(96%);
-            transform: scale(1) rotate(0deg); /* FORCE UPRIGHT */
+        .feature-icon {
+            color: var(--primary-blue);
+            margin-right: 15px;
+            margin-top: 3px;
         }
 
-        .tradewise-tagline {
-            color: #7f8c8d;
-            font-size: 1.1rem;
-            font-weight: 500;
-            letter-spacing: 0.5px;
-            margin-top: 5px;
+        .broker-button {
+            display: block;
+            text-align: center;
+            background: var(--gradient-main);
+            color: white;
+            padding: 12px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            border: none;
         }
 
-        /* Form field grouping */
-        .form-row {
-            display: flex;
-            gap: 10px;
+        .broker-button:hover {
+            background: var(--gradient-reverse);
+            transform: translateY(-3px);
+            color: white;
+        }
+
+        /* Videos Grid */
+        .videos-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(500px, 1fr));
+            gap: 40px;
+            margin-top: 50px;
+        }
+
+        .video-card {
+            background: white;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+
+        .video-header {
+            background: var(--dark-blue);
+            color: white;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .video-container {
+            position: relative;
+            padding-bottom: 56.25%;
+            height: 0;
+        }
+
+        .video-container iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
             width: 100%;
+            height: 100%;
+            border: none;
         }
 
-        .form-row input {
-            flex: 1;
+        /* Future Section */
+        .coin-3d {
+            width: 250px;
+            height: 250px;
+            margin: 0 auto;
+            perspective: 1000px;
         }
 
-        /* MOBILE-SPECIFIC STYLES - ONLY AFFECTS MOBILE */
-        @media (max-width: 768px) {
-            /* Mobile TradeWise Header */
-            .tradewise-header {
-                margin-bottom: 30px;
-                padding: 10px;
-            }
-            
-            .tradewise-text-logo {
-                font-size: 2rem;
-                margin-bottom: 10px;
-            }
-            
-            .tradewise-image-logo {
-                height: 40px;
-                margin: 8px 0 12px 0;
-            }
-            
-            .tradewise-tagline {
-                font-size: 0.9rem;
-            }
+        .rotating-coin {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            animation: rotate-coin 8s infinite linear;
+        }
 
-            /* Mobile Container with COLOR TRANSITION MAGIC */
-            .container {
-                width: 100%;
-                min-height: auto;
-                border-radius: 20px;
-                overflow: hidden;
-                margin-bottom: 30px;
-                position: relative;
-                transition: all 0.6s ease-in-out;
+        @keyframes rotate-coin {
+            from { transform: rotateY(0deg); }
+            to { transform: rotateY(360deg); }
+        }
+
+        /* Footer Styles */
+        .footer-menu a:hover {
+            color: #3498db !important;
+        }
+        
+        .footer-social-links a:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+        }
+
+        /* Responsive Design */
+        @media (max-width: 991.98px) {
+            .navbar-nav.mx-auto {
+                position: static;
+                transform: none;
+                text-align: center;
+                margin: 1rem 0;
+                gap: 0.3rem;
             }
-            
-            /* Mobile Form Containers with COLOR TRANSITION */
-            .form-container {
-                position: relative;
-                width: 100% !important;
-                height: auto;
-                padding: 40px 25px;
-                transition: all 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55);
-                background: white;
+    
+            .nav-link {
+                padding: 0.8rem 1rem !important;
+                font-size: 1rem;
+            }
+    
+            .header-buttons {
+                margin-left: 0;
+                justify-content: center;
+                margin-top: 1rem;
+            }
+    
+            .navbar-collapse {
+                background: linear-gradient(135deg, rgba(44, 62, 80, 0.98), rgba(52, 152, 219, 0.98));
                 border-radius: 15px;
-                box-shadow: 0 5px 20px rgba(0,0,0,0.1);
-                margin-bottom: 20px;
+                margin-top: 1rem;
+                padding: 1rem;
+                backdrop-filter: blur(20px);
+                box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            }
+    
+            body {
+                padding-top: 70px;
+            }
+
+            .hero-content h1 {
+                font-size: 2.5rem;
             }
             
-            .sign-in-container, .sign-up-container {
-                position: relative;
-                width: 100% !important;
-                opacity: 1;
-                transform: none;
-                left: 0;
+            .brokers-grid,
+            .videos-grid {
+                grid-template-columns: 1fr;
             }
             
-            .container.right-panel-active .sign-in-container,
-            .container.right-panel-active .sign-up-container {
-                transform: none;
-                animation: none;
+            .videos-grid {
+                gap: 20px;
+            }
+
+            .weekly-number-display {
+                font-size: 2rem !important;
+                letter-spacing: 3px !important;
             }
             
-            /* Hide overlay on mobile */
-            .overlay-container {
-                display: none;
+            .referral-actions .btn {
+                flex: 1;
+                min-width: 120px;
             }
-            
-            /* Mobile Form Styling */
-            form {
-                padding: 0 25px;
-                background: transparent;
-                box-shadow: none;
-                border-radius: 0;
-            }
-            
-            input {
-                font-size: 16px;
-                padding: 15px 20px;
-            }
-            
-            button {
-                padding: 10px 35px;
-                font-size: 14px;
-                font-weight: 700;
-                margin-top: 10px;
-            }
-            
-            /* Mobile Link Styling - Make "Sign Up" PROMINENT (BLUE, NOT GREEN) */
-            .mobile-switch-link {
-                display: inline-block;
-                padding: 14px 30px !important;
-                border-radius: 25px;
-                text-decoration: none;
-                font-weight: 800 !important;
-                font-size: 1rem !important;
-                transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
-                letter-spacing: 0.5px;
-                text-transform: uppercase;
-                margin-top: 20px !important;
-                border: 2px solid transparent !important;
-                position: relative;
-                overflow: hidden;
-            }
-            
-            .mobile-signup-link {
-                background: linear-gradient(135deg, #3498db, #2980b9); /* BLUE, NOT GREEN */
-                color: white !important;
-                box-shadow: 0 5px 15px rgba(52, 152, 219, 0.3);
-            }
-            
-            .mobile-signup-link:hover {
-                transform: translateY(-3px);
-                box-shadow: 0 8px 20px rgba(52, 152, 219, 0.4);
-                background: linear-gradient(135deg, #2980b9, #1f639e);
-            }
-            
-            .mobile-signin-link {
-                background: linear-gradient(135deg, #3498db, #2980b9);
-                color: white !important;
-                box-shadow: 0 5px 15px rgba(52, 152, 219, 0.3);
-            }
-            
-            .mobile-signin-link:hover {
-                transform: translateY(-3px);
-                box-shadow: 0 8px 20px rgba(52, 152, 219, 0.4);
-                background: linear-gradient(135deg, #2980b9, #1f639e);
-            }
-            
-            /* Mobile Form Animation Magic - NO COLOR SWAP, JUST SCALE */
-            .form-mobile-active {
-                display: block;
-                opacity: 1;
-                transform: translateY(0) scale(1);
-                animation: mobileSlideIn 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55) forwards;
-            }
-            
-            .form-mobile-hidden {
-                display: none;
-                opacity: 0;
-                transform: translateY(20px) scale(0.95);
-            }
-            
-            @keyframes mobileSlideIn {
-                0% {
-                    opacity: 0;
-                    transform: translateY(20px) scale(0.95);
-                }
-                100% {
-                    opacity: 1;
-                    transform: translateY(0) scale(1);
-                }
-            }
-            
-            @keyframes mobileSlideOut {
-                0% {
-                    opacity: 1;
-                    transform: translateY(0) scale(1);
-                }
-                100% {
-                    opacity: 0;
-                    transform: translateY(-20px) scale(0.95);
-                }
-            }
-            
-            /* Logo Animation Magic - UPRIGHT ONLY, NO TILT */
-            .logo-transition {
-                animation: logoPulse 0.6s ease forwards;
-                transform: scale(1.1) rotate(0deg); /* NO ROTATION - UPRIGHT */
-            }
-            
-            @keyframes logoPulse {
-                0% {
-                    transform: scale(1);
-                }
-                50% {
-                    transform: scale(1.2);
-                }
-                100% {
-                    transform: scale(1.1);
-                }
-            }
-            
-            /* Adjust text for mobile */
-            h2 {
-                font-size: 1.8rem;
-                margin-bottom: 25px;
-            }
-            
-            p {
-                font-size: 15px;
-                line-height: 1.6;
-            }
-            
-            .social-container {
-                margin: 25px 0;
-            }
-            
-            .social-container a {
-                height: 50px;
-                width: 50px;
-                font-size: 1.2rem;
+        }
+    
+        @media (min-width: 992px) {
+            .navbar-nav.mx-auto {
+                position: absolute;
+                left: 50%;
+                transform: translateX(-50%);
             }
         }
 
-        @media (max-width: 480px) {
-            .tradewise-text-logo {
-                font-size: 1.8rem;
+        @media (max-width: 768px) {
+            .footer-menu div {
+                justify-content: center;
+                gap: 15px;
             }
             
-            .tradewise-image-logo {
-                height: 75px;
+            .footer-copyright-text {
+                text-align: center !important;
+                margin-top: 15px;
             }
-            
-            .tradewise-tagline {
-                font-size: 0.85rem;
-            }
-            
-            form {
-                padding: 0 20px;
-            }
-            
-            .form-container {
-                padding: 30px 20px;
-            }
-            
-            .mobile-switch-link {
-                padding: 12px 25px !important;
-                font-size: 0.9rem !important;
-            }
-        }
-
-        /* LAPTOP VIEW - PRESERVED EXACTLY AS YOU HAD IT */
-        @media (min-width: 769px) {
-            .tradewise-image-logo {
-                display: none; /* Hide image logo on laptop - keep text only */
-            }
-            
-            .mobile-switch-link {
-                display: none; /* Hide mobile links on laptop */
-            }
-            
-            /* All your original laptop styling remains intact */
         }
     </style>
 </head>
 <body>
-    <!-- TradeWise Header with Logo BETWEEN Title and Tagline -->
-    <div class="tradewise-header">
-        <div class="tradewise-logo-container">
-            <!-- TradeWise Text Logo -->
-            <div class="tradewise-text-logo">TRADEWISE</div>
-            
-            <!-- TradeWise Logo Image - Appears BETWEEN the title and tagline -->
-            <img src="{% static 'images/TRADE-WISE-FINAL-TRANSPARENT.png' %}" 
-                 alt="TradeWise Logo" 
-                 class="tradewise-image-logo"
-                 id="tradewiseLogo">
-            
-            <!-- TradeWise Tagline -->
-            <div class="tradewise-tagline">Trade Smarter With Confidence</div>
-        </div>
-    </div>
-
-    <!-- Django Messages Display -->
-    <div class="django-messages">
-        {% if messages %}
-            {% for message in messages %}
-                <div class="alert alert-{{ message.tags }}">
-                    {{ message }}
-                </div>
-            {% endfor %}
-        {% endif %}
-    </div>
-
-    <div id="popupMessage" class="messageDiv"></div>
+    <header class="main-header">
+        <nav class="navbar navbar-expand-lg navbar-dark">
+            <div class="container-fluid px-4">
+                <a class="navbar-brand" href="/">
+                    <img src="{% static 'images/TRADE-WISE-FINAL-TRANSPARENT.png' %}" alt="TradeWise" class="logo-img">
+                </a>
+                
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
     
-    <div class="container" id="container">
-        <!-- Sign Up Form -->
-        <div class="form-container sign-up-container" id="mobileSignUpForm">
-            <form id="signUpForm" action="{% url 'signup' %}" method="post">
-                <h1>Create Account</h1>
-                <div class="social-container">
-                    <a href="#" class="social"><i class="fab fa-facebook-f"></i></a>
-                    <a href="#" class="social"><i class="fab fa-google-plus-g"></i></a>
+                <div class="collapse navbar-collapse" id="navbarContent">
+                    <ul class="navbar-nav mx-auto mb-2 mb-lg-0">
+                        <li class="nav-item"><a class="nav-link text-white active" href="/">Home</a></li>
+                        <li class="nav-item"><a class="nav-link text-white" href="/market">Coaching</a></li>
+                        <li class="nav-item"><a class="nav-link text-white" href="/trade">Trade Desk</a></li>
+                        <li class="nav-item"><a class="nav-link text-white" href="/payment">Payment Plan</a></li>
+                        <li class="nav-item"><a class="nav-link text-white" href="/contact">Contact Us</a></li>
+                    </ul>
+                    
+                    <div class="d-flex header-buttons ms-auto">
+                        {% if first_name %}
+                            <span class="nav-link text-white me-2" style="padding: 0.4rem 0.8rem !important; font-size: 1rem;">
+                                <i class="fas fa-user me-1" style="font-size: 1rem;">Welcome</i>{{ first_name }}
+                            </span>
+                            <a href="{% url 'logout_view' %}" class="btn btn-outline-light">
+                                <i class="fas fa-sign-out-alt me-1"></i>Logout
+                            </a>
+                        {% else %}
+                            <a href="tel:+254702700745" class="btn btn-outline-light me-2">
+                                <i class="fas fa-phone me-1"></i><span>+254 702 700 745</span>
+                            </a>
+                            <a href="loginpage" class="btn btn-gradient">
+                                <i class="fas fa-sign-in-alt me-1"></i>Sign In
+                            </a>
+                        {% endif %}
+                    </div>
                 </div>
-                <span>or use your email for registration</span>
-                {% csrf_token %}
-                <div class="form-row">
-                    <input type="text" id="fName" name="first_name" placeholder="First Name" required>
-                    <input type="text" id="lName" name="second_name" placeholder="Last Name" required>
-                </div>
-                <input type="email" id="rEmail" name="email" placeholder="Email" required>
-                <input type="tel" id="rPhone" name="phone" placeholder="Phone Number" required>
-                <input type="password" id="rPassword" name="password" placeholder="Password" required minlength="6" onkeyup="checkPasswordStrength(this.value)">
-                <div id="passwordStrength" class="password-strength"></div>
-                
-                <!-- 🚨 IMMUTABLE REFERRAL CODE FIELD - CANNOT BE DELETED 🚨 -->
-                <input type="hidden" id="referralCode" name="referral_code">
-                <div id="referralDisplay" class="referral-display">
-                    <strong>🎯 Referral Applied:</strong> 
-                    <span id="referralCodeText" class="referral-code-text"></span>
-                    <span class="referral-note">
-                        <i class="fas fa-lock me-1"></i>This referral code is locked and cannot be changed
-                    </span>
-                </div>
-                
-                <button type="submit" id="submitSignUp">
-                    <span>Sign Up</span>
-                </button>
-                <p>Already have an account? 
-                    <!-- Mobile link - BOLD and PROMINENT -->
-                    <a href="#" class="mobile-switch-link mobile-signin-link" id="mobileSignInLink">
-                        Sign In <i class="fas fa-arrow-right"></i>
-                    </a>
-                    <!-- Original laptop link (hidden on mobile) -->
-                    <a href="#" id="signInLink">Sign In</a>
-                </p>
-            </form>
-        </div>
+            </div>
+        </nav>
+    </header>
 
-        <!-- Sign In Form -->
-        <div class="form-container sign-in-container" id="mobileSignInForm">
-            <form id="signInForm" action="{% url 'login_view' %}" method="post">
-                <h1>Sign In</h1>
-                <div class="social-container">
-                    <a href="#" class="social"><i class="fab fa-facebook-f"></i></a>
-                    <a href="#" class="social"><i class="fab fa-google-plus-g"></i></a>
-                </div>
-                <span>or use your account</span>
-                {% csrf_token %}
-                <input type="email" id="sEmail" name="email" placeholder="Email" required>
-                <input type="password" id="sPassword" name="password" placeholder="Password" required>
-                <a href="{% url 'forgot_password' %}" class="forgot-password">Forgot your password?</a>
-                <button type="submit" id="submitSignIn">
-                    <span>Sign In</span>
-                </button>
-                <p>Don't have an account? 
-                    <!-- Mobile link - BOLD and PROMINENT -->
-                    <a href="#" class="mobile-switch-link mobile-signup-link" id="mobileSignUpLink">
-                        Sign Up <i class="fas fa-user-plus"></i>
-                    </a>
-                    <!-- Original laptop link (hidden on mobile) -->
-                    <a href="#" id="signUpLink">Sign Up</a>
-                </p>
-            </form>
+    <!-- Hero Section -->
+    <section class="account-hero">
+        <div class="hero-content">
+            <h1 style="font-size: 2rem;margin-top: 70px;">You Have Started Your Trading Journey</h1>
+            <p>Join thousands of successful traders with TradeWise premium features and signals</p>
+            <a href="#brokers" class="cta-button">Get Started Now</a>
         </div>
+    </section>
 
-        <!-- Overlay - Only shows on laptop -->
-        <div class="overlay-container">
-            <div class="overlay">
-                <div class="overlay-panel overlay-left">
-                    <h1>Welcome Back!</h1>
-                    <p>Sign in to access your trading dashboard and analytics</p>
-                    <button class="ghost" id="signIn">Sign In</button>
+    
+
+            
+
+    <!-- Membership Card Section -->
+<section id="card" style="background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%); padding: 60px 0;">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-10 text-center mb-4">
+                <h2 style="font-size: 2rem; font-weight: 700; color: #2c3e50; margin-bottom: 10px;">Your Exclusive <span style="color: #3498db;">TradeWise Card</span></h2>
+                <p style="font-size: 1rem; color: #7f8c8d;">Unlock premium trading benefits with your membership card</p>
+            </div>
+        </div>
+        
+        <div class="row align-items-center">
+            <!-- Card Column - LEFT -->
+            <div class="col-lg-6 mb-4 mb-lg-0">
+                <div class="card-container" style="position: relative;">
+                    <div class="membership-card" style="background: linear-gradient(145deg, #1a2a4f 0%, #0d1a33 100%); border-radius: 16px; padding: 25px; box-shadow: 0 15px 35px rgba(0,0,0,0.2); position: relative; overflow: hidden; color: white; border: 1px solid rgba(255,255,255,0.1); min-height: 280px;">
+                        <div class="card-content" style="position: relative; z-index: 2;">
+                            <div class="mb-3" style="display: flex; align-items: center;">
+                                <img src="{% static 'images/TRADE-WISE-FINAL-TRANSPARENT.png' %}" alt="TradeWise Logo" style="height: 45px; margin-right: 12px; filter: brightness(0) invert(1);">
+                                <div style="font-size: 1rem; font-weight: 600;">Premium Member</div>
+                            </div>
+                            
+                            <div class="mb-3" style="background: rgba(255,255,255,0.15); padding: 12px; border-radius: 8px;">
+                                <div style="font-size: 0.8rem; margin-bottom: 4px; opacity: 0.8;">CARD NUMBER</div>
+                                <div style="font-size: 1.2rem; letter-spacing: 2px; font-weight: 600;">
+                                    TWC/NO/{% if account_number %}{{ account_number }}{% else %}001234{% endif %}
+                                </div>
+                            </div>
+
+                            <div class="mb-3">
+                                <div style="font-size: 0.8rem; opacity: 0.8;">TRADEWISE COINS</div>
+                                <div style="font-size: 1.2rem; font-weight: 700;">
+                                    R/T/W/C/G/{% if balance %}{{ balance }}{% else %}50 COINS{% endif %}
+                                </div>
+                            </div>
+                            
+                            <div style="display: flex; justify-content: space-between; align-items: flex-end;">
+                                <div>
+                                    <div style="font-size: 0.8rem; opacity: 0.8;">CARD HOLDER</div>
+                                    <div style="font-size: 1rem; font-weight: 600;">{% if first_name %}{{ first_name }} {{ second_name }}{% else %}John Doe{% endif %}</div>
+                                </div>
+                                <div>
+                                    <div style="font-size: 0.8rem; opacity: 0.8;">STATUS</div>
+                                    <div style="font-size: 1rem; font-weight: 600; color: #2ecc71;">ACTIVE</div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Card Watermark -->
+                        <div style="position: absolute; top: -20px; right: -20px; opacity: 0.1; font-size: 8rem; font-weight: 700; color: white; transform: rotate(15deg);">TRADE</div>
+                        
+                        <!-- Chip Effect -->
+                        <div style="position: absolute; top: 25px; right: 25px; width: 40px; height: 32px; background: linear-gradient(45deg, #ffd700, #ffed4e); border-radius: 6px; opacity: 0.8;"></div>
+                    </div>
+                    
+                    <!-- Glow Effect -->
+                    <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 100%; height: 100%; background: radial-gradient(circle, rgba(52, 152, 219, 0.15) 0%, rgba(52, 152, 219, 0) 70%); border-radius: 16px; z-index: -1;"></div>
                 </div>
-                <div class="overlay-panel overlay-right">
-                    <h1>New Here?</h1>
-                    <p>Create an account to start your trading journey with us</p>
-                    <button class="ghost" id="signUp">Sign Up</button>
+            </div>
+            
+            <!-- Benefits Column - RIGHT -->
+            <div class="col-lg-6">
+                <div class="benefits-content">
+                    <h3 style="font-size: 1.5rem; font-weight: 700; color: #2c3e50; margin-bottom: 20px; text-align: center;">
+                        Premium Benefits
+                    </h3>
+                    
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <div class="benefit-item" style="padding: 16px; background: white; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.08); height: 100%; transition: all 0.3s ease; border-top: 3px solid #3498db;">
+                                <div class="text-center mb-2">
+                                    <div style="width: 48px; height: 48px; background: linear-gradient(135deg, #3498db, #2c3e50); border-radius: 10px; display: inline-flex; align-items: center; justify-content: center;">
+                                        <i class="fas fa-coins" style="color: white; font-size: 1.2rem;"></i>
+                                    </div>
+                                </div>
+                                <h4 style="font-size: 1rem; color: #2c3e50; margin-bottom: 6px; font-weight: 600; text-align: center;">Upto $500K Prop Trading</h4>
+                                <p style="color: #7f8c8d; margin: 0; font-size: 0.85rem; text-align: center;">Access premium funding</p>
+                            </div>
+                        </div>
+                        
+                        <div class="col-md-6 mb-3">
+                            <div class="benefit-item" style="padding: 16px; background: white; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.08); height: 100%; transition: all 0.3s ease; border-top: 3px solid #2ecc71;">
+                                <div class="text-center mb-2">
+                                    <div style="width: 48px; height: 48px; background: linear-gradient(135deg, #2ecc71, #27ae60); border-radius: 10px; display: inline-flex; align-items: center; justify-content: center;">
+                                        <i class="fas fa-chart-line" style="color: white; font-size: 1.2rem;"></i>
+                                    </div>
+                                </div>
+                                <h4 style="font-size: 1rem; color: #2c3e50; margin-bottom: 6px; font-weight: 600; text-align: center;">Priority Signals</h4>
+                                <p style="color: #7f8c8d; margin: 0; font-size: 0.85rem; text-align: center;">Early access to trades</p>
+                            </div>
+                        </div>
+                        
+                        <div class="col-md-6 mb-3">
+                            <div class="benefit-item" style="padding: 16px; background: white; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.08); height: 100%; transition: all 0.3s ease; border-top: 3px solid #e74c3c;">
+                                <div class="text-center mb-2">
+                                    <div style="width: 48px; height: 48px; background: linear-gradient(135deg, #e74c3c, #c0392b); border-radius: 10px; display: inline-flex; align-items: center; justify-content: center;">
+                                        <i class="fas fa-user-tie" style="color: white; font-size: 1.2rem;"></i>
+                                    </div>
+                                </div>
+                                <h4 style="font-size: 1rem; color: #2c3e50; margin-bottom: 6px; font-weight: 600; text-align: center;">Dedicated Manager</h4>
+                                <p style="color: #7f8c8d; margin: 0; font-size: 0.85rem; text-align: center;">24/7 personal support</p>
+                            </div>
+                        </div>
+                        
+                        <div class="col-md-6 mb-3">
+                            <div class="benefit-item" style="padding: 16px; background: white; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.08); height: 100%; transition: all 0.3s ease; border-top: 3px solid #9b59b6;">
+                                <div class="text-center mb-2">
+                                    <div style="width: 48px; height: 48px; background: linear-gradient(135deg, #9b59b6, #8e44ad); border-radius: 10px; display: inline-flex; align-items: center; justify-content: center;">
+                                        <i class="fas fa-graduation-cap" style="color: white; font-size: 1.2rem;"></i>
+                                    </div>
+                                </div>
+                                <h4 style="font-size: 1rem; color: #2c3e50; margin-bottom: 6px; font-weight: 600; text-align: center;">VIP Education</h4>
+                                <p style="color: #7f8c8d; margin: 0; font-size: 0.85rem; text-align: center;">Premium courses & mentorship</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="text-center mt-3">
+                        <button onclick="showPaymentModal('TradeWise Membership Card', 1500)" class="btn-primary-gradient" style="padding: 12px 32px; font-size: 1rem; font-weight: 600; border-radius: 50px; border: none; transition: all 0.3s ease; background: linear-gradient(135deg, #3498db, #2c3e50); color: white; box-shadow: 0 4px 15px rgba(52, 152, 219, 0.3);">
+                            <i class="fas fa-credit-card me-2"></i> Get Card - $10
+                        </button>
+                        <p style="color: #7f8c8d; margin-top: 12px; font-size: 0.85rem;">
+                            <i class="fas fa-shield-alt me-1"></i> Secure • Instant • Guaranteed
+                        </p>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
+</section>
 
-<script>
-    // Popup message function
-    function showPopup(message, type = 'success') {
-        const popup = document.getElementById('popupMessage');
-        popup.textContent = message;
-        popup.className = `messageDiv show ${type}`;
-        
-        if (popup.timeoutId) {
-            clearTimeout(popup.timeoutId);
-        }
-        
-        popup.timeoutId = setTimeout(() => {
-            popup.classList.remove('show');
-        }, 5000);
-    }
 
-    // Password strength checker
-    function checkPasswordStrength(password) {
-        const strengthDiv = document.getElementById('passwordStrength');
-        if (!password) {
-            strengthDiv.textContent = '';
-            return;
-        }
 
-        let strength = 0;
-        let feedback = '';
+      <!-- Affiliates Section - Updated with Total Coins Display -->
+<section id="affiliates" style="padding: 80px 0; background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);">
+    <div class="container">
+        <div class="row justify-content-center mb-5">
+            <div class="col-lg-10 text-center">
+                <span style="background: linear-gradient(135deg, #3498db, #2c3e50); color: white; padding: 8px 25px; border-radius: 2px; font-size: 0.9rem; font-weight: 600; letter-spacing: 1px;">AFFILIATE PROGRAM</span>
+                <h2 style="font-size: 2rem; font-weight: 800; color: #2c3e50; margin: 20px 0 10px;">Earn with <span style="color: #3498db;">TWC Coins</span> Referrals</h2>
+                <p style="color: #64748b; font-size: 1.1rem; max-width: 600px; margin: 0 auto;">Get 50 TWC coins for every person who signs up with your referral link. Redeemable at 10 Ksh per coin weekly!</p>
+            </div>
+        </div>
 
-        // Length check
-        if (password.length >= 8) strength++;
-        else feedback = 'Password should be at least 8 characters';
+        <div class="row g-4">
+            <!-- Affiliate Stats & Referral Link with Weekly Number -->
+            <div class="col-lg-6">
+                <div class="affiliate-card" style="background: white; border-radius: 15px; padding: 30px; box-shadow: 0 10px 30px rgba(0,0,0,0.08); height: 100%; border: 1px solid #e9ecef;">
+                    <div class="d-flex align-items-center mb-4">
+                        <div class="icon-box me-3" style="width: 60px; height: 60px; background: rgba(52, 152, 219, 0.1); border-radius: 50%; display: flex; align-items: center; justify-content: center;">
+                            <i class="fas fa-link" style="font-size: 1.8rem; color: #3498db;"></i>
+                        </div>
+                        <h3 class="mb-0" style="color: #2c3e50; font-weight: 700;">Your Referral Link</h3>
+                    </div>
+                    
+                    <div class="referral-link-container mb-4">
+                        <div class="input-group">
+                            <input type="text" class="form-control" id="referralLink" 
+                            value="http://127.0.0.1:8000//signup?ref={{ referral_code|default:'TW' }}"
+                                   readonly style="border-radius: 8px 0 0 8px; border: 2px solid #e2e8f0; font-family: 'Courier New', monospace;">
+                            <button class="btn btn-primary" onclick="copyReferralLink()" 
+                                    style="border-radius: 0 8px 8px 0; background: #3498db; border: 2px solid #3498db; font-weight: 600;">
+                                <i class="fas fa-copy me-1"></i>Copy
+                            </button>
+                        </div>
+                        <small class="text-muted mt-2 d-block">
+                            <i class="fas fa-info-circle me-1"></i>Share this link to earn 50 TWC coins per successful referral
+                        </small>
+                    </div>
 
-        // Mixed case check
-        if (password.match(/([a-z].*[A-Z])|([A-Z].*[a-z])/)) strength++;
-        else if (!feedback) feedback = 'Include both uppercase and lowercase letters';
-
-        // Numbers check
-        if (password.match(/([0-9])/)) strength++;
-        else if (!feedback) feedback = 'Include at least one number';
-
-        // Special characters check
-        if (password.match(/([!,%,&,@,#,$,^,*,?,_,~])/)) strength++;
-        else if (!feedback) feedback = 'Include at least one special character';
-
-        // Update UI
-        if (strength === 0) {
-            strengthDiv.textContent = '';
-        } else if (strength <= 2) {
-            strengthDiv.textContent = `Weak ${feedback ? '- ' + feedback : ''}`;
-            strengthDiv.className = 'password-strength strength-weak';
-        } else if (strength === 3) {
-            strengthDiv.textContent = 'Medium - Good password';
-            strengthDiv.className = 'password-strength strength-medium';
-        } else {
-            strengthDiv.textContent = 'Strong - Excellent password';
-            strengthDiv.className = 'password-strength strength-strong';
-        }
-    }
-
-    // 🚨 ULTIMATE REFERRAL CAPTURE - IMMUTABLE & GUARANTEED 🚨
-    function autoFillReferralCode() {
-        // Get referral code from URL parameters
-        const urlParams = new URLSearchParams(window.location.search);
-        let refCode = urlParams.get('ref');
-        
-        console.log('🔍 URL Referral Code:', refCode);
-        
-        // Also check for referral_code in URL (backup)
-        if (!refCode) {
-            refCode = urlParams.get('referral_code');
-        }
-        
-        // Set the referral code input field value
-        const referralInput = document.getElementById('referralCode');
-        const referralDisplay = document.getElementById('referralDisplay');
-        const referralCodeText = document.getElementById('referralCodeText');
-        
-        if (refCode && referralInput) {
-            // Clean and format the referral code
-            refCode = refCode.trim().toUpperCase();
+                    <!-- Weekly Lucky Number - Integrated -->
+                    <div class="weekly-number-integrated mb-4" style="background: linear-gradient(135deg, #3498db 0%, #2c3e50 100%); border-radius: 12px; padding: 20px; color: white;">
+                        <div class="d-flex align-items-center justify-content-between mb-3">
+                            <div class="d-flex align-items-center">
+                                <div class="icon-box me-3" style="width: 40px; height: 40px; background: rgba(255,255,255,0.2); border-radius: 50%; display: flex; align-items: center; justify-content: center;">
+                                    <i class="fas fa-trophy" style="font-size: 1.2rem; color: white;"></i>
+                                </div>
+                                <div>
+                                    <h5 class="mb-0" style="color: white; font-weight: 600; font-size: 1rem;">Weekly Lucky Number</h5>
+                                    <small style="opacity: 0.8;">Instant redemption opportunity</small>
+                                </div>
+                            </div>
+                            <div id="weeklyLuckyNumber" class="lucky-number" style="font-size: 1.5rem; font-weight: 800; letter-spacing: 2px; background: rgba(255,255,255,0.15); padding: 8px 16px; border-radius: 8px; font-family: 'Courier New', monospace;">
+                                {% if current_weekly_number %}{{ current_weekly_number.number }}{% else %}7 8 4 2 1{% endif %}
+                            </div>
+                        </div>
+                        
+                        <div class="redemption-rules" style="background: rgba(255,255,255,0.1); padding: 12px; border-radius: 8px;">
+                            <div class="d-flex align-items-start mb-2">
+                                <i class="fas fa-check-circle mt-1 me-2" style="color: #2ecc71; font-size: 0.9rem;"></i>
+                                <div>
+                                    <small style="opacity: 0.9; font-weight: 600;">Normal: Referred users must subscribe To Atleast One Tradewise Service</small>
+                                </div>
+                            </div>
+                            <div class="d-flex align-items-start">
+                                <i class="fas fa-star mt-1 me-2" style="color: #f39c12; font-size: 0.9rem;"></i>
+                                <div>
+                                    <small style="opacity: 0.9; font-weight: 600;">Lucky Number: Redeem regardless of subscription</small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="referral-stats mb-4">
+                        <div class="row text-center">
+                            <div class="col-4">
+                                <div class="stat-box p-3" style="background: rgba(52, 152, 219, 0.05); border-radius: 10px; border: 1px solid rgba(52, 152, 219, 0.1);">
+                                    <div class="d-flex align-items-center justify-content-center mb-2">
+                                        <i class="fas fa-users me-2" style="color: #3498db;"></i>
+                                        <h3 class="mb-0" style="color: #3498db;" id="totalReferrals">{{ referral_stats.total_referrals }}</h3>
+                                    </div>
+                                    <p class="mb-0 small" style="color: #64748b; font-weight: 600;">Total Referrals</p>
+                                </div>
+                            </div>
+                            <div class="col-4">
+                                <div class="stat-box p-3" style="background: rgba(46, 204, 113, 0.05); border-radius: 10px; border: 1px solid rgba(46, 204, 113, 0.1);">
+                                    <div class="d-flex align-items-center justify-content-center mb-2">
+                                        <i class="fas fa-coins me-2" style="color: #2ecc71;"></i>
+                                        <h3 class="mb-0" style="color: #2ecc71;" id="totalCoins">{{ referral_stats.total_coins }}</h3>
+                                    </div>
+                                    <p class="mb-0 small" style="color: #64748b; font-weight: 600;">Total Coins Earned</p>
+                                </div>
+                            </div>
+                            <div class="col-4">
+                                <div class="stat-box p-3" style="background: rgba(231, 76, 60, 0.05); border-radius: 10px; border: 1px solid rgba(231, 76, 60, 0.1);">
+                                    <div class="d-flex align-items-center justify-content-center mb-2">
+                                        <i class="fas fa-wallet me-2" style="color: #e74c3c;"></i>
+                                        <h3 class="mb-0" style="color: #e74c3c;" id="availableBalance">{{ referral_stats.coin_balance }}</h3>
+                                    </div>
+                                    <p class="mb-0 small" style="color: #64748b; font-weight: 600;">Available Balance</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="referral-actions">
+                        <h5 class="mb-3" style="color: #2c3e50; font-weight: 600;">
+                            <i class="fas fa-share-alt me-2"></i>Share Your Link
+                        </h5>
+                        <div class="d-flex gap-2 flex-wrap">
+                            <button class="btn btn-outline-primary" onclick="shareOnWhatsApp()" style="border-radius: 8px; border-color: #3498db; color: #3498db; font-weight: 600; flex: 1; min-width: 120px;">
+                                <i class="fab fa-whatsapp me-2"></i> WhatsApp
+                            </button>
+                            <button class="btn btn-outline-primary" onclick="shareOnFacebook()" style="border-radius: 8px; border-color: #3498db; color: #3498db; font-weight: 600; flex: 1; min-width: 120px;">
+                                <i class="fab fa-facebook me-2"></i> Facebook
+                            </button>
+                            <button class="btn btn-outline-primary" onclick="shareOnTwitter()" style="border-radius: 8px; border-color: #3498db; color: #3498db; font-weight: 600; flex: 1; min-width: 120px;">
+                                <i class="fab fa-twitter me-2"></i> Twitter
+                            </button>
+                            <button class="btn btn-outline-primary" onclick="shareViaEmail()" style="border-radius: 8px; border-color: #3498db; color: #3498db; font-weight: 600; flex: 1; min-width: 120px;">
+                                <i class="fas fa-envelope me-2"></i> Email
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
             
-            // If it's just numbers, add 'TW' prefix (5000 → TW5000)
-            if (/^\d+$/.test(refCode)) {
-                refCode = 'TW' + refCode;
+  <!-- TWC Coin Redemption -->
+<div class="col-lg-6">
+    <div class="affiliate-card" style="background: white; border-radius: 15px; padding: 30px; box-shadow: 0 10px 30px rgba(0,0,0,0.08); height: 100%; border: 1px solid #e9ecef;">
+        <div class="d-flex align-items-center mb-4">
+            <div class="icon-box me-3" style="width: 60px; height: 60px; background: rgba(46, 204, 113, 0.1); border-radius: 50%; display: flex; align-items: center; justify-content: center;">
+                <i class="fas fa-exchange-alt" style="font-size: 1.8rem; color: #2ecc71;"></i>
+            </div>
+            <h3 class="mb-0" style="color: #2c3e50; font-weight: 700;">Redeem Coins</h3>
+        </div>
+        
+        <div class="redemption-info mb-4">
+            <div style="background: rgba(46, 204, 113, 0.05); padding: 20px; border-radius: 10px; text-align: center; border: 1px solid rgba(46, 204, 113, 0.1);">
+                <h4 style="color: #2ecc71; margin-bottom: 10px; font-size: 1.1rem; font-weight: 600;">
+                    <i class="fas fa-trophy me-2"></i>Your Total Earnings
+                </h4>
+                <div class="balance-amount" style="font-size: 2.5rem; font-weight: 800; color: #2c3e50; margin: 10px 0;" id="currentBalance">
+                    {{ referral_stats.total_coins }}
+                </div>
+                <p class="mb-0 small" style="color: #64748b; font-weight: 600;">Total TWC Coins Earned</p>
+                <p class="small mt-2" style="color: #7f8c8d; font-weight: 600;" id="cashEquivalent">
+                    <i class="fas fa-money-bill-wave me-1"></i>≈ <span id="cashValue">{{ cash_value }}</span> Ksh Total Value
+                </p>
+                
+                <!-- Available Balance Info -->
+                <div class="mt-3 p-2" style="background: rgba(52, 152, 219, 0.1); border-radius: 8px;">
+                    <small style="color: #3498db; font-weight: 600;">
+                        <i class="fas fa-wallet me-1"></i>
+                        Available to Redeem: <strong>{{ referral_stats.coin_balance }}</strong> coins
+                        {% if referral_stats.coin_balance < referral_stats.total_coins %}
+                            <br><span style="color: #e74c3c; font-size: 0.8rem;">
+                                ({{ referral_stats.total_coins|add:"0"|add:"-"|add:referral_stats.coin_balance }} coins already redeemed)
+                            </span>
+                        {% endif %}
+                    </small>
+                </div>
+            </div>
+        </div>
+        
+        <form method="POST" action="/affiliate/request-payout/" id="payoutForm">
+            {% csrf_token %}
+            <div class="redemption-form">
+                <div class="row g-3">
+                    <div class="col-md-6">
+                        <label for="coinAmount" class="form-label fw-bold" style="color: #2c3e50; font-size: 0.9rem;">
+                            <i class="fas fa-coins me-1"></i>Coins to Redeem
+                        </label>
+                        <input type="number" class="form-control" id="coinAmount" name="coin_amount"
+                               placeholder="Min 50 coins" min="50" max="{{ referral_stats.coin_balance }}" 
+                               style="border-radius: 8px; border: 2px solid #e2e8f0; font-size: 0.9rem; padding: 12px;" 
+                               oninput="calculatePayout()" required>
+                        <small class="text-muted">Max: {{ referral_stats.coin_balance }} coins available to redeem</small>
+                    </div>
+                    <div class="col-md-6">
+                        <label for="paymentMethod" class="form-label fw-bold" style="color: #2c3e50; font-size: 0.9rem;">
+                            <i class="fas fa-credit-card me-1"></i>Payment Method
+                        </label>
+                        <select class="form-select" id="paymentMethod" name="payment_method" style="border-radius: 8px; border: 2px solid #e2e8f0; font-size: 0.9rem; padding: 12px;" onchange="showPaymentFields()" required>
+                            <option value="">Choose method</option>
+                            <option value="mpesa">M-Pesa</option>
+                            <option value="bank">Bank Transfer</option>
+                            <option value="paypal">PayPal</option>
+                        </select>
+                    </div>
+                    
+                    <!-- Dynamic Payment Fields -->
+                    <div class="col-12" id="paymentFields" style="display: none;">
+                        <div class="payment-details mt-2 p-3" style="background: #f8f9fa; border-radius: 10px; border: 1px solid #e9ecef;">
+                            <!-- M-Pesa Fields -->
+                            <div id="mpesaFields" class="payment-method-fields">
+                                <label for="mpesaNumber" class="form-label small fw-bold" style="color: #2c3e50;">
+                                    <i class="fas fa-mobile-alt me-1"></i>M-Pesa Number
+                                </label>
+                                <input type="text" class="form-control" id="mpesaNumber" name="mpesa_number" placeholder="e.g., 254712345678" style="border-radius: 6px;">
+                            </div>
+                            
+                            <!-- Bank Fields -->
+                            <div id="bankFields" class="payment-method-fields" style="display: none;">
+                                <div class="row g-2">
+                                    <div class="col-md-6">
+                                        <label for="bankName" class="form-label small fw-bold" style="color: #2c3e50;">
+                                            <i class="fas fa-university me-1"></i>Bank Name
+                                        </label>
+                                        <input type="text" class="form-control" id="bankName" name="bank_name" placeholder="e.g., Equity Bank" style="border-radius: 6px;">
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label for="bankAccount" class="form-label small fw-bold" style="color: #2c3e50;">
+                                            <i class="fas fa-file-invoice me-1"></i>Account Number
+                                        </label>
+                                        <input type="text" class="form-control" id="bankAccount" name="bank_account" placeholder="e.g., 1234567890" style="border-radius: 6px;">
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- PayPal Fields -->
+                            <div id="paypalFields" class="payment-method-fields" style="display: none;">
+                                <label for="paypalEmail" class="form-label small fw-bold" style="color: #2c3e50;">
+                                    <i class="fab fa-paypal me-1"></i>PayPal Email
+                                </label>
+                                <input type="email" class="form-control" id="paypalEmail" name="paypal_email" placeholder="e.g., your.email@example.com" style="border-radius: 6px;">
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="col-12">
+                        <div class="d-flex justify-content-between align-items-center mt-3 p-3" style="background: #f8f9fa; border-radius: 10px;">
+                            <div>
+                                <p class="mb-0 fw-bold" style="color: #2c3e50; font-size: 1rem;">
+                                    <i class="fas fa-calculator me-2"></i>Payout: <span id="estimatedPayout" style="color: #2ecc71; font-size: 1.2rem;">0 Ksh</span>
+                                </p>
+                                <small class="text-muted">10 Ksh per coin</small>
+                            </div>
+                            <button type="button" class="btn btn-success" style="border-radius: 8px; background: #2ecc71; border: none; padding: 12px 24px; font-size: 1rem; font-weight: 600;" onclick="showEligibilityModal()">
+                                <i class="fas fa-paper-plane me-2"></i>Request Payout
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+        
+        <div class="mt-4">
+            <div class="alert alert-info" style="background: rgba(52, 152, 219, 0.05); border: none; border-left: 4px solid #3498db; padding: 15px; font-size: 0.85rem; border-radius: 8px;">
+                <div class="d-flex align-items-center">
+                    <i class="fas fa-info-circle me-2" style="color: #3498db;"></i>
+                    <div>
+                        <strong>Weekly Processing</strong> every Friday • <strong>Minimum 50 coins</strong> • <strong>10 Ksh per coin</strong>
+                        <br>
+                        <small class="text-muted">Redeem from your available balance: {{ referral_stats.coin_balance }} coins</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Eligibility Modal -->
+<div class="modal fade" id="eligibilityModal" tabindex="-1" aria-labelledby="eligibilityModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content" style="border-radius: 15px; border: none; box-shadow: 0 20px 60px rgba(0,0,0,0.15);">
+            <div class="modal-header" style="background: linear-gradient(135deg, #2ecc71, #27ae60); border-radius: 15px 15px 0 0; border: none; padding: 25px 30px;">
+                <div class="d-flex align-items-center w-100">
+                    <div class="icon-box me-3" style="width: 50px; height: 50px; background: rgba(255,255,255,0.2); border-radius: 50%; display: flex; align-items: center; justify-content: center;">
+                        <i class="fas fa-gift" style="font-size: 1.5rem; color: white;"></i>
+                    </div>
+                    <h5 class="modal-title mb-0" style="color: white; font-weight: 700; font-size: 1.4rem;" id="eligibilityModalLabel">
+                        Almost There!
+                    </h5>
+                </div>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body" style="padding: 30px;">
+                <div class="text-center mb-4">
+                    <div style="width: 80px; height: 80px; background: rgba(46, 204, 113, 0.1); border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; margin-bottom: 20px;">
+                        <i class="fas fa-users" style="font-size: 2rem; color: #2ecc71;"></i>
+                    </div>
+                    <h4 style="color: #2c3e50; font-weight: 700; margin-bottom: 15px;">You're Not Eligible Yet</h4>
+                    <p style="color: #64748b; font-size: 1rem; line-height: 1.6; margin-bottom: 10px;">
+                        None of your referrers or people you referred have subscribed to at least one TradeWise service.
+                    </p>
+                    <p style="color: #2ecc71; font-size: 1.1rem; font-weight: 700; margin-bottom: 0;">
+                        Keep making referrals - you're one referral away from your first payout!
+                    </p>
+                </div>
+                
+                <div class="progress mb-4" style="height: 8px; border-radius: 10px; background: #f1f5f9;">
+                    <div class="progress-bar" style="background: linear-gradient(90deg, #2ecc71, #27ae60); border-radius: 10px; width: 85%;"></div>
+                </div>
+                
+                <div class="d-flex justify-content-between align-items-center text-center">
+                    <div>
+                        <div style="font-size: 0.9rem; color: #64748b; font-weight: 600;">Current Progress</div>
+                        <div style="font-size: 1.2rem; color: #2ecc71; font-weight: 800;">85%</div>
+                    </div>
+                    <div>
+                        <div style="font-size: 0.9rem; color: #64748b; font-weight: 600;">Referrals Needed</div>
+                        <div style="font-size: 1.2rem; color: #2c3e50; font-weight: 800;">1 More</div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer" style="border: none; padding: 25px 30px; border-radius: 0 0 15px 15px; background: #f8f9fa;">
+                <button type="button" class="btn btn-outline-secondary me-3" style="border-radius: 8px; padding: 10px 20px; font-weight: 600;" data-bs-dismiss="modal">
+                    Close
+                </button>
+                <button type="button" class="btn btn-success" style="border-radius: 8px; background: #2ecc71; border: none; padding: 10px 25px; font-weight: 600;">
+                    <i class="fas fa-share-alt me-2"></i>Share Referral Link
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+        </div>
+
+        <!-- Recent Activity Section -->
+        <div class="row mt-4">
+            <div class="col-lg-6">
+                <div class="activity-card" style="background: white; border-radius: 15px; padding: 25px; box-shadow: 0 10px 30px rgba(0,0,0,0.08); border: 1px solid #e9ecef;">
+                    <div class="d-flex justify-content-between align-items-center mb-4">
+                        <h5 style="color: #2c3e50; font-weight: 700; margin-bottom: 0;">
+                            <i class="fas fa-history me-2"></i>Recent Referrals
+                        </h5>
+                        {% if recent_referrals %}
+                        <button class="btn btn-outline-primary btn-sm" onclick="showAllReferralsModal()" 
+                                style="border-radius: 20px; border-color: #3498db; color: #3498db; font-weight: 600;">
+                            <i class="fas fa-eye me-1"></i>
+                            View All 
+                            <span class="badge bg-primary ms-1" style="font-size: 0.7rem;">{{ recent_referrals|length }}</span>
+                        </button>
+                        {% endif %}
+                    </div>
+                    
+                    {% if recent_referrals %}
+                        <!-- Show only the FIRST referral with nice design -->
+                        <div class="first-referral mb-3">
+                            <div class="referral-item p-3" style="background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%); border-radius: 12px; border-left: 4px solid #3498db;">
+                                <div class="d-flex align-items-center">
+                                    <div class="avatar me-3" style="width: 50px; height: 50px; background: linear-gradient(135deg, #3498db, #2c3e50); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-weight: 700; font-size: 1.1rem;">
+                                        {{ recent_referrals.0.referred_user.first_name|first }}{{ recent_referrals.0.referred_user.second_name|first }}
+                                    </div>
+                                    <div class="flex-grow-1">
+                                        <p class="mb-1 fw-bold" style="color: #2c3e50; font-size: 1rem;">
+                                            {{ recent_referrals.0.referred_user.first_name }} {{ recent_referrals.0.referred_user.second_name }}
+                                        </p>
+                                        <small class="text-muted">
+                                            <i class="fas fa-envelope me-1"></i>{{ recent_referrals.0.referred_user.email }}
+                                        </small>
+                                        <br>
+                                        <small class="text-muted">
+                                            <i class="fas fa-calendar me-1"></i>{{ recent_referrals.0.created_at|date:"M d, Y" }}
+                                        </small>
+                                    </div>
+                                    <div class="text-end">
+                                        <span class="badge" style="background: #2ecc71; color: white; padding: 8px 12px; border-radius: 20px; font-size: 0.9rem;">
+                                            <i class="fas fa-coins me-1"></i>+50 coins
+                                        </span>
+                                        <br>
+                                        <small class="text-muted mt-1 d-block">Latest referral</small>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Referral Stats Summary -->
+                        <div class="referral-summary p-3" style="background: rgba(52, 152, 219, 0.05); border-radius: 10px;">
+                            <div class="row text-center">
+                                <div class="col-6">
+                                    <h4 class="mb-0" style="color: #3498db; font-weight: 800;">{{ recent_referrals|length }}</h4>
+                                    <small style="color: #64748b; font-weight: 600;">Total Referrals</small>
+                                </div>
+                                <div class="col-6">
+                                    <h4 class="mb-0" style="color: #2ecc71; font-weight: 800;">{{ referral_stats.total_coins }}</h4>
+                                    <small style="color: #64748b; font-weight: 600;">Total Coins Earned</small>
+                                </div>
+                            </div>
+                        </div>
+
+                    {% else %}
+                        <div class="text-center py-4">
+                            <i class="fas fa-users fa-3x text-muted mb-3"></i>
+                            <h6 style="color: #64748b; font-weight: 600;">No Referrals Yet</h6>
+                            <p class="text-muted mb-3">Share your referral link to start earning coins!</p>
+                            <button class="btn btn-primary" onclick="copyReferralLink()">
+                                <i class="fas fa-copy me-1"></i>Copy Referral Link
+                            </button>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+            
+            <div class="col-lg-6">
+                <div class="activity-card" style="background: white; border-radius: 15px; padding: 25px; box-shadow: 0 10px 30px rgba(0,0,0,0.08); border: 1px solid #e9ecef;">
+                    <h5 style="color: #2c3e50; font-weight: 700; margin-bottom: 20px;">
+                        <i class="fas fa-receipt me-2"></i>Payout History
+                    </h5>
+                    {% if payout_history %}
+                        <div class="payout-list">
+                            {% for payout in payout_history %}
+                            <div class="payout-item d-flex align-items-center justify-content-between p-3 mb-2" style="background: #f8f9fa; border-radius: 8px;">
+                                <div>
+                                    <p class="mb-0 fw-bold" style="color: #2c3e50; font-size: 0.9rem;">
+                                        {{ payout.coin_amount }} coins
+                                    </p>
+                                    <small class="text-muted">{{ payout.created_at|date:"M d, Y" }}</small>
+                                </div>
+                                <div class="text-end">
+                                    <p class="mb-0 fw-bold" style="color: #2c3e50;">KES {{ payout.amount_kes }}</p>
+                                    <span class="badge 
+                                        {% if payout.status == 'approved' %}bg-success
+                                        {% elif payout.status == 'pending' %}bg-warning
+                                        {% elif payout.status == 'rejected' %}bg-danger
+                                        {% else %}bg-secondary{% endif %}"
+                                        style="font-size: 0.7rem;">
+                                        {{ payout.status|title }}
+                                    </span>
+                                </div>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        <div class="text-center py-4">
+                            <i class="fas fa-money-bill-wave fa-2x text-muted mb-3"></i>
+                            <p class="text-muted mb-0">No payout requests yet. Redeem your coins to get started!</p>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- All Referrals Modal -->
+<div class="modal fade" id="allReferralsModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header" style="background: linear-gradient(135deg, #3498db, #2c3e50); color: white;">
+                <h5 class="modal-title">
+                    <i class="fas fa-users me-2"></i>All Referrals ({{ recent_referrals|length }})
+                </h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="referral-stats-summary mb-4 p-3" style="background: rgba(52, 152, 219, 0.1); border-radius: 10px;">
+                    <div class="row text-center">
+                        <div class="col-4">
+                            <h3 class="mb-0" style="color: #3498db; font-weight: 800;">{{ recent_referrals|length }}</h3>
+                            <small style="color: #64748b; font-weight: 600;">Total Referrals</small>
+                        </div>
+                        <div class="col-4">
+                            <h3 class="mb-0" style="color: #2ecc71; font-weight: 800;">{{ referral_stats.total_coins }}</h3>
+                            <small style="color: #64748b; font-weight: 600;">Total Coins</small>
+                        </div>
+                        <div class="col-4">
+                            <h3 class="mb-0" style="color: #e74c3c; font-weight: 800;">{{ referral_stats.coin_balance }}</h3>
+                            <small style="color: #64748b; font-weight: 600;">Available Balance</small>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="referrals-list" style="max-height: 400px; overflow-y: auto;">
+                    {% for referral in recent_referrals %}
+                    <div class="referral-item d-flex align-items-center justify-content-between p-3 mb-2" 
+                         style="background: {% if forloop.first %}linear-gradient(135deg, #d4edda, #c3e6cb){% else %}#f8f9fa{% endif %}; 
+                                border-radius: 10px; border-left: 4px solid {% if forloop.first %}#28a745{% else %}#3498db{% endif %};">
+                        <div class="d-flex align-items-center">
+                            <div class="avatar me-3" 
+                                 style="width: 45px; height: 45px; background: {% if forloop.first %}linear-gradient(135deg, #28a745, #20c997){% else %}linear-gradient(135deg, #3498db, #2c3e50){% endif %}; 
+                                        border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-weight: 600;">
+                                {{ referral.referred_user.first_name|first }}{{ referral.referred_user.second_name|first }}
+                            </div>
+                            <div>
+                                <p class="mb-0 fw-bold" style="color: #2c3e50; font-size: 0.95rem;">
+                                    {{ referral.referred_user.first_name }} {{ referral.referred_user.second_name }}
+                                    {% if forloop.first %}<span class="badge bg-success ms-2" style="font-size: 0.6rem;">LATEST</span>{% endif %}
+                                </p>
+                                <small class="text-muted d-block">
+                                    <i class="fas fa-envelope me-1"></i>{{ referral.referred_user.email }}
+                                </small>
+                                <small class="text-muted">
+                                    <i class="fas fa-calendar me-1"></i>{{ referral.created_at|date:"M d, Y • g:i A" }}
+                                </small>
+                            </div>
+                        </div>
+                        <div class="text-end">
+                            <span class="badge" style="background: #2ecc71; color: white; padding: 6px 10px; border-radius: 15px; font-size: 0.8rem;">
+                                +50 coins
+                            </span>
+                            <br>
+                            <small class="text-muted" style="font-size: 0.75rem;">
+                                {{ forloop.counter }} of {{ recent_referrals|length }}
+                            </small>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" onclick="copyReferralLink()">
+                    <i class="fas fa-copy me-1"></i>Copy Referral Link
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- JavaScript -->
+<script>
+// Flickering effect for lucky number
+document.addEventListener('DOMContentLoaded', function() {
+    const luckyNumber = document.getElementById('weeklyLuckyNumber');
+    if (luckyNumber) {
+        setInterval(() => {
+            luckyNumber.style.opacity = luckyNumber.style.opacity === '0.8' ? '1' : '0.8';
+        }, 1000);
+    }
+    
+    // Initial data load
+    updateLiveData();
+});
+
+// Copy referral link function
+function copyReferralLink() {
+    const referralLink = document.getElementById('referralLink');
+    referralLink.select();
+    referralLink.setSelectionRange(0, 99999);
+    document.execCommand('copy');
+    
+    // Show success message
+    const originalText = event.target.innerHTML;
+    event.target.innerHTML = '<i class="fas fa-check me-1"></i>Copied!';
+    event.target.style.background = '#2ecc71';
+    event.target.style.borderColor = '#2ecc71';
+    
+    setTimeout(() => {
+        event.target.innerHTML = originalText;
+        event.target.style.background = '#3498db';
+        event.target.style.borderColor = '#3498db';
+    }, 2000);
+}
+
+// Calculate payout amount
+function calculatePayout() {
+    const coinAmount = document.getElementById('coinAmount').value;
+    const payoutElement = document.getElementById('estimatedPayout');
+    const maxCoins = parseInt(document.getElementById('coinAmount').max);
+    
+    if (coinAmount > maxCoins) {
+        payoutElement.style.color = '#e74c3c';
+        payoutElement.innerHTML = 'Exceeds available balance!';
+        return;
+    }
+    
+    const payoutAmount = coinAmount * 10; // 10 Ksh per coin
+    payoutElement.style.color = '#2ecc71';
+    payoutElement.textContent = payoutAmount + ' Ksh';
+}
+
+// Show payment method fields
+function showPaymentFields() {
+    const paymentMethod = document.getElementById('paymentMethod').value;
+    const paymentFields = document.getElementById('paymentFields');
+    const mpesaFields = document.getElementById('mpesaFields');
+    const bankFields = document.getElementById('bankFields');
+    const paypalFields = document.getElementById('paypalFields');
+    
+    // Hide all fields first
+    mpesaFields.style.display = 'none';
+    bankFields.style.display = 'none';
+    paypalFields.style.display = 'none';
+    paymentFields.style.display = 'none';
+    
+    // Show selected field
+    if (paymentMethod === 'mpesa') {
+        mpesaFields.style.display = 'block';
+        paymentFields.style.display = 'block';
+    } else if (paymentMethod === 'bank') {
+        bankFields.style.display = 'block';
+        paymentFields.style.display = 'block';
+    } else if (paymentMethod === 'paypal') {
+        paypalFields.style.display = 'block';
+        paymentFields.style.display = 'block';
+    }
+}
+
+// Show all referrals modal
+function showAllReferralsModal() {
+    const modal = new bootstrap.Modal(document.getElementById('allReferralsModal'));
+    modal.show();
+}
+
+// Social sharing functions
+function shareOnWhatsApp() {
+    const referralLink = document.getElementById('referralLink').value;
+    const message = `Join TradeWise using my referral link and get 50 TWC coins! ${referralLink}`;
+    window.open(`https://wa.me/?text=${encodeURIComponent(message)}`, '_blank');
+}
+
+function shareOnFacebook() {
+    const referralLink = document.getElementById('referralLink').value;
+    window.open(`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(referralLink)}`, '_blank');
+}
+
+function shareOnTwitter() {
+    const referralLink = document.getElementById('referralLink').value;
+    const message = 'Join TradeWise using my referral link and get 50 TWC coins!';
+    window.open(`https://twitter.com/intent/tweet?text=${encodeURIComponent(message)}&url=${encodeURIComponent(referralLink)}`, '_blank');
+}
+
+function shareViaEmail() {
+    const referralLink = document.getElementById('referralLink').value;
+    const subject = 'Join TradeWise with my referral link!';
+    const body = `Hi! I'm using TradeWise and thought you might be interested. Use my referral link to sign up and we both get 50 TWC coins!\n\n${referralLink}`;
+    window.location.href = `mailto:?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+}
+
+// Live updates every 10 seconds
+function updateLiveData() {
+    fetch('/get-affiliate-data/')
+        .then(r => r.json())
+        .then(data => {
+            if (data.success) {
+                // Update stats cards
+                document.getElementById('totalReferrals').textContent = data.stats.total_referrals;
+                document.getElementById('totalCoins').textContent = data.stats.total_coins;
+                document.getElementById('availableBalance').textContent = data.stats.coin_balance;
+                
+                // Update balance section - SHOWS TOTAL COINS EARNED
+                document.getElementById('currentBalance').textContent = data.stats.total_coins;
+                document.getElementById('cashValue').textContent = data.cash_value;
+                
+                // Update weekly number
+                document.getElementById('weeklyLuckyNumber').textContent = data.weekly_number;
+                
+                // Update max attribute for coin redemption (uses available balance)
+                const coinInput = document.getElementById('coinAmount');
+                if (coinInput) {
+                    coinInput.max = data.stats.coin_balance;
+                    coinInput.placeholder = `Min 50 coins (Max: ${data.stats.coin_balance})`;
+                }
+                
+                console.log('🔄 Live data updated:', data);
+            }
+        })
+        .catch(error => {
+            console.error('❌ Live update error:', error);
+        });
+}
+
+// Auto-refresh every 10 seconds
+setInterval(updateLiveData, 10000);
+
+// ELIGIBILITY MODAL FUNCTIONS - FIXED
+function showEligibilityModal() {
+    console.log('Button clicked - showing modal');
+    
+    // Get the modal element
+    var modalElement = document.getElementById('eligibilityModal');
+    
+    if (modalElement) {
+        console.log('Modal element found');
+        
+        // Create Bootstrap modal instance
+        var modal = new bootstrap.Modal(modalElement);
+        
+        // Show the modal
+        modal.show();
+        
+        console.log('Modal should be visible now');
+    } else {
+        console.error('Modal element not found!');
+    }
+}
+
+// Prevent form submission and show modal instead
+document.addEventListener('DOMContentLoaded', function() {
+    const payoutForm = document.getElementById('payoutForm');
+    if (payoutForm) {
+        payoutForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            showEligibilityModal();
+        });
+    }
+    
+    // Initialize payment fields and calculations
+    showPaymentFields();
+    calculatePayout();
+});
+</script>
+
+<style>
+.lucky-number {
+    animation: flicker 2s infinite;
+    transition: all 0.3s ease;
+    font-family: 'Courier New', monospace;
+}
+
+@keyframes flicker {
+    0%, 100% { 
+        opacity: 1; 
+        transform: scale(1); 
+        text-shadow: 0 0 10px rgba(255,255,255,0.3);
+    }
+    50% { 
+        opacity: 0.8; 
+        transform: scale(1.02);
+        text-shadow: 0 0 20px rgba(255,255,255,0.5);
+    }
+}
+
+.affiliate-card, .activity-card {
+    transition: all 0.3s ease;
+    border: 1px solid #e9ecef;
+}
+
+.affiliate-card:hover, .activity-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+}
+
+.stat-box {
+    transition: all 0.3s ease;
+}
+
+.stat-box:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+}
+
+.btn-outline-primary:hover {
+    background: #3498db;
+    color: white;
+    transform: translateY(-2px);
+}
+
+.icon-box {
+    transition: all 0.3s ease;
+}
+
+.icon-box:hover {
+    transform: scale(1.1);
+}
+
+.weekly-number-integrated {
+    transition: all 0.3s ease;
+}
+
+.weekly-number-integrated:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(52, 152, 219, 0.3);
+}
+
+.referral-item, .payout-item {
+    transition: all 0.3s ease;
+}
+
+.referral-item:hover, .payout-item:hover {
+    transform: translateX(5px);
+    background: #e9ecef !important;
+}
+
+.referrals-list::-webkit-scrollbar {
+    width: 6px;
+}
+
+.referrals-list::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 10px;
+}
+
+.referrals-list::-webkit-scrollbar-thumb {
+    background: #3498db;
+    border-radius: 10px;
+}
+
+.referrals-list::-webkit-scrollbar-thumb:hover {
+    background: #2980b9;
+}
+</style>
+
+    <!-- Modern Brokers Section -->
+    <section id="brokers" style="padding: 80px 0; background: #f8fafc;">
+        <div class="container">
+            <div class="text-center mb-5">
+                <span style="background: linear-gradient(135deg, #2c3e50, #3498db); color: white; padding: 8px 25px; border-radius: 2px; font-size: 0.9rem; font-weight: 600; letter-spacing: 1px;">TRUSTED BROKERS</span>
+                <h2 style="font-size: 2rem; font-weight: 800; color: #2c3e50; margin: 20px 0 10px;">Choose Your Trading Platform</h2>
+                <p style="color: #64748b; font-size: 1.1rem; max-width: 600px; margin: 0 auto;">Partner with world-class brokers trusted by thousands of successful traders</p>
+            </div>
+
+            <div class="row g-4 justify-content-center">
+                <!-- Windsor Brokers - Modern Card -->
+                <div class="col-lg-5 col-md-6">
+                    <div class="broker-card-rectangle" style="background: white; border-radius: 0; padding: 0; overflow: hidden; box-shadow: 0 5px 25px rgba(44, 62, 80, 0.1); transition: all 0.3s ease; border: 1px solid #e2e8f0; height: 100%; position: relative;">
+                        <!-- Header with diagonal cut -->
+                        <div style="background: linear-gradient(135deg, #2c3e50 0%, #3498db 100%); padding: 30px; text-align: center; position: relative; clip-path: polygon(0 0, 100% 0, 100% 85%, 0 100%);">
+                            <div style="width: 100px; height: 60px; background: white; border-radius: 0; display: inline-flex; align-items: center; justify-content: center; margin-bottom: 20px; border: 1px solid #e2e8f0;">
+                                <img src="{% static 'images/windsor.png' %}" alt="Windsor" style="width: 80px; height: 45px; object-fit: contain;">
+                            </div>
+                            <h3 style="color: white; font-size: 1.6rem; font-weight: 700; margin: 0 0 5px;">WINDSOR BROKERS</h3>
+                            <p style="color: rgba(255,255,255,0.9); font-size: 0.9rem; margin: 0; font-weight: 500;">EST. 1988 • REGULATED</p>
+                        </div>
+                        
+                        <!-- Features -->
+                        <div style="padding: 30px;">
+                            <div class="feature-item" style="display: flex; align-items: center; margin-bottom: 20px; padding: 15px; background: #f8fafc; border-left: 4px solid #3498db;">
+                                <div style="margin-right: 15px; color: #3498db; font-size: 1.1rem;">
+                                    <i class="fas fa-chart-line"></i>
+                                </div>
+                                <div>
+                                    <h4 style="font-size: 1rem; color: #2c3e50; margin: 0 0 5px; font-weight: 600;">0.0 Pips Spread</h4>
+                                    <p style="color: #64748b; margin: 0; font-size: 0.85rem;">Ultra-tight competitive spreads</p>
+                                </div>
+                            </div>
+                            
+                            <div class="feature-item" style="display: flex; align-items: center; margin-bottom: 20px; padding: 15px; background: #f8fafc; border-left: 4px solid #3498db;">
+                                <div style="margin-right: 15px; color: #3498db; font-size: 1.1rem;">
+                                    <i class="fas fa-bolt"></i>
+                                </div>
+                                <div>
+                                    <h4 style="font-size: 1rem; color: #2c3e50; margin: 0 0 5px; font-weight: 600;">1:500 Leverage</h4>
+                                    <p style="color: #64748b; margin: 0; font-size: 0.85rem;">Maximum trading power</p>
+                                </div>
+                            </div>
+                            
+                            <div class="feature-item" style="display: flex; align-items: center; margin-bottom: 25px; padding: 15px; background: #f8fafc; border-left: 4px solid #3498db;">
+                                <div style="margin-right: 15px; color: #3498db; font-size: 1.1rem;">
+                                    <i class="fas fa-shield-alt"></i>
+                                </div>
+                                <div>
+                                    <h4 style="font-size: 1rem; color: #2c3e50; margin: 0 0 5px; font-weight: 600;">Balance Protection</h4>
+                                    <p style="color: #64748b; margin: 0; font-size: 0.85rem;">Advanced risk management</p>
+                                </div>
+                            </div>
+                            
+                            <a href="https://ke.myuserhub.com/welcome?returnUrl=%2Faccounts&pt=200578" target="_blank" class="broker-btn" style="display: block; text-align: center; background: linear-gradient(135deg, #2c3e50, #3498db); color: white; padding: 12px; border-radius: 0; text-decoration: none; font-weight: 600; transition: all 0.3s ease; font-size: 1rem; border: none;">
+                                <i class="fas fa-rocket me-2"></i>CREATE WINDSOR ACCOUNT
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Deriv - Modern Card -->
+                <div class="col-lg-5 col-md-6">
+                    <div class="broker-card-rectangle" style="background: white; border-radius: 0; padding: 0; overflow: hidden; box-shadow: 0 5px 25px rgba(44, 62, 80, 0.1); transition: all 0.3s ease; border: 1px solid #e2e8f0; height: 100%; position: relative;">
+                        <!-- Header with diagonal cut -->
+                        <div style="background: linear-gradient(135deg, #1a365d 0%, #2c3e50 100%); padding: 30px; text-align: center; position: relative; clip-path: polygon(0 0, 100% 0, 100% 85%, 0 100%);">
+                            <div style="width: 100px; height: 60px; background: white; border-radius: 0; display: inline-flex; align-items: center; justify-content: center; margin-bottom: 20px; border: 1px solid #e2e8f0;">
+                                <img src="{% static 'images/deriv.webp' %}" alt="Deriv" style="width: 80px; height: 45px; object-fit: contain;">
+                            </div>
+                            <h3 style="color: white; font-size: 1.6rem; font-weight: 700; margin: 0 0 5px;">DERIV</h3>
+                            <p style="color: rgba(255,255,255,0.9); font-size: 0.9rem; margin: 0; font-weight: 500;">20+ YEARS • MULTI-REGULATED</p>
+                        </div>
+                        
+                        <!-- Features -->
+                        <div style="padding: 30px;">
+                            <div class="feature-item" style="display: flex; align-items: center; margin-bottom: 20px; padding: 15px; background: #f8fafc; border-left: 4px solid #2c3e50;">
+                                <div style="margin-right: 15px; color: #2c3e50; font-size: 1.1rem;">
+                                    <i class="fas fa-globe"></i>
+                                </div>
+                                <div>
+                                    <h4 style="font-size: 1rem; color: #2c3e50; margin: 0 0 5px; font-weight: 600;">24/7 Trading</h4>
+                                    <p style="color: #64748b; margin: 0; font-size: 0.85rem;">Synthetic indices anytime</p>
+                                </div>
+                            </div>
+                            
+                            <div class="feature-item" style="display: flex; align-items: center; margin-bottom: 20px; padding: 15px; background: #f8fafc; border-left: 4px solid #2c3e50;">
+                                <div style="margin-right: 15px; color: #2c3e50; font-size: 1.1rem;">
+                                    <i class="fas fa-fire"></i>
+                                </div>
+                                <div>
+                                    <h4 style="font-size: 1rem; color: #2c3e50; margin: 0 0 5px; font-weight: 600;">1:1000 Leverage</h4>
+                                    <p style="color: #64748b; margin: 0; font-size: 0.85rem;">Maximum trading conditions</p>
+                                </div>
+                            </div>
+                            
+                            <div class="feature-item" style="display: flex; align-items: center; margin-bottom: 25px; padding: 15px; background: #f8fafc; border-left: 4px solid #2c3e50;">
+                                <div style="margin-right: 15px; color: #2c3e50; font-size: 1.1rem;">
+                                    <i class="fas fa-play-circle"></i>
+                                </div>
+                                <div>
+                                    <h4 style="font-size: 1rem; color: #2c3e50; margin: 0 0 5px; font-weight: 600;">$10K Demo</h4>
+                                    <p style="color: #64748b; margin: 0; font-size: 0.85rem;">Practice completely risk-free</p>
+                                </div>
+                            </div>
+                            
+                            <a href="https://track.deriv.com/_9VbYrFdiio5MjdsyM5hasGNd7ZgqdRLk/1/" target="_blank" class="broker-btn" style="display: block; text-align: center; background: linear-gradient(135deg, #1a365d, #2c3e50); color: white; padding: 12px; border-radius: 0; text-decoration: none; font-weight: 600; transition: all 0.3s ease; font-size: 1rem; border: none;">
+                                <i class="fas fa-bolt me-2"></i>CREATE DERIV ACCOUNT
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Modern Video Tutorials -->
+<section style="padding: 80px 0; background: #2c3e50;">
+    <div class="container">
+        <div class="text-center mb-5">
+            <span style="background: #3498db; color: white; padding: 8px 25px; border-radius: 2px; font-size: 0.9rem; font-weight: 600; letter-spacing: 1px;">QUICK START GUIDES</span>
+            <h2 style="font-size: 2rem; font-weight: 800; color: white; margin: 20px 0 10px;">Setup in Minutes</h2>
+            <p style="color: #cbd5e1; font-size: 1.1rem; max-width: 600px; margin: 0 auto;">Watch our professional guides and start trading in less than 10 minutes</p>
+        </div>
+
+        <div class="row g-4 justify-content-center">
+            <div class="col-lg-5 col-md-6">
+                <div class="video-card-rectangle" style="background: #1a2a3a; border-radius: 0; overflow: hidden; border: 1px solid #374151; transition: all 0.3s ease;">
+                    <div style="position: relative;">
+                        <div class="video-container" style="position: relative; padding-bottom: 56.25%; height: 0; background: #0f172a;">
+                            <!-- Image placeholder - replace with your thumbnail -->
+                            <img src="https://i.ytimg.com/vi/8MBcu4ovIqA/hq720.jpg?sqp=-oaymwEhCK4FEIIDSFryq4qpAxMIARUAAAAAGAElAADIQj0AgKJD&rs=AOn4CLA-3xZg0uR7M_R0J7kwQY-4AZ-M_g" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover;">
+                            <!-- Watch button that links to YouTube -->
+                            <a href="https://www.youtube.com/watch?v=8MBcu4ovIqA" target="_blank" style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); background: #000; color: white; padding: 15px 30px; border-radius: 0; text-decoration: none; font-weight: 600; font-size: 1rem; display: flex; align-items: center; gap: 8px;">
+                                <i class="fas fa-play"></i> WATCH GUIDE
+                            </a>
+                        </div>
+                        <div style="position: absolute; top: 15px; left: 15px; background: #3498db; color: white; padding: 8px 15px; border-radius: 0; font-size: 0.8rem; font-weight: 600;">
+                            <i class="fas fa-play me-1"></i>WINDSOR BROKERS
+                        </div>
+                    </div>
+                    <div style="padding: 25px; text-align: center; border-top: 3px solid #3498db;">
+                        <h4 style="color: white; font-size: 1.2rem; font-weight: 600; margin-bottom: 10px;">Professional Account Setup</h4>
+                        <p style="color: #cbd5e1; margin: 0; font-size: 0.9rem;">Complete step-by-step Windsor account creation</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-lg-5 col-md-6">
+                <div class="video-card-rectangle" style="background: #1a2a3a; border-radius: 0; overflow: hidden; border: 1px solid #374151; transition: all 0.3s ease;">
+                    <div style="position: relative;">
+                        <div class="video-container" style="position: relative; padding-bottom: 56.25%; height: 0; background: #0f172a;">
+                            <!-- Image placeholder - replace with your thumbnail -->
+                            <img src="https://i.ytimg.com/vi/c2hVM2_jS4k/hq720.jpg?sqp=-oaymwEhCK4FEIIDSFryq4qpAxMIARUAAAAAGAElAADIQj0AgKJD&rs=AOn4CLAMKBqqxe-qjWyg_yZVkfi3FXofkw" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover;">
+                            <!-- Watch button that links to YouTube -->
+                            <a href="https://www.youtube.com/watch?v=hAA64mnVHIk" target="_blank" style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); background: #2c3e50; color: white; padding: 15px 30px; border-radius: 0; text-decoration: none; font-weight: 600; font-size: 1rem; display: flex; align-items: center; gap: 8px;">
+                                <i class="fas fa-play"></i> WATCH GUIDE
+                            </a>
+                        </div>
+                        <div style="position: absolute; top: 15px; left: 15px; background: #2c3e50; color: white; padding: 8px 15px; border-radius: 0; font-size: 0.8rem; font-weight: 600;">
+                            <i class="fas fa-play me-1"></i>DERIV PLATFORM
+                        </div>
+                    </div>
+                    <div style="padding: 25px; text-align: center; border-top: 3px solid #2c3e50;">
+                        <h4 style="color: white; font-size: 1.2rem; font-weight: 600; margin-bottom: 10px;">Quick Platform Setup</h4>
+                        <p style="color: #cbd5e1; margin: 0; font-size: 0.9rem;">Rapid Deriv account configuration guide</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+    <!-- Modern TradeWise Coin -->
+    <section style="padding: 100px 0; background: linear-gradient(135deg, #1a2a3a 0%, #2c3e50 100%); position: relative; overflow: hidden; margin-bottom: 0;">
+        <div class="container position-relative" style="z-index: 2;">
+            <div class="row align-items-center">
+                <div class="col-lg-6 text-white">
+                    <span style="background: linear-gradient(135deg, #3498db, #2980b9); color: white; padding: 8px 20px; border-radius: 2px; font-size: 0.9rem; font-weight: 600; letter-spacing: 1px;">COMING SOON</span>
+                    <h2 style="font-size: 2rem; font-weight: 800; margin: 20px 0 15px; line-height: 1.2;">
+                        TradeWise <span style="color: #3498db;">Coin</span>
+                    </h2>
+                    <p style="font-size: 1.2rem; color: #cbd5e1; margin-bottom: 30px; line-height: 1.6;">
+                        The next evolution in trading. Exclusive utility token for premium features, staking rewards, and commission-free transactions.
+                    </p>
+                    
+                    <div style="display: flex; gap: 15px; flex-wrap: wrap; margin-bottom: 30px;">
+                        <button onclick="showPaymentModal('TradeWise Coin Pre-Order', 10)" style="background: linear-gradient(135deg, #3498db, #2980b9); border: 2px solid #3498db; color: white; padding: 12px 30px; border-radius: 0; font-weight: 600; font-size: 1rem; transition: all 0.3s ease; cursor: pointer;">
+                            <i class="fas fa-coins me-2"></i>PRE-ORDER NOW
+                        </button>
+                        <button style="background: transparent; border: 2px solid #3498db; color: #3498db; padding: 12px 25px; border-radius: 0; font-weight: 600; font-size: 1rem; transition: all 0.3s ease; cursor: pointer;">
+                            <i class="fas fa-info-circle me-2"></i>LEARN MORE
+                        </button>
+                    </div>
+                    
+                    <div style="display: flex; gap: 30px; border-top: 1px solid #374151; padding-top: 25px;">
+                        <div style="text-align: center;">
+                            <div style="font-size: 1.5rem; font-weight: 700; color: #3498db;">$0.10</div>
+                            <div style="font-size: 0.8rem; color: #cbd5e1;">Pre-Sale Price</div>
+                        </div>
+                        <div style="text-align: center;">
+                            <div style="font-size: 1.5rem; font-weight: 700; color: #3498db;">+15%</div>
+                            <div style="font-size: 0.8rem; color: #cbd5e1;">Early Bonus</div>
+                        </div>
+                        <div style="text-align: center;">
+                            <div style="font-size: 1.5rem; font-weight: 700; color: #3498db;">1M</div>
+                            <div style="font-size: 0.8rem; color: #cbd5e1;">Total Supply</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-lg-6 text-center">
+                    <div style="position: relative; display: inline-block;">
+                        <!-- Fixed image with rotation animation restored -->
+                        <img src="{% static 'images/tradewisecoin.png' %}" alt="TradeWise Coin" style="width: 300px; height: 300px; object-fit: contain; border: 3px solid #3498db; padding: 20px; background: rgba(255,255,255,0.05); animation: rotate-coin 8s infinite linear;">
+                        <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 350px; height: 350px; background: rgba(52, 152, 219, 0.1); border: 1px solid #3498db; z-index: -1;"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- TradeWise Footer -->
+    <footer class="main-footer" style="background: linear-gradient(135deg, #1a1a1a 0%, #2c3e50 100%); color: white; padding: 60px 0 0; margin-top: 0;">
+        <div class="container">
+            <div class="row">
+                <!-- About Section -->
+                <div class="col-lg-4 col-md-6 mb-4">
+                    <div class="about-footer">
+                        <h2 style="color: white; font-size: 2rem; font-weight: 700; margin-bottom: 15px;">Trade Smarter <span style="color: #3498db;">With Confidence</span></h2>
+                        <p style="color: #cbd5e1; line-height: 1.6; margin-bottom: 20px;">TradeWise provides institutional-grade trading tools and education for retail traders worldwide.</p>
+                        <img src="{% static 'images/TRADE-WISE-FINAL-TRANSPARENT.png' %}" alt="TradeWise Logo" style="height: 80px; width: auto; margin-top: 10px;">
+                    </div>
+                </div>
+
+                <!-- Trading Hours & Social -->
+                <div class="col-lg-4 col-md-6 mb-4">
+                    <div class="footer-contact-info">
+                        <h3 style="color: #3498db; font-size: 1.3rem; font-weight: 600; margin-bottom: 20px;">TRADING HOURS</h3>
+                        <div style="color: #cbd5e1; line-height: 1.8;">
+                            <p style="margin-bottom: 8px;">📈 24/5 Market Coverage</p>
+                            <p style="margin-bottom: 20px;">🕐 Support: 08:00 - 22:00 GMT+3</p>
+                        </div>
+                        
+                        <div class="footer-social-links">
+                            <h3 style="color: #3498db; font-size: 1.3rem; font-weight: 600; margin-bottom: 15px;">FOLLOW US</h3>
+                            <div style="display: flex; gap: 12px;">
+                                <a href="https://whatsapp.com/channel/0029VavSfHJADTO55tdYiu1W" style="display: inline-flex; align-items: center; justify-content: center; width: 40px; height: 40px; background: #25D366; border-radius: 0; color: white; text-decoration: none; transition: all 0.3s ease;">
+                                    <i class="fa-brands fa-whatsapp" style="font-size: 1.2rem;"></i>
+                                </a>
+                                <a href="https://www.facebook.com/share/1V2p5jGAoq/" style="display: inline-flex; align-items: center; justify-content: center; width: 40px; height: 40px; background: #1877F2; border-radius: 0; color: white; text-decoration: none; transition: all 0.3s ease;">
+                                    <i class="fa-brands fa-facebook-f" style="font-size: 1.2rem;"></i>
+                                </a>
+                                <a href="https://www.instagram.com/trade_wise01/profilecard/?igsh=MTh6MjdnbnQ4bmpvZg==" style="display: inline-flex; align-items: center; justify-content: center; width: 40px; height: 40px; background: linear-gradient(45deg, #405DE6, #5851DB, #833AB4, #C13584, #E1306C, #FD1D1D); border-radius: 0; color: white; text-decoration: none; transition: all 0.3s ease;">
+                                    <i class="fa-brands fa-instagram" style="font-size: 1.2rem;"></i>
+                                </a>
+                                <a href="#" style="display: inline-flex; align-items: center; justify-content: center; width: 40px; height: 40px; background: #FF0000; border-radius: 0; color: white; text-decoration: none; transition: all 0.3s ease;">
+                                    <i class="fa-brands fa-youtube" style="font-size: 1.2rem;"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Contact Info -->
+                <div class="col-lg-4 col-md-6 mb-4">
+                    <div class="footer-contact-info">
+                        <h3 style="color: #3498db; font-size: 1.3rem; font-weight: 600; margin-bottom: 20px;">CONTACT US</h3>
+                        <div style="color: #cbd5e1; line-height: 1.8;">
+                            <p style="margin-bottom: 12px; display: flex; align-items: center;">
+                                <i class="fas fa-envelope" style="color: #3498db; margin-right: 10px; width: 20px;"></i>
+                                support@trade-wise.co.ke
+                            </p>
+                            <p style="margin-bottom: 12px; display: flex; align-items: center;">
+                                <i class="fas fa-phone" style="color: #3498db; margin-right: 10px; width: 20px;"></i>
+                                +254 702 700 745
+                            </p>
+                            <p style="margin-bottom: 20px; display: flex; align-items: center;">
+                                <i class="fas fa-map-marker-alt" style="color: #3498db; margin-right: 10px; width: 20px;"></i>
+                                Nairobi, Kenya
+                            </p>
+                        </div>
+                        
+                        <!-- Payment Methods -->
+                        <div>
+                            <h3 style="color: #3498db; font-size: 1.3rem; font-weight: 600; margin-bottom: 15px;">PAYMENT METHODS</h3>
+                            <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+                                <div style="background: #000; padding: 8px 12px; border-radius: 0; font-weight: 600; color: #ffffff; font-size: 0.8rem;">
+                                    M-PESA
+                                </div>
+                                <div style="background: #111122; padding: 8px 12px; border-radius: 0; font-weight: 600; color: #ffffff; font-size: 0.8rem;">
+                                    BANK TRANSFER
+                                </div>
+                                <div style="background:#000; padding: 8px 12px; border-radius: 0; font-weight: 600; color: #ffffff; font-size: 0.8rem;">
+                                    PAYPAL
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Footer Copyright Section -->
+            <div class="footer-copyright" style="border-top: 1px solid #374151; margin-top: 40px; padding: 25px 0;">
+                <div class="row align-items-center">
+                    <div class="col-md-6 mb-3 mb-md-0">
+                        <div class="footer-menu">
+                            <div style="display: flex; gap: 20px; flex-wrap: wrap;">
+                                <a href="/" style="color: #cbd5e1; text-decoration: none; font-weight: 500; font-size: 0.9rem; transition: color 0.3s ease;">HOME</a>
+                                <a href="https://wa.me/254742962615" style="color: #cbd5e1; text-decoration: none; font-weight: 500; font-size: 0.9rem; transition: color 0.3s ease;">MARKETS</a>
+                                <a href="#" style="color: #cbd5e1; text-decoration: none; font-weight: 500; font-size: 0.9rem; transition: color 0.3s ease;">SIGNALS</a>
+                                <a href="https://wa.me/254742962615" style="color: #cbd5e1; text-decoration: none; font-weight: 500; font-size: 0.9rem; transition: color 0.3s ease;">EDUCATION</a>
+                                <a href="#" style="color: #cbd5e1; text-decoration: none; font-weight: 500; font-size: 0.9rem; transition: color 0.3s ease;">ABOUT</a>
+                                <a href="/contact" style="color: #cbd5e1; text-decoration: none; font-weight: 500; font-size: 0.9rem; transition: color 0.3s ease;">CONTACT</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="footer-copyright-text text-center text-md-end">
+                            <p style="color: #3498db; margin: 0; font-weight: 500; font-size: 0.9rem;">
+                                Copyright © <span id="footer-year">2025</span> TradeWise. All Rights Reserved.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Bootstrap JS - THIS IS THE FIX! -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script>
+        // Set current year in footer
+        document.getElementById('footer-year').textContent = new Date().getFullYear();
+
+        // Affiliates Section JavaScript
+        function copyReferralLink() {
+            const referralLink = document.getElementById('referralLink');
+            referralLink.select();
+            referralLink.setSelectionRange(0, 99999);
+            navigator.clipboard.writeText(referralLink.value);
+            
+            // Show feedback
+            const originalText = event.target.innerHTML;
+            event.target.innerHTML = '<i class="fas fa-check"></i> Copied!';
+            event.target.style.background = '#2ecc71';
+            
+            setTimeout(() => {
+                event.target.innerHTML = originalText;
+                event.target.style.background = '#3498db';
+            }, 2000);
+        }
+
+        function calculatePayout() {
+            const coinAmount = document.getElementById('coinAmount').value;
+            const estimatedPayout = document.getElementById('estimatedPayout');
+            const payoutAmount = coinAmount * 1; // 10 Ksh per coin
+            estimatedPayout.textContent = payoutAmount + ' Ksh';
+        }
+
+        function updateCashEquivalent() {
+            const totalCoins = parseInt(document.getElementById('currentBalance').textContent) || 0;
+            const cashValue = totalCoins * 1; // 10 Ksh per coin
+            document.getElementById('cashValue').textContent = cashValue;
+        }
+
+        function requestRedemption() {
+            const coinAmount = document.getElementById('coinAmount').value;
+            const paymentMethod = document.getElementById('paymentMethod').value;
+            
+            if (!coinAmount || coinAmount < 50) {
+                alert('Minimum redemption is 50 TWC coins');
+                return;
             }
             
-            // Set the hidden field value
-            referralInput.value = refCode;
+            if (!paymentMethod) {
+                alert('Please select a payment method');
+                return;
+            }
             
-            // Show the referral display
-            referralCodeText.textContent = refCode;
-            referralDisplay.classList.add('show');
-            
-            console.log('✅ IMMUTABLE REFERRAL CODE SET:', refCode);
+            // Here you would typically send this data to your backend
+            console.log('Redemption request:', { coinAmount, paymentMethod });
             
             // Show success message
-            showPopup(`🎯 Referral code applied: ${refCode}. 50 coins will be awarded!`, 'info');
-        } else {
-            // Hide referral display if no code
-            referralDisplay.classList.remove('show');
-            console.log('ℹ️ No referral code found in URL');
-        }
-        
-        // Debug info
-        console.log('📝 Referral input value:', referralInput.value);
-    }
-
-    // MOBILE-SPECIFIC FORM SWITCHING - UPRIGHT LOGO, NO TILT, NO GREEN
-    function initMobileFormSwitching() {
-        const mobileSignUpLink = document.getElementById('mobileSignUpLink');
-        const mobileSignInLink = document.getElementById('mobileSignInLink');
-        const mobileSignUpForm = document.getElementById('mobileSignUpForm');
-        const mobileSignInForm = document.getElementById('mobileSignInForm');
-        const tradewiseLogo = document.getElementById('tradewiseLogo');
-        
-        if (mobileSignUpLink && mobileSignInLink) {
-            // Switch to Sign Up form
-            mobileSignUpLink.addEventListener('click', function(e) {
-                e.preventDefault();
-                e.stopPropagation();
-                
-                console.log('📱 Switching to Sign Up form on mobile');
-                
-                // 1. Animate the TradeWise logo - UPRIGHT PULSE ONLY, NO TILT
-                if (tradewiseLogo) {
-                    tradewiseLogo.classList.add('logo-transition');
-                }
-                
-                // 2. Add fade out animation to sign in form
-                mobileSignInForm.classList.add('form-mobile-hidden');
-                mobileSignInForm.style.animation = 'mobileSlideOut 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55) forwards';
-                
-                // 3. After fade out, show sign up form
-                setTimeout(() => {
-                    mobileSignInForm.style.display = 'none';
-                    mobileSignInForm.style.animation = '';
-                    mobileSignInForm.classList.remove('form-mobile-hidden');
-                    
-                    mobileSignUpForm.style.display = 'block';
-                    mobileSignUpForm.classList.add('form-mobile-active');
-                    
-                    // Auto-fill referral code
-                    autoFillReferralCode();
-                    
-                    // Scroll to top smoothly
-                    window.scrollTo({ top: 0, behavior: 'smooth' });
-                    
-                    // 4. Reset logo animation after completion
-                    setTimeout(() => {
-                        if (tradewiseLogo) {
-                            tradewiseLogo.classList.remove('logo-transition');
-                            tradewiseLogo.style.transform = 'scale(1) rotate(0deg)'; // UPRIGHT
-                        }
-                    }, 600);
-                }, 300);
-            });
+            alert('Redemption request submitted! You will receive payment by Friday.');
             
-            // Switch to Sign In form
-            mobileSignInLink.addEventListener('click', function(e) {
-                e.preventDefault();
-                e.stopPropagation();
-                
-                console.log('📱 Switching to Sign In form on mobile');
-                
-                // 1. Animate the TradeWise logo - UPRIGHT PULSE ONLY, NO TILT
-                if (tradewiseLogo) {
-                    tradewiseLogo.classList.add('logo-transition');
-                }
-                
-                // 2. Add fade out animation to sign up form
-                mobileSignUpForm.classList.add('form-mobile-hidden');
-                mobileSignUpForm.style.animation = 'mobileSlideOut 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55) forwards';
-                
-                // 3. After fade out, show sign in form
-                setTimeout(() => {
-                    mobileSignUpForm.style.display = 'none';
-                    mobileSignUpForm.style.animation = '';
-                    mobileSignUpForm.classList.remove('form-mobile-hidden');
-                    
-                    mobileSignInForm.style.display = 'block';
-                    mobileSignInForm.classList.add('form-mobile-active');
-                    
-                    // Scroll to top smoothly
-                    window.scrollTo({ top: 0, behavior: 'smooth' });
-                    
-                    // 4. Reset logo animation after completion
-                    setTimeout(() => {
-                        if (tradewiseLogo) {
-                            tradewiseLogo.classList.remove('logo-transition');
-                            tradewiseLogo.style.transform = 'scale(1) rotate(0deg)'; // UPRIGHT
-                        }
-                    }, 600);
-                }, 300);
-            });
+            // Reset form
+            document.getElementById('coinAmount').value = '';
+            document.getElementById('paymentMethod').value = '';
+            document.getElementById('estimatedPayout').textContent = '0 Ksh';
         }
-    }
 
-    // LAPTOP FORM SWITCHING (your original code - unchanged)
-    const signUpButton = document.getElementById('signUp');
-    const signInButton = document.getElementById('signIn');
-    const signUpLink = document.getElementById('signUpLink');
-    const signInLink = document.getElementById('signInLink');
-    const container = document.getElementById('container');
+        function shareOnWhatsApp() {
+            const referralLink = document.getElementById('referralLink').value;
+            const message = `Join TradeWise using my referral link and get 50 TWC coins! ${referralLink}`;
+            window.open(`https://wa.me/?text=${encodeURIComponent(message)}`, '_blank');
+        }
 
-    if (signUpButton && signInButton) {
-        signUpButton.addEventListener('click', () => {
-            container.classList.add("right-panel-active");
-            setTimeout(autoFillReferralCode, 100);
-        });
+        function shareOnFacebook() {
+            const referralLink = document.getElementById('referralLink').value;
+            window.open(`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(referralLink)}`, '_blank');
+        }
 
-        signInButton.addEventListener('click', () => {
-            container.classList.remove("right-panel-active");
-        });
+        function shareOnTwitter() {
+            const referralLink = document.getElementById('referralLink').value;
+            const message = 'Join TradeWise using my referral link and get 50 TWC coins!';
+            window.open(`https://twitter.com/intent/tweet?text=${encodeURIComponent(message)}&url=${encodeURIComponent(referralLink)}`, '_blank');
+        }
 
-        signUpLink.addEventListener('click', (e) => {
-            e.preventDefault();
-            container.classList.add("right-panel-active");
-            setTimeout(autoFillReferralCode, 100);
-        });
+        function shareViaEmail() {
+            const referralLink = document.getElementById('referralLink').value;
+            const subject = 'Join TradeWise - Get 50 TWC Coins';
+            const body = `Hi! I'm using TradeWise and thought you might be interested. Use my referral link to sign up and we both get 50 TWC coins!\n\n${referralLink}\n\nTradeWise offers premium trading signals, education, and tools to help you succeed in the markets.`;
+            window.open(`mailto:?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`);
+        }
 
-        signInLink.addEventListener('click', (e) => {
-            e.preventDefault();
-            container.classList.remove("right-panel-active");
-        });
-    }
+        function showPreviousNumbers() {
+            alert('Previous TradeWise Numbers feature coming soon!');
+        }
 
-    // Form submission handling with loading states
-    document.getElementById('signUpForm').addEventListener('submit', function(e) {
-        const submitBtn = this.querySelector('button[type="submit"]');
-        const originalText = submitBtn.innerHTML;
-        submitBtn.classList.add('btn-loading');
-        submitBtn.disabled = true;
+        function showBonusRules() {
+            alert('Bonus Rules:\n- Get 50 TWC coins per successful referral\n- If referral\'s TradeWise Number matches weekly number, get 2x bonus (100 coins)\n- Minimum redemption: 50 coins\n- Redemption rate: 10 Ksh per coin\n- Payments processed every Friday');
+        }
 
-        // Log referral code before submission
-        const referralInput = document.getElementById('referralCode');
-        console.log('🚀 SUBMITTING WITH REFERRAL CODE:', referralInput.value);
+        // Real-time data updates (simulated - replace with actual backend calls)
+        function updateAffiliateStats() {
+            // This would be replaced with actual API calls to your backend
+            // For demonstration, we'll simulate some updates
+            setInterval(() => {
+                // Simulate new referrals and coin updates
+                const totalReferrals = document.getElementById('totalReferrals');
+                const totalCoins = document.getElementById('totalCoins');
+                const currentBalance = document.getElementById('currentBalance');
+                
+                // In a real implementation, you would fetch this data from your backend
+                // For now, we'll just demonstrate the structure
+                console.log('Updating affiliate stats...');
+                
+                // Update cash equivalent when balance changes
+                updateCashEquivalent();
+            }, 30000); // Update every 30 seconds
+        }
 
-        // Allow form to submit naturally
-        setTimeout(() => {
-            // This allows the form to submit while showing loading state
-        }, 500);
-    });
-
-    document.getElementById('signInForm').addEventListener('submit', function(e) {
-        const submitBtn = this.querySelector('button[type="submit"]');
-        const originalText = submitBtn.innerHTML;
-        submitBtn.classList.add('btn-loading');
-        submitBtn.disabled = true;
-
-        // Allow form to submit naturally
-        setTimeout(() => {
-            submitBtn.classList.remove('btn-loading');
-            submitBtn.disabled = false;
-            submitBtn.innerHTML = originalText;
-        }, 5000);
-    });
-
-    // Initialize based on device
-    window.addEventListener('DOMContentLoaded', (event) => {
-        // Auto-fill referral code on page load
-        autoFillReferralCode();
-        
-        // Initialize mobile form switching only on mobile
-        if (window.innerWidth <= 768) {
-            console.log('📱 Mobile device detected - initializing mobile form switching');
-            initMobileFormSwitching();
+        // Initialize real-time updates
+        document.addEventListener('DOMContentLoaded', function() {
+            updateAffiliateStats();
+            updateCashEquivalent();
             
-            // Hide one form initially on mobile
-            document.getElementById('mobileSignUpForm').style.display = 'none';
-            document.getElementById('mobileSignInForm').classList.add('form-mobile-active');
-        } else {
-            console.log('💻 Laptop device detected - using original layout');
-            // Show both forms on laptop (original behavior)
-            document.getElementById('mobileSignUpForm').style.display = 'block';
-            document.getElementById('mobileSignInForm').style.display = 'block';
-        }
-        
-        // Auto-hide Django messages after 5 seconds
-        const djangoMessages = document.querySelectorAll('.alert');
-        djangoMessages.forEach(message => {
-            setTimeout(() => {
-                message.style.opacity = '0';
-                message.style.transition = 'opacity 0.5s ease-in-out';
-                setTimeout(() => {
-                    message.remove();
-                }, 500);
-            }, 5000);
+            // Set max redemption amount based on current balance
+            const currentBalance = parseInt(document.getElementById('currentBalance').textContent);
+            document.getElementById('coinAmount').max = currentBalance;
         });
 
-        // Check URL for verification success
-        const urlParams = new URLSearchParams(window.location.search);
-        if (urlParams.get('verified') === 'true') {
-            showPopup('Email verified successfully! You can now sign in.', 'success');
+        // Payment modal function (placeholder)
+        function showPaymentModal(item, amount) {
+            alert(`Payment functionality for ${item} - $${amount} would be implemented here.`);
         }
-        
-        // Check for signup success
-        if (urlParams.get('signup') === 'success') {
-            showPopup('Account created successfully! Please check your email to activate your account.', 'info');
-        }
-    });
 
-    // Handle window resize
-    window.addEventListener('resize', function() {
-        // Re-initialize mobile form switching if needed
-        if (window.innerWidth <= 768) {
-            initMobileFormSwitching();
-        }
-    });
-</script>
+        // Button hover states with gradient
+        document.addEventListener('DOMContentLoaded', function() {
+            const buttons = document.querySelectorAll('button');
+            buttons.forEach(button => {
+                button.addEventListener('mouseenter', function() {
+                    if (this.style.background && this.style.background.includes('gradient')) {
+                        this.style.background = 'linear-gradient(135deg, #2980b9, #3498db) !important';
+                        this.style.borderColor = '#2980b9 !important';
+                        this.style.transform = 'translateY(-2px)';
+                        this.style.color = 'white !important';
+                    }
+                });
+            });
+        });
+    </script>
 </body>
 </html>
