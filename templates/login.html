@@ -1,3 +1,4 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -426,61 +427,6 @@
             color: #34495e;
         }
 
-        /* Responsive Design */
-        @media (max-width: 900px) {
-            .container {
-                width: 100%;
-                min-height: 100vh;
-                border-radius: 0;
-                box-shadow: none;
-            }
-            
-            .form-container {
-                width: 100% !important;
-                padding: 20px;
-            }
-            
-            .sign-in-container, .sign-up-container {
-                width: 100% !important;
-            }
-            
-            .overlay-container {
-                display: none;
-            }
-            
-            .container.right-panel-active .sign-in-container,
-            .container.right-panel-active .sign-up-container {
-                transform: none;
-            }
-            
-            form {
-                padding: 0 30px;
-            }
-            
-            input {
-                font-size: 16px;
-            }
-            
-            button {
-                padding: 15px 45px;
-                font-size: 14px;
-            }
-        }
-
-        @media (max-width: 480px) {
-            form {
-                padding: 0 20px;
-            }
-            
-            h2 {
-                font-size: 1.5rem;
-            }
-            
-            .social-container {
-                margin: 15px 0;
-            }
-        }
-
         /* Loading spinner */
         .loading {
             display: inline-block;
@@ -517,22 +463,39 @@
             animation: spin 1s ease-in-out infinite;
         }
 
-        /* TradeWise Branding */
+        /* TradeWise Branding - UPDATED WITH LOGO BETWEEN TEXT */
         .tradewise-header {
             text-align: center;
-            margin-bottom: 30px;
+            margin-bottom: 40px;
             width: 100%;
             padding: 0 20px;
+            position: relative;
         }
 
-        .tradewise-logo {
+        .tradewise-logo-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .tradewise-text-logo {
             font-size: 2.8rem;
             font-weight: 800;
             background: linear-gradient(135deg, #2c3e50, #3498db);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
-            margin-bottom: 10px;
             text-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            margin-bottom: 15px;
+        }
+
+        /* LOGO POSITIONED BETWEEN TITLE AND TAGLINE */
+        .tradewise-image-logo {
+            height: 50px;
+            width: auto;
+            margin: 10px 0 15px 0;
+            transition: all 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+            filter: brightness(0) saturate(100%) invert(24%) sepia(99%) saturate(745%) hue-rotate(173deg) brightness(93%) contrast(96%);
         }
 
         .tradewise-tagline {
@@ -540,6 +503,7 @@
             font-size: 1.1rem;
             font-weight: 500;
             letter-spacing: 0.5px;
+            margin-top: 5px;
         }
 
         /* Form field grouping */
@@ -552,12 +516,296 @@
         .form-row input {
             flex: 1;
         }
+
+        /* MOBILE-SPECIFIC STYLES - ONLY AFFECTS MOBILE */
+        @media (max-width: 768px) {
+            /* Mobile TradeWise Header */
+            .tradewise-header {
+                margin-bottom: 30px;
+                padding: 10px;
+            }
+            
+            .tradewise-text-logo {
+                font-size: 2rem;
+                margin-bottom: 10px;
+            }
+            
+            .tradewise-image-logo {
+                height: 40px;
+                margin: 8px 0 12px 0;
+            }
+            
+            .tradewise-tagline {
+                font-size: 0.9rem;
+            }
+
+            /* Mobile Container with COLOR TRANSITION MAGIC */
+            .container {
+                width: 100%;
+                min-height: auto;
+                border-radius: 20px;
+                overflow: hidden;
+                margin-bottom: 30px;
+                position: relative;
+                transition: all 0.6s ease-in-out;
+            }
+            
+            /* COLOR SWAP BACKGROUNDS - SAME AS LAPTOP */
+            .container.sign-in-view {
+                background: linear-gradient(to right, #ffffff 0%, #ffffff 50%, #2c3e50 50%, #3498db 100%);
+            }
+            
+            .container.sign-up-view {
+                background: linear-gradient(to right, #3498db 0%, #2c3e50 50%, #ffffff 50%, #ffffff 100%);
+            }
+            
+            /* Mobile Form Containers with COLOR TRANSITION */
+            .form-container {
+                position: relative;
+                width: 100% !important;
+                height: auto;
+                padding: 40px 25px;
+                transition: all 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+                background: white;
+                border-radius: 15px;
+                box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+                margin-bottom: 20px;
+            }
+            
+            .sign-in-container, .sign-up-container {
+                position: relative;
+                width: 100% !important;
+                opacity: 1;
+                transform: none;
+                left: 0;
+            }
+            
+            .container.right-panel-active .sign-in-container,
+            .container.right-panel-active .sign-up-container {
+                transform: none;
+                animation: none;
+            }
+            
+            /* Hide overlay on mobile */
+            .overlay-container {
+                display: none;
+            }
+            
+            /* Mobile Form Styling */
+            form {
+                padding: 0 25px;
+                background: transparent;
+                box-shadow: none;
+                border-radius: 0;
+            }
+            
+            input {
+                font-size: 16px;
+                padding: 15px 20px;
+            }
+            
+            button {
+                padding: 10px 35px;
+                font-size: 14px;
+                font-weight: 700;
+                margin-top: 10px;
+            }
+            
+            /* Mobile Link Styling - Make "Sign Up" PROMINENT WITH COLOR TRANSITION */
+            .mobile-switch-link {
+                display: inline-block;
+                padding: 14px 30px !important;
+                border-radius: 25px;
+                text-decoration: none;
+                font-weight: 800 !important;
+                font-size: 1rem !important;
+                transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+                letter-spacing: 0.5px;
+                text-transform: uppercase;
+                margin-top: 20px !important;
+                border: 2px solid transparent !important;
+                position: relative;
+                overflow: hidden;
+            }
+            
+            .mobile-signup-link {
+                background: linear-gradient(135deg, #2ecc71, #27ae60);
+                color: white !important;
+                box-shadow: 0 5px 15px rgba(46, 204, 113, 0.3);
+            }
+            
+            .mobile-signup-link:hover {
+                transform: translateY(-3px);
+                box-shadow: 0 8px 20px rgba(46, 204, 113, 0.4);
+                background: linear-gradient(135deg, #27ae60, #219653);
+            }
+            
+            .mobile-signin-link {
+                background: linear-gradient(135deg, #3498db, #2980b9);
+                color: white !important;
+                box-shadow: 0 5px 15px rgba(52, 152, 219, 0.3);
+            }
+            
+            .mobile-signin-link:hover {
+                transform: translateY(-3px);
+                box-shadow: 0 8px 20px rgba(52, 152, 219, 0.4);
+                background: linear-gradient(135deg, #2980b9, #1f639e);
+            }
+            
+            /* Mobile Form Animation Magic with COLOR SWAP */
+            .form-mobile-active {
+                display: block;
+                opacity: 1;
+                transform: translateY(0) scale(1);
+                animation: mobileSlideIn 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55) forwards;
+            }
+            
+            .form-mobile-hidden {
+                display: none;
+                opacity: 0;
+                transform: translateY(20px) scale(0.95);
+            }
+            
+            @keyframes mobileSlideIn {
+                0% {
+                    opacity: 0;
+                    transform: translateY(20px) scale(0.95);
+                }
+                100% {
+                    opacity: 1;
+                    transform: translateY(0) scale(1);
+                }
+            }
+            
+            @keyframes mobileSlideOut {
+                0% {
+                    opacity: 1;
+                    transform: translateY(0) scale(1);
+                }
+                100% {
+                    opacity: 0;
+                    transform: translateY(-20px) scale(0.95);
+                }
+            }
+            
+            /* Logo Animation Magic */
+            .logo-transition-signup {
+                animation: logoToGreen 0.6s ease forwards;
+                transform: scale(1.1) rotate(5deg);
+            }
+            
+            .logo-transition-signin {
+                animation: logoToBlue 0.6s ease forwards;
+                transform: scale(1.1) rotate(-5deg);
+            }
+            
+            @keyframes logoToGreen {
+                0% {
+                    filter: brightness(0) saturate(100%) invert(24%) sepia(99%) saturate(745%) hue-rotate(173deg) brightness(93%) contrast(96%);
+                    transform: scale(1);
+                }
+                50% {
+                    transform: scale(1.2);
+                }
+                100% {
+                    filter: brightness(0) saturate(100%) invert(67%) sepia(91%) saturate(348%) hue-rotate(87deg) brightness(95%) contrast(101%);
+                    transform: scale(1.1) rotate(5deg);
+                }
+            }
+            
+            @keyframes logoToBlue {
+                0% {
+                    filter: brightness(0) saturate(100%) invert(67%) sepia(91%) saturate(348%) hue-rotate(87deg) brightness(95%) contrast(101%);
+                    transform: scale(1);
+                }
+                50% {
+                    transform: scale(1.2);
+                }
+                100% {
+                    filter: brightness(0) saturate(100%) invert(24%) sepia(99%) saturate(745%) hue-rotate(173deg) brightness(93%) contrast(96%);
+                    transform: scale(1.1) rotate(-5deg);
+                }
+            }
+            
+            /* Adjust text for mobile */
+            h2 {
+                font-size: 1.8rem;
+                margin-bottom: 25px;
+            }
+            
+            p {
+                font-size: 15px;
+                line-height: 1.6;
+            }
+            
+            .social-container {
+                margin: 25px 0;
+            }
+            
+            .social-container a {
+                height: 50px;
+                width: 50px;
+                font-size: 1.2rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .tradewise-text-logo {
+                font-size: 1.8rem;
+            }
+            
+            .tradewise-image-logo {
+                height: 75px;
+            }
+            
+            .tradewise-tagline {
+                font-size: 0.85rem;
+            }
+            
+            form {
+                padding: 0 20px;
+            }
+            
+            .form-container {
+                padding: 30px 20px;
+            }
+            
+            .mobile-switch-link {
+                padding: 12px 25px !important;
+                font-size: 0.9rem !important;
+            }
+        }
+
+        /* LAPTOP VIEW - PRESERVED EXACTLY AS YOU HAD IT */
+        @media (min-width: 769px) {
+            .tradewise-image-logo {
+                display: none; /* Hide image logo on laptop - keep text only */
+            }
+            
+            .mobile-switch-link {
+                display: none; /* Hide mobile links on laptop */
+            }
+            
+            /* All your original laptop styling remains intact */
+        }
     </style>
 </head>
 <body>
+    <!-- TradeWise Header with Logo BETWEEN Title and Tagline -->
     <div class="tradewise-header">
-        <div class="tradewise-logo">TRADEWISE</div>
-        <div class="tradewise-tagline">Trade Smarter With Confidence</div>
+        <div class="tradewise-logo-container">
+            <!-- TradeWise Text Logo -->
+            <div class="tradewise-text-logo">TRADEWISE</div>
+            
+            <!-- TradeWise Logo Image - Appears BETWEEN the title and tagline -->
+            <img src="{% static 'images/TRADE-WISE-FINAL-TRANSPARENT.png' %}" 
+                 alt="TradeWise Logo" 
+                 class="tradewise-image-logo"
+                 id="tradewiseLogo">
+            
+            <!-- TradeWise Tagline -->
+            <div class="tradewise-tagline">Trade Smarter With Confidence</div>
+        </div>
     </div>
 
     <!-- Django Messages Display -->
@@ -575,7 +823,7 @@
     
     <div class="container" id="container">
         <!-- Sign Up Form -->
-        <div class="form-container sign-up-container">
+        <div class="form-container sign-up-container" id="mobileSignUpForm">
             <form id="signUpForm" action="{% url 'signup' %}" method="post">
                 <h1>Create Account</h1>
                 <div class="social-container">
@@ -606,12 +854,19 @@
                 <button type="submit" id="submitSignUp">
                     <span>Sign Up</span>
                 </button>
-                <p>Already have an account? <a href="#" id="signInLink">Sign In</a></p>
+                <p>Already have an account? 
+                    <!-- Mobile link - BOLD and PROMINENT -->
+                    <a href="#" class="mobile-switch-link mobile-signin-link" id="mobileSignInLink">
+                        Sign In <i class="fas fa-arrow-right"></i>
+                    </a>
+                    <!-- Original laptop link (hidden on mobile) -->
+                    <a href="#" id="signInLink">Sign In</a>
+                </p>
             </form>
         </div>
 
         <!-- Sign In Form -->
-        <div class="form-container sign-in-container">
+        <div class="form-container sign-in-container" id="mobileSignInForm">
             <form id="signInForm" action="{% url 'login_view' %}" method="post">
                 <h1>Sign In</h1>
                 <div class="social-container">
@@ -626,11 +881,18 @@
                 <button type="submit" id="submitSignIn">
                     <span>Sign In</span>
                 </button>
-                <p>Don't have an account? <a href="#" id="signUpLink">Sign Up</a></p>
+                <p>Don't have an account? 
+                    <!-- Mobile link - BOLD and PROMINENT -->
+                    <a href="#" class="mobile-switch-link mobile-signup-link" id="mobileSignUpLink">
+                        Sign Up <i class="fas fa-user-plus"></i>
+                    </a>
+                    <!-- Original laptop link (hidden on mobile) -->
+                    <a href="#" id="signUpLink">Sign Up</a>
+                </p>
             </form>
         </div>
 
-        <!-- Overlay -->
+        <!-- Overlay - Only shows on laptop -->
         <div class="overlay-container">
             <div class="overlay">
                 <div class="overlay-panel overlay-left">
@@ -753,34 +1015,135 @@
         console.log('📝 Referral input value:', referralInput.value);
     }
 
-    // Toggle between sign-in and sign-up forms
+    // MOBILE-SPECIFIC FORM SWITCHING WITH COLOR TRANSITION MAGIC
+    function initMobileFormSwitching() {
+        const mobileSignUpLink = document.getElementById('mobileSignUpLink');
+        const mobileSignInLink = document.getElementById('mobileSignInLink');
+        const mobileSignUpForm = document.getElementById('mobileSignUpForm');
+        const mobileSignInForm = document.getElementById('mobileSignInForm');
+        const container = document.getElementById('container');
+        const tradewiseLogo = document.getElementById('tradewiseLogo');
+        
+        if (mobileSignUpLink && mobileSignInLink) {
+            // Switch to Sign Up form
+            mobileSignUpLink.addEventListener('click', function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                
+                console.log('📱 Switching to Sign Up form on mobile WITH COLOR TRANSITION');
+                
+                // 1. Change container background color (like laptop)
+                container.classList.remove('sign-in-view');
+                container.classList.add('sign-up-view');
+                
+                // 2. Animate the TradeWise logo - COLOR SWAP to green
+                if (tradewiseLogo) {
+                    tradewiseLogo.classList.remove('logo-transition-signin');
+                    tradewiseLogo.classList.add('logo-transition-signup');
+                }
+                
+                // 3. Add fade out animation to sign in form
+                mobileSignInForm.classList.add('form-mobile-hidden');
+                mobileSignInForm.style.animation = 'mobileSlideOut 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55) forwards';
+                
+                // 4. After fade out, show sign up form
+                setTimeout(() => {
+                    mobileSignInForm.style.display = 'none';
+                    mobileSignInForm.style.animation = '';
+                    mobileSignInForm.classList.remove('form-mobile-hidden');
+                    
+                    mobileSignUpForm.style.display = 'block';
+                    mobileSignUpForm.classList.add('form-mobile-active');
+                    
+                    // Auto-fill referral code
+                    autoFillReferralCode();
+                    
+                    // Scroll to top smoothly
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                    
+                    // 5. Reset logo animation after completion
+                    setTimeout(() => {
+                        if (tradewiseLogo) {
+                            tradewiseLogo.style.transform = 'scale(1) rotate(0)';
+                            tradewiseLogo.style.filter = 'brightness(0) saturate(100%) invert(67%) sepia(91%) saturate(348%) hue-rotate(87deg) brightness(95%) contrast(101%)';
+                        }
+                    }, 600);
+                }, 300);
+            });
+            
+            // Switch to Sign In form
+            mobileSignInLink.addEventListener('click', function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                
+                console.log('📱 Switching to Sign In form on mobile WITH COLOR TRANSITION');
+                
+                // 1. Change container background color (like laptop)
+                container.classList.remove('sign-up-view');
+                container.classList.add('sign-in-view');
+                
+                // 2. Animate the TradeWise logo - COLOR SWAP to blue
+                if (tradewiseLogo) {
+                    tradewiseLogo.classList.remove('logo-transition-signup');
+                    tradewiseLogo.classList.add('logo-transition-signin');
+                }
+                
+                // 3. Add fade out animation to sign up form
+                mobileSignUpForm.classList.add('form-mobile-hidden');
+                mobileSignUpForm.style.animation = 'mobileSlideOut 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55) forwards';
+                
+                // 4. After fade out, show sign in form
+                setTimeout(() => {
+                    mobileSignUpForm.style.display = 'none';
+                    mobileSignUpForm.style.animation = '';
+                    mobileSignUpForm.classList.remove('form-mobile-hidden');
+                    
+                    mobileSignInForm.style.display = 'block';
+                    mobileSignInForm.classList.add('form-mobile-active');
+                    
+                    // Scroll to top smoothly
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                    
+                    // 5. Reset logo animation after completion
+                    setTimeout(() => {
+                        if (tradewiseLogo) {
+                            tradewiseLogo.style.transform = 'scale(1) rotate(0)';
+                            tradewiseLogo.style.filter = 'brightness(0) saturate(100%) invert(24%) sepia(99%) saturate(745%) hue-rotate(173deg) brightness(93%) contrast(96%)';
+                        }
+                    }, 600);
+                }, 300);
+            });
+        }
+    }
+
+    // LAPTOP FORM SWITCHING (your original code - unchanged)
     const signUpButton = document.getElementById('signUp');
     const signInButton = document.getElementById('signIn');
     const signUpLink = document.getElementById('signUpLink');
     const signInLink = document.getElementById('signInLink');
     const container = document.getElementById('container');
 
-    signUpButton.addEventListener('click', () => {
-        container.classList.add("right-panel-active");
-        // Auto-fill referral code when switching to signup
-        setTimeout(autoFillReferralCode, 100);
-    });
+    if (signUpButton && signInButton) {
+        signUpButton.addEventListener('click', () => {
+            container.classList.add("right-panel-active");
+            setTimeout(autoFillReferralCode, 100);
+        });
 
-    signInButton.addEventListener('click', () => {
-        container.classList.remove("right-panel-active");
-    });
+        signInButton.addEventListener('click', () => {
+            container.classList.remove("right-panel-active");
+        });
 
-    signUpLink.addEventListener('click', (e) => {
-        e.preventDefault();
-        container.classList.add("right-panel-active");
-        // Auto-fill referral code when switching to signup
-        setTimeout(autoFillReferralCode, 100);
-    });
+        signUpLink.addEventListener('click', (e) => {
+            e.preventDefault();
+            container.classList.add("right-panel-active");
+            setTimeout(autoFillReferralCode, 100);
+        });
 
-    signInLink.addEventListener('click', (e) => {
-        e.preventDefault();
-        container.classList.remove("right-panel-active");
-    });
+        signInLink.addEventListener('click', (e) => {
+            e.preventDefault();
+            container.classList.remove("right-panel-active");
+        });
+    }
 
     // Form submission handling with loading states
     document.getElementById('signUpForm').addEventListener('submit', function(e) {
@@ -793,8 +1156,7 @@
         const referralInput = document.getElementById('referralCode');
         console.log('🚀 SUBMITTING WITH REFERRAL CODE:', referralInput.value);
 
-        // Allow form to submit naturally - NO preventDefault()
-        // Show loading state for better UX
+        // Allow form to submit naturally
         setTimeout(() => {
             // This allows the form to submit while showing loading state
         }, 500);
@@ -806,8 +1168,7 @@
         submitBtn.classList.add('btn-loading');
         submitBtn.disabled = true;
 
-        // Allow form to submit naturally - NO preventDefault()
-        // Re-enable button after 5 seconds in case of error
+        // Allow form to submit naturally
         setTimeout(() => {
             submitBtn.classList.remove('btn-loading');
             submitBtn.disabled = false;
@@ -815,12 +1176,31 @@
         }, 5000);
     });
 
-    // Auto-hide Django messages after 5 seconds
+    // Initialize based on device
     window.addEventListener('DOMContentLoaded', (event) => {
         // Auto-fill referral code on page load
         autoFillReferralCode();
         
-        // Auto-hide Django messages
+        // Initialize mobile form switching only on mobile
+        if (window.innerWidth <= 768) {
+            console.log('📱 Mobile device detected - initializing mobile form switching with COLOR MAGIC');
+            initMobileFormSwitching();
+            
+            // Set initial container background for mobile
+            const container = document.getElementById('container');
+            container.classList.add('sign-in-view');
+            
+            // Hide one form initially on mobile
+            document.getElementById('mobileSignUpForm').style.display = 'none';
+            document.getElementById('mobileSignInForm').classList.add('form-mobile-active');
+        } else {
+            console.log('💻 Laptop device detected - using original layout');
+            // Show both forms on laptop (original behavior)
+            document.getElementById('mobileSignUpForm').style.display = 'block';
+            document.getElementById('mobileSignInForm').style.display = 'block';
+        }
+        
+        // Auto-hide Django messages after 5 seconds
         const djangoMessages = document.querySelectorAll('.alert');
         djangoMessages.forEach(message => {
             setTimeout(() => {
@@ -844,15 +1224,13 @@
         }
     });
 
-    // Auto-hide messages on mobile after shorter time
-    if (window.innerWidth <= 768) {
-        const popup = document.getElementById('popupMessage');
-        if (popup && popup.classList.contains('show')) {
-            setTimeout(() => {
-                popup.classList.remove('show');
-            }, 3000);
+    // Handle window resize
+    window.addEventListener('resize', function() {
+        // Re-initialize mobile form switching if needed
+        if (window.innerWidth <= 768) {
+            initMobileFormSwitching();
         }
-    }
+    });
 </script>
 </body>
 </html>
