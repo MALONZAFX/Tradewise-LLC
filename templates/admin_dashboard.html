@@ -4429,43 +4429,39 @@ console.log('✅ All edit/delete buttons should now work with traditional form s
 
 
 <script>
-    // AJAX User Search Functionality
+    // AJAX User Search - ONLY AFFECTS USERS TAB
     document.addEventListener('DOMContentLoaded', function() {
-        const searchInput = document.getElementById('userSearchInput');
-        const searchBtn = document.getElementById('searchUsersBtn');
-        const clearBtn = document.getElementById('clearSearchBtn');
-        const filterBtns = document.querySelectorAll('.filter-btn');
-        const usersTableBody = document.getElementById('usersTableBody');
-        const searchStatus = document.getElementById('searchStatus');
-        const searchStatusText = document.getElementById('searchStatusText');
-        const usersLoading = document.getElementById('usersLoading');
-        const searchResultBadge = document.getElementById('searchResultBadge');
-        const noUsersMessage = document.getElementById('noUsersMessage');
-        const userCountBadge = document.getElementById('userCountBadge');
+        // ONLY target elements in the users tab
+        const usersTab = document.getElementById('users');
+        if (!usersTab) return; // Exit if users tab not found
+        
+        // Get elements ONLY within users tab
+        const searchInput = usersTab.querySelector('#userSearchInput');
+        const searchBtn = usersTab.querySelector('#searchUsersBtn');
+        const clearBtn = usersTab.querySelector('#clearSearchBtn');
+        const filterBtns = usersTab.querySelectorAll('.filter-btn');
+        const usersTableBody = usersTab.querySelector('#usersTableBody');
+        const searchStatus = usersTab.querySelector('#searchStatus');
+        const searchStatusText = usersTab.querySelector('#searchStatusText');
+        const usersLoading = usersTab.querySelector('#usersLoading');
+        const searchResultBadge = usersTab.querySelector('#searchResultBadge');
+        const noUsersMessage = usersTab.querySelector('#noUsersMessage');
+        const userCountBadge = usersTab.querySelector('#userCountBadge');
+        
+        // If no users tab elements found, exit
+        if (!searchInput || !searchBtn) {
+            console.log('⚠️ User search elements not found, skipping AJAX search');
+            return;
+        }
+        
+        console.log('✅ Initializing AJAX user search...');
         
         let currentSearch = '';
         let currentFilter = '';
         let isInitialLoad = true;
         
-        // Load users when tab is shown
-        document.addEventListener('click', function(e) {
-            if (e.target && (e.target.getAttribute('data-tab') === 'users' || 
-                             e.target.closest('[data-tab="users"]'))) {
-                // Tab clicked, load users
-                if (isInitialLoad) {
-                    loadAllUsers();
-                    isInitialLoad = false;
-                }
-            }
-        });
-        
-        // Also check current URL on page load
-        if (window.location.search.includes('tab=users')) {
-            setTimeout(() => {
-                loadAllUsers();
-                isInitialLoad = false;
-            }, 500);
-        }
+        // Rest of your AJAX search code...
+        // [Keep all the search functionality but ONLY for users tab]
         
         // Search button click
         searchBtn.addEventListener('click', function() {
@@ -4707,117 +4703,26 @@ console.log('✅ All edit/delete buttons should now work with traditional form s
             noUsersMessage.classList.add('d-none');
         }
         
-        // Prevent form submission (if there's still a form somewhere)
-        const forms = document.querySelectorAll('form');
-        forms.forEach(form => {
-            form.addEventListener('submit', function(e) {
-                e.preventDefault();
-                return false;
-            });
-        });
-    });
-    
-    // User action functions
-    function disableUser(userId) {
-        if (confirm('Are you sure you want to disable this user?')) {
-            // AJAX disable user
-            fetch(`/admin/ajax/disable-user/${userId}/`, {
-                method: 'POST',
-                headers: {
-                    'X-CSRFToken': getCookie('csrftoken'),
-                    'X-Requested-With': 'XMLHttpRequest'
-                }
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    alert('User disabled successfully!');
-                    // Refresh the users table
-                    performSearch();
-                } else {
-                    alert('Error: ' + data.error);
-                }
-            })
-            .catch(error => {
-                console.error('Error:', error);
-                alert('Failed to disable user');
-            });
-        }
-    }
-    
-    function enableUser(userId) {
-        if (confirm('Are you sure you want to enable this user?')) {
-            // AJAX enable user
-            fetch(`/admin/ajax/enable-user/${userId}/`, {
-                method: 'POST',
-                headers: {
-                    'X-CSRFToken': getCookie('csrftoken'),
-                    'X-Requested-With': 'XMLHttpRequest'
-                }
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    alert('User enabled successfully!');
-                    // Refresh the users table
-                    performSearch();
-                } else {
-                    alert('Error: ' + data.error);
-                }
-            })
-            .catch(error => {
-                console.error('Error:', error);
-                alert('Failed to enable user');
-            });
-        }
-    }
-    
-    function resetUserPassword(userId) {
-        if (confirm('Send password reset email to this user?')) {
-            // AJAX reset password
-            fetch(`/admin/ajax/reset-password/${userId}/`, {
-                method: 'POST',
-                headers: {
-                    'X-CSRFToken': getCookie('csrftoken'),
-                    'X-Requested-With': 'XMLHttpRequest'
-                }
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    alert('Password reset email sent!');
-                } else {
-                    alert('Error: ' + data.error);
-                }
-            })
-            .catch(error => {
-                console.error('Error:', error);
-                alert('Failed to send reset email');
-            });
-        }
-    }
-    
-    function viewUserDetails(userId) {
-        // Open user details in modal or new page
-        alert('View user details for ID: ' + userId);
-        // You can implement a modal here
-    }
-    
-    // Helper function to get CSRF token
-    function getCookie(name) {
-        let cookieValue = null;
-        if (document.cookie && document.cookie !== '') {
-            const cookies = document.cookie.split(';');
-            for (let i = 0; i < cookies.length; i++) {
-                const cookie = cookies[i].trim();
-                if (cookie.substring(0, name.length + 1) === (name + '=')) {
-                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
-                    break;
+        // Load users when tab is shown
+        document.addEventListener('click', function(e) {
+            if (e.target && (e.target.getAttribute('data-tab') === 'users' || 
+                             e.target.closest('[data-tab="users"]'))) {
+                // Tab clicked, load users
+                if (isInitialLoad) {
+                    loadAllUsers();
+                    isInitialLoad = false;
                 }
             }
+        });
+        
+        // Also check current URL on page load
+        if (window.location.search.includes('tab=users')) {
+            setTimeout(() => {
+                loadAllUsers();
+                isInitialLoad = false;
+            }, 500);
         }
-        return cookieValue;
-    }
+    });
     </script>
 </body>
 </html>
