@@ -1530,18 +1530,17 @@
                         </div>
                     </div>
 
-                   <!-- TRADEWISE COIN TAB - WITH WORKING ACTION BUTTONS -->
+               <!-- TRADEWISE COIN TAB - FIXED AND WORKING VERSION -->
 <div id="tradewise-coin" class="content-tab">
     <div class="card">
         <div class="card-header">
             <h3 class="card-title">TradeWise Coin Management</h3>
-            
         </div>
         <div class="card-body">
             
-            <!-- COIN ACTION JAVASCRIPT -->
+            <!-- COIN ACTION JAVASCRIPT - UPDATED -->
             <script>
-            // Coin action submission function
+            // Coin action submission function - FIXED
             function submitCoinAction(actionType, transactionId = null, coinAmount = null) {
                 console.log(`🪙 Coin action: ${actionType}, Transaction: ${transactionId}, Amount: ${coinAmount}`);
                 
@@ -1587,8 +1586,40 @@
                 }
             }
             
+            // Test coin update function
+            function testCoinUpdate() {
+                console.log("🧪 Testing coin update...");
+                
+                // Get form data
+                const formData = new FormData();
+                formData.append('csrfmiddlewaretoken', '{{ csrf_token }}');
+                formData.append('action', 'update_coin');
+                formData.append('title', document.getElementById('coinTitle').value);
+                formData.append('buy_price_usd', document.getElementById('coinBuyPrice').value);
+                formData.append('sell_price_usd', document.getElementById('coinSellPrice').value);
+                formData.append('bonus_text', document.getElementById('coinBonus').value);
+                
+                // Send test request
+                fetch('{% url "admin_dashboard" %}', {
+                    method: 'POST',
+                    body: formData,
+                    headers: {
+                        'X-Requested-With': 'XMLHttpRequest'
+                    }
+                })
+                .then(response => response.text())
+                .then(data => {
+                    console.log("✅ Test response:", data);
+                    alert('Test successful! Check console.');
+                })
+                .catch(error => {
+                    console.error("❌ Test error:", error);
+                    alert('Test failed: ' + error);
+                });
+            }
+            
             // Show transaction details
-            function showTransactionDetails(id, type, customer, amount, usdAmount, rate,) {
+            function showTransactionDetails(id, type, customer, amount, usdAmount, rate) {
                 const details = `
 Transaction Details:
 -------------------
@@ -1599,14 +1630,32 @@ Amount: ${amount} TWC
 USD Amount: $${usdAmount}
 Rate: $${rate} per TWC
 
-
 Action: ${type === 'buy' ? 'Approve to complete purchase' : 'Process to initiate payout'}
                 `;
                 alert(details);
             }
+            
+            // Admin coin transaction actions
+            function approveCoinBuy(transactionId) {
+                if (confirm('Approve this buy transaction and award coins?')) {
+                    submitCoinAction('approve_coin_buy', transactionId);
+                }
+            }
+            
+            function processCoinSell(transactionId) {
+                if (confirm('Process this sell transaction and initiate payout?')) {
+                    submitCoinAction('process_coin_sell', transactionId);
+                }
+            }
+            
+            function cancelCoinTransaction(transactionId) {
+                if (confirm('Cancel this transaction?')) {
+                    submitCoinAction('cancel_coin_transaction', transactionId);
+                }
+            }
             </script>
             
-            <!-- EXISTING COIN SETTINGS FORM -->
+            <!-- COIN SETTINGS FORM - FIXED -->
             <div class="card mb-4">
                 <div class="card-header bg-gradient-primary text-white">
                     <h4 class="card-title mb-0">
@@ -1614,8 +1663,8 @@ Action: ${type === 'buy' ? 'Approve to complete purchase' : 'Process to initiate
                     </h4>
                 </div>
                 <div class="card-body">
-                    <!-- FORM 1: UPDATE COIN SETTINGS -->
-                    <form method="POST" action="{% url 'admin_dashboard' %}" enctype="multipart/form-data">
+                    <!-- FORM: UPDATE COIN SETTINGS - SIMPLIFIED -->
+                    <form method="POST" action="{% url 'admin_dashboard' %}" enctype="multipart/form-data" id="coinSettingsForm">
                         {% csrf_token %}
                         <input type="hidden" name="action" value="update_coin">
                         
@@ -1691,16 +1740,24 @@ Action: ${type === 'buy' ? 'Approve to complete purchase' : 'Process to initiate
                             <button type="submit" class="btn btn-gradient-primary">
                                 <i class="fas fa-save"></i> Update Coin Details & Prices
                             </button>
+                            
+                            <button type="button" onclick="testCoinUpdate()" class="btn btn-warning ml-2">
+                                <i class="fas fa-vial"></i> Test Update
+                            </button>
+                            
+                            <button type="button" onclick="testCoinAction()" class="btn btn-info ml-2">
+                                <i class="fas fa-check"></i> Test Action Handler
+                            </button>
                         </div>
                     </form>
                 </div>
             </div>
             
-            <!-- Pending Transactions -->
+            <!-- Pending Transactions Table - WITH ACTION BUTTONS -->
             <div class="card mb-4">
                 <div class="card-header bg-gradient-warning text-white">
                     <h4 class="card-title mb-0">
-                        <i class="fas fa-clock"></i> Tradewise Coin Transactions Records
+                        <i class="fas fa-clock"></i> Pending Coin Transactions
                         <span class="badge badge-light float-right">{{ pending_coin_transactions.count }}</span>
                     </h4>
                 </div>
@@ -1708,7 +1765,7 @@ Action: ${type === 'buy' ? 'Approve to complete purchase' : 'Process to initiate
                     {% if pending_coin_transactions %}
                     <div class="table-responsive">
                         <table class="table table-bordered table-hover">
-                            <thead>
+                            <thead class="thead-dark">
                                 <tr>
                                     <th>ID</th>
                                     <th>Type</th>
@@ -1716,9 +1773,8 @@ Action: ${type === 'buy' ? 'Approve to complete purchase' : 'Process to initiate
                                     <th>Amount</th>
                                     <th>Rate</th>
                                     <th>Platform/Wallet</th>
-                                    
                                     <th>Date</th>
-                                   
+                                    <th>Actions</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -1756,9 +1812,32 @@ Action: ${type === 'buy' ? 'Approve to complete purchase' : 'Process to initiate
                                         </small>
                                         {% endif %}
                                     </td>
-                                    
                                     <td>{{ trans.created_at|date:"M d, H:i" }}</td>
-                                   
+                                    <td>
+                                        <div class="btn-group btn-group-sm" role="group">
+                                            <button type="button" class="btn btn-info" 
+                                                onclick="showTransactionDetails('{{ trans.id }}', '{{ trans.transaction_type }}', '{{ trans.customer_name }}', '{{ trans.coin_amount }}', '{{ trans.usd_amount }}', '{{ trans.rate }}')">
+                                                <i class="fas fa-eye"></i>
+                                            </button>
+                                            
+                                            {% if trans.transaction_type == 'buy' %}
+                                            <button type="button" class="btn btn-success" 
+                                                onclick="approveCoinBuy('{{ trans.id }}')">
+                                                <i class="fas fa-check"></i> Approve
+                                            </button>
+                                            {% else %}
+                                            <button type="button" class="btn btn-primary" 
+                                                onclick="processCoinSell('{{ trans.id }}')">
+                                                <i class="fas fa-dollar-sign"></i> Process
+                                            </button>
+                                            {% endif %}
+                                            
+                                            <button type="button" class="btn btn-danger" 
+                                                onclick="cancelCoinTransaction('{{ trans.id }}')">
+                                                <i class="fas fa-times"></i> Cancel
+                                            </button>
+                                        </div>
+                                    </td>
                                 </tr>
                                 {% endfor %}
                             </tbody>
@@ -1767,21 +1846,192 @@ Action: ${type === 'buy' ? 'Approve to complete purchase' : 'Process to initiate
                     {% else %}
                     <div class="text-center py-4">
                         <i class="fas fa-check-circle fa-3x text-success mb-3"></i>
-                        <h5>No Coin Transactions Records</h5>
+                        <h5>No Pending Coin Transactions</h5>
                         <p class="text-muted">All transactions have been processed.</p>
                     </div>
                     {% endif %}
                 </div>
             </div>
             
+            <!-- Recent Completed Transactions -->
+            <div class="card mb-4">
+                
+                <div class="card-body">
+                    {% if recent_coin_transactions %}
+                    <div class="table-responsive">
+                        <table class="table table-bordered table-hover">
+                            <thead class="thead-dark">
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Type</th>
+                                    <th>Customer</th>
+                                    <th>Amount</th>
+                                    <th>Status</th>
+                                    <th>Date</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for trans in recent_coin_transactions %}
+                                <tr>
+                                    <td>
+                                        <span class="badge badge-{% if trans.transaction_type == 'buy' %}success{% else %}danger{% endif %}">
+                                            {{ trans.transaction_type|upper }}-{{ trans.id|stringformat:"04d" }}
+                                        </span>
+                                    </td>
+                                    <td>
+                                        {% if trans.transaction_type == 'buy' %}
+                                        <span class="badge badge-success">BUY</span>
+                                        {% else %}
+                                        <span class="badge badge-danger">SELL</span>
+                                        {% endif %}
+                                    </td>
+                                    <td>
+                                        <strong>{{ trans.customer_name }}</strong><br>
+                                        <small class="text-muted">{{ trans.customer_email }}</small>
+                                    </td>
+                                    <td>
+                                        <strong>{{ trans.coin_amount }} TWC</strong><br>
+                                        <small>${{ trans.usd_amount }}</small>
+                                    </td>
+                                    <td>
+                                        {% if trans.status == 'completed' %}
+                                        <span class="badge badge-success">Completed</span>
+                                        {% elif trans.status == 'processing' %}
+                                        <span class="badge badge-warning">Processing</span>
+                                        {% elif trans.status == 'cancelled' %}
+                                        <span class="badge badge-danger">Cancelled</span>
+                                        {% else %}
+                                        <span class="badge badge-info">{{ trans.status|title }}</span>
+                                        {% endif %}
+                                    </td>
+                                    <td>{{ trans.created_at|date:"M d, H:i" }}</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                    {% else %}
+                    
+                    {% endif %}
+                </div>
+            </div>
             
-
-           
+            <!-- Quick Actions Panel -->
+            <div class="card">
+                <div class="card-header bg-gradient-info text-white">
+                    <h4 class="card-title mb-0">
+                        <i class="fas fa-bolt"></i> Quick Actions
+                    </h4>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-4 text-center">
+                            <button class="btn btn-success btn-lg btn-block mb-2" 
+                                onclick="submitCoinAction('approve_all_buys')">
+                                <i class="fas fa-check-circle"></i><br>
+                                Approve All Pending Buys
+                            </button>
+                            <small class="text-muted">Approve all pending buy transactions</small>
+                        </div>
+                        <div class="col-md-4 text-center">
+                            <button class="btn btn-primary btn-lg btn-block mb-2" 
+                                onclick="submitCoinAction('process_all_sells')">
+                                <i class="fas fa-dollar-sign"></i><br>
+                                Process All Pending Sells
+                            </button>
+                            <small class="text-muted">Process all pending sell transactions</small>
+                        </div>
+                        <div class="col-md-4 text-center">
+                            <button class="btn btn-danger btn-lg btn-block mb-2" 
+                                onclick="submitCoinAction('cancel_all_pending')">
+                                <i class="fas fa-times-circle"></i><br>
+                                Cancel All Pending
+                            </button>
+                            <small class="text-muted">Cancel all pending transactions</small>
+                        </div>
+                    </div>
+                    
+                    <hr>
+                    
+                    <!-- Current Coin Status -->
+                    <div class="row mt-3">
+                        <div class="col-md-6">
+                            <div class="card bg-light">
+                                <div class="card-body">
+                                    <h5 class="card-title">Current Coin Status</h5>
+                                    <div class="row">
+                                        <div class="col-6">
+                                            <div class="text-center">
+                                                <h6 class="text-success">Buy Price</h6>
+                                                <h3 class="text-success">${{ tradewise_coin.buy_price_usd|default:"0.10" }}</h3>
+                                            </div>
+                                        </div>
+                                        <div class="col-6">
+                                            <div class="text-center">
+                                                <h6 class="text-danger">Sell Price</h6>
+                                                <h3 class="text-danger">${{ tradewise_coin.sell_price_usd|default:"0.09" }}</h3>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="mt-3">
+                                        <p class="mb-1"><strong>Coin Title:</strong> {{ tradewise_coin.title|default:"TradeWise Coin" }}</p>
+                                        <p class="mb-1"><strong>Status:</strong> 
+                                            {% if tradewise_coin.is_active %}
+                                            <span class="badge badge-success">Active</span>
+                                            {% else %}
+                                            <span class="badge badge-danger">Inactive</span>
+                                            {% endif %}
+                                        </p>
+                                        <p class="mb-0"><small class="text-muted">Last updated: {{ tradewise_coin.updated_at|date:"M d, Y H:i"|default:"Never" }}</small></p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="card bg-light">
+                                <div class="card-body">
+                                    <h5 class="card-title">Transaction Stats</h5>
+                                    <div class="row text-center">
+                                        <div class="col-4">
+                                            <h2 class="text-warning">{{ pending_coin_transactions.count }}</h2>
+                                            <small class="text-muted">Pending</small>
+                                        </div>
+                                        <div class="col-4">
+                                            <h2 class="text-success">{{ recent_coin_transactions.count }}</h2>
+                                            <small class="text-muted">Completed</small>
+                                        </div>
+                                        <div class="col-4">
+                                            <h2 class="text-info">{{ pending_coin_transactions.count|add:recent_coin_transactions.count }}</h2>
+                                            <small class="text-muted">Total</small>
+                                        </div>
+                                    </div>
+                                    <div class="mt-3">
+                                        <div class="progress">
+                                            {% if pending_coin_transactions.count > 0 %}
+                                            <div class="progress-bar bg-warning" 
+                                                 style="width: {{ pending_coin_transactions.count|add:recent_coin_transactions.count|divisibleby:100|default:0 }}%">
+                                                Pending
+                                            </div>
+                                            {% endif %}
+                                            {% if recent_coin_transactions.count > 0 %}
+                                            <div class="progress-bar bg-success" 
+                                                 style="width: {{ recent_coin_transactions.count|divisibleby:100|default:0 }}%">
+                                                Completed
+                                            </div>
+                                            {% endif %}
+                                        </div>
+                                        <small class="text-muted">Transaction completion rate</small>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
             
         </div>
     </div>
 </div>
-
 
 
                    <!-- ALL REQUESTS TAB -->
@@ -1870,77 +2120,114 @@ Action: ${type === 'buy' ? 'Approve to complete purchase' : 'Process to initiate
                         </div>
                     </div>
                 </div>
-                    <!-- USERS MANAGEMENT TAB -->
-                    <div id="users" class="content-tab">
-                        <div class="card">
-                            <div class="card-header">
-                                <h3 class="card-title">Users Management</h3>
-                                <span class="badge badge-info">{{ total_users }} Total Users</span>
-                            </div>
-                            <div class="card-body">
-                                <div class="table-responsive">
-                                    <table class="table table-bordered table-hover">
-                                        <thead>
-                                            <tr>
-                                                <th>ID</th>
-                                                <th>Name</th>
-                                                <th>Email</th>
-                                                <th>Phone</th>
-                                                <th>Account No.</th>
-                                                <th>Status</th>
-                                                <th>Last Login</th>
-                                                <th>Created</th>
-                                                <th>Actions</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            {% for user in users %}
-                                            <tr>
-                                                <td>USR{{ user.id|stringformat:"03d" }}</td>
-                                                <td>{{ user.first_name }} {{ user.second_name }}</td>
-                                                <td>{{ user.email }}</td>
-                                                <td>{{ user.phone|default:"Not provided" }}</td>
-                                                <td>{{ user.account_number }}</td>
-                                                <td>
-                                                    {% if user.is_active %}
-                                                    <span class="badge badge-success">Active</span>
-                                                    {% else %}
-                                                    <span class="badge badge-danger">Disabled</span>
-                                                    {% endif %}
-                                                </td>
-                                                <td>{{ user.last_login|date:"M d, Y H:i"|default:"Never" }}</td>
-                                                <td>{{ user.created_at|date:"M d, Y" }}</td>
-                                                <td>
-                                                    <div class="btn-group">
-                                                        {% if user.is_active %}
-                                                        <button class="btn btn-sm btn-warning" onclick="disableUser({{ user.id }})" title="Disable Account">
-                                                            <i class="fas fa-user-slash"></i>
-                                                        </button>
-                                                        {% else %}
-                                                        <button class="btn btn-sm btn-success" onclick="enableUser({{ user.id }})" title="Enable Account">
-                                                            <i class="fas fa-user-check"></i>
-                                                        </button>
-                                                        {% endif %}
-                                                        <button class="btn btn-sm btn-info" onclick="resetUserPassword({{ user.id }})" title="Send Password Reset">
-                                                            <i class="fas fa-key"></i>
-                                                        </button>
-                                                        <button class="btn btn-sm btn-secondary" onclick="viewUserDetails({{ user.id }})" title="View Details">
-                                                            <i class="fas fa-eye"></i>
-                                                        </button>
-                                                    </div>
-                                                </td>
-                                            </tr>
-                                            {% empty %}
-                                            <tr>
-                                                <td colspan="9" class="text-center text-muted">No users found</td>
-                                            </tr>
-                                            {% endfor %}
-                                        </tbody>
-                                    </table>
-                                </div>
-                            </div>
-                        </div>
+                   <!-- USERS MANAGEMENT TAB -->
+<div id="users" class="content-tab">
+    <div class="card">
+        <div class="card-header">
+            <div class="d-flex justify-content-between align-items-center">
+                <h3 class="card-title">Users Management</h3>
+                <div>
+                    <span id="userCountBadge" class="badge badge-info">{{ total_users }} Total Users</span>
+                    <span id="searchResultBadge" class="badge badge-success ml-2 d-none"></span>
+                </div>
+            </div>
+            
+            <!-- SEARCH BAR - PURE AJAX VERSION (NO FORM RELOAD) -->
+            <div class="mt-3">
+                <div class="input-group w-100">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text">
+                            <i class="fas fa-search"></i>
+                        </span>
                     </div>
+                    <input type="text" 
+                           class="form-control" 
+                           id="userSearchInput" 
+                           placeholder="Search by TradeWise Number, Name, Email, or Phone..."
+                           value="{{ search_query|default:'' }}"
+                           autocomplete="off">
+                    <div class="input-group-append">
+                        <button class="btn btn-primary" id="searchUsersBtn">
+                            <i class="fas fa-search"></i> Search
+                        </button>
+                        <button class="btn btn-outline-secondary" id="clearSearchBtn">
+                            <i class="fas fa-times"></i> Clear
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- QUICK FILTERS - AJAX VERSION -->
+                <div class="mt-2">
+                    <div class="btn-group btn-group-sm" role="group" id="userFilterBtns">
+                        <button type="button" class="btn btn-outline-secondary filter-btn active" data-filter="">
+                            All Users ({{ total_users }})
+                        </button>
+                        <button type="button" class="btn btn-outline-success filter-btn" data-filter="active">
+                            Active ({{ active_users_count|default:0 }})
+                        </button>
+                        <button type="button" class="btn btn-outline-danger filter-btn" data-filter="inactive">
+                            Inactive ({{ inactive_users_count|default:0 }})
+                        </button>
+                        <button type="button" class="btn btn-outline-warning filter-btn" data-filter="today">
+                            Today ({{ new_users_today }})
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- SEARCH STATUS -->
+                <div id="searchStatus" class="mt-2 d-none">
+                    <div class="alert alert-info alert-sm py-1 mb-0">
+                        <i class="fas fa-info-circle"></i>
+                        <span id="searchStatusText"></span>
+                        <button type="button" class="close" onclick="clearSearch()" style="font-size: 0.8rem;">
+                            <span>&times;</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="card-body">
+            <!-- USERS TABLE (will be populated via AJAX) -->
+            <div id="usersTableContainer">
+                <div class="table-responsive">
+                    <table class="table table-bordered table-hover" id="usersTable">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Name</th>
+                                <th>Email</th>
+                                <th>Phone</th>
+                                <th>Account No.</th>
+                                <th>Status</th>
+                                <th>Last Login</th>
+                                <th>Created</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="usersTableBody">
+                            <!-- Users will be loaded here via AJAX -->
+                        </tbody>
+                    </table>
+                </div>
+                
+                <!-- LOADING SPINNER -->
+                <div id="usersLoading" class="text-center d-none">
+                    <div class="spinner-border text-primary" role="status">
+                        <span class="sr-only">Loading...</span>
+                    </div>
+                    <p class="mt-2">Loading users...</p>
+                </div>
+                
+                <!-- NO USERS MESSAGE -->
+                <div id="noUsersMessage" class="text-center text-muted py-4 d-none">
+                    <i class="fas fa-users fa-2x mb-2"></i>
+                    <p>No users found</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 
                     <!-- REVIEWS MANAGEMENT TAB -->
                     <div id="reviews" class="content-tab">
@@ -4140,5 +4427,397 @@ console.log('🛠️ Admin action functions loaded successfully!');
 console.log('✅ All edit/delete buttons should now work with traditional form submissions');
 </script>
 
+
+<script>
+    // AJAX User Search Functionality
+    document.addEventListener('DOMContentLoaded', function() {
+        const searchInput = document.getElementById('userSearchInput');
+        const searchBtn = document.getElementById('searchUsersBtn');
+        const clearBtn = document.getElementById('clearSearchBtn');
+        const filterBtns = document.querySelectorAll('.filter-btn');
+        const usersTableBody = document.getElementById('usersTableBody');
+        const searchStatus = document.getElementById('searchStatus');
+        const searchStatusText = document.getElementById('searchStatusText');
+        const usersLoading = document.getElementById('usersLoading');
+        const searchResultBadge = document.getElementById('searchResultBadge');
+        const noUsersMessage = document.getElementById('noUsersMessage');
+        const userCountBadge = document.getElementById('userCountBadge');
+        
+        let currentSearch = '';
+        let currentFilter = '';
+        let isInitialLoad = true;
+        
+        // Load users when tab is shown
+        document.addEventListener('click', function(e) {
+            if (e.target && (e.target.getAttribute('data-tab') === 'users' || 
+                             e.target.closest('[data-tab="users"]'))) {
+                // Tab clicked, load users
+                if (isInitialLoad) {
+                    loadAllUsers();
+                    isInitialLoad = false;
+                }
+            }
+        });
+        
+        // Also check current URL on page load
+        if (window.location.search.includes('tab=users')) {
+            setTimeout(() => {
+                loadAllUsers();
+                isInitialLoad = false;
+            }, 500);
+        }
+        
+        // Search button click
+        searchBtn.addEventListener('click', function() {
+            performSearch();
+        });
+        
+        // Real-time search as you type (with debounce)
+        let searchTimeout;
+        searchInput.addEventListener('input', function() {
+            clearTimeout(searchTimeout);
+            searchTimeout = setTimeout(() => {
+                if (this.value.trim().length > 0) {
+                    performSearch();
+                }
+            }, 300);
+        });
+        
+        // Enter key in search input
+        searchInput.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                clearTimeout(searchTimeout);
+                performSearch();
+            }
+        });
+        
+        // Clear search button
+        clearBtn.addEventListener('click', function() {
+            searchInput.value = '';
+            currentSearch = '';
+            currentFilter = '';
+            
+            // Reset filter buttons
+            filterBtns.forEach(btn => {
+                if (btn.dataset.filter === '') {
+                    btn.classList.add('active');
+                } else {
+                    btn.classList.remove('active');
+                }
+            });
+            
+            // Show all users
+            loadAllUsers();
+        });
+        
+        // Filter button clicks
+        filterBtns.forEach(btn => {
+            btn.addEventListener('click', function() {
+                // Update active state
+                filterBtns.forEach(b => b.classList.remove('active'));
+                this.classList.add('active');
+                
+                currentFilter = this.dataset.filter;
+                performSearch();
+            });
+        });
+        
+        // Load all users initially
+        function loadAllUsers() {
+            currentSearch = '';
+            currentFilter = '';
+            performSearch();
+        }
+        
+        // Perform AJAX search
+        function performSearch() {
+            const searchTerm = searchInput.value.trim();
+            currentSearch = searchTerm;
+            
+            // Show loading, hide table and messages
+            usersLoading.classList.remove('d-none');
+            usersTableBody.innerHTML = '';
+            noUsersMessage.classList.add('d-none');
+            
+            // Prepare URL
+            const url = new URL('/admin/ajax/users-data/', window.location.origin);
+            if (searchTerm) {
+                url.searchParams.append('search', searchTerm);
+            }
+            if (currentFilter) {
+                url.searchParams.append('filter', currentFilter);
+            }
+            
+            // Add timestamp to prevent caching
+            url.searchParams.append('_', Date.now());
+            
+            // Make AJAX request
+            fetch(url, {
+                method: 'GET',
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest',
+                    'Accept': 'application/json'
+                }
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.json();
+            })
+            .then(data => {
+                if (data.success) {
+                    updateUsersTable(data.users);
+                    updateSearchStatus(data, searchTerm);
+                    
+                    // Update user count badge
+                    if (searchTerm || currentFilter) {
+                        userCountBadge.textContent = `${data.count} Users`;
+                        userCountBadge.className = 'badge badge-primary';
+                    } else {
+                        userCountBadge.textContent = `${data.count} Total Users`;
+                        userCountBadge.className = 'badge badge-info';
+                    }
+                } else {
+                    showError('Search failed: ' + (data.error || 'Unknown error'));
+                }
+            })
+            .catch(error => {
+                console.error('Search error:', error);
+                showError('Search failed. Please try again.');
+            })
+            .finally(() => {
+                usersLoading.classList.add('d-none');
+            });
+        }
+        
+        // Update users table with search results
+        function updateUsersTable(users) {
+            if (users.length === 0) {
+                // Show no users message
+                noUsersMessage.classList.remove('d-none');
+                usersTableBody.innerHTML = '';
+                return;
+            }
+            
+            // Hide no users message
+            noUsersMessage.classList.add('d-none');
+            
+            let html = '';
+            users.forEach(user => {
+                const statusBadge = user.is_active ? 
+                    '<span class="badge badge-success">Active</span>' : 
+                    '<span class="badge badge-danger">Disabled</span>';
+                
+                // Format account number with badge
+                const accountBadge = `<span class="badge badge-primary">${user.account_number}</span>`;
+                
+                // Action buttons
+                const disableBtn = user.is_active ? 
+                    `<button class="btn btn-sm btn-warning" onclick="disableUser(${user.id})" title="Disable Account">
+                        <i class="fas fa-user-slash"></i>
+                    </button>` :
+                    `<button class="btn btn-sm btn-success" onclick="enableUser(${user.id})" title="Enable Account">
+                        <i class="fas fa-user-check"></i>
+                    </button>`;
+                
+                html += `
+                    <tr>
+                        <td>${user.display_id}</td>
+                        <td>${user.first_name} ${user.second_name}</td>
+                        <td>${user.email}</td>
+                        <td>${user.phone}</td>
+                        <td>${accountBadge}</td>
+                        <td>${statusBadge}</td>
+                        <td>${user.last_login}</td>
+                        <td>${user.created_at}</td>
+                        <td>
+                            <div class="btn-group">
+                                ${disableBtn}
+                                <button class="btn btn-sm btn-info" onclick="resetUserPassword(${user.id})" title="Send Password Reset">
+                                    <i class="fas fa-key"></i>
+                                </button>
+                                <button class="btn btn-sm btn-secondary" onclick="viewUserDetails(${user.id})" title="View Details">
+                                    <i class="fas fa-eye"></i>
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                `;
+            });
+            
+            usersTableBody.innerHTML = html;
+        }
+        
+        // Update search status display
+        function updateSearchStatus(data, searchTerm) {
+            if (searchTerm || currentFilter) {
+                searchStatus.classList.remove('d-none');
+                
+                let statusText = '';
+                if (searchTerm && currentFilter) {
+                    statusText = `Search: "${searchTerm}" | Filter: ${getFilterName(currentFilter)} | Found: ${data.count} user(s)`;
+                } else if (searchTerm) {
+                    statusText = `Search: "${searchTerm}" | Found: ${data.count} user(s)`;
+                } else if (currentFilter) {
+                    statusText = `Filter: ${getFilterName(currentFilter)} | Found: ${data.count} user(s)`;
+                }
+                
+                searchStatusText.textContent = statusText;
+                
+                // Update result badge
+                if (data.count > 0) {
+                    searchResultBadge.textContent = `${data.count} result(s)`;
+                    searchResultBadge.classList.remove('d-none');
+                } else {
+                    searchResultBadge.classList.add('d-none');
+                }
+            } else {
+                searchStatus.classList.add('d-none');
+                searchResultBadge.classList.add('d-none');
+            }
+        }
+        
+        // Get filter display name
+        function getFilterName(filter) {
+            switch(filter) {
+                case 'active': return 'Active Users';
+                case 'inactive': return 'Inactive Users';
+                case 'today': return "Today's Registrations";
+                default: return 'All Users';
+            }
+        }
+        
+        // Show error message
+        function showError(message) {
+            usersTableBody.innerHTML = `
+                <tr>
+                    <td colspan="9" class="text-center text-danger">
+                        <i class="fas fa-exclamation-circle"></i> ${message}
+                    </td>
+                </tr>
+            `;
+            
+            searchStatus.classList.remove('d-none');
+            searchStatusText.textContent = message;
+            searchStatusText.parentElement.className = 'alert alert-danger alert-sm py-1 mb-0';
+            
+            // Hide loading
+            usersLoading.classList.add('d-none');
+            noUsersMessage.classList.add('d-none');
+        }
+        
+        // Prevent form submission (if there's still a form somewhere)
+        const forms = document.querySelectorAll('form');
+        forms.forEach(form => {
+            form.addEventListener('submit', function(e) {
+                e.preventDefault();
+                return false;
+            });
+        });
+    });
+    
+    // User action functions
+    function disableUser(userId) {
+        if (confirm('Are you sure you want to disable this user?')) {
+            // AJAX disable user
+            fetch(`/admin/ajax/disable-user/${userId}/`, {
+                method: 'POST',
+                headers: {
+                    'X-CSRFToken': getCookie('csrftoken'),
+                    'X-Requested-With': 'XMLHttpRequest'
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    alert('User disabled successfully!');
+                    // Refresh the users table
+                    performSearch();
+                } else {
+                    alert('Error: ' + data.error);
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('Failed to disable user');
+            });
+        }
+    }
+    
+    function enableUser(userId) {
+        if (confirm('Are you sure you want to enable this user?')) {
+            // AJAX enable user
+            fetch(`/admin/ajax/enable-user/${userId}/`, {
+                method: 'POST',
+                headers: {
+                    'X-CSRFToken': getCookie('csrftoken'),
+                    'X-Requested-With': 'XMLHttpRequest'
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    alert('User enabled successfully!');
+                    // Refresh the users table
+                    performSearch();
+                } else {
+                    alert('Error: ' + data.error);
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('Failed to enable user');
+            });
+        }
+    }
+    
+    function resetUserPassword(userId) {
+        if (confirm('Send password reset email to this user?')) {
+            // AJAX reset password
+            fetch(`/admin/ajax/reset-password/${userId}/`, {
+                method: 'POST',
+                headers: {
+                    'X-CSRFToken': getCookie('csrftoken'),
+                    'X-Requested-With': 'XMLHttpRequest'
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    alert('Password reset email sent!');
+                } else {
+                    alert('Error: ' + data.error);
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('Failed to send reset email');
+            });
+        }
+    }
+    
+    function viewUserDetails(userId) {
+        // Open user details in modal or new page
+        alert('View user details for ID: ' + userId);
+        // You can implement a modal here
+    }
+    
+    // Helper function to get CSRF token
+    function getCookie(name) {
+        let cookieValue = null;
+        if (document.cookie && document.cookie !== '') {
+            const cookies = document.cookie.split(';');
+            for (let i = 0; i < cookies.length; i++) {
+                const cookie = cookies[i].trim();
+                if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+            }
+        }
+        return cookieValue;
+    }
+    </script>
 </body>
 </html>

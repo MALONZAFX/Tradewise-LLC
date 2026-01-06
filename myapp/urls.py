@@ -128,6 +128,6 @@ path('ajax/delete-request/', views.ajax_delete_request, name='ajax_delete_reques
     path('debug-email-templates/', views.debug_email_templates, name='debug_email_templates'),
    path('test-admin-coin-actions/', views.test_admin_coin_actions, name='test_admin_coin_actions'),
    path('admin-process-form/', views.process_admin_form, name='process_admin_form'),
-   
+   path('admin/ajax/users-data/', views.ajax_users_data, name='ajax_users_data'),
     
 ]
